@@ -15,6 +15,12 @@ Route::resource('post', 'CustomerController@index');
 Route::resource('user', 'UsersController@store');
 
 
+
+Route::resource('api/v1/unsubscribe', 'ListSubscribersController@unsubscribe');
+Route::resource('api/v1/subscriber', 'ListSubscribersController@search');
+Route::post('api/v1/subscriber/update', 'ListSubscribersController@update');
+
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -38,4 +44,6 @@ Route::group(['prefix' => 'api/v1'], function()
     Route::resource('delivery-server', 'DeliveryServerController');
     Route::resource('bounce-servers', 'BounceServersController');
     Route::resource('bounce-server', 'BounceServerController');
+    Route::resource('subscribe', 'ListSubscribersController');
+    Route::resource('campaign', 'CampaignController');
 });

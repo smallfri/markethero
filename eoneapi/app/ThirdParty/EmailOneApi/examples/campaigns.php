@@ -59,7 +59,7 @@ $response = $endpoint->create(array(
         //'autoresponder_event'            => 'AFTER-SUBSCRIBE', // AFTER-SUBSCRIBE or AFTER-CAMPAIGN-OPEN
         //'autoresponder_time_unit'        => 'hour', // minute, hour, day, week, month, year
         //'autoresponder_time_value'       => 1, // 1 hour after event
-        //'autoresponder_open_campaign_id' => 1, // INT id of campaign, only if event is AFTER-CAMPAIGN-OPEN,
+        //'201' => 1, // INT id of campaign, only if event is AFTER-CAMPAIGN-OPEN,
         
         // - if this campaign is advanced recurring, you can set a cron job style frequency.
         // - please note that this applies only for regular campaigns.

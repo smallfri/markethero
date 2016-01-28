@@ -36,7 +36,7 @@ EmailOneApi_Autoloader::register();
 
 // configuration object
 $config = new EmailOneApi_Config(array(
-    'apiUrl'        => 'http://deva.emailone.net/api',
+    'apiUrl'        => 'http://localhost/api',
     'publicKey'     => '68134d5312eebc9965d87978b80c6d710ea8248d',
     'privateKey'    => '82f32116e089075d14c5cb73a2f656f90675b02c',
     
