@@ -1,0 +1,23 @@
+h3.reply-box-title {
+    font-size: 14px!important;
+    padding: 20px 0px 5px 10px;
+}
+h3.reply-box-title a {
+    color: #3c8dbc!important;
+}
+.reply-header-info {
+    margin-left:5px;
+    margin-top:7px;
+}
+
+h3.ticket-box-title {
+    font-size: 18px!important;
+    padding: 20px 0px 5px 10px;
+}
+h3.ticket-box-title a {
+    color: #3c8dbc!important;
+}
+.ticket-header-info {
+    margin-left:5px;
+    margin-top:7px;
+}
