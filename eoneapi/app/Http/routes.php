@@ -1,4 +1,5 @@
 <?php
+//use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -11,14 +12,10 @@
 |
 */
 
-Route::resource('post', 'CustomerController@index');
-Route::resource('user', 'UsersController@store');
 
-
-
-Route::resource('api/v1/unsubscribe', 'ListSubscribersController@unsubscribe');
-Route::resource('api/v1/subscriber', 'ListSubscribersController@search');
-Route::post('api/v1/subscriber/update', 'ListSubscribersController@update');
+Route::resource('v1/unsubscribe', 'ListSubscribersController@unsubscribe');
+Route::resource('v1/subscriber', 'ListSubscribersController@search');
+Route::post('v1/subscriber/update', 'ListSubscribersController@update');
 
 
 /*
@@ -32,11 +29,8 @@ Route::post('api/v1/subscriber/update', 'ListSubscribersController@update');
 |
 */
 
-Route::group(['middleware' => ['web']], function () {
-    //
-});
 
-Route::group(['prefix' => 'api/v1'], function()
+Route::group(['prefix' => 'v1'], function()
 {
     Route::resource('customer', 'CustomerController');
     Route::resource('customers', 'CustomersController');
@@ -46,4 +40,6 @@ Route::group(['prefix' => 'api/v1'], function()
     Route::resource('bounce-server', 'BounceServerController');
     Route::resource('subscribe', 'ListSubscribersController');
     Route::resource('campaign', 'CampaignController');
+    Route::resource('user', 'UsersController');
+
 });

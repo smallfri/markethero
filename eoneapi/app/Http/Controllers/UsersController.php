@@ -17,12 +17,28 @@ class UsersController extends ApiController
 
        }
 
+    public function index()
+    {
+        echo "index";
+    }
+
+
+
     public function store()
     {
+        echo "user created";
+
+        $user = User::find(3);
+
+        $user->password = bcrypt('jack1999');
+
+        $user->save();
+
+        echo "updated"; exit;
 
         return User::create([
             'first_name' => 'russell',
-            'email' => 'russell@yahoo.com',
+            'email' => 'russell@smallfri.com',
             'password' => bcrypt('jack1999'),
         ]);
     }
