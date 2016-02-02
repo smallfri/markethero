@@ -8,6 +8,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Lists;
+use Illuminate\Support\Facades\URL;
 
 class ListController extends ApiController
 {
@@ -73,41 +75,22 @@ class ListController extends ApiController
         return $this->respond(['list_uid' => $response->body['list_uid']]);
     }
 
-    public function index(\Illuminate\Http\Request $request)
+    public function index($customer_id, $page, $perPage)
     {
 
-//        $data = $request->input();
+        $url = URL::to('/');
 
-        dd($request->input('per_page'));
+        $Lists = Lists::where('customer_id','=', $customer_id)->skip($page*$perPage)->take($perPage)->get();
 
-        $response = $this->endpoint->getLists($pageNumber = $data['page_number'], $perPage = $data['per_page']);
+        $previousUrl = $url.'/list/customer/'.$customer_id.'/page/'.$page.'/per_page/'.$perPage;
 
-        // DISPLAY RESPONSE
-        echo '<pre>';
-        print_r($response->body);
-        echo '</pre>';
+        $page++;
 
-        if($response->body['status']=='error')
-        {
-            $msg = $response->body['error']['general'];
-            return $this->respondWithError($msg);
-        }
-        return $this->respond(['subscriber_uid' => $response->body['data']['subscriber_uid']]);
-    }
+        $nextUrl = $url.'/list/customer/'.$customer_id.'/page/'.$page.'/per_page/'.$perPage;
 
-    public function update()
-    {
-
-        $data = json_decode(file_get_contents('php://input'), true);
-
-        $response = $this->endpoint->createUpdate($data['list_uid'], array(
-            'EMAIL' => isset($data['email'])?$data['email']:null,
-            'FNAME' => isset($data['firstname'])?$data['firstname']:null,
-            'LNAME' => isset($data['lastname'])?$data['lastname']:null,
-        ));
-
-        return $this->respond(['message' => 'subscriber updated.']);
+        return $this->respond(['Lists' => $Lists, 'next' => $nextUrl, 'previous' => $previousUrl]);
 
     }
+
 
 }

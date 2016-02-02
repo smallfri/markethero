@@ -28,7 +28,7 @@ Route::post('v1/subscriber/update', 'ListSubscribersController@update');
 | kernel and includes session state, CSRF protection, and more.
 |
 */
-
+Route::get('v1/list/customer/{customer_uid}/page/{page}/per_page/{per_page}', 'ListController@index');
 
 Route::group(['prefix' => 'v1'], function()
 {
