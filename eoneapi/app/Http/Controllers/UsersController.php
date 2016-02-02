@@ -30,7 +30,7 @@ class UsersController extends ApiController
 
         $user = User::find(3);
 
-        $user->password = bcrypt('jack1999');
+        $user->password = bcrypt('KjV9g2JcyFG!AHng');
 
         $user->save();
 

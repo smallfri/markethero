@@ -41,5 +41,6 @@ Route::group(['prefix' => 'v1'], function()
     Route::resource('subscribe', 'ListSubscribersController');
     Route::resource('campaign', 'CampaignController');
     Route::resource('user', 'UsersController');
+    Route::resource('list', 'ListController');
 
 });

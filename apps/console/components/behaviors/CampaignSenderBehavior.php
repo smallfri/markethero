@@ -651,11 +651,6 @@ class CampaignSenderBehavior extends CBehavior
         if(!$onlyPlainText)
         {
 
-            if(!empty($campaign->option)&&$campaign->option->send_referral_url==1)
-            {
-                $emailContent = CampaignHelper::injectReferralLink($emailContent,$campaign->customer_id);
-            }
-
             if(($emailFooter = $customer->getGroupOption('campaigns.email_footer'))&&strlen(trim($emailFooter))>5)
             {
                 $emailContent = CampaignHelper::injectEmailFooter($emailContent,$emailFooter,$campaign);

@@ -127,7 +127,7 @@ class CComponent
 					return $object->$name;
 			}
 		}
-		throw new CException(Yii::t('yii','Property "{class}.{property}" is not defined.',
+		throw new CException(Yii::t('yii','Property "{class}.{property}" is not defined22.',
 			array('{class}'=>get_class($this), '{property}'=>$name)));
 	}
 

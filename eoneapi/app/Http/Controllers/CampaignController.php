@@ -74,7 +74,7 @@ END;
             'template' => array(
                 //'archive'         => file_get_contents(dirname(__FILE__) . '/template-example.zip'),
                 //'template_uid'    => 'TEMPLATE-UNIQUE-ID',
-                'content' => file_get_contents($data['template_url']),
+                'content' => htmlspecialchars_decode($data['template_url']),
                 'inline_css' => $data['inline_css'], // yes | no
                 'plain_text' => null, // leave empty to auto generate
                 'auto_plain_text' => 'yes', // yes | no
@@ -83,7 +83,7 @@ END;
 
         if($response->body['status']=='error')
         {
-            $msg = $response->body['error']['general'];
+            $msg = $response->body['error'];
             return $this->respondWithError($msg);
         }
         return $this->respond(['campaign_uid' => $response->body['campaign_uid']]);

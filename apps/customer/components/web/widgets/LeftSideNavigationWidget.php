@@ -99,12 +99,12 @@ class LeftSideNavigationWidget extends CWidget
                 'active'    => 'api_keys',
                 'route'     => array('api_keys/index'),
             ),
-            'referrals' => array(
-                            'name'      => Yii::t('app', 'Referral Settings'),
-                            'icon'      => 'fa-cogs',
-                            'active'    => 'referrals',
-                            'route'     => array('referrals/index'),
-                        ),
+//            'referrals' => array(
+//                            'name'      => Yii::t('app', 'Referral Settings'),
+//                            'icon'      => 'fa-cogs',
+//                            'active'    => 'referrals',
+//                            'route'     => array('referrals/index'),
+//                        ),
             'settings' => array(
                 'name'      => Yii::t('app', 'Settings'),
                 'icon'      => 'fa-cogs',
