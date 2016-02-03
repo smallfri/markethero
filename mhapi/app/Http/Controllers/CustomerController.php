@@ -31,17 +31,6 @@ class CustomerController extends ApiController
     /**
      * @return mixed
      */
-//    public function index()
-//    {
-//        $Customers = Customer::all();
-//
-//        return $this->respond(['customers' => $Customers]);
-//
-//    }
-
-    /**
-     * @return mixed
-     */
     public function store()
     {
         $data = json_decode(file_get_contents('php://input'), true);
@@ -52,7 +41,7 @@ class CustomerController extends ApiController
 
         if($response->body['status']=='error')
         {
-            $msg = $response->body['error']['general'];
+            $msg = $response->body['error'];
             return $this->respondWithError($msg);
         }
 

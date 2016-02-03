@@ -4,11 +4,12 @@ namespace App;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Customer extends Authenticatable
+class SegmentCondition extends Authenticatable
 {
+    public $timestamps = false;
 
-    protected $table = 'mw_customer';
-    protected $primaryKey = "customer_id";
+    protected $table = 'mw_list_segment_condition';
+    protected $primaryKey = "condition_id";
     /**
      * The attributes that are mass assignable.
      *

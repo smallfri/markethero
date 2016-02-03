@@ -4,10 +4,11 @@ namespace App;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Lists extends Authenticatable
+class ListsDefaults extends Authenticatable
 {
+    public $timestamps = false;
 
-    protected $table = 'mw_list';
+    protected $table = 'mw_list_default';
     protected $primaryKey = "list_id";
     /**
      * The attributes that are mass assignable.

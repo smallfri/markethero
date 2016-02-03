@@ -39,7 +39,7 @@ class EmailOneApi_Endpoint_Customers extends EmailOneApi_Base
             $data['customer']['confirm_email'] = $data['customer']['email'];
         }
         
-        if (empty($data['customer']['timezone'])) {
+        if (!isset($data['customer']['timezone'])) {
             $data['customer']['timezone'] = 'UTC';
         }
         

@@ -29,6 +29,7 @@ Route::post('v1/subscriber/update', 'ListSubscribersController@update');
 |
 */
 Route::get('v1/list/customer/{customer_uid}/page/{page}/per_page/{per_page}', 'ListController@index');
+Route::put('v1/list/{list_uid}', 'ListController@save');
 
 Route::group(['prefix' => 'v1'], function()
 {
@@ -42,5 +43,8 @@ Route::group(['prefix' => 'v1'], function()
     Route::resource('campaign', 'CampaignController');
     Route::resource('user', 'UsersController');
     Route::resource('list', 'ListController');
+    Route::resource('segment', 'SegmentController');
+    Route::resource('segmentcondition', 'SegmentConditionController');
+    Route::resource('fields', 'FieldsController');
 
 });
