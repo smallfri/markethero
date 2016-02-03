@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c9b7ec24-babb-4088-b4f3-f3a6cadded3c" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServerCustomerController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServerCustomerController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServersController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServersController.php" />
     </list>
     <ignored path="MarketHero.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -36,11 +36,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BounceServerCustomerController.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="BounceServerCustomerController.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServerCustomerController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.7129338">
+            <state vertical-scroll-proportion="-18.833334">
               <caret line="78" column="67" selection-start-line="0" selection-start-column="0" selection-end-line="85" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BounceServersController.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServersController.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.59148264">
+              <caret line="42" column="70" selection-start-line="42" selection-start-column="70" selection-end-line="42" selection-end-column="70" />
               <folding />
             </state>
           </provider>
@@ -54,7 +64,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/apps/customer/views/campaigns/step-setup.php" />
         <option value="$PROJECT_DIR$/apps/common/models/CampaignOption.php" />
         <option value="$PROJECT_DIR$/apps/console/components/behaviors/CampaignSenderBehavior.php" />
         <option value="$PROJECT_DIR$/eoneapi/app/ThirdParty/EmailOneApi/examples/campaigns.php" />
@@ -105,6 +114,7 @@
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/ListSubscribersController.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServerController.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServerCustomerController.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServersController.php" />
       </list>
     </option>
   </component>
@@ -448,13 +458,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/mhapi/app/ThirdParty/EmailOneApi/Http/Request.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.1488953">
-          <caret line="45" column="20" selection-start-line="45" selection-start-column="20" selection-end-line="45" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mhapi/app/ThirdParty/EmailOneApi/Http/Client.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.907781">
@@ -821,8 +824,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServerCustomerController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7129338">
+        <state vertical-scroll-proportion="-18.833334">
           <caret line="78" column="67" selection-start-line="0" selection-start-column="0" selection-end-line="85" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServersController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.59148264">
+          <caret line="42" column="70" selection-start-line="42" selection-start-column="70" selection-end-line="42" selection-end-column="70" />
           <folding />
         </state>
       </provider>

@@ -38,6 +38,11 @@ class BounceServersController extends ApiController
 
         $BounceServer = BounceServer::find($id);
 
+        if(empty($BounceServer))
+        {
+            return $this->respondWithError('Bounce Server not found');
+        }
+
         return $this->respond(['bounce_server' => $BounceServer->toArray()]);
 
     }
@@ -49,6 +54,11 @@ class BounceServersController extends ApiController
     {
 
         $BounceServer = BounceServer::all();
+
+        if(empty($BounceServer))
+                {
+                    return $this->respondWithError('No Bounce Servers not found');
+                }
 
         return $this->respond(['bounce_servers' => $BounceServer->toArray()]);
 
