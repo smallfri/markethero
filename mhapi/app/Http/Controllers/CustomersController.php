@@ -33,7 +33,13 @@ class CustomersController extends ApiController
      */
     public function index()
     {
+
         $Customers = Customer::all();
+
+        if(empty($Customers))
+        {
+            return $this->respondWithError('No Customers found.');
+        }
 
         return $this->respond(['customers' => $Customers]);
 
