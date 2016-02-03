@@ -92,7 +92,7 @@ class BounceServerController extends ApiController
 
         if($BounceServer->server_id<1)
         {
-            return $this->respondWithError('There was an error, the bounce server was not created.'):
+            return $this->respondWithError('There was an error, the bounce server was not created.');
         }
 
         return $this->respond(['bounce_server_id' => $BounceServer->server_id]);
@@ -127,7 +127,7 @@ class BounceServerController extends ApiController
 
         if($BounceServer->server_id<1)
         {
-            return $this->respondWithError('There was an error, the bounce server was not updated.'):
+            return $this->respondWithError('There was an error, the bounce server was not updated.');
                }
 
         return $this->respond(['bounce_server_id' => $BounceServer->server_id]);
