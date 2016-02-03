@@ -14,7 +14,7 @@
 
 
 Route::resource('v1/unsubscribe', 'ListSubscribersController@unsubscribe');
-Route::resource('v1/subscriber', 'ListSubscribersController@search');
+//Route::resource('v1/subscriber', 'ListSubscribersController@search');
 Route::post('v1/subscriber/update', 'ListSubscribersController@update');
 
 
@@ -39,7 +39,7 @@ Route::group(['prefix' => 'v1'], function()
     Route::resource('delivery-server', 'DeliveryServerController');
     Route::resource('bounce-servers', 'BounceServersController');
     Route::resource('bounce-server', 'BounceServerController');
-    Route::resource('subscribe', 'ListSubscribersController');
+    Route::resource('subscriber', 'ListSubscribersController');
     Route::resource('campaign', 'CampaignController');
     Route::resource('user', 'UsersController');
     Route::resource('list', 'ListController');

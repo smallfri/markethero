@@ -9,6 +9,8 @@
 namespace App\Http\Controllers;
 
 
+use App\ListsSubscriber;
+
 class ListSubscribersController extends ApiController
 {
 
@@ -64,35 +66,20 @@ class ListSubscribersController extends ApiController
         return $this->respond(['message' => 'unsubscribed']);
     }
 
-    public function show()
+    public function show($email)
     {
-
-        $data = $_GET;
 
         // SEARCH BY EMAIL
-        $response = $this->endpoint->emailSearch($data['list_uid'], $data['email']);
+       $ListSubscriber = ListsSubscriber::where('email','=',$email)->get();
 
-        if($response->body['status']=='error')
+        if(empty($ListSubscriber[0]))
         {
-            $msg = $response->body['error']['general'];
-            return $this->respondWithError($msg);
+            return $this->respondWithError('Subscriber not found.');
         }
-        return $this->respond(['subscriber_uid' => $response->body['data']['subscriber_uid']]);
+
+        return $this->respond(['subscriber_uid' => $ListSubscriber[0]->subscriber_uid]);
     }
 
-    public function update()
-    {
 
-        $data = json_decode(file_get_contents('php://input'), true);
-
-        $response = $this->endpoint->createUpdate($data['list_uid'], array(
-            'EMAIL' => isset($data['email'])?$data['email']:null,
-            'FNAME' => isset($data['firstname'])?$data['firstname']:null,
-            'LNAME' => isset($data['lastname'])?$data['lastname']:null,
-        ));
-
-        return $this->respond(['message' => 'subscriber updated.']);
-
-    }
 
 }
