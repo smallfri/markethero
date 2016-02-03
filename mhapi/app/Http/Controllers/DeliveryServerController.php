@@ -31,6 +31,11 @@ class DeliveryServerController extends ApiController
 
         $SMTPServer = SMTPServer::all();
 
+        if(empty($SMTPServer))
+        {
+            return $this->respondWithError('SMTP Server not found');
+        }
+
         return $this->respond(['delivery_servers' => $SMTPServer->toArray()]);
 
     }
@@ -81,6 +86,11 @@ class DeliveryServerController extends ApiController
 
         $SMTPServer = SMTPServer::find($id);
 
+        if(empty($SMTPServer))
+        {
+            return $this->respondWithError('No SMTP Servers not found');
+        }
+
         return $this->respond(['delivery_server' => $SMTPServer->toArray()]);
 
     }
@@ -121,6 +131,7 @@ class DeliveryServerController extends ApiController
 
     public function destroy($id)
     {
+
         $SMTPServer = SMTPServer::find($id);
 
         $SMTPServer->forceDelete();
