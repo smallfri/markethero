@@ -71,10 +71,15 @@ class BounceServerCustomerController extends ApiController
      */
     public function show($id)
     {
-        $BounceServer = BounceServer::where('customer_id','=',$id)->get();
+
+        $BounceServer = BounceServer::where('customer_id', '=', $id)->get();
+
+        if(empty($BounceServer))
+        {
+            return $this->respondWithError('Bounce Server not found.');
+        }
 
         return $this->respond(['bounce_server' => $BounceServer]);
     }
-
 
 }
