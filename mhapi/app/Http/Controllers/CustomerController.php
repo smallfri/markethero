@@ -33,6 +33,7 @@ class CustomerController extends ApiController
      */
     public function store()
     {
+
         $data = json_decode(file_get_contents('php://input'), true);
 
         $endpoint = new \EmailOneApi_Endpoint_Customers();
@@ -54,7 +55,13 @@ class CustomerController extends ApiController
      */
     public function show($email)
     {
-        $Customer = Customer::where('email','=',$email)->get();
+
+        $Customer = Customer::where('email', '=', $email)->get();
+
+        if(empty($Customer[0]))
+        {
+            return $this->respondWithError('Customer not found');
+        }
 
         return $this->respond(['customer' => $Customer]);
 
