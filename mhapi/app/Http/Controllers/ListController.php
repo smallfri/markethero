@@ -192,13 +192,19 @@ class ListController extends ApiController
 
     public function show($email)
     {
-        $Customer = Customer::where('email','=',$email)->get();
+
+        $Customer = Customer::where('email', '=', $email)->get();
+
+        if(empty($Customer[0]))
+        {
+            return $this->respondWithError('Customer not found');
+        }
 
         $customer_id = $Customer[0]->customer_id;
 
-        $Lists = Lists::where('customer_id','=',$customer_id)->get();
+        $Lists = Lists::where('customer_id', '=', $customer_id)->get();
 
-        return $this->respond(['lists'=>$Lists]);
+        return $this->respond(['lists' => $Lists]);
 
     }
 
