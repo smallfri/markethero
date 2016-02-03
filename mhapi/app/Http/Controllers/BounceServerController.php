@@ -38,6 +38,11 @@ class BounceServerController extends ApiController
 
         $BounceServer = BounceServer::find($id);
 
+        if(empty($BounceServer))
+        {
+            $this->respondWithError('Bounce Server not found.');
+        }
+
         return $this->respond(['bounce_server' => $BounceServer->toArray()]);
 
     }
@@ -50,6 +55,11 @@ class BounceServerController extends ApiController
 
         $BounceServer = BounceServer::all();
 
+        if(empty($BounceServer))
+        {
+            $this->respondWithError('No Bounce Servers not found.');
+        }
+
         return $this->respond(['bounce_servers' => $BounceServer->toArray()]);
 
     }
@@ -59,6 +69,7 @@ class BounceServerController extends ApiController
      */
     public function store()
     {
+
         $data = json_decode(file_get_contents('php://input'), true);
 
         $PasswordsController = new PasswordsController();
@@ -78,6 +89,11 @@ class BounceServerController extends ApiController
         $BounceServer->search_charset = $data['search_charset'];
         $BounceServer->delete_all_messages = $data['delete_all_messages'];
         $BounceServer->save();
+
+        if($BounceServer->server_id<1)
+        {
+            return $this->respondWithError('There was an error, the bounce server was not created.'):
+        }
 
         return $this->respond(['bounce_server_id' => $BounceServer->server_id]);
     }
@@ -108,6 +124,11 @@ class BounceServerController extends ApiController
         $BounceServer->search_charset = $data['search_charset'];
         $BounceServer->delete_all_messages = $data['delete_all_messages'];
         $BounceServer->save();
+
+        if($BounceServer->server_id<1)
+        {
+            return $this->respondWithError('There was an error, the bounce server was not updated.'):
+               }
 
         return $this->respond(['bounce_server_id' => $BounceServer->server_id]);
     }
