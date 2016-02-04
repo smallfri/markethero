@@ -42,8 +42,6 @@ class CustomerController extends ApiController
             'confirm_email',
             'confirm_password',
             'email',
-            'password',
-            'email',
             'fake_password',
             'first_name',
             'group_id',
@@ -55,7 +53,8 @@ class CustomerController extends ApiController
 
         foreach($expected_input AS $input)
         {
-            if(!isset($data[$input]))
+//            echo $input; exit;
+            if(!isset($data['customer'][$input]))
             {
                 $missing_fields[$input] = 'Input field not found.';
             }
