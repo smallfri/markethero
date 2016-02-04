@@ -26,7 +26,39 @@ class SegmentController extends ApiController
     public function store()
     {
 
+
         $data = json_decode(file_get_contents('php://input'), true);
+
+        if(empty($data))
+        {
+            return $this->respondWithError('No data found, please check your POST data and try again');
+        }
+
+        $expected_input = [
+            'list_id',
+            'name',
+            'username',
+            'operator_match',
+            'operator_id',
+            'field_id',
+            'value'
+        ];
+
+        $missing_fields = array();
+
+        foreach($expected_input AS $input)
+        {
+            if(!isset($data[$input]))
+            {
+                $missing_fields[$input] = 'Input field not found.';
+            }
+
+        }
+
+        if(!empty($missing_fields))
+        {
+            return $this->respondWithError($missing_fields);
+        }
 
         $Segment = new Segment();
 
@@ -52,6 +84,10 @@ class SegmentController extends ApiController
 
         $SegmentCondition->save();
 
+        if($SegmentCondition->condition_id<1 OR $Segment->segment_id<1)
+        {
+            return $this->respondWithError('There was an error, the segment was not created.');
+        }
 
         $segment = Segment::find($Segment->segment_id);
 

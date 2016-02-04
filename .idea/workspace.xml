@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c9b7ec24-babb-4088-b4f3-f3a6cadded3c" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/ListSubscribersController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/ListSubscribersController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/SegmentController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/SegmentController.php" />
     </list>
     <ignored path="MarketHero.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -36,11 +36,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ListSubscribersController.php" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/ListSubscribersController.php">
+      <file leaf-file-name="SegmentController.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/SegmentController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.57289296">
-              <caret line="100" column="0" selection-start-line="100" selection-start-column="0" selection-end-line="100" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.5637813">
+              <caret line="86" column="68" selection-start-line="86" selection-start-column="68" selection-end-line="86" selection-end-column="68" />
               <folding />
             </state>
           </provider>
@@ -49,8 +49,8 @@
       <file leaf-file-name="BounceServerController.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServerController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-30.333334">
-              <caret line="109" column="9" selection-start-line="79" selection-start-column="7" selection-end-line="109" selection-end-column="9" />
+            <state vertical-scroll-proportion="-16.583334">
+              <caret line="132" column="9" selection-start-line="128" selection-start-column="0" selection-end-line="132" selection-end-column="9" />
               <folding />
             </state>
           </provider>
@@ -100,7 +100,6 @@
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/SegmentConditionController.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Field.php" />
         <option value="$PROJECT_DIR$/mhapi/app/FieldRepository.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/SegmentController.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/routes.php" />
         <option value="$PROJECT_DIR$/mhapi/app/ListsSubscriber.php" />
         <option value="$PROJECT_DIR$/mhapi/app/ListsSubscriberRepository.php" />
@@ -115,6 +114,7 @@
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/FieldsController.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/ListController.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/ListSubscribersController.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/SegmentController.php" />
       </list>
     </option>
   </component>
@@ -744,16 +744,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/SegmentController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3785489">
-          <caret line="41" column="0" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
-          <folding>
-            <element signature="e#120#136#0#PHP" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServerCustomerController.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.46127564">
@@ -860,18 +850,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServerController.php">
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/ListSubscribersController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-30.333334">
-          <caret line="109" column="9" selection-start-line="79" selection-start-column="7" selection-end-line="109" selection-end-column="9" />
+        <state vertical-scroll-proportion="-15.958333">
+          <caret line="100" column="0" selection-start-line="100" selection-start-column="0" selection-end-line="100" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/ListSubscribersController.php">
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServerController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.57289296">
-          <caret line="100" column="0" selection-start-line="100" selection-start-column="0" selection-end-line="100" selection-end-column="0" />
+        <state vertical-scroll-proportion="-16.583334">
+          <caret line="132" column="9" selection-start-line="128" selection-start-column="0" selection-end-line="132" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/SegmentController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5637813">
+          <caret line="86" column="68" selection-start-line="86" selection-start-column="68" selection-end-line="86" selection-end-column="68" />
           <folding />
         </state>
       </provider>
