@@ -35,55 +35,52 @@ class ListController extends ApiController
 
         $data = json_decode(file_get_contents('php://input'), true);
 
-        $response = $this->endpoint->create(array(
-            // required
-            'general' => array(
-                'name' => $data['name'], // required
-                'description' => $data['description'], // required
-            ),
-            // required
-            'defaults' => array(
-                'from_name' => $data['from_name'], // required
-                'from_email' => $data['from_email'], // required
-                'reply_to' => $data['reply_to'], // required
-                'subject' => $data['subject'],
-            ),
-            // optional
-            'notifications' => array(
-                // notification when new subscriber added
-                'subscribe' => $data['subscribe'], // yes|no
-                // notification when subscriber unsubscribes
-                'unsubscribe' => $data['unsubscribe'], // yes|no
-                // where to send the notifications.
-                'subscribe_to' => $data['subscribe_to'],
-                'unsubscribe_to' => $data['unsubscribe_to'],
-            ),
-            // optional, if not set customer company data will be used
-            'company' => array(
-                'name' => isset($data['company_name'])?$data['company_name']:'',
-                // required
-                'country' => isset($data['country'])?$data['country']:'',
-                // required
-                'zone' => isset($data['state'])?$data['state']:'',
-                // required
-                'address_1' => isset($data['address_1'])?$data['address_1']:'',
-                // required
-                'address_2' => isset($data['address_2'])?$data['address_2']:'',
-                'zone_name' => isset($data['zone_name'])?$data['zone_name']:'',
-                // when country doesn't have required zone.
-                'city' => isset($data['city'])?$data['city']:'',
-                'zip_code' => isset($data['zip_code'])?$data['zip_code']:'',
-            ),
-        ));
+        $Lists = new Lists();
+        $Lists->name = $data['name'];
+        $Lists->list_uid = uniqid();
+        $Lists->customer_id = $data['customer_id'];
+        $Lists->description = $data['description'];
+        $Lists->save();
 
-        if($response->body['status']=='error')
-        {
-            $msg = $response->body['error']['general'];
-            return $this->respondWithError($msg);
-        }
-        $List = Lists::where('list_uid', '=', $response->body['list_uid'])->get();
+        $ListsDefaults = new ListsDefaults();
 
-        return $this->respond(['list_uid' => $response->body['list_uid'], 'list_id' => $List[0]->list_id]);
+        $ListsDefaults->from_name = $data['from_name']; // required
+        $ListsDefaults->from_email = $data['from_email']; // required
+        $ListsDefaults->reply_to = $data['reply_to']; // required
+        $ListsDefaults->subject = $data['subject'];
+        $ListsDefaults->list_id = $Lists->list_id;
+        $ListsDefaults->save();
+
+        $ListsCustomerNotifications = new ListsCustomerNotification();
+
+        $ListsCustomerNotifications->subscribe = $data['subscribe']; // yes|no
+        $ListsCustomerNotifications->unsubscribe = $data['unsubscribe']; // yes|no
+        $ListsCustomerNotifications->subscribe_to = $data['subscribe_to'];
+        $ListsCustomerNotifications->unsubscribe_to = $data['unsubscribe_to'];
+        $ListsCustomerNotifications->list_id = $Lists->list_id;
+        $ListsCustomerNotifications->save();
+
+        $ListsCompany = new ListsCompany();
+
+        $Country_id = Country::where('code', '=', $data['country'])->get();
+
+        $Zone = Zone::where('country_id', '=', $Country_id[0]->country_id)->get();
+
+        $ListsCompany->name = isset($data['company_name'])?$data['company_name']:''; // required
+        $ListsCompany->country_id = isset($Country_id[0]->country_id)?$Country_id[0]->country_id:''; // required
+        $ListsCompany->address_1 = isset($data['address_1'])?$data['address_1']:''; // required
+        $ListsCompany->address_2 = isset($data['address_2'])?$data['address_2']:'';
+        $ListsCompany->zone_name
+            = isset($Zone[0]->zone_name)?$Zone[0]->zone_name:''; // when country doesn't have required zone.
+        $ListsCompany->city = isset($data['city'])?$data['city']:'';
+        $ListsCompany->zip_code = isset($data['zip_code'])?$data['zip_code']:'';
+        $ListsCompany->list_id = $Lists->list_id;
+        $ListsCompany->save();
+
+
+        $List = Lists::where('list_id', '=', $Lists->list_id)->get();
+
+        return $this->respond(['list_uid' => $List[0]->list_uid, 'list_id' => $Lists->list_id]);
     }
 
     public function index($customer_id, $page, $perPage)

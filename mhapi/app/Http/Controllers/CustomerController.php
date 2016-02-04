@@ -38,6 +38,35 @@ class CustomerController extends ApiController
 
         $endpoint = new \EmailOneApi_Endpoint_Customers();
 
+        $expected_input = [
+            'confirm_email',
+            'confirm_password',
+            'email',
+            'password',
+            'email',
+            'fake_password',
+            'first_name',
+            'group_id',
+            'last_name',
+            'timezone',
+        ];
+
+        $missing_fields = array();
+
+        foreach($expected_input AS $input)
+        {
+            if(!isset($data[$input]))
+            {
+                $missing_fields[$input] = 'Input field not found.';
+            }
+
+        }
+
+        if(!empty($missing_fields))
+        {
+            return $this->respondWithError($missing_fields);
+        }
+
         $response = $endpoint->create($data);
 
         if($response->body['status']=='error')

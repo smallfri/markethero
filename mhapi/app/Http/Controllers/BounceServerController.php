@@ -72,6 +72,43 @@ class BounceServerController extends ApiController
 
         $data = json_decode(file_get_contents('php://input'), true);
 
+        if(empty($data))
+        {
+            return $this->respondWithError('No data found, please check your POST data and try again');
+        }
+
+        $expected_input = [
+            'customer_id',
+            'hostname',
+            'username',
+            'password',
+            'email',
+            'service',
+            'port',
+            'protocol',
+            'validate_ssl',
+            'locked',
+            'disable_authenticator',
+            'search_charset',
+            'delete_all_messages'
+        ];
+
+        $missing_fields = array();
+
+        foreach($expected_input AS $input)
+        {
+            if(!isset($data[$input]))
+            {
+                $missing_fields[$input] = 'Input field not found.';
+            }
+
+        }
+
+        if(!empty($missing_fields))
+        {
+            return $this->respondWithError($missing_fields);
+        }
+
         $PasswordsController = new PasswordsController();
 
         $BounceServer = new BounceServer();
@@ -107,6 +144,38 @@ class BounceServerController extends ApiController
 
         $data = json_decode(file_get_contents('php://input'), true);
 
+        $expected_input = [
+            'customer_id',
+            'hostname',
+            'username',
+            'password',
+            'email',
+            'service',
+            'port',
+            'protocol',
+            'validate_ssl',
+            'locked',
+            'disable_authenticator',
+            'search_charset',
+            'delete_all_messages'
+        ];
+
+        $missing_fields = array();
+
+        foreach($expected_input AS $input)
+        {
+            if(!isset($data[$input]))
+            {
+                $missing_fields[$input] = 'Input field not found.';
+            }
+
+        }
+
+        if(!empty($missing_fields))
+        {
+            return $this->respondWithError($missing_fields);
+        }
+
         $PasswordsController = new PasswordsController();
 
         $BounceServer = BounceServer::find($id);
@@ -140,9 +209,14 @@ class BounceServerController extends ApiController
     public function destroy($id)
     {
 
-        $SMTPServer = BounceServer::find($id);
+        $BounceServer = BounceServer::find($id);
 
-        $SMTPServer->forceDelete();
+        if(empty($BounceServer))
+        {
+            return $this->respondWithError('Bounce server id not found');
+        }
+
+        $BounceServer->forceDelete();
 
         return $this->respond(['bounce_server_id' => $id]);
 

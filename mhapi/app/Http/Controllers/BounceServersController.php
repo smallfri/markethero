@@ -56,9 +56,9 @@ class BounceServersController extends ApiController
         $BounceServer = BounceServer::all();
 
         if(empty($BounceServer))
-                {
-                    return $this->respondWithError('No Bounce Servers not found');
-                }
+        {
+            return $this->respondWithError('No Bounce Servers not found');
+        }
 
         return $this->respond(['bounce_servers' => $BounceServer->toArray()]);
 
@@ -69,9 +69,42 @@ class BounceServersController extends ApiController
      */
     public function store()
     {
+
         $data = json_decode(file_get_contents('php://input'), true);
 
         $PasswordsController = new PasswordsController();
+
+        $expected_input = [
+            'customer_id',
+            'hostname',
+            'username',
+            'password',
+            'email',
+            'service',
+            'port',
+            'protocol',
+            'validate_ssl',
+            'locked',
+            'disable_authenticator',
+            'search_charset',
+            'delete_all_messages'
+        ];
+
+        $missing_fields = array();
+
+        foreach($expected_input AS $input)
+        {
+            if(!isset($data[$input]))
+            {
+                $missing_fields[$input] = 'Input field not found.';
+            }
+
+        }
+
+        if(!empty($missing_fields))
+        {
+            return $this->respondWithError($missing_fields);
+        }
 
         $BounceServer = new BounceServer();
         $BounceServer->customer_id = $data['customer_id'];
@@ -89,6 +122,11 @@ class BounceServersController extends ApiController
         $BounceServer->delete_all_messages = $data['delete_all_messages'];
         $BounceServer->save();
 
+        if($BounceServer->server_id<1)
+        {
+            return $this->respondWithError('There was an error, the bounce server was not created.');
+        }
+
         return $this->respond(['bounce_server_id' => $BounceServer->server_id]);
     }
 
@@ -102,6 +140,33 @@ class BounceServersController extends ApiController
         $data = json_decode(file_get_contents('php://input'), true);
 
         $PasswordsController = new PasswordsController();
+
+        $expected_input = [
+            'customer_id',
+            'hostname',
+            'username',
+            'password',
+            'email',
+            'service',
+            'port',
+            'protocol',
+            'validate_ssl',
+            'locked',
+            'disable_authenticator',
+            'search_charset',
+            'delete_all_messages'
+        ];
+
+        $missing_fields = array();
+
+        foreach($expected_input AS $input)
+        {
+            if(!isset($data[$input]))
+            {
+                $missing_fields[$input] = 'Input field not found.';
+            }
+
+        }
 
         $BounceServer = BounceServer::find($id);
         $BounceServer->customer_id = $data['customer_id'];
@@ -118,6 +183,11 @@ class BounceServersController extends ApiController
         $BounceServer->search_charset = $data['search_charset'];
         $BounceServer->delete_all_messages = $data['delete_all_messages'];
         $BounceServer->save();
+
+        if($BounceServer->server_id<1)
+        {
+            return $this->respondWithError('There was an error, the bounce server was not updated.');
+        }
 
         return $this->respond(['bounce_server_id' => $BounceServer->server_id]);
     }

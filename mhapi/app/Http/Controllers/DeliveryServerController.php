@@ -48,6 +48,49 @@ class DeliveryServerController extends ApiController
 
         $data = json_decode(file_get_contents('php://input'), true);
 
+        $expected_input = [
+            'customer_id',
+            'bounce_server_id',
+            'tracking_domain_id',
+            'server_type',
+            'name',
+            'hostname',
+            'username',
+            'password',
+            'port',
+            'protocol',
+            'from_email',
+            'from_name',
+            'reply_to_email',
+            'probability',
+            'hourly_quota',
+            'meta_data',
+            'confirmation_key',
+            'locked',
+            'use_for',
+            'use_queue',
+            'signing_enabled',
+            'force_from',
+            'force_reply_to',
+            'status'
+        ];
+
+        $missing_fields = array();
+
+        foreach($expected_input AS $input)
+        {
+            if(!isset($data[$input]))
+            {
+                $missing_fields[$input] = 'Input field not found.';
+            }
+
+        }
+
+        if(!empty($missing_fields))
+        {
+            return $this->respondWithError($missing_fields);
+        }
+
         $PasswordsController = new PasswordsController();
 
         $Server = new SMTPServer();
@@ -99,6 +142,49 @@ class DeliveryServerController extends ApiController
     {
 
         $data = json_decode(file_get_contents('php://input'), true);
+
+        $expected_input = [
+            'customer_id',
+            'bounce_server_id',
+            'tracking_domain_id',
+            'server_type',
+            'name',
+            'hostname',
+            'username',
+            'password',
+            'port',
+            'protocol',
+            'from_email',
+            'from_name',
+            'reply_to_email',
+            'probability',
+            'hourly_quota',
+            'meta_data',
+            'confirmation_key',
+            'locked',
+            'use_for',
+            'use_queue',
+            'signing_enabled',
+            'force_from',
+            'force_reply_to',
+            'status'
+        ];
+
+        $missing_fields = array();
+
+        foreach($expected_input AS $input)
+        {
+            if(!isset($data[$input]))
+            {
+                $missing_fields[$input] = 'Input field not found.';
+            }
+
+        }
+
+        if(!empty($missing_fields))
+        {
+            return $this->respondWithError($missing_fields);
+        }
 
         $Server = SMTPServer::find($id);
         $Server->customer_id = $data['customer_id'];

@@ -28,6 +28,45 @@ class CampaignController extends ApiController
 
         $data = json_decode(file_get_contents('php://input'), true);
 
+        $expected_input = [
+            'type',
+            'autoresponder_event',
+            'autoresponder_time_unit',
+            'autoresponder_time_value',
+            'autoresponder_open_campaign_id',
+            'name',
+            'from_name',
+            'from_email',
+            'subject',
+            'reply_to',
+            'send_at',
+            'list_uid',
+            'segment_uid',
+            'url_tracking',
+            'json_feed',
+            'xml_feed',
+            'plain_text_email',
+            'email_stats_address',
+            'template_url',
+            'inline_css'
+        ];
+
+        $missing_fields = array();
+
+        foreach($expected_input AS $input)
+        {
+            if(!isset($data[$input]))
+            {
+                $missing_fields[$input] = 'Input field not found.';
+            }
+
+        }
+
+        if(!empty($missing_fields))
+        {
+            return $this->respondWithError($missing_fields);
+        }
+
         $autoresponder = null;
 
         if($data['type']=='autoresponder')
