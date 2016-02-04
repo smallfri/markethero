@@ -35,7 +35,7 @@ class CampaignController extends ApiController
             'autoresponder_time_value',
             'autoresponder_open_campaign_id',
             'name',
-            'from_name',
+            'fromname',
             'from_email',
             'subject',
             'reply_to',
