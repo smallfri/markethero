@@ -35,6 +35,36 @@ class FieldsController extends ApiController
     public function store()
     {
 
+        $expected_input = [
+            'type_id',
+            'list_id',
+            'label',
+            'tag',
+            'default_value',
+            'help_text',
+            'required',
+            'visibility',
+            'validate_ssl',
+            'sort_order'
+        ];
+
+        $missing_fields = array();
+
+        foreach($expected_input AS $input)
+        {
+            if(!isset($data[$input]))
+            {
+                $missing_fields[$input] = 'Input field not found.';
+            }
+
+        }
+
+        if(!empty($missing_fields))
+        {
+            return $this->respondWithError($missing_fields);
+        }
+
+
         $data = json_decode(file_get_contents('php://input'), true);
 
         $Fields = new Field();
@@ -43,7 +73,7 @@ class FieldsController extends ApiController
 
         $Fields->list_id = $data['list_id'];
 
-        $Fields->label= $data['label'];
+        $Fields->label = $data['label'];
 
         $Fields->tag = $data['tag'];
 
@@ -58,8 +88,13 @@ class FieldsController extends ApiController
         $Fields->sort_order = $data['sort_order'];;
 
         $Fields->save();
-        
-        return $this->respond(['message'=>'field added.']);
+
+        if($Fields->field_id<1)
+        {
+            return $this->respondWithError('There was an error, the field was not created.');
+        }
+
+        return $this->respond(['message' => 'field added.']);
     }
 
     public function index($customer_id, $page, $perPage)
@@ -75,13 +110,11 @@ class FieldsController extends ApiController
         $data = json_decode(file_get_contents('php://input'), true);
 
 
-
         return $this->respond(['success' => 'list updated.']);
     }
 
     public function destroy($list_uid)
     {
-
 
 
         return $this->respondWithError('list '.$list_uid.' not found.');
@@ -92,7 +125,7 @@ class FieldsController extends ApiController
     {
 
 
-        return $this->respond(['lists'=>$Lists]);
+        return $this->respond(['lists' => $Lists]);
 
     }
 
