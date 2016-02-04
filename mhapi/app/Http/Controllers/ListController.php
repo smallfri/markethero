@@ -82,13 +82,14 @@ class ListController extends ApiController
         $Lists->description = $data['description'];
         $Lists->save();
 
-        $ListsDefaults = new ListsDefaults();
+        $list_id = $Lists->list_id;
 
+        $ListsDefaults = new ListsDefaults();
         $ListsDefaults->from_name = $data['from_name']; // required
         $ListsDefaults->from_email = $data['from_email']; // required
         $ListsDefaults->reply_to = $data['reply_to']; // required
         $ListsDefaults->subject = $data['subject'];
-        $ListsDefaults->list_id = $Lists->list_id;
+        $ListsDefaults->list_id = $list_id;
         $ListsDefaults->save();
 
         $ListsCustomerNotifications = new ListsCustomerNotification();
@@ -97,7 +98,7 @@ class ListController extends ApiController
         $ListsCustomerNotifications->unsubscribe = $data['unsubscribe']; // yes|no
         $ListsCustomerNotifications->subscribe_to = $data['subscribe_to'];
         $ListsCustomerNotifications->unsubscribe_to = $data['unsubscribe_to'];
-        $ListsCustomerNotifications->list_id = $Lists->list_id;
+        $ListsCustomerNotifications->list_id = $list_id;
         $ListsCustomerNotifications->save();
 
         $ListsCompany = new ListsCompany();
@@ -106,18 +107,35 @@ class ListController extends ApiController
 
         $Zone = Zone::where('country_id', '=', $Country_id[0]->country_id)->get();
 
+        $state_name = null;
+        foreach($Zone as $zone)
+        {
+            if($data['zone']==$zone['name'])
+            {
+                $state_name = $zone['name'];
+            }
+        }
+
         $ListsCompany->name = isset($data['company_name'])?$data['company_name']:''; // required
         $ListsCompany->country_id = isset($Country_id[0]->country_id)?$Country_id[0]->country_id:''; // required
         $ListsCompany->address_1 = isset($data['address_1'])?$data['address_1']:''; // required
         $ListsCompany->address_2 = isset($data['address_2'])?$data['address_2']:'';
-        $ListsCompany->zone_name
-            = isset($Zone[0]->zone_name)?$Zone[0]->zone_name:''; // when country doesn't have required zone.
+        $ListsCompany->zone_name = $state_name; // when country doesn't have required zone.
         $ListsCompany->city = isset($data['city'])?$data['city']:'';
+        $ListsCompany->zone_id = $Zone[0]->zone_id;
         $ListsCompany->zip_code = isset($data['zip_code'])?$data['zip_code']:'';
-        $ListsCompany->list_id = $Lists->list_id;
+        $ListsCompany->list_id = $list_id;
+        $ListsCompany->address_format
+            = <<<END
+[COMPANY_NAME]
+[COMPANY_ADDRESS_1] [COMPANY_ADDRESS_2]
+[COMPANY_CITY] [COMPANY_ZONE] [COMPANY_ZIP]
+[COMPANY_COUNTRY]
+END;
+
         $ListsCompany->save();
 
-        if($Lists->list_id<1 OR $ListsDefaults->list_id<1 OR $ListsCustomerNotifications->list_id<1 OR $ListsCompany->list_id<1)
+        if($Lists->list_id<1)
         {
             return $this->respondWithError('There was an error, the list was not created.');
         }
