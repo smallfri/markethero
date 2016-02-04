@@ -9,6 +9,12 @@
 namespace App\Http\Controllers;
 
 
+use App\CampaignModel;
+use App\CampaignOptionsModel;
+use App\CampaignTemplateModel;
+use App\Lists;
+use App\Segment;
+
 class CampaignController extends ApiController
 {
 
@@ -67,65 +73,62 @@ class CampaignController extends ApiController
             return $this->respondWithError($missing_fields);
         }
 
-        $autoresponder = null;
+        $Campaign = new CampaignModel();
 
+        $uid = uniqid();
+
+        $List = Lists::where('list_uid', '=', $data['list_uid'])->get();
+        $list_id = $List[0]->list_id;
+
+        $segment_id = null;
+        if(isset($data['segment_uid']) AND $data['segment_uid']!='')
+        {
+            $Segment = Segment::where('segment_uid', '=', $data['segment_uid'])->get();
+            $segment_id = $Segment[0]->segment_id;
+        }
+
+        $Campaign->name = $data['name']; // required
+        $Campaign->campaign_uid = $uid; // required
+        $Campaign->type = $data['type']; // optional: regular or autoresponder
+        $Campaign->from_name = $data['fromname']; // required
+        $Campaign->from_email = $data['from_email']; // required
+        $Campaign->subject = $data['subject']; // required
+        $Campaign->reply_to = $data['reply_to']; // required
+        $Campaign->send_at = $data['send_at']; // required ; this will use the timezone which customer selected
+        $Campaign->list_id = $list_id; // required
+        $Campaign->segment_id = $segment_id;// optional ; only to narrow down
+        $Campaign->customer_id = $List[0]->customer_id;// optional ; only to narrow down
+        $Campaign->save();
+
+        $CampaignOptions = new CampaignOptionsModel();
+        $CampaignOptions->url_tracking = $data['url_tracking'];
+        $CampaignOptions->json_feed = $data['json_feed'];
+        $CampaignOptions->xml_feed = $data['xml_feed'];
+        $CampaignOptions->plain_text_email = $data['plain_text_email'];
+        $CampaignOptions->email_stats = $data['email_stats_address'];
+        $CampaignOptions->campaign_id = $Campaign->campaign_id;
         if($data['type']=='autoresponder')
         {
-            $autoresponder
-                = <<<END
-            'autoresponder_event'            => {$data['autoresponder_event']}, // AFTER-SUBSCRIBE or AFTER-CAMPAIGN-OPEN
-            'autoresponder_time_unit'        => {$data['autoresponder_time_unit']}, // minute, hour, day, week, month, year
-            'autoresponder_time_value'       => {$data['autoresponder_time_value']}, // 1 hour after event
-            'autoresponder_open_campaign_id' => {$data['autoresponder_open_campaign_id']}, // INT id of campaign, only if event is AFTER-CAMPAIGN-OPEN,
-END;
+            $CampaignOptions->autoresponder_event = $data['autoresponder_event'];
+            $CampaignOptions->autoresponder_time_unit = $data['autoresponder_time_unit'];
+            $CampaignOptions->autoresponder_time_value = $data['autoresponder_time_value'];
+            $CampaignOptions->autoresponder_open_campaign_id = $data['autoresponder_open_campaign_id'];
         }
+        $CampaignOptions->save();
 
+        $CampaignTemplate = new CampaignTemplateModel();
+        $CampaignTemplate->content = $data['template_url'];
+        $CampaignTemplate->inline_css = $data['inline_css'];
+        $CampaignTemplate->plain_text = null;
+        $CampaignTemplate->auto_plain_text = 'yes';
+        $CampaignTemplate->campaign_id = $Campaign->campaign_id;
+        $CampaignTemplate->save();
 
-        // CREATE CAMPAIGN
-        $response = $this->endpoint->create(array(
-            'name' => $data['name'], // required
-            'type' => $data['type'], // optional: regular or autoresponder
-            'from_name' => $data['fromname'], // required
-            'from_email' => $data['from_email'], // required
-            'subject' => $data['subject'], // required
-            'reply_to' => $data['reply_to'], // required
-            'send_at' => $data['send_at'], // required, this will use the timezone which customer selected
-            'list_uid' => $data['list_uid'], // required
-            'segment_uid' => $data['segment_uid'],// optional, only to narrow down
-
-            // optional block, defaults are shown
-            'options' => array(
-                'url_tracking' => $data['url_tracking'],
-                // yes | no
-                'json_feed' => $data['json_feed'],
-                // yes | no
-                'xml_feed' => $data['xml_feed'],
-                // yes | no
-                'plain_text_email' => $data['plain_text_email'],
-                // yes | no
-                'email_stats' => $data['email_stats_address'],
-                // a valid email address where we should send the stats after campaign done
-                $autoresponder
-
-            ),
-
-            // required block, archive or template_uid or content => required.
-            'template' => array(
-                //'archive'         => file_get_contents(dirname(__FILE__) . '/template-example.zip'),
-                //'template_uid'    => 'TEMPLATE-UNIQUE-ID',
-                'content' => htmlspecialchars_decode($data['template_url']),
-                'inline_css' => $data['inline_css'], // yes | no
-                'plain_text' => null, // leave empty to auto generate
-                'auto_plain_text' => 'yes', // yes | no
-            ),
-        ));
-
-        if($response->body['status']=='error')
-        {
-            $msg = $response->body['error'];
-            return $this->respondWithError($msg);
-        }
-        return $this->respond(['campaign_uid' => $response->body['campaign_uid']]);
+        if($Campaign->campaign_id<1)
+                {
+                    return $this->respondWithError('There was an error, the campaign was not created.');
+                }
+        return $this->respond(['campaign_uid' => $uid]);
     }
 
 }
