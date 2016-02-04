@@ -35,6 +35,46 @@ class ListController extends ApiController
 
         $data = json_decode(file_get_contents('php://input'), true);
 
+        if(empty($data))
+        {
+            return $this->respondWithError('No data found, please check your POST data and try again');
+        }
+
+        $expected_input = [
+            'name',
+            'customer_id',
+            'description',
+            'from_name',
+            'from_email',
+            'reply_to',
+            'subject',
+            'subscribe',
+            'unsubscribe',
+            'unsubscribe_to',
+            'country',
+            'company_name',
+            'address_1',
+            'address_2',
+            'city',
+            'zip_code'
+        ];
+
+        $missing_fields = array();
+
+        foreach($expected_input AS $input)
+        {
+            if(!isset($data[$input]))
+            {
+                $missing_fields[$input] = 'Input field not found.';
+            }
+
+        }
+
+        if(!empty($missing_fields))
+        {
+            return $this->respondWithError($missing_fields);
+        }
+
         $Lists = new Lists();
         $Lists->name = $data['name'];
         $Lists->list_uid = uniqid();
@@ -77,6 +117,10 @@ class ListController extends ApiController
         $ListsCompany->list_id = $Lists->list_id;
         $ListsCompany->save();
 
+        if($Lists->list_id<1 OR $ListsDefaults->list_id<1 OR $ListsCustomerNotifications->list_id<1 OR $ListsCompany->list_id<1)
+        {
+            return $this->respondWithError('There was an error, the list was not created.');
+        }
 
         $List = Lists::where('list_id', '=', $Lists->list_id)->get();
 
@@ -90,6 +134,11 @@ class ListController extends ApiController
 
         $Lists = Lists::where('customer_id', '=', $customer_id)->skip($page*$perPage)->take($perPage)->get();
 
+        if(empty($Lists))
+        {
+            return $this->respondWithError('List not found.');
+        }
+
         $previousUrl = $url.'/list/customer/'.$customer_id.'/page/'.$page.'/per_page/'.$perPage;
 
         $page++;
@@ -102,6 +151,45 @@ class ListController extends ApiController
 
     public function save($list_uid)
     {
+
+        if(empty($data))
+        {
+            return $this->respondWithError('No data found, please check your POST data and try again');
+        }
+
+        $expected_input = [
+            'name',
+            'description',
+            'from_name',
+            'from_email',
+            'reply_to',
+            'subject',
+            'subscribe',
+            'unsubscribe',
+            'unsubscribe_to',
+            'country',
+            'company_name',
+            'address_1',
+            'address_2',
+            'city',
+            'zip_code'
+        ];
+
+        $missing_fields = array();
+
+        foreach($expected_input AS $input)
+        {
+            if(!isset($data[$input]))
+            {
+                $missing_fields[$input] = 'Input field not found.';
+            }
+
+        }
+
+        if(!empty($missing_fields))
+        {
+            return $this->respondWithError($missing_fields);
+        }
 
         $data = json_decode(file_get_contents('php://input'), true);
 
@@ -144,6 +232,11 @@ class ListController extends ApiController
         $ListsCompany->city = isset($data['city'])?$data['city']:'';
         $ListsCompany->zip_code = isset($data['zip_code'])?$data['zip_code']:'';
         $ListsCompany->save();
+
+        if($Lists->list_id<1 OR $ListsDefaults->list_id<1 OR $ListsCustomerNotifications->list_id<1 OR $ListsCompany->list_id<1)
+        {
+            return $this->respondWithError('There was an error, the list was not created.');
+        }
 
         return $this->respond(['success' => 'list updated.']);
     }
