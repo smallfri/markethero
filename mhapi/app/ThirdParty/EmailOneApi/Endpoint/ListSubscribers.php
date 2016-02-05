@@ -79,7 +79,7 @@ class EmailOneApi_Endpoint_ListSubscribers extends EmailOneApi_Base
             'url'           => $this->config->getApiUrl(sprintf('lists/%s/subscribers', (string)$listUid)),
             'paramsPost'    => $data,
         ));
-        
+
         return $response = $client->request();
     }
     

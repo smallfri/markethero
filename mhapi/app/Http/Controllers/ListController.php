@@ -170,6 +170,8 @@ END;
     public function save($list_uid)
     {
 
+        $data = json_decode(file_get_contents('php://input'), true);
+
         if(empty($data))
         {
             return $this->respondWithError('No data found, please check your POST data and try again');

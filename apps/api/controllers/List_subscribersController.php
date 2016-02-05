@@ -210,6 +210,7 @@ class List_subscribersController extends Controller
      */
     public function actionCreate($list_uid)
     {
+
         $request = Yii::app()->request;
         
         if (!$request->isPostRequest) {
@@ -240,14 +241,14 @@ class List_subscribersController extends Controller
                 'error'     => Yii::t('api', 'Please provide a valid email address.')
             ), 422);
         }
-        
+
         if (!($list = $this->loadListByUid($list_uid))) {
             return $this->renderJson(array(
                 'status'    => 'error',
                 'error'     => Yii::t('api', 'The subscribers list does not exist4.')
             ), 404);
         }
-        
+
         $customer                = $list->customer;
         $maxSubscribersPerList   = (int)$customer->getGroupOption('lists.max_subscribers_per_list', -1);
         $maxSubscribers          = (int)$customer->getGroupOption('lists.max_subscribers', -1);
@@ -461,7 +462,7 @@ class List_subscribersController extends Controller
         if (empty($subscriber)) {
             return $this->renderJson(array(
                 'status'    => 'error',
-                'error'     => Yii::t('api', 'The subscriber does not exist in this list.')
+                'error'     => Yii::t('api', 'The subscriber does not exist in this list2.')
             ), 409);
         }
 
@@ -724,14 +725,28 @@ class List_subscribersController extends Controller
         ), 200);
     }
     
+//    public function loadListByUid($list_uid)
+//    {
+//        $criteria = new CDbCriteria();
+//        $criteria->compare('list_uid', $list_uid);
+//        $criteria->compare('customer_id', (int)Yii::app()->user->getId());
+//        $criteria->addNotInCondition('status', array(Lists::STATUS_PENDING_DELETE));
+//        return Lists::model()->find($criteria);
+//    }
+
+    /*
+     * Russell's Customization
+     *
+     */
+
     public function loadListByUid($list_uid)
-    {
-        $criteria = new CDbCriteria();
-        $criteria->compare('list_uid', $list_uid);
-        $criteria->compare('customer_id', (int)Yii::app()->user->getId());
-        $criteria->addNotInCondition('status', array(Lists::STATUS_PENDING_DELETE));
-        return Lists::model()->find($criteria);
-    }
+        {
+            $criteria = new CDbCriteria();
+            $criteria->compare('list_uid', $list_uid);
+            $criteria->addNotInCondition('status', array(Lists::STATUS_PENDING_DELETE));
+            return Lists::model()->find($criteria);
+        }
+
     
     /**
      * It will generate the timestamp that will be used to generate the ETAG for GET requests.

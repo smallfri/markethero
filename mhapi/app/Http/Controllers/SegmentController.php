@@ -37,7 +37,6 @@ class SegmentController extends ApiController
         $expected_input = [
             'list_id',
             'name',
-            'username',
             'operator_match',
             'operator_id',
             'field_id',
