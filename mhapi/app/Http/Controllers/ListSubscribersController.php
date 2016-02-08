@@ -13,6 +13,7 @@ use App\ListFieldValueModel;
 use App\Lists;
 use App\SubscriberModel;
 use App\Field;
+use App\ListsSubscriber;
 
 class ListSubscribersController extends ApiController
 {
@@ -27,6 +28,20 @@ class ListSubscribersController extends ApiController
         $this->middleware('auth.basic');
 
     }
+
+    public function index()
+        {
+
+            // SEARCH BY EMAIL
+            $ListSubscriber = ListsSubscriber::all();
+
+            if(empty($ListSubscriber[0]))
+            {
+                return $this->respondWithError('Subscribers not found.');
+            }
+
+            return $this->respond(['subscribers' => $ListSubscriber]);
+        }
 
     public function store()
     {
@@ -67,7 +82,7 @@ class ListSubscribersController extends ApiController
             'LNAME' => isset($data['lastname'])?$data['lastname']:null,
         ));
         $response = $response->body;
-
+        
         if($response['status']=='error')
         {
             $msg = $response['error'];
@@ -160,16 +175,25 @@ class ListSubscribersController extends ApiController
             return $this->respondWithError($missing_fields);
         }
 
-        // UNSUBSCRIBE existing subscriber, no email is sent, unsubscribe is silent
-        $response = $this->endpoint->unsubscribeByEmail($data['list_uid'], $data['email']);
+        $List = Lists::where('list_uid','=',$data['list_uid'])->get();
 
-        if($response->body['status']=='error')
+        $list_id = $List[0]->list_id;
+
+        $subscriber = SubscriberModel::where('email','=',$data['email'])->where('list_id','=',$list_id)->get();
+
+        $Subscriber = SubscriberModel::find($subscriber[0]->subscriber_id);
+
+        $Subscriber->status = 'unsubscribed';
+        $Subscriber->source = 'api';
+        $Subscriber->save();
+
+        if($Subscriber->status == 'unsubscribed')
         {
-            $msg = $response->body['error']['general'];
-            return $this->respondWithError($msg);
-        }
+            return $this->respond(['message' => 'unsubscribed']);
 
-        return $this->respond(['message' => 'unsubscribed']);
+        }
+        return $this->respondWithError('Cannot un-subscribe this subscriber');
+
     }
 
     public function show($email)

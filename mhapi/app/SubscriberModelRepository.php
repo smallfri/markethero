@@ -7,7 +7,7 @@
  */
 namespace App;
 
-class SubscriberRepository
+class SubscriberModelRepository
 {
 
     public function save(Field $field)

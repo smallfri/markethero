@@ -305,6 +305,7 @@ class List_subscribersController extends Controller
         }
 
         $blacklisted = $subscriber->getIsBlacklisted();
+
         if (!empty($blacklisted)) {
             return $this->renderJson(array(
                 'status'    => 'error',

@@ -6,6 +6,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class BounceServer extends Authenticatable
 {
+    public $timestamps = false;
 
     protected $table = 'mw_bounce_server';
     protected $primaryKey = "server_id";

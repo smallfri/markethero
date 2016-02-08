@@ -146,13 +146,21 @@ class Transactional_emailsController extends Controller
         
         $ioFilter   = Yii::app()->ioFilter;
         $attributes = (array)$request->getPost('email', array());
-        
+
         $email = new TransactionalEmail();
+
         $email->attributes  = $attributes;
         $email->body        = !empty($email->body) ? $ioFilter->purify(@base64_decode($email->body)) : null;
         $email->plain_text  = !empty($email->plain_text) ? $ioFilter->purify(@base64_decode($email->plain_text)) : null;
-        $email->customer_id = (int)Yii::app()->user->getId();
-        
+//        $email->customer_id = (int)Yii::app()->user->getId();
+
+        /*
+         * Russell's Customization
+         *
+         */
+        $email->customer_id = $attributes['customer_id'];
+
+
         if (!$email->save()) {
             return $this->renderJson(array(
                 'status'    => 'error',

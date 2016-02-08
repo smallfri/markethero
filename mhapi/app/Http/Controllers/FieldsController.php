@@ -35,6 +35,8 @@ class FieldsController extends ApiController
     public function store()
     {
 
+        $data = json_decode(file_get_contents('php://input'), true);
+
         $expected_input = [
             'type_id',
             'list_id',
@@ -44,7 +46,6 @@ class FieldsController extends ApiController
             'help_text',
             'required',
             'visibility',
-            'validate_ssl',
             'sort_order'
         ];
 

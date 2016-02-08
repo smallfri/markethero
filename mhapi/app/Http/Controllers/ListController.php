@@ -167,7 +167,7 @@ END;
 
     }
 
-    public function save($list_uid)
+    public function update($list_uid)
     {
 
         $data = json_decode(file_get_contents('php://input'), true);
@@ -185,6 +185,7 @@ END;
             'reply_to',
             'subject',
             'subscribe',
+            'subscribe_to',
             'unsubscribe',
             'unsubscribe_to',
             'country',
@@ -210,8 +211,6 @@ END;
         {
             return $this->respondWithError($missing_fields);
         }
-
-        $data = json_decode(file_get_contents('php://input'), true);
 
         $Lists = Lists::where('list_uid', '=', $list_uid)->get();
 
@@ -253,7 +252,7 @@ END;
         $ListsCompany->zip_code = isset($data['zip_code'])?$data['zip_code']:'';
         $ListsCompany->save();
 
-        if($Lists->list_id<1 OR $ListsDefaults->list_id<1 OR $ListsCustomerNotifications->list_id<1 OR $ListsCompany->list_id<1)
+        if($Lists->list_id<1)
         {
             return $this->respondWithError('There was an error, the list was not created.');
         }
