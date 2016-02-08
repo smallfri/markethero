@@ -40,7 +40,8 @@ class TransactionalEmailsController extends ApiController
             'subject',
             'body',
             'plain_text',
-            'send_at'
+            'send_at',
+            'customer_id'
         ];
 
         $missing_fields = array();

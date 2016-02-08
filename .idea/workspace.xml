@@ -2,18 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c9b7ec24-babb-4088-b4f3-f3a6cadded3c" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/TransactionalEmailsController.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/SubscriberRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/SubscriberModelRepository.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/api/controllers/List_subscribersController.php" afterPath="$PROJECT_DIR$/apps/api/controllers/List_subscribersController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/api/controllers/Transactional_emailsController.php" afterPath="$PROJECT_DIR$/apps/api/controllers/Transactional_emailsController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/BounceServer.php" afterPath="$PROJECT_DIR$/mhapi/app/BounceServer.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/FieldsController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/FieldsController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/ListController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/ListController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/ListSubscribersController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/ListSubscribersController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/PasswordsController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/PasswordsController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/routes.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/routes.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/SMTPServer.php" afterPath="$PROJECT_DIR$/mhapi/app/SMTPServer.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/TransactionalEmailsController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/TransactionalEmailsController.php" />
     </list>
     <ignored path="MarketHero.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -47,14 +37,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ListSubscribersController.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ListSubscribersController.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/ListSubscribersController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.3815789">
-              <caret line="189" column="0" selection-start-line="189" selection-start-column="0" selection-end-line="189" selection-end-column="0" />
+            <state vertical-scroll-proportion="-23.666666">
+              <caret line="153" column="48" selection-start-line="153" selection-start-column="48" selection-end-line="153" selection-end-column="48" />
               <folding>
                 <element signature="e#121#149#0#PHP" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TransactionalEmailsController.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/TransactionalEmailsController.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.5719844">
+              <caret line="54" column="0" selection-start-line="54" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -157,10 +157,10 @@
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/TransactionalEmails.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/routes.php" />
         <option value="$PROJECT_DIR$/apps/api/controllers/Transactional_emailsController.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/TransactionalEmailsController.php" />
         <option value="$PROJECT_DIR$/apps/api/controllers/List_subscribersController.php" />
         <option value="$PROJECT_DIR$/mhapi/app/SubscriberModelRepository.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/ListSubscribersController.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/TransactionalEmailsController.php" />
       </list>
     </option>
   </component>
@@ -176,8 +176,8 @@
   <component name="ProjectFrameBounds">
     <option name="x" value="-2560" />
     <option name="y" value="23" />
-    <option name="width" value="1440" />
-    <option name="height" value="873" />
+    <option name="width" value="2560" />
+    <option name="height" value="1417" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -561,18 +561,18 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-2560" y="23" width="1440" height="873" extended-state="0" />
+    <frame x="-2560" y="23" width="2560" height="1417" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32014388" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17729084" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32838038" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.45090908" sideWeight="0.50213677" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15589081" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.55" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32738096" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3283582" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24973261" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.37101185" sideWeight="0.49786323" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.37136465" sideWeight="0.49786323" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -924,6 +924,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-27.916666">
           <caret line="70" column="20" selection-start-line="70" selection-start-column="20" selection-end-line="70" selection-end-column="20" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -938,13 +939,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-20.625">
           <caret line="155" column="0" selection-start-line="155" selection-start-column="0" selection-end-line="155" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/TransactionalEmailsController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6381323">
-          <caret line="75" column="8" selection-start-line="75" selection-start-column="8" selection-end-line="75" selection-end-column="8" />
         </state>
       </provider>
     </entry>
@@ -1003,11 +997,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/ListSubscribersController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.3815789">
-          <caret line="189" column="0" selection-start-line="189" selection-start-column="0" selection-end-line="189" selection-end-column="0" />
+        <state vertical-scroll-proportion="-23.666666">
+          <caret line="153" column="48" selection-start-line="153" selection-start-column="48" selection-end-line="153" selection-end-column="48" />
           <folding>
             <element signature="e#121#149#0#PHP" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/TransactionalEmailsController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5719844">
+          <caret line="54" column="0" selection-start-line="54" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
