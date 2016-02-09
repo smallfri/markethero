@@ -3,7 +3,7 @@ $I = new AcceptanceTester($scenario);
 
 $I->wantTo('Create a list.');
 
-$I->amHttpAuthenticated('russell@smallfri.com','jack1999');
+$I->amHttpAuthenticated('russell@smallfri.com','KjV9g2JcyFGAHng');
 
 $data =  <<<END
 {
@@ -28,7 +28,7 @@ $data =  <<<END
 }
 END;
 
-$I->sendPUT('/v1/list/ed3493rvea4e6',$data);
+$I->sendPUT('/v1/list/vx819px7esd38',$data);
 
 $I->seeResponseIsJson();
 

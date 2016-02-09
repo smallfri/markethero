@@ -3,7 +3,7 @@ $I = new AcceptanceTester($scenario);
 
 $I->wantTo('Create a subscriber.');
 
-$I->amHttpAuthenticated('russell@smallfri.com','jack1999');
+$I->amHttpAuthenticated('russell@smallfri.com','KjV9g2JcyFGAHng');
 
 $email = 'me@'.uniqid().'domain.com';
 
@@ -12,7 +12,7 @@ $data =  <<<END
   "email": "$email",
   "firstname": "russell",
   "lastname": "hudson update",
-  "list_uid": "dv663ggbyx713"
+  "list_uid": "vx819px7esd38"
 }
 END;
 

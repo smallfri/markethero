@@ -3,7 +3,7 @@ $I = new AcceptanceTester($scenario);
 
 $I->wantTo('Create a campaign');
 
-$I->amHttpAuthenticated('russell@smallfri.com','jack1999');
+$I->amHttpAuthenticated('russell@smallfri.com','KjV9g2JcyFGAHng');
 $data =  <<<END
 {
   "autoresponder_event": "AFTER-SUBSCRIBE",
@@ -15,7 +15,7 @@ $data =  <<<END
   "fromname": "Russell",
   "inline_css": "yes",
   "json_feed": "yes",
-  "list_uid": "ed3493rvea4e6",
+  "list_uid": "vx819px7esd38",
   "name": "My New Campaign",
   "plain_text_email": "yes",
   "reply_to": "noreply@smallfri.com",

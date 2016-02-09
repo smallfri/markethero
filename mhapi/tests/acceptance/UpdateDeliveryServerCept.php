@@ -3,7 +3,7 @@ $I = new AcceptanceTester($scenario);
 
 $I->wantTo('Update a delivery server.');
 
-$I->amHttpAuthenticated('russell@smallfri.com','jack1999');
+$I->amHttpAuthenticated('russell@smallfri.com','KjV9g2JcyFGAHng');
 
 $data =  <<<END
 {
@@ -19,7 +19,7 @@ $data =  <<<END
   "locked": "no",
   "meta_data": "boo",
   "name": "test server",
-  "password": "jack1999",
+  "password": "KjV9g2JcyFGAHng",
   "port": 22,
   "probability": 100,
   "protocol": "ssl",
@@ -27,7 +27,7 @@ $data =  <<<END
   "server_type": "smtp",
   "signing_enabled": "yes",
   "status": "active",
-  "tracking_domain_id": 8,
+  "tracking_domain_id": 1,
   "use_for": "all",
   "use_queue": "no",
   "username": "russell"

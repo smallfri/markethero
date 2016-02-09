@@ -29,7 +29,7 @@ class SpamController extends ApiController
 
         if(empty($Spam[0]))
         {
-            return $this->respondWithError('No Spam not found.');
+            return $this->respond('No Spam not found.');
         }
 
         return $this->respond(['spam' => $Spam->toArray()]);
@@ -43,7 +43,7 @@ class SpamController extends ApiController
 
         if(empty($Spam[0]))
         {
-           return $this->respondWithError('No Spam found.');
+           return $this->respond('No Spam found.');
         }
 
         return $this->respond(['spam' => $Spam->toArray()]);

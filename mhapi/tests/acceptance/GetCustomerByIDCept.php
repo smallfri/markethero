@@ -3,7 +3,7 @@ $I = new AcceptanceTester($scenario);
 
 $I->wantTo('Get customer by id');
 
-$I->amHttpAuthenticated('russell@smallfri.com','jack1999');
+$I->amHttpAuthenticated('russell@smallfri.com','KjV9g2JcyFGAHng');
 
 $I->sendGET('/v1/customer/email@domain.com');
 

@@ -82,8 +82,8 @@ class ListSubscribersController extends ApiController
             'LNAME' => isset($data['lastname'])?$data['lastname']:null,
         ));
         $response = $response->body;
-        
-        if($response['status']=='error')
+
+        if($response['status']=='error' AND strpos($response['error'], 'Traversable') < 1)
         {
             $msg = $response['error'];
             return $this->respondWithError($msg);

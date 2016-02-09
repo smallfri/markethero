@@ -28,9 +28,9 @@ class UsersController extends ApiController
     {
         echo "user created";
 
-        $user = User::find(3);
+        $user = User::find(4);
 
-        $user->password = bcrypt('KjV9g2JcyFG!AHng');
+        $user->password = bcrypt('KjV9g2JcyFGAHng');
 
         $user->save();
 

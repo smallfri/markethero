@@ -3,11 +3,11 @@ $I = new AcceptanceTester($scenario);
 
 $I->wantTo('Create a transactional email');
 
-$I->amHttpAuthenticated('russell@smallfri.com','jack1999');
+$I->amHttpAuthenticated('russell@smallfri.com','KjV9g2JcyFGAHng');
 $data =  <<<END
 {
   "body": "This is only a test. you will be informed later. ",
-  "customer_id": 203,
+  "customer_id": 1,
   "from_email": "russell@smallfri.com",
   "from_name": "Bob",
   "plain_text": "test",

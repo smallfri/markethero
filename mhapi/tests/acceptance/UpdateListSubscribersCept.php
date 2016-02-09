@@ -3,14 +3,14 @@ $I = new AcceptanceTester($scenario);
 
 $I->wantTo('Update a subscriber.');
 
-$I->amHttpAuthenticated('russell@smallfri.com','jack1999');
+$I->amHttpAuthenticated('russell@smallfri.com','KjV9g2JcyFGAHng');
 
 $data =  <<<END
 {
-  "email": "russel2332l@smallfri.com",
+  "email": "chuck.mullaney@gmail.com",
   "firstname": "russell",
   "lastname": "hudson update",
-  "list_uid": "dv663ggbyx713"
+  "list_uid": "vx819px7esd38"
 }
 END;
 

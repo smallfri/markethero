@@ -50,8 +50,8 @@ EmailOneApi_Autoloader::register();
 // configuration object
 $config = new EmailOneApi_Config(array(
     'apiUrl'        => 'http://localhost/api',
-    'publicKey'     => '3128c0565c9c7fb5c665363f5e57777b6b8ef4c7',
-    'privateKey'    => 'd5bd4e63888916fe07b669cdfd2cbbd9e29a5ab6',
+    'publicKey'     => 'dacd2b3a46ba2a517fbc36dee781896787923b6c',
+     'privateKey'    => 'f886e635780a1d7eb6695cc04e7b6aba5e0f787a',
 
     // components
     'components' => array(

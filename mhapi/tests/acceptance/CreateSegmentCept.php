@@ -3,12 +3,12 @@ $I = new AcceptanceTester($scenario);
 
 $I->wantTo('Create a Segment.');
 
-$I->amHttpAuthenticated('russell@smallfri.com','jack1999');
+$I->amHttpAuthenticated('russell@smallfri.com','KjV9g2JcyFGAHng');
 
 $data =  <<<END
 {
-  "field_id": 1307,
-  "list_id": 149,
+  "field_id": 1,
+  "list_id": 1,
   "name": "Segment Name",
   "operator_id": 9,
   "operator_match": "any",
