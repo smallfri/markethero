@@ -46,7 +46,6 @@ class CustomerController extends ApiController
             'first_name',
             'group_id',
             'last_name',
-            'timezone',
         ];
 
         $missing_fields = array();
