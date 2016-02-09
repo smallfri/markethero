@@ -47,5 +47,8 @@ Route::group(['prefix' => 'v1'], function()
     Route::resource('segmentcondition', 'SegmentConditionController');
     Route::resource('fields', 'FieldsController');
     Route::resource('emails', 'TransactionalEmailsController');
+    Route::resource('bounce', 'BounceController');
+    Route::resource('spam', 'SpamController');
+    Route::resource('blacklist', 'BlacklistController');
 
 });
