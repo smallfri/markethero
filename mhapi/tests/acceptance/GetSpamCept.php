@@ -1,11 +1,11 @@
 <?php 
 $I = new AcceptanceTester($scenario);
 
-$I->wantTo('Get all customers');
+$I->wantTo('Cet Spam');
 
 $I->amHttpAuthenticated('russell@smallfri.com','jack1999');
 
-$I->sendGET('/v1/customers');
+$I->sendGET('/v1/bounce/2008');
 
 $I->seeResponseIsJson();
 

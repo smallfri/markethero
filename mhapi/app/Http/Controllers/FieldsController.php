@@ -95,7 +95,7 @@ class FieldsController extends ApiController
             return $this->respondWithError('There was an error, the field was not created.');
         }
 
-        return $this->respond(['message' => 'field added.']);
+        return $this->respond(['field_id' => $Fields->field_id]);
     }
 
     public function index($customer_id, $page, $perPage)

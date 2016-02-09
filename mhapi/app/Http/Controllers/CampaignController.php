@@ -39,7 +39,6 @@ class CampaignController extends ApiController
             'autoresponder_event',
             'autoresponder_time_unit',
             'autoresponder_time_value',
-            'autoresponder_open_campaign_id',
             'name',
             'fromname',
             'from_email',
@@ -112,7 +111,7 @@ class CampaignController extends ApiController
             $CampaignOptions->autoresponder_event = $data['autoresponder_event'];
             $CampaignOptions->autoresponder_time_unit = $data['autoresponder_time_unit'];
             $CampaignOptions->autoresponder_time_value = $data['autoresponder_time_value'];
-            $CampaignOptions->autoresponder_open_campaign_id = $data['autoresponder_open_campaign_id'];
+            $CampaignOptions->autoresponder_open_campaign_id = null;
         }
         $CampaignOptions->save();
 
@@ -128,7 +127,7 @@ class CampaignController extends ApiController
                 {
                     return $this->respondWithError('There was an error, the campaign was not created.');
                 }
-        return $this->respond(['campaign_uid' => $uid]);
+        return $this->respond(['campaign_uid' => $uid, 'campaign_id'=>$Campaign->campaign_id]);
     }
 
 }

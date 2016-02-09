@@ -1,7 +1,7 @@
 <?php 
 $I = new AcceptanceTester($scenario);
 
-$I->wantTo('Get delivery servers.');
+$I->wantTo('Get delivery server by id.');
 
 $I->amHttpAuthenticated('russell@smallfri.com','jack1999');
 
