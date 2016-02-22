@@ -1,0 +1,5 @@
+Script started on Sun Feb 21 18:15:26 2016
+command: artisan optimize handling the post-update-cmd event returned with an error
+Script: artisan: No such file or directory
+
+Script done on Sun Feb 21 18:15:26 2016

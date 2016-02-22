@@ -11,7 +11,7 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-
+Route::resource('dashboard', 'DashboardController');
 
 Route::resource('v1/unsubscribe', 'ListSubscribersController@unsubscribe');
 //Route::resource('v1/subscriber', 'ListSubscribersController@search');
