@@ -8,212 +8,230 @@
         <div>
             <hr>
             <ul class="breadcrumb">
-                <li><a href="index.html#">Home</a></li>
-                <li><a href="index.html#">Dashboard</a></li>
+                <li><a href="/dashboard">Dashboard</a></li>
             </ul>
             <hr>
         </div>
 
-        <div class="row circleStats">
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
-            <div class="col-md-2 col-sm-4 col-xs-6">
-                <div class="circleStatsItem red">
-                    <i class="fa fa-check"></i>
-                    <span class="plus">+</span>
-                    <span class="percent">%</span>
-                    <input type="text" value="{!! $deliveries_percent !!}" class="orangeCircle"/>
-                </div>
-                <div class="box-small-title">Delivery Increase</div>
-            </div><!--/col-->
+        <script type="text/javascript">
+            google.charts.load('current', {'packages': ['line', 'corechart', 'bar']});
+            google.charts.setOnLoadCallback(drawChart);
+            google.charts.setOnLoadCallback(drawChart2);
+            google.charts.setOnLoadCallback(drawChart3);
+            google.charts.setOnLoadCallback(drawChart4);
+            function drawChart() {
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'Day');
+                data.addColumn('number', 'This Week');
+                data.addColumn('number', 'Last Week');
+                data.addRows([
+                    <?php echo $delivery_stats; ?>
 
-            <div class="col-md-2 col-sm-4 col-xs-6">
-                <div class="circleStatsItem blue">
-                    <i class="fa  fa-thumbs-o-down"></i>
-                    <span class="plus">+</span>
-                    <span class="percent">%</span>
-                    <input type="text" value="{!! $bounce_percent !!}" class="blueCircle"/>
-                </div>
-                <div class="box-small-title">Bounce Increase</div>
-            </div><!--/col-->
+                  ]);
+                var options = {
+                    backgroundColor: '#fcfcfc',
+                    colors: ['blue', 'red'],
+                    chart: {
+                        title: 'Delivery Rate Over the Last 2 Weeks',
+//                    subtitle: 'in millions of dollars (USD)',
+                    },
+                    width: '100%',
+                };
+                var chart = new google.charts.Line(document.getElementById('chart_div'));
+                chart.draw(data, google.charts.Line.convertOptions(options));
+            }
+            function drawChart2() {
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'Day');
+                data.addColumn('number', 'This Week');
+                data.addColumn('number', 'Last Week');
+                data.addRows([
+                    <?php echo $bounce_stats; ?>
 
-            <div class="col-md-2 col-sm-4 col-xs-6">
-                <div class="circleStatsItem yellow">
-                    <i class="fa  fa-envelope-o"></i>
-                    <span class="plus">+</span>
-                    <span class="percent">%</span>
-                    <input type="text" value="{!! $campaigns_precent !!}" class="yellowCircle"/>
-                </div>
-                <div class="box-small-title">Campaigns Increase</div>
-            </div><!--/col-->
+                  ]);
+                var options = {
+                    backgroundColor: '#fcfcfc',
+                    colors: ['blue', 'red'],
+                    chart: {
+                        title: 'Bounce Rate Over the Last 2 Weeks',
+                        //                    subtitle: 'in millions of dollars (USD)',
+                    },
+                    width: '100%',
+                };
+                var chart = new google.charts.Line(document.getElementById('chart_div2'));
+                chart.draw(data, google.charts.Line.convertOptions(options));
+            }
+            function drawChart3() {
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'Day');
+                data.addColumn('number', 'This Week');
+                data.addColumn('number', 'Last Week');
+                data.addRows([
+                    <?php echo $abuse_stats; ?>
 
-            {{--<div class="col-md-2 col-sm-4 col-xs-6">--}}
-                {{--<div class="circleStatsItem pink">--}}
-                    {{--<i class="fa  fa-globe"></i>--}}
-                    {{--<span class="plus">+</span>--}}
-                    {{--<span class="percent">%</span>--}}
-                    {{--<input type="text" value="23" class="pinkCircle"/>--}}
-                {{--</div>--}}
-                {{--<div class="box-small-title">Visits</div>--}}
-            {{--</div><!--/col-->--}}
+                  ]);
+                var options = {
+                    backgroundColor: '#fcfcfc',
+                    colors: ['blue', 'red'],
+                    chart: {
+                        title: 'Abuse Rate Over the Last 2 Weeks',
+                        //                    subtitle: 'in millions of dollars (USD)',
+                    },
+                    width: '100%',
+                };
+                var chart = new google.charts.Line(document.getElementById('chart_div3'));
+                chart.draw(data, google.charts.Line.convertOptions(options));
+            }
+            function drawChart4() {
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'Month');
+                data.addColumn('number', 'Subscribers');
+                data.addRows([
+                    <?php echo $monthly_subscriptions; ?>
+                ]);
 
-            {{--<div class="col-md-2 col-sm-4 col-xs-6">--}}
-                {{--<div class="circleStatsItem green">--}}
-                    {{--<i class="fa  fa-bar-chart-o"></i>--}}
-                    {{--<span class="plus">+</span>--}}
-                    {{--<span class="percent">%</span>--}}
-                    {{--<input type="text" value="34" class="greenCircle"/>--}}
-                {{--</div>--}}
-                {{--<div class="box-small-title">Income</div>--}}
-            {{--</div><!--/col-->--}}
+                var options = {
+                    title: 'Subscribers By Month',
+                    width: '100%',
+                    hAxis: {
+                        format: 'M/d/yy',
+                        gridlines: {count: 15}
+                    },
+                    vAxis: {
+                        gridlines: {color: 'none'},
+                        minValue: 0
+                    }
+                };
+                var chart = new google.charts.Bar(document.getElementById('chart_div4'));
+                chart.draw(data, options);
+                var button = document.getElementById('change');
+                button.onclick = function () {
 
-            {{--<div class="col-md-2 col-sm-4 col-xs-6">--}}
-                {{--<div class="circleStatsItem lightorange">--}}
-                    {{--<i class="fa  fa-shopping-cart"></i>--}}
-                    {{--<span class="plus">+</span>--}}
-                    {{--<span class="percent">%</span>--}}
-                    {{--<input type="text" value="42" class="lightOrangeCircle"/>--}}
-                {{--</div>--}}
-                {{--<div class="box-small-title">Sales</div>--}}
-            {{--</div><!--/col-->--}}
+                    // If the format option matches, change it to the new option,
+                    // if not, reset it to the original format.
+                    options.hAxis.format === 'M/d/yy' ?
+                            options.hAxis.format = 'MMM dd, yyyy' :
+                            options.hAxis.format = 'M/d/yy';
+                    chart.draw(data, options);
+                };
+            }
 
-        </div><!--/row-->
-
-        <hr>
+        </script>
 
         <div class="row">
 
-            {{--<div class="col-md-8 col-sm-12">--}}
-                {{--<div class="box">--}}
-                    {{--<div class="box-header">--}}
-                        {{--<h2><i class="fa fa-signal"></i><span class="break"></span>Site Statistics</h2>--}}
-                        {{--<div class="box-icon">--}}
-                            {{--<a href="index.html#" class="btn-setting"><i class="fa fa-wrench"></i></a>--}}
-                            {{--<a href="index.html#" class="btn-minimize"><i class="fa fa-chevron-up"></i></a>--}}
-                            {{--<a href="index.html#" class="btn-close"><i class="fa fa-times"></i></a>--}}
-                        {{--</div>--}}
-                    {{--</div>--}}
-                    {{--<div class="box-content">--}}
-                        {{--<div id="stats-chart" class="center" style="height:300px"></div>--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-            {{--</div>--}}
+            <div class="col-sm-2 col-xs-6">
+                <a class="quick-button" href="subscribers">
+                    <i class="fa  fa-users"></i>
 
-            <div class="col-md-4 col-sm-12">
-                <div class="box">
-                    <div class="box-header">
-                        <h2><i class="fa fa-list"></i><span class="break"></span>Weekly Stats</h2>
-                        <div class="box-icon">
-                            <a href="index.html#" class="btn-minimize"><i class="fa fa-chevron-up"></i></a>
-                            <a href="index.html#" class="btn-close"><i class="fa fa-times"></i></a>
-                        </div>
-                    </div>
-                    <div class="box-content">
-                        <div class="sparkLineStats">
+                    <p>Subscribers</p>
+                    <span class="notification">{!! $subscribers !!}</span>
+                </a>
+            </div>
+            <!--/col-->
+            <div class="col-sm-2 col-xs-6">
+                <a class="quick-button" href="subscribers">
+                    <i class="fa   fa-user"></i>
 
-                            <ul class="unstyled">
-                                <li>
-                                    <span class="sparkLineStats1 "></span>
-                                    Deliveries:
-                                    <span class="number">{!!$deliveries!!}</span>
-                                </li>
-                                <li>
-                                    <span class="sparkLineStats2"></span>
-                                    Bounces:
-                                    <span class="number">{!!$bounces!!}</span>
-                                </li>
-                                <li><span class="sparkLineStats3"></span>
-                                    Abuse Reports:
-                                    <span class="number">{!!$abuses!!}</span>
-                                </li>
-                                <li><span class="sparkLineStats4"></span>
-                                    Campaigns:
-                                    <span class="number">{!! $campaigns !!}</span>
-                                </li>
-                                <li><span class="sparkLineStats5"></span>
-                                    Lists:
-                                    <span class="number">{!! $lists !!}</span>
-                                </li>
-                                <li><span class="sparkLineStats6"></span>
-                                    Subscribers: <span class="number">{!! $subscribers !!}</span>
-                                </li>
-                                {{--<li><span class="sparkLineStats7"></span>--}}
-                                    {{--% New Visits:--}}
-                                    {{--<span class="number">70,79%</span>--}}
-                                {{--</li>--}}
-                                {{--<li><span class="sparkLineStats8"></span>--}}
-                                    {{--% Returning Visitor:--}}
-                                    {{--<span class="number">29,21%</span>--}}
-                                {{--</li>--}}
-
-                            </ul>
-
-                        </div><!-- End .sparkStats -->
-                    </div>
-                </div>
-
+                    <p>Unique Subscribers</p>
+                    <span class="notification">{!! $unigue_subscribers !!}</span>
+                </a>
             </div><!--/col-->
 
+            <div class="col-sm-2 col-xs-6">
+                <a class="quick-button" href="campaigns">
+                    <i class="fa fa-gamepad"></i>
+
+                    <p>Campaigns</p>
+                    <span class="notification red">{!! $campaigns !!}</span>
+                </a>
+            </div><!--/col-->
+
+            <div class="col-sm-2 col-xs-6">
+                <a class="quick-button">
+                    <i class="fa  fa-list"></i>
+
+                    <p>Lists</p>
+                    <span class="notification">{!! $lists !!}</span>
+
+                </a>
+            </div><!--/col-->
+
+            <div class="col-sm-2 col-xs-6">
+                <a class="quick-button" href="transactional-emails">
+                    <i class="fa  fa-envelope"></i>
+
+                    <p>Transactional Emails</p>
+                    <span class="notification">{!! $transactionals !!}</span>
+
+                </a>
+            </div><!--/col-->
+            <div class="col-sm-2 col-xs-6">
+                <a class="quick-button">
+                    <i class="fa  fa-puzzle-piece"></i>
+
+                    <p>Segments</p>
+                    <span class="notification">{!! $segments !!}</span>
+
+                </a>
+            </div><!--/col-->
+
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-4 col-sm-6">
+                <div class="box">
+                    <div class="box-header">
+                        <h2><i class="fa fa-list"></i><span class="break"></span>Deliveries</h2></div>
+                    <div class="box-content">
+
+                        <div id="chart_div"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="box">
+                    <div class="box-header">
+                        <h2><i class="fa fa-list"></i><span class="break"></span>Bounces</h2></div>
+                    <div class="box-content">
+
+                        <div id="chart_div2"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-6">
+                <div class="box">
+                    <div class="box-header">
+                        <h2><i class="fa fa-list"></i><span class="break"></span>Abuse Reports</h2></div>
+                    <div class="box-content">
+
+                        <div id="chart_div3"></div>
+                    </div>
+                </div>
+            </div>
+        </div><!--/row-->
+        <hr>
+        <div class="row">
+
+            <div class="col-md-12 col-sm-3">
+                <div class="box">
+                    <div class="box-header">
+                        <h2><i class="fa fa-list"></i><span class="break"></span>Monthly Stats</h2></div>
+                    <div class="box-content">
+
+                        <div id="chart_div4"></div>
+                    </div>
+                </div>
+            </div>
         </div><!--/row-->
 
         <hr>
 
-        {{--<div class="row">--}}
+    </div><!--/content-->
 
-            {{--<div class="col-sm-2 col-xs-6">--}}
-                {{--<a class="quick-button">--}}
-                    {{--<i class="fa  fa-group"></i>--}}
+    <hr>
 
-                    {{--<p>Users</p>--}}
-                    {{--<span class="notification">1.367</span>--}}
-                {{--</a>--}}
-            {{--</div><!--/col-->--}}
-
-            {{--<div class="col-sm-2 col-xs-6">--}}
-                {{--<a class="quick-button">--}}
-                    {{--<i class="fa  fa-comments-o"></i>--}}
-
-                    {{--<p>Comments</p>--}}
-                    {{--<span class="notification green">167</span>--}}
-                {{--</a>--}}
-            {{--</div><!--/col-->--}}
-
-            {{--<div class="col-sm-2 col-xs-6">--}}
-                {{--<a class="quick-button">--}}
-                    {{--<i class="fa  fa-shopping-cart"></i>--}}
-
-                    {{--<p>Orders</p>--}}
-                {{--</a>--}}
-            {{--</div><!--/col-->--}}
-
-            {{--<div class="col-sm-2 col-xs-6">--}}
-                {{--<a class="quick-button">--}}
-                    {{--<i class="fa  fa-barcode"></i>--}}
-
-                    {{--<p>Products</p>--}}
-                {{--</a>--}}
-            {{--</div><!--/col-->--}}
-
-            {{--<div class="col-sm-2 col-xs-6">--}}
-                {{--<a class="quick-button">--}}
-                    {{--<i class="fa  fa-envelope"></i>--}}
-
-                    {{--<p>Messages</p>--}}
-                {{--</a>--}}
-            {{--</div><!--/col-->--}}
-
-            {{--<div class="col-sm-2 col-xs-6">--}}
-                {{--<a class="quick-button">--}}
-                    {{--<i class="fa  fa-calendar"></i>--}}
-
-                    {{--<p>Calendar</p>--}}
-                    {{--<span class="notification red">68</span>--}}
-                {{--</a>--}}
-            {{--</div><!--/col-->--}}
-
-        {{--</div><!--/row-->--}}
-
-
-
-        <!-- end: Content -->
-    </div><!--/#content.span10-->
 @stop

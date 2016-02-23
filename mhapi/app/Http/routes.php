@@ -12,6 +12,9 @@
 |
 */
 Route::resource('dashboard', 'DashboardController');
+Route::resource('subscribers', 'DashboardController@subscribers');
+Route::resource('campaigns', 'DashboardController@campaigns');
+Route::resource('transactional-emails', 'DashboardController@transactional_emails');
 
 Route::resource('v1/unsubscribe', 'ListSubscribersController@unsubscribe');
 //Route::resource('v1/subscriber', 'ListSubscribersController@search');

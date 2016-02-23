@@ -13,9 +13,12 @@ use App\CampaignAbuseModel;
 use App\CampaignModel;
 use App\DeliveryLogModel;
 use App\Lists;
+use App\Segment;
 use App\SubscriberModel;
+use App\TransactionalEmailModel;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends ApiController
 {
@@ -28,94 +31,243 @@ class DashboardController extends ApiController
     public function index()
     {
 
-        $Deliveries = DeliveryLogModel::where('date_added', '>=', Carbon::parse('this week - 1 day'))
-            ->where('date_added', '<', Carbon::parse('this week + 5 days'))
-            ->get()
-            ->count();
+        /*
+         * This gathers delivery stats for 2 weeks starting today
+         */
 
-        //weekly delivery %
-        $lastWeekDeliveries = DeliveryLogModel::where('date_added', '>=', Carbon::parse('last week - 1 day'))
-            ->where('date_added', '<', Carbon::parse('this week - 2 days'))
-            ->get()
-            ->count();
-
-        $thisWeekDeliveries = DeliveryLogModel::where('date_added', '>=', Carbon::parse('this week - 1 day'))
-            ->where('date_added', '<', Carbon::parse('this week + 5 days'))
-            ->get()
-            ->count();
-
-        $deliveries = 0;
-        if($thisWeekDeliveries>0 and $lastWeekDeliveries>0)
+        $delivery = null;
+        $d = 1;
+        for($i = 1;$i<7;$i++)
         {
-            $deliveries = $lastWeekDeliveries/$thisWeekDeliveries*100;
+
+            switch($d)
+            {
+                case 1:
+                    $day = "Sun";
+                    break;
+                case 2:
+                    $day = "Mon";
+                    break;
+                case 3:
+                    $day = "Tues";
+                    break;
+                case 4:
+                    $day = "Wed";
+                    break;
+                case 5:
+                    $day = "Thurs";
+                    break;
+                case 6:
+                    $day = "Fri";
+                    break;
+                case 7:
+                    $day = "Sat";
+                    break;
+
+            }
+
+            $last_week = Carbon::parse('last week - 7 days');
+            $this_week = Carbon::parse('this week - 7 days');
+
+            $last_week = DeliveryLogModel::where('date_added', '>=', Carbon::parse($last_week.' + '.$i.' day'))
+                ->get()
+                ->count();
+
+            $this_week = DeliveryLogModel::where('date_added', '>=', Carbon::parse($this_week.' + '.$i.' day'))
+                ->get()
+                ->count();
+
+            $delivery .= '["'.$day.'",'.$last_week.','.$this_week.'],';
+            $d++;
         }
 
-        $Bounces = Bounce::where('bounce_type', '=', 'hard')
-            ->where('date_added', '>=', Carbon::parse('this week - 1 day'))
-            ->where('date_added', '<', Carbon::parse('this week + 5 days'))
-            ->get()
-            ->count();
+        $delivery_stats = rtrim($delivery, ",");
 
-        $lastWeekBounces = Bounce::where('date_added', '>=', Carbon::parse('last week - 1 day'))
-            ->where('date_added', '<', Carbon::parse('this week - 2 days'))
-            ->get()
-            ->count();
+        /*
+         * This gathers Bounce stats for 2 weeks starting today
+         */
 
-        $thisWeekBounces = Bounce::where('date_added', '>=', Carbon::parse('this week - 1 day'))
-            ->where('date_added', '<', Carbon::parse('this week + 5 days'))
-            ->get()
-            ->count();
-
-        $bounces = 0;
-        if($lastWeekBounces>0 and $thisWeekBounces>0)
+        $bounce = null;
+        $d = 1;
+        for($i = 1;$i<7;$i++)
         {
-            $bounces = $lastWeekBounces/$thisWeekBounces*100;
+
+            switch($d)
+            {
+                case 1:
+                    $day = "Sun";
+                    break;
+                case 2:
+                    $day = "Mon";
+                    break;
+                case 3:
+                    $day = "Tues";
+                    break;
+                case 4:
+                    $day = "Wed";
+                    break;
+                case 5:
+                    $day = "Thurs";
+                    break;
+                case 6:
+                    $day = "Fri";
+                    break;
+                case 7:
+                    $day = "Sat";
+                    break;
+
+            }
+
+            $last_week = Carbon::parse('last week - 7 days');
+            $this_week = Carbon::parse('this week - 7 days');
+
+            $last_week = Bounce::where('date_added', '>=', Carbon::parse($last_week.' + '.$i.' day'))
+                ->get()
+                ->count();
+
+            $this_week = Bounce::where('date_added', '>=', Carbon::parse($this_week.' + '.$i.' day'))
+                ->get()
+                ->count();
+
+            $bounce .= '["'.$day.'",'.$last_week.','.$this_week.'],';
+            $d++;
         }
 
-        $Abuses = CampaignAbuseModel::where('date_added', '>=', Carbon::parse('this week - 1 day'))
-            ->where('date_added', '<', Carbon::parse('this week + 5 days'))
-            ->get()
-            ->count();
+        $bounce_stats = rtrim($bounce, ",");
 
-        $Campaigns = CampaignModel::where('date_added', '>=', Carbon::parse('this week - 1 day'))
-            ->where('date_added', '<', Carbon::parse('this week + 5 days'))
-            ->get()
-            ->count();
+        /*
+         * This gathers Abuse stats for 2 weeks starting today
+         */
 
-        $lastWeekCampagigns = CampaignModel::where('date_added', '>=', Carbon::parse('last week - 1 day'))
-            ->where('date_added', '<', Carbon::parse('this week - 2 days'))
-            ->get()
-            ->count();
-
-        $thisWeekCampaigns = CampaignModel::where('date_added', '>=', Carbon::parse('this week - 1 day'))
-            ->where('date_added', '<', Carbon::parse('this week + 5 days'))
-            ->get()
-            ->count();
-
-        $campaigns = 0;
-        if($lastWeekCampagigns>0 and $thisWeekCampaigns>0)
+        $abuse = null;
+        $d = 1;
+        for($i = 1;$i<7;$i++)
         {
-            $bounces = $lastWeekCampagigns/$thisWeekCampaigns*100;
+
+            switch($d)
+            {
+                case 1:
+                    $day = "Sun";
+                    break;
+                case 2:
+                    $day = "Mon";
+                    break;
+                case 3:
+                    $day = "Tues";
+                    break;
+                case 4:
+                    $day = "Wed";
+                    break;
+                case 5:
+                    $day = "Thurs";
+                    break;
+                case 6:
+                    $day = "Fri";
+                    break;
+                case 7:
+                    $day = "Sat";
+                    break;
+
+            }
+
+            $last_week = Carbon::parse('last week - 7 days');
+            $this_week = Carbon::parse('this week - 7 days');
+
+            $last_week = CampaignAbuseModel::where('date_added', '>=', Carbon::parse($last_week.' + '.$i.' day'))
+                ->get()
+                ->count();
+
+            $this_week = CampaignAbuseModel::where('date_added', '>=', Carbon::parse($this_week.' + '.$i.' day'))
+                ->get()
+                ->count();
+
+            $abuse .= '["'.$day.'",'.$last_week.','.$this_week.'],';
+            $d++;
         }
 
-        $Lists = Lists::all()->count();
+        $abuse_stats = rtrim($bounce, ",");
 
-        $Subscribers = SubscriberModel::all()->count();
+        $Subs_month = SubscriberModel::select('subscriber_id', 'date_added', DB::raw('count(1) AS count'))->groupBy(DB::raw('MONTH(date_added)'))->get();
+
+        $monthly_subscriptions = null;
+        foreach($Subs_month as $month)
+        {
+            $monthly_subscriptions .= '["'.date('M',strtotime($month['date_added'])).'", '.$month['count'].'],';
+        }
+
+        $monthly_subscriptions = rtrim($monthly_subscriptions, ",");
+
+        /*
+         *  Get counts
+         */
+        $subscribers = SubscriberModel::all()->count();
+        $unigue_subscribers = SubscriberModel::all()->groupBy('email')->count();
+        $lists = Lists::all()->count();
+        $campaigns = CampaignModel::all()->count();
+        $transactionals = TransactionalEmailModel::all()->count();
+        $segments = Segment::all()->count();
+
 
         $data = [
-            'deliveries' => $Deliveries,
-            'deliveries_percent' => $deliveries,
-            'bounces' => $Bounces,
-            'bounce_percent' => $bounces,
-            'abuses' => $Abuses,
-            'campaigns' => $Campaigns,
-            'campaigns_precent' => $campaigns,
-            'lists'=> $Lists,
-            'subscribers' => $Subscribers
+            'delivery_stats' => $delivery_stats,
+            'bounce_stats' => $bounce_stats,
+            'abuse_stats' => $abuse_stats,
+            'subscribers' => $subscribers,
+            'lists' => $lists,
+            'campaigns' => $campaigns,
+            'transactionals' => $transactionals,
+            'unigue_subscribers' => $unigue_subscribers,
+            'segments' => $segments,
+            'monthly_subscriptions' => $monthly_subscriptions
+
+
+
         ];
 
         return view('dashboard.index', $data);
 
+    }
+
+    public function subscribers()
+    {
+        $Subscribers = SubscriberModel::all();
+
+        $data = [
+                    'subscribers' => $Subscribers
+
+
+                ];
+
+                return view('dashboard.subscribers.index', $data);
+    }
+
+    public function campaigns()
+    {
+        $Campaigns = CampaignModel::select('mw_campaign.*','l.name AS listname', 's.name AS segmentname')->join('mw_list AS l','l.list_id','=','mw_campaign.list_id')->Leftjoin('mw_list_segment AS s','s.segment_id','=','mw_campaign.segment_id')->get();
+
+//        dd($Campaigns);
+
+        $data = [
+                    'campaigns' => $Campaigns
+
+
+                ];
+
+                return view('dashboard.campaigns.index', $data);
+    }
+
+    public function transactional_emails()
+    {
+        $Emails = TransactionalEmailModel::select('mw_transactional_email.*','log.message')->join('mw_transactional_email_log AS log','log.email_id','=','mw_transactional_email.email_id')->get();
+
+
+        $data = [
+                    'emails' => $Emails
+
+
+                ];
+
+                return view('dashboard.emails.index', $data);
     }
 
     public function store()

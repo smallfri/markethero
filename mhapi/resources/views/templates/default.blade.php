@@ -4,7 +4,7 @@
 	
 	<!-- start: Meta -->
 	<meta charset="utf-8">
-	<title>Perfectum Dashboard - Perfect Bootstrap Admin Template</title>
+	<title>Market Hero</title>
 	<meta name="description" content="Perfectum Dashboard Bootstrap Admin Template.">
 	<meta name="author" content="Łukasz Holeczek">
 	<!-- end: Meta -->
@@ -61,7 +61,7 @@
 			      <span class="icon-bar"></span>
 			      <span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="index.html"> <img alt="Perfectum Dashboard" src="/mhapi/public/assets/img/market_hero_logo.jpg" style="height: 30px;"/> <span>Market Hero</span></a>
+			<a class="navbar-brand" href="/dashboard"> <img alt="Perfectum Dashboard" src="/mhapi/public/assets/img/market_hero_logo.jpg" style="height: 30px;"/> <span>Market Hero</span></a>
 							
 			<!-- start: Header Menu -->
 			<div class="header-nav">
@@ -315,7 +315,7 @@
 			<div class="col-sm-2 main-menu-span">
 				<div class="sidebar-nav nav-collapse collapse navbar-collapse">
 					<ul class="nav nav-tabs nav-stacked main-menu">
-						<li><a href="index.html"><i class="fa fa-home icon"></i><span class="hidden-sm"> Dashboard</span></a></li>
+						<li><a href="dashboard"><i class="fa fa-home icon"></i><span class="hidden-sm"> Dashboard</span></a></li>
 						{{--<li><a href="ui.html"><i class="fa fa-eye"></i><span class="hidden-sm"> UI Features</span></a></li>--}}
 						{{--<li><a href="forms.html"><i class="fa fa-edit"></i><span class="hidden-sm"> Forms</span></a></li>--}}
 						{{--<li><a href="charts.html"><i class="fa fa-bar-chart-o"></i><span class="hidden-sm"> Charts</span></a></li>--}}
@@ -441,8 +441,17 @@
 	
 	<!-- inline scripts related to this page -->
 	<script src="/mhapi/public/assets/js/pages/index.js"></script>
-	
-		<!-- end: JavaScript-->
-	
+
+		<!--subscribers page -->
+	<script src="/mhapi/public/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
+	<script src="/mhapi/public/assets/js/jquery.dataTables.min.js"></script>
+	<script src="/mhapi/public/assets/js/dataTables.bootstrap.min.js"></script>
+ <!-- inline scripts related to this page -->
+	<script src="/mhapi/public/assets/js/pages/table.js"></script>
+		<!--subscribers/-->
+
+
+
+
 </body>
 </html>
