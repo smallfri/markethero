@@ -154,28 +154,5 @@ _t.push({publisher_id: '55f50e18c132a62e8f02a72d'});
             <?php $hooks->doAction('layout_footer_html', $this);?>
             <div class="clearfix"><!-- --></div>
         </footer>
-        <?php
-$name = $email = $timestamp = $group_id = null;
-if ($customer = Yii::app()->customer->getModel()) {
-    $name = $customer->fullName;
-    $email = $customer->email;
-	$group_id = $customer->group_id;
-    $timestamp = strtotime($customer->date_added);
-}
-?>
-<script>
-  window.intercomSettings = {
-    // TODO: The current logged in user's full name
-    name: "<?php echo $name;?>",
-    // TODO: The current logged in user's email address.
-    email: "<?php echo $email;?>",
-	// TODO: The current logged in user's groupid
-    group: "<?php echo $group_id;?>",
-    // TODO: The current logged in user's sign-up date as a Unix timestamp.
-    created_at: <?php echo (int)$timestamp;?>,
-    app_id: "qb2ykdj4"
-  };
-</script>
-<script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/c81osy6m';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()</script>
-    </body>
+ </body>
 </html>

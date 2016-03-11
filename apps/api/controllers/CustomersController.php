@@ -124,8 +124,8 @@ class CustomersController extends Controller
             }
         }
         
-        $this->_sendRegistrationConfirmationEmail($customer, $company);
-        $this->_sendNewCustomerNotifications($customer, $company);
+//        $this->_sendRegistrationConfirmationEmail($customer, $company);
+//        $this->_sendNewCustomerNotifications($customer, $company);
         
         return $this->renderJson(array(
             'status'        => 'success',

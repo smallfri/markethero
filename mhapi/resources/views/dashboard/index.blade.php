@@ -123,7 +123,7 @@
         <div class="row">
 
             <div class="col-sm-2 col-xs-6">
-                <a class="quick-button" href="subscribers">
+                <a class="quick-button" href="subscribers"  target="_blank">
                     <i class="fa  fa-users"></i>
 
                     <p>Subscribers</p>
@@ -132,7 +132,7 @@
             </div>
             <!--/col-->
             <div class="col-sm-2 col-xs-6">
-                <a class="quick-button" href="subscribers">
+                <a class="quick-button" href="subscribers" target="_blank">
                     <i class="fa   fa-user"></i>
 
                     <p>Unique Subscribers</p>
@@ -141,7 +141,7 @@
             </div><!--/col-->
 
             <div class="col-sm-2 col-xs-6">
-                <a class="quick-button" href="campaigns">
+                <a class="quick-button" href="campaigns"  target="_blank">
                     <i class="fa fa-gamepad"></i>
 
                     <p>Campaigns</p>
@@ -160,7 +160,7 @@
             </div><!--/col-->
 
             <div class="col-sm-2 col-xs-6">
-                <a class="quick-button" href="transactional-emails">
+                <a class="quick-button" href="transactional-emails"  target="_blank">
                     <i class="fa  fa-envelope"></i>
 
                     <p>Transactional Emails</p>

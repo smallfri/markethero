@@ -113,7 +113,7 @@ class CustomersController extends Controller
         $notify     = Yii::app()->notify;
         
         $this->setData('initCustomerStatus', $customer->status);
-        $customer->onAfterSave = array($this, '_sendEmailNotification');
+//        $customer->onAfterSave = array($this, '_sendEmailNotification');
         
         if ($request->isPostRequest && ($attributes = (array)$request->getPost($customer->modelName, array()))) {
             $customer->attributes = $attributes;
