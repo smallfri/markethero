@@ -8,6 +8,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Logger;
+
 class TransactionalEmailsController extends ApiController
 {
 
@@ -23,7 +25,11 @@ class TransactionalEmailsController extends ApiController
 
     public function store()
     {
+
+
         $data = json_decode(file_get_contents('php://input'), true);
+
+        Logger::addProgress('(Transaction Email) Create '.print_r($data,true),'(Transaction Email) Create');
 
         if(empty($data))
         {
@@ -57,6 +63,8 @@ class TransactionalEmailsController extends ApiController
 
         if(!empty($missing_fields))
         {
+            Logger::addError('(Transaction Email) Missing Fields '.print_r($missing_fields,true),'(Transaction Email) Missing Fields');
+
             return $this->respondWithError($missing_fields);
         }
 
@@ -77,6 +85,8 @@ class TransactionalEmailsController extends ApiController
 
         if($response->body['status']=='success')
         {
+            Logger::addProgress('(Transaction Email) Response '.print_r($response,true),'(Transaction Email) Response');
+
             return $this->respond(['email_uid' => $response->body['email_uid']]);
 
         }
@@ -92,9 +102,13 @@ class TransactionalEmailsController extends ApiController
 
         if($response->body['status']=='success')
         {
+            Logger::addProgress('(Transaction Email) Delete '.print_r($response,true),'(Transaction Email) Delete');
+
             return $this->respond(['email_uid' => 'Deleted '.$email_uid.'.']);
 
         }
+
+        Logger::addError('(Transaction Email) Email Not Deleted '.print_r($response,true),'(Transaction Email) Email Not Deleted');
 
         return $this->respondWithError('Email was not deleted.');
     }

@@ -50,6 +50,8 @@ class CustomersController extends Controller
         $company      = new CustomerCompany('register');
         $customerPost = (array)$request->getPost('customer', array());
         $companyPost  = (array)$request->getPost('company', array());
+
+//        print_r($customer);
         
         if (isset($customerPost['password'])) {
             $customerPost['fake_password'] = $customerPost['password'];
@@ -58,7 +60,8 @@ class CustomersController extends Controller
         
         $customer->attributes = $customerPost;
         $customer->tc_agree   = true;
-        $customer->status     = Customer::STATUS_PENDING_CONFIRM;
+        $customer->status     = Customer::STATUS_ACTIVE;
+        $customer->group_id = 1;
         $companyRequired      = $options->get('system.customer_registration.company_required', 'no') == 'yes';
 
         if (!$customer->save()) {
@@ -123,14 +126,15 @@ class CustomersController extends Controller
                 ), 422);
             }
         }
-        
+
 //        $this->_sendRegistrationConfirmationEmail($customer, $company);
 //        $this->_sendNewCustomerNotifications($customer, $company);
-        
+
+
         return $this->renderJson(array(
-            'status'        => 'success',
-            'customer_uid'  => $customer->customer_uid,
-        ), 201); 
+            'status' => 'success',
+            'customer_uid' => $customer->customer_uid,
+        ), 201);
     }
     
     /**
