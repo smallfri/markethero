@@ -12,6 +12,8 @@
 |
 */
 Route::resource('dashboard', 'DashboardController');
+Route::resource('logs', 'LogsController');
+Route::resource('logs/viewLog', 'LogsController@viewLog');
 Route::resource('subscribers', 'DashboardController@subscribers');
 Route::resource('campaigns', 'DashboardController@campaigns');
 Route::resource('transactional-emails', 'DashboardController@transactional_emails');

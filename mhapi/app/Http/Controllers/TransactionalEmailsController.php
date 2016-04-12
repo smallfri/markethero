@@ -83,9 +83,12 @@ class TransactionalEmailsController extends ApiController
             'customer_id'=> $data['customer_id']
         ));
 
+        Logger::addProgress('(Transaction Email) Response '.print_r($response,true),'(Transaction Email) Response');
+
+
         if($response->body['status']=='success')
         {
-            Logger::addProgress('(Transaction Email) Response '.print_r($response,true),'(Transaction Email) Response');
+            Logger::addProgress('(Transaction Email) Response Success '.print_r($response,true),'(Transaction Email) Response Success');
 
             return $this->respond(['email_uid' => $response->body['email_uid']]);
 
