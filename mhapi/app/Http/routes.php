@@ -1,5 +1,5 @@
 <?php
-//use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,10 +34,12 @@ Route::post('v1/subscriber/update', 'ListSubscribersController@update');
 |
 */
 Route::get('v1/list/customer/{customer_uid}/page/{page}/per_page/{per_page}', 'ListController@index');
+Route::post('v1/blacklist/subscriber/{email}', 'BlacklistController@store');
 //Route::put('v1/list/{list_uid}', 'ListController@save');
 
 Route::group(['prefix' => 'v1'], function()
 {
+    Route::resource('abuse', 'AbuseController');
     Route::resource('customer', 'CustomerController');
     Route::resource('customers', 'CustomersController');
     Route::resource('delivery-servers', 'DeliveryServerController@all');
