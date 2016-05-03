@@ -35,7 +35,7 @@ class SendCampaignsCommand extends CConsoleCommand
     public $campaigns_offset = 0;
     
     // whether this should be verbose and output to console
-    public $verbose = 0;
+    public $verbose = 9;
     
     public function init()
     {
@@ -100,6 +100,12 @@ class SendCampaignsCommand extends CConsoleCommand
     
     protected function process() 
     {
+
+        if ($this->verbose)
+        {
+            echo "Hi Russell, glad to see you!...\n";
+        }
+
         if ($this->verbose) {
             echo "[".date("Y-m-d H:i:s")."] Starting the send-campaigns command...\n";
         }

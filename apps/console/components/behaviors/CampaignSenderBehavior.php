@@ -29,6 +29,61 @@ class CampaignSenderBehavior extends CBehavior
     {
         $campaign = $this->getOwner();
 
+
+        //get count for thresholding
+        $count = Yii::app()->db->createCommand()
+            ->select('count(1) as count')
+            ->from('mw_list_subscriber')
+            ->where('list_id=:id', array(':id' => (int)$campaign->list_id))
+            ->queryRow();
+
+
+        if ($this->verbose)
+        {
+            echo "[".date("Y-m-d H:i:s")."] Subscriber count ".$count['count']."\n";
+        }
+
+        //get threshold value
+        $limit = Yii::app()->db->createCommand()
+            ->select('threshold')
+            ->from('mw_campaign AS c')
+            ->join('mw_campaign_compliance As cc', 'c.campaign_id=cc.campaign_id')
+            ->join('mw_compliance_levels AS mcl', 'cc.compliance_levels_id=mcl.id')
+            ->where('list_id=:id', array(':id' => (int)$campaign->list_id))
+            ->queryRow();
+
+        //make limit based on threshold value x count
+        $threshold = round($limit['threshold'] * $count['count'], 0);
+
+        if ($this->verbose)
+        {
+            echo "[".date("Y-m-d H:i:s")."] Subscriber threshold ".$threshold."\n";
+        }
+
+        //get last processed id
+        $id = Yii::app()->db->createCommand(
+            'SELECT
+              MAX(ids.subscriber_id) AS last_processed_id
+            FROM
+              mw_list_subscriber as mls
+            INNER JOIN
+                (
+                SELECT
+                  subscriber_id
+                FROM
+                  mw_list_subscriber
+                WHERE
+                  list_id = 96
+                ORDER BY subscriber_id LIMIT '.$threshold.') as ids
+                 ON mls.subscriber_id = ids.subscriber_id'
+        )->queryRow();
+
+        if ($this->verbose)
+        {
+            echo "[".date("Y-m-d H:i:s")."] Subscriber last processed id ".$id['last_processed_id']."\n";
+        }
+
+
         // this should never happen unless the list is removed while sending
         if (empty($campaign->list) || empty($campaign->list->customer)) {
             return 0;
@@ -37,7 +92,7 @@ class CampaignSenderBehavior extends CBehavior
         $options  = Yii::app()->options;
         $list     = $campaign->list;
         $customer = $list->customer;
-        
+
         if ($this->verbose) {
             echo "[".date("Y-m-d H:i:s")."] Processing the campaign " . $campaign->name . " having the uid: " . $campaign->campaign_uid;
             echo " belonging to the customer: " . $customer->fullName . "(" . $customer->customer_id . ")\n";
@@ -69,7 +124,7 @@ class CampaignSenderBehavior extends CBehavior
             
             return 0;
         }
-        
+
         if ($this->verbose) {
             echo "OK\n";
             echo "[".date("Y-m-d H:i:s")."] Picking a delivery server...";
@@ -224,9 +279,28 @@ class CampaignSenderBehavior extends CBehavior
             
             // sort subscribers
             $subscribers = $this->sortSubscribers($subscribers);
+
+
+            if ($this->verbose)
+            {
+                echo "\n[".date("Y-m-d H:i:s")."] Compliance last id ".$id['last_processed_id']."\n";
+            }
             
             foreach ($subscribers as $index => $subscriber) {
- 
+
+                //throttle
+                if ($subscriber->subscriber_id>$id['last_processed_id'])
+                {
+                    $this->logDelivery($subscriber, Yii::t('campaigns', 'In compliance review'),
+                        CampaignDeliveryLog::STATUS_COMPLIANCE_REVIEW);
+                    if ($this->verbose)
+                    {
+                        echo "\n[".date("Y-m-d H:i:s")."] The email address is in compliance review\n";
+                    }
+                    continue;
+                }
+
+
                 if ($this->verbose) {
                     $timeStart = microtime(true);
                     echo "\n[".date("Y-m-d H:i:s")."] Current progress: " . ($index + 1) . " out of " . count($subscribers);   
@@ -528,6 +602,7 @@ class CampaignSenderBehavior extends CBehavior
         // the sending batch is over. 
         // if we don't have enough subscribers for next batch, we stop.
         $subscribers = $this->countSubscribers();
+
         if (empty($subscribers)) {
             $this->markCampaignSent();
             return 0;
@@ -633,6 +708,8 @@ class CampaignSenderBehavior extends CBehavior
     
     protected function prepareEmail($subscriber)
     {
+
+
         $campaign = $this->getOwner();
 
         // how come ?

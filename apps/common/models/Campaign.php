@@ -1,5 +1,4 @@
 <?php defined('MW_PATH') || exit('No direct script access allowed');
-
 /**
  * Campaign
  * 
@@ -35,6 +34,7 @@
  * @property string $status
  * @property string $date_added
  * @property string $last_updated
+ * @property string $compliance_level_id
  *
  * The followings are the available model relations:
  * @property CampaignGroup $group
@@ -55,7 +55,7 @@
  * @property CampaignTemplate $template
  * @property CampaignTemplate[] $templates
  * @property CampaignAttachment[] $attachments
- * @property DeliveryServer[] $deliveryServers
+ * @property DeliveryServer[] $deliveryServersØ
  * @property CampaignTrackOpen[] $trackOpens
  * @property CampaignTrackUnsubscribe[] $trackUnsubscribes
  * @property CampaignUrl[] $urls
@@ -75,7 +75,11 @@ class Campaign extends ActiveRecord
     const STATUS_PAUSED = 'paused';
     
     const STATUS_PENDING_DELETE = 'pending-delete';
-    
+
+    const STATUS_IN_COMPLIANCE = 'in-compliance';
+
+    const STATUS_IN_REVIEW = 'in-review‚Ø';
+
     const TYPE_REGULAR = 'regular';
     
     const TYPE_AUTORESPONDER = 'autoresponder';
@@ -176,7 +180,6 @@ class Campaign extends ActiveRecord
             'send_at'               => Yii::t('campaigns', 'Send at'),
             'started_at'            => Yii::t('campaigns', 'Started at'),
             'finished_at'           => Yii::t('campaigns', 'Finished at'),
-            
             'lastOpen'              => Yii::t('campaigns', 'Last open'),
             'totalDeliveryTime'     => Yii::t('campaigns', 'Total delivery time'),
         );
@@ -877,6 +880,8 @@ class Campaign extends ActiveRecord
             self::STATUS_SENT               => ucfirst(Yii::t('campaigns', self::STATUS_SENT)),
             self::STATUS_PROCESSING         => ucfirst(Yii::t('campaigns', self::STATUS_PROCESSING)),
             self::STATUS_PAUSED             => ucfirst(Yii::t('campaigns', self::STATUS_PAUSED)),
+            self::STATUS_IN_COMPLIANCE      => ucfirst(Yii::t('campaigns', self::STATUS_IN_COMPLIANCE)),
+            self::STATUS_IN_REVIEW      => ucfirst(Yii::t('campaigns', self::STATUS_IN_REVIEW)),
             //self::STATUS_PENDING_DELETE     => ucfirst(Yii::t('campaigns', self::STATUS_PENDING_DELETE)),
         );
     }

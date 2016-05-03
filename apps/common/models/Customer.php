@@ -133,7 +133,8 @@ class Customer extends ActiveRecord
             array('confirm_password', 'compare', 'compareAttribute' => 'fake_password'),
             array('confirm_email', 'compare', 'compareAttribute' => 'email'),
             array('email', 'unique'),
-            
+            array('compliance_levels_id', 'numerical', 'integerOnly' => true),
+
             // avatar
             array('new_avatar', 'file', 'types' => array('png', 'jpg', 'gif'), 'mimeTypes' => $avatarMimes, 'allowEmpty' => true),
             
@@ -195,6 +196,7 @@ class Customer extends ActiveRecord
             'avatar'        => Yii::t('customers', 'Avatar'),
             'new_avatar'    => Yii::t('customers', 'New avatar'),
             'removable'     => Yii::t('customers', 'Removable'),
+            'compliance_levels_id'     => Yii::t('customers', 'Compliance Level ID'),
 
             'confirm_email'         => Yii::t('customers', 'Confirm email'),
             'fake_password'         => Yii::t('customers', 'Password'),
@@ -560,6 +562,18 @@ class Customer extends ActiveRecord
         $quotaMark->customer_id = $this->customer_id;
         $quotaMark->save(false);
         return $this->_lastQuotaMark = $quotaMark;
+    }
+
+    public function getComplianceLevel()
+    {
+
+        $Customer = Yii::app()->db->createCommand()
+            ->select('compliance_levels_id')
+            ->from('mw_customer')
+            ->where('customer_id=:id', array(':id' => (int)$this->customer_id))
+            ->queryRow();
+        return $Customer['compliance_levels_id'];
+
     }
     
     public function getHasGroup()
