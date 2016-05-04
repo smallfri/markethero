@@ -18,7 +18,7 @@ class BlacklistController extends ApiController
 
     function __construct()
     {
-        //$this->middleware('auth.basic');
+        $this->middleware('auth.basic');
     }
 
 
@@ -88,12 +88,10 @@ class BlacklistController extends ApiController
         $Blacklist = new BlacklistModel();
 
         $Blacklist->subscriber_id = $Subscriber['subscriber_id'];
-        $Subscriber->reason = 'api';
         $Blacklist->email = $email;
         $Blacklist->Save();
 
         $Subscriber->status = 'blacklisted';
-        $Subscriber->source = 'api';
         $Subscriber->Save();
 
         Logger::addProgress('(BlackList) Added '.print_r($Blacklist, true), '(BlackList) Added');

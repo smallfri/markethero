@@ -25,7 +25,7 @@ class CampaignController extends ApiController
 
         $this->endpoint = new \EmailOneApi_Endpoint_Campaigns();
 
-        $this->middleware('auth.basic');
+        //$this->middleware('auth.basic');
 
     }
 

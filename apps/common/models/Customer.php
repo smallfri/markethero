@@ -133,7 +133,6 @@ class Customer extends ActiveRecord
             array('confirm_password', 'compare', 'compareAttribute' => 'fake_password'),
             array('confirm_email', 'compare', 'compareAttribute' => 'email'),
             array('email', 'unique'),
-            array('compliance_levels_id', 'numerical', 'integerOnly' => true),
 
             // avatar
             array('new_avatar', 'file', 'types' => array('png', 'jpg', 'gif'), 'mimeTypes' => $avatarMimes, 'allowEmpty' => true),

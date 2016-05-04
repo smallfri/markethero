@@ -19,7 +19,7 @@ class TransactionalEmailsController extends ApiController
     {
 
         $this->endpoint = new \EmailOneApi_Endpoint_TransactionalEmails();
-        $this->middleware('auth.basic');
+        //$this->middleware('auth.basic');
 
     }
 

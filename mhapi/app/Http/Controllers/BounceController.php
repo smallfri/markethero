@@ -13,7 +13,7 @@ class BounceController extends ApiController
     function __construct()
     {
 
-        $this->middleware('auth.basic');
+        //$this->middleware('auth.basic');
 
     }
 

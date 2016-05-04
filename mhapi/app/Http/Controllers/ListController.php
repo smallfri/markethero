@@ -26,7 +26,7 @@ class ListController extends ApiController
     {
 
         $this->endpoint = new \EmailOneApi_Endpoint_Lists();
-        $this->middleware('auth.basic');
+        //$this->middleware('auth.basic');
 
     }
 
