@@ -24,7 +24,7 @@ class BounceServerController extends ApiController
 
         $this->BounceServerTransformer = $bounceServerTransformer;
 
-        //$this->middleware('auth.basic');
+        $this->middleware('auth.basic');
 
     }
 

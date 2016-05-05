@@ -19,7 +19,7 @@ class DeliveryServerController extends ApiController
 
         $this->customerTransformer = $customerTransformer;
 
-        //$this->middleware('auth.basic');
+        $this->middleware('auth.basic');
 
     }
 
