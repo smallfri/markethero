@@ -60,12 +60,12 @@ class TransactionalEmail extends ActiveRecord
 	public function rules()
 	{
 		$rules = array(
-			array('to_email, to_name, from_name, subject, body, send_at', 'required'),
+			array('to_email, to_name, from_name, subject, body, send_at, status', 'required'),
 			array('to_email, to_name, from_email, from_name, reply_to_email, reply_to_name', 'length', 'max' => 150),
             array('to_email, from_email, reply_to_email', 'email'),
 			array('subject', 'length', 'max' => 255),
             array('send_at', 'date', 'format' => 'yyyy-mm-dd hh:mm:ss'),
-            
+
 			// The following rule is used by search().
 			array('to_email, to_name, from_email, from_name, reply_to_email, reply_to_name, subject, status', 'safe', 'on'=>'search'),
 		);
@@ -105,6 +105,7 @@ class TransactionalEmail extends ActiveRecord
 			'retries'        => Yii::t('transactional_emails', 'Retries'),
 			'max_retries'    => Yii::t('transactional_emails', 'Max retries'),
 			'send_at'        => Yii::t('transactional_emails', 'Send at'),
+			'status'         => Yii::t('transactional_emails', 'Status'),
 		);
         return CMap::mergeArray($labels, parent::attributeLabels());
 	}

@@ -28,7 +28,7 @@ class UsersController extends ApiController
     {
 //        echo "user created";
 //
-//        $user = User::find(3);
+//        $user = User::find(7);
 //
 //        $user->password = bcrypt('KjV9g2JcyFGAHng');
 //
@@ -38,11 +38,11 @@ class UsersController extends ApiController
 
 
 //
-//        return User::create([
-//            'user_uid' => uniqid(),
-//            'first_name' => 'DEV',
-//            'email' => 'noreply@markethero.io',
-//            'password' => bcrypt('KjV9g2JcyFGAHng'),
-//        ]);
+        return User::create([
+            'user_uid' => uniqid(),
+            'first_name' => 'DEV',
+            'email' => 'noreply@markethero.io',
+            'password' => bcrypt('KjV9g2JcyFGAHng'),
+        ]);
     }
 }

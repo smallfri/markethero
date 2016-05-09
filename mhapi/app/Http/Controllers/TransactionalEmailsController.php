@@ -80,11 +80,11 @@ class TransactionalEmailsController extends ApiController
             'body'=> $data['body'],
             'plain_text'=> $data['plain_text'],
             'send_at'=> $data['send_at'],
-            'customer_id'=> $data['customer_id']
+            'customer_id'=> $data['customer_id'],
+            'status' => 'pending'
         ));
 
         Logger::addProgress('(Transaction Email) Response '.print_r($response,true),'(Transaction Email) Response');
-
 
         if($response->body['status']=='success')
         {
