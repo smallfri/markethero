@@ -48,17 +48,84 @@ class SendTransactionalEmailsCommand extends CConsoleCommand
             echo "[".date("Y-m-d H:i:s")."] Processing of transactional emails starting...\n";
         }
 
-
-        //pull back transaction emails by group id check send at once settings
-
-        //foreach through the groups and send emails
-
-
-
+        $options = Yii::app()->db->createCommand()
+            ->select('*')
+            ->from('mw_transactional_email_options')
+            ->where('id=:id', array(':id' => 1))
+            ->queryRow();
 
 
+        if ($this->verbose)
+        {
+            echo "[".date("Y-m-d H:i:s")."] Options ".print_r($options, true)."\n";
+        }
+
+//        $statuses = array(TransactionalEmail::STATUS_SENDING, TransactionalEmail::STATUS_PENDING_SENDING);
+        $campaignLimit = $options['groups_at_once'];
+
+        //todo replace with model
+
+        $transactionalEmailsGroupIds = Yii::app()->db->createCommand()
+            ->select('transactional_email_group_id')
+            ->from('mw_transactional_email')
+            ->group('transactional_email_group_id')
+            ->limit($campaignLimit)
+            ->queryAll();
+
+        if ($this->verbose)
+        {
+            echo "[".date("Y-m-d H:i:s")."] transactionalEmailsGroupIds ".print_r($transactionalEmailsGroupIds, true)."\n";
+        }
 
 
+        if (empty($transactionalEmailsGroupIds))
+        {
+            if ($this->verbose)
+            {
+                echo "[".date("Y-m-d H:i:s")."] No Email Groups found for processing!\n";
+            }
+            return 0;
+        }
+
+        if ($this->verbose)
+        {
+            echo "[".date("Y-m-d H:i:s")."] Found ".count($transactionalEmailsGroupIds)."
+             email groups for processing, starting...\n";
+        }
+
+        $groupIds = array();
+        foreach ($transactionalEmailsGroupIds as $groupId)
+        {
+            $groupIds[] = $groupId['transactional_email_group_id'];
+        }
+
+        if ($this->verbose)
+        {
+            echo "[".date("Y-m-d H:i:s")."] Email Group IDs ".print_r($groupIds,
+                    true)." email groups for processing, starting...\n";
+        }
+
+        $emailLimit = $options['emails_at_once'];
+
+        foreach ($groupIds as $groupId)
+        {
+            $emails = TransactionalEmail::model()->findEmails(array($groupId, $emailLimit));
+
+            if ($this->verbose)
+            {
+                echo "[".date("Y-m-d H:i:s")."] Sending ".count($emails, true)." emails...\n";
+            }
+            $emails->send();
+        }
+//
+//        $this->_campaign = null;
+//
+//        if ($this->verbose)
+//        {
+//            echo "[".date("Y-m-d H:i:s")."] Finished the send-campaigns command!\n";
+//        }
+//
+//        return 0;
 
 
         /*

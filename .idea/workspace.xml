@@ -2,18 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c9b7ec24-babb-4088-b4f3-f3a6cadded3c" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/TransactionalEmailGroupController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app/TransactionalEmailGroupModel.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app/TransactionalEmailGroupModelRepository.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/migrations/00100_create_transactional_email_groups.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/apps/console/components/behaviors/TransactionalEmailSenderBehavior.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/common/models/TransactionalEmail.php" afterPath="$PROJECT_DIR$/apps/common/models/TransactionalEmail.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/console/commands/SendTransactionalEmailsCommand.php" afterPath="$PROJECT_DIR$/apps/console/commands/SendTransactionalEmailsCommand.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/TransactionalEmailsController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/TransactionalEmailsController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/UsersController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/UsersController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/routes.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/routes.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/ThirdParty/EmailOneApi/Endpoint/TransactionalEmails.php" afterPath="$PROJECT_DIR$/mhapi/app/ThirdParty/EmailOneApi/Endpoint/TransactionalEmails.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/console/config/main.php" afterPath="$PROJECT_DIR$/apps/console/config/main.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/TransactionalEmailGroupController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/TransactionalEmailGroupController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/migrations/00100_create_transactional_email_groups.sql" afterPath="$PROJECT_DIR$/mhapi/migrations/00100_create_transactional_email_groups.sql" />
     </list>
     <ignored path="MarketHero.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -35,74 +30,103 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="TransactionalEmailGroupController.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/TransactionalEmailGroupController.php">
+      <file leaf-file-name="SendTransactionalEmailsCommand.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/apps/console/commands/SendTransactionalEmailsCommand.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-43.615383">
-              <caret line="76" column="5" selection-start-line="76" selection-start-column="5" selection-end-line="76" selection-end-column="5" />
+            <state vertical-scroll-proportion="0.5895404">
+              <caret line="111" column="92" selection-start-line="111" selection-start-column="92" selection-end-line="111" selection-end-column="92" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TransactionalEmail.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/common/models/TransactionalEmail.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="326" column="59" selection-start-line="326" selection-start-column="59" selection-end-line="326" selection-end-column="59" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SendingDomain.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/common/models/SendingDomain.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-18.615385">
+              <caret line="358" column="25" selection-start-line="358" selection-start-column="25" selection-end-line="358" selection-end-column="25" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Campaign.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/common/models/Campaign.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="1236" column="48" selection-start-line="1236" selection-start-column="40" selection-end-line="1236" selection-end-column="48" />
               <folding>
-                <element signature="e#119#134#0#PHP" expanded="true" />
+                <element signature="n#beforeValidate#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="n#beforeSave#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="n#beforeDelete#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="n#afterFind#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="n#afterConstruct#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="n#afterDelete#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="n#generateUid#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="n#attributeHelpTexts#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="n#attributePlaceholders#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="n#pause#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="n#getRemovable#0;n#Campaign#0;n#!!top" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TransactionalEmailsController.php" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/TransactionalEmailsController.php">
+      <file leaf-file-name="CampaignSenderBehavior.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/console/components/behaviors/CampaignSenderBehavior.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.2905512">
-              <caret line="71" column="38" selection-start-line="71" selection-start-column="38" selection-end-line="71" selection-end-column="38" />
-              <folding />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="29" column="8" selection-start-line="29" selection-start-column="8" selection-end-line="29" selection-end-column="38" />
+              <folding>
+                <element signature="n#logDelivery#0;n#CampaignSenderBehavior#0;n#!!top" expanded="false" />
+                <element signature="n#countSubscribers#0;n#CampaignSenderBehavior#0;n#!!top" expanded="false" />
+                <element signature="n#findSubscribers#0;n#CampaignSenderBehavior#0;n#!!top" expanded="false" />
+                <element signature="n#sortSubscribers#0;n#CampaignSenderBehavior#0;n#!!top" expanded="false" />
+                <element signature="n#prepareEmail#0;n#CampaignSenderBehavior#0;n#!!top" expanded="false" />
+                <element signature="n#markCampaignSent#0;n#CampaignSenderBehavior#0;n#!!top" expanded="false" />
+                <element signature="n#sendCampaignStats#0;n#CampaignSenderBehavior#0;n#!!top" expanded="false" />
+                <element signature="n#getFailStatusFromResponse#0;n#CampaignSenderBehavior#0;n#!!top" expanded="false" />
+                <marker date="1462443580000" expanded="true" signature="2012:2466" placeholder="SELECT MAX(i..mw_list_subscriber..." />
+                <marker date="1462443580000" expanded="true" signature="2191:2386" placeholder="SELECT subsc..mw_list_subscriber..." />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TransactionalEmailGroupModel.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mhapi/app/TransactionalEmailGroupModel.php">
+      <file leaf-file-name="TransactionalEmailSenderBehavior.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/console/components/behaviors/TransactionalEmailSenderBehavior.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-11.769231">
-              <caret line="18" column="21" selection-start-line="18" selection-start-column="21" selection-end-line="18" selection-end-column="21" />
-              <folding />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="39" column="27" selection-start-line="33" selection-start-column="10" selection-end-line="39" selection-end-column="27" />
+              <folding>
+                <marker date="1462824526000" expanded="true" signature="1734:2214" placeholder="SELECT MAX(i..mw_list_subscriber..." />
+                <marker date="1462824526000" expanded="true" signature="1925:2132" placeholder="SELECT subsc..mw_list_subscriber..." />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="UserRepository.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mhapi/app/UserRepository.php">
+      <file leaf-file-name="SendCampaignsCommand.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/console/commands/SendCampaignsCommand.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TransactionalEmailGroupModelRepository.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mhapi/app/TransactionalEmailGroupModelRepository.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-8.5">
-              <caret line="18" column="1" selection-start-line="18" selection-start-column="1" selection-end-line="18" selection-end-column="1" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ListsCompany.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mhapi/app/ListsCompany.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ListsCompanyRepository.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mhapi/app/ListsCompanyRepository.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="197" column="17" selection-start-line="103" selection-start-column="7" selection-end-line="197" selection-end-column="17" />
+              <folding>
+                <element signature="n#init#0;n#SendCampaignsCommand#0;n#!!top" expanded="false" />
+                <element signature="n#_handleExternalSignal#0;n#SendCampaignsCommand#0;n#!!top" expanded="false" />
+                <element signature="n#_restoreStates#0;n#SendCampaignsCommand#0;n#!!top" expanded="false" />
+                <element signature="n#actionIndex#0;n#SendCampaignsCommand#0;n#!!top" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -115,8 +139,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/LogsController.php" />
-        <option value="$PROJECT_DIR$/mhapi/resources/views/logs/logs.blade.php" />
         <option value="$PROJECT_DIR$/mhapi/app/AbuseModel.php" />
         <option value="$PROJECT_DIR$/apps/console/console.php" />
         <option value="$PROJECT_DIR$/apps/customer/components/init/CustomerSystemInit.php" />
@@ -131,7 +153,6 @@
         <option value="$PROJECT_DIR$/apps/common/models/Campaign.php" />
         <option value="$PROJECT_DIR$/apps/common/config/main-custom.php" />
         <option value="$PROJECT_DIR$/apps/common/models/CampaignDeliveryLog.php" />
-        <option value="$PROJECT_DIR$/apps/console/components/behaviors/CampaignSenderBehavior.php" />
         <option value="$PROJECT_DIR$/apps/common/models/Customer.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServerController.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServerCustomerController.php" />
@@ -154,18 +175,21 @@
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceController.php" />
         <option value="$PROJECT_DIR$/mhapi/migrations/0001_create_transactional_email_groups.php" />
         <option value="$PROJECT_DIR$/mhapi/migrations/0001_create_transactional_email_groups.sql" />
-        <option value="$PROJECT_DIR$/mhapi/migrations/00100_create_transactional_email_groups.sql" />
-        <option value="$PROJECT_DIR$/apps/console/commands/SendTransactionalEmailsCommand.php" />
         <option value="$PROJECT_DIR$/mhapi/app/TransactionalEmailGroupModel.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/TransactionalEmailsGroupController.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/routes.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/UsersController.php" />
         <option value="$PROJECT_DIR$/mhapi/app/TransactionaEmailGroupRepository.php" />
         <option value="$PROJECT_DIR$/mhapi/app/TransactionaEmailGroupModelRepository.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/TransactionalEmailGroupController.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/TransactionalEmailsController.php" />
         <option value="$PROJECT_DIR$/mhapi/app/ThirdParty/EmailOneApi/Endpoint/TransactionalEmails.php" />
+        <option value="$PROJECT_DIR$/apps/console/components/behaviors/CampaignSenderBehavior.php" />
+        <option value="$PROJECT_DIR$/apps/console/components/behaviors/TransactionalEmailSenderBehavior.php" />
+        <option value="$PROJECT_DIR$/apps/console/config/main.php" />
         <option value="$PROJECT_DIR$/apps/common/models/TransactionalEmail.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/TransactionalEmailGroupController.php" />
+        <option value="$PROJECT_DIR$/mhapi/migrations/00100_create_transactional_email_groups.sql" />
+        <option value="$PROJECT_DIR$/apps/console/commands/SendTransactionalEmailsCommand.php" />
       </list>
     </option>
   </component>
@@ -209,6 +233,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -296,40 +321,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="ThirdParty" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EmailOneApi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MarketHero" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MarketHero" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mhapi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ThirdParty" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EmailOneApi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="Http" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -352,37 +343,11 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="ThirdParty" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EmailOneApi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Endpoint" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MarketHero" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MarketHero" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mhapi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="Http" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Middleware" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -440,6 +405,46 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="console" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apps" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="console" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="commands" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apps" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="common" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -466,49 +471,8 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MarketHero" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MarketHero" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="apps" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="api" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MarketHero" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MarketHero" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="apps" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="api" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="controllers" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -541,11 +505,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/apps/console/components/behaviors" />
       <recent name="$PROJECT_DIR$/mhapi/app" />
       <recent name="$PROJECT_DIR$/mhapi/app/Http/Controllers" />
       <recent name="$PROJECT_DIR$/apps/backend/controllers" />
       <recent name="$PROJECT_DIR$/mhapi/resources/views/dashboard/emails" />
-      <recent name="$PROJECT_DIR$/mhapi/resources/views/dashboard/campaigns" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/apps/api/controllers" />
@@ -601,17 +565,14 @@
     <editor active="true" />
     <layout>
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32971016" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.196" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1336" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32838038" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.45090908" sideWeight="0.50213677" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15589081" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32531646" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3275862" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32706767" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2496" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23417722" sideWeight="0.49786323" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3936709" sideWeight="0.49786323" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -620,8 +581,11 @@
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Command Line Tools Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32932332" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="REST Client" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3299909" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32531646" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32838038" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -689,87 +653,31 @@
           <line>205</line>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/apps/console/components/behaviors/CampaignSenderBehavior.php</url>
+          <line>642</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/apps/console/components/behaviors/CampaignSenderBehavior.php</url>
+          <line>27</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/apps/common/models/TransactionalEmail.php</url>
+          <line>185</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
       </breakpoints>
-      <option name="time" value="7" />
+      <option name="time" value="10" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/mhapi/.env">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServerController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-15.038462">
-          <caret line="26" column="8" selection-start-line="26" selection-start-column="8" selection-end-line="26" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServerCustomerController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-10.461538">
-          <caret line="21" column="8" selection-start-line="21" selection-start-column="8" selection-end-line="21" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServersController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-15.038462">
-          <caret line="26" column="8" selection-start-line="26" selection-start-column="8" selection-end-line="26" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/CampaignController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-11.769231">
-          <caret line="27" column="8" selection-start-line="27" selection-start-column="8" selection-end-line="27" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/CustomerController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-14.384615">
-          <caret line="26" column="8" selection-start-line="26" selection-start-column="8" selection-end-line="26" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/DeliveryServerController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-11.769231">
-          <caret line="21" column="8" selection-start-line="21" selection-start-column="8" selection-end-line="21" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/FieldsController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-9.807693">
-          <caret line="30" column="8" selection-start-line="30" selection-start-column="8" selection-end-line="30" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/Auth/AuthController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/SegmentConditionController.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.20015699">
           <caret line="29" column="8" selection-start-line="29" selection-start-column="8" selection-end-line="29" selection-end-column="8" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -777,7 +685,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.20015699">
           <caret line="21" column="8" selection-start-line="21" selection-start-column="8" selection-end-line="21" selection-end-column="8" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -785,7 +692,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.20015699">
           <caret line="17" column="8" selection-start-line="17" selection-start-column="8" selection-end-line="17" selection-end-column="8" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -793,7 +699,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-11.769231">
           <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -829,9 +734,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-10.461538">
           <caret line="16" column="38" selection-start-line="16" selection-start-column="38" selection-end-line="16" selection-end-column="38" />
-          <folding>
-            <element signature="e#23#59#0#PHP" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -856,34 +758,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/common/models/Campaign.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.43669724">
-          <caret line="0" column="32" selection-start-line="0" selection-start-column="28" selection-end-line="0" selection-end-column="32" />
-          <folding>
-            <element signature="n#beforeValidate#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="n#beforeSave#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="n#beforeDelete#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="n#afterFind#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="n#afterConstruct#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="n#afterDelete#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="n#generateUid#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="n#attributeHelpTexts#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="n#attributePlaceholders#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="n#pause#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="n#copy#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="n#getSegmentsDropDownArray#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="n#getGroupsDropDownArray#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="n#getRemovable#0;n#Campaign#0;n#!!top" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mhapi/composer.json">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -891,9 +769,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.051376145">
           <caret line="45" column="4" selection-start-line="45" selection-start-column="4" selection-end-line="45" selection-end-column="4" />
-          <folding>
-            <marker date="1462443580000" expanded="true" signature="12649:12750" placeholder="SELECT log_i..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -901,7 +776,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-10.461538">
           <caret line="22" column="40" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="40" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -909,7 +783,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-1.3495146">
           <caret line="19" column="5" selection-start-line="19" selection-start-column="5" selection-end-line="19" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -917,7 +790,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-3.1359224">
           <caret line="22" column="7" selection-start-line="22" selection-start-column="7" selection-end-line="22" selection-end-column="7" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -925,7 +797,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -933,28 +804,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/console/components/behaviors/CampaignSenderBehavior.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="99.42308">
-          <caret line="98" column="9" selection-start-line="95" selection-start-column="8" selection-end-line="98" selection-end-column="9" />
-          <folding>
-            <marker date="1462443580000" expanded="true" signature="2012:2466" placeholder="SELECT MAX(i..mw_list_subscriber..." />
-            <marker date="1462443580000" expanded="true" signature="2191:2386" placeholder="SELECT subsc..mw_list_subscriber..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/console/commands/SendTransactionalEmailsCommand.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-9.807693">
-          <caret line="51" column="78" selection-start-line="51" selection-start-column="78" selection-end-line="51" selection-end-column="78" />
-          <folding>
-            <marker date="1462805399000" expanded="true" signature="2521:2653" placeholder="DELETE FROM ..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -962,7 +811,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.2944882">
           <caret line="26" column="8" selection-start-line="26" selection-start-column="8" selection-end-line="26" selection-end-column="8" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -970,7 +818,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -982,19 +829,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/console/commands/SendCampaignsCommand.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="85.19231">
-          <caret line="0" column="32" selection-start-line="0" selection-start-column="28" selection-end-line="0" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/UsersController.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33464566">
           <caret line="30" column="18" selection-start-line="30" selection-start-column="18" selection-end-line="37" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1002,15 +840,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.7897638">
           <caret line="59" column="84" selection-start-line="59" selection-start-column="84" selection-end-line="59" selection-end-column="84" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/migrations/00100_create_transactional_email_groups.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.36728394">
-          <caret line="28" column="32" selection-start-line="28" selection-start-column="4" selection-end-line="28" selection-end-column="32" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1018,9 +847,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-26.153847">
           <caret line="144" column="96" selection-start-line="137" selection-start-column="7" selection-end-line="144" selection-end-column="96" />
-          <folding>
-            <element signature="e#120#136#0#PHP" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1028,7 +854,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1036,7 +861,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1044,7 +868,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1060,7 +883,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1068,17 +890,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-8.5">
           <caret line="18" column="1" selection-start-line="18" selection-start-column="1" selection-end-line="18" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/TransactionalEmailGroupController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-43.615383">
-          <caret line="76" column="5" selection-start-line="76" selection-start-column="5" selection-end-line="76" selection-end-column="5" />
-          <folding>
-            <element signature="e#119#134#0#PHP" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1086,15 +897,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.6330709">
           <caret line="18" column="6" selection-start-line="18" selection-start-column="6" selection-end-line="18" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/common/models/TransactionalEmail.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.42834646">
-          <caret line="62" column="79" selection-start-line="62" selection-start-column="79" selection-end-line="62" selection-end-column="79" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1102,11 +904,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.4417323">
           <caret line="149" column="31" selection-start-line="149" selection-start-column="31" selection-end-line="149" selection-end-column="31" />
-          <folding>
-            <marker date="1454686080000" expanded="true" signature="7422:7856" placeholder="SELECT AVG(t..customer_id..." />
-            <marker date="1454686080000" expanded="true" signature="7508:7785" placeholder="SELECT `a`.`..{{transactional_email}}..." />
-            <marker date="1454686080000" expanded="true" signature="8313:8464" placeholder="SELECT UNIX_..{{transactional_email}}..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1114,14 +911,185 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.27086616">
           <caret line="56" column="78" selection-start-line="56" selection-start-column="65" selection-end-line="56" selection-end-column="78" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/TransactionalEmailsController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.2905512">
+        <state vertical-scroll-proportion="1.1699687">
           <caret line="71" column="38" selection-start-line="71" selection-start-column="38" selection-end-line="71" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/common/components/behaviors/AppsBehavior.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/common/framework/base/CBehavior.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.5136986">
+          <caret line="72" column="20" selection-start-line="72" selection-start-column="20" selection-end-line="72" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/customer/config/main.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.83835614">
+          <caret line="202" column="4" selection-start-line="202" selection-start-column="4" selection-end-line="205" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/console/config/main.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-43.615383">
+          <caret line="82" column="47" selection-start-line="82" selection-start-column="47" selection-end-line="82" selection-end-column="72" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/console/components/db/ar/ActiveRecord.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.17401575">
+          <caret line="13" column="6" selection-start-line="13" selection-start-column="6" selection-end-line="13" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/common/models/TransactionalEmailLog.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.7322835">
+          <caret line="101" column="11" selection-start-line="85" selection-start-column="8" selection-end-line="101" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/common/framework/yiilite.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.34015748">
+          <caret line="8034" column="20" selection-start-line="8034" selection-start-column="20" selection-end-line="8034" selection-end-column="20" />
+          <folding>
+            <marker date="1453816882000" expanded="true" signature="263155:263232" placeholder="CREATE TABLE..${$this-&gt;quoteTableName($table)}..." />
+            <marker date="1453816882000" expanded="true" signature="263492:263503" placeholder="DROP TABLE $..." />
+            <marker date="1453816882000" expanded="true" signature="263704:263801" placeholder="ALTER TABLE ${$this-&gt;quoteTableName($table)}..." />
+            <marker date="1453816882000" expanded="true" signature="263897:263959" placeholder="ALTER TABLE ${$this-&gt;quoteTableName($table)}..." />
+            <marker date="1453816882000" expanded="true" signature="264063:264170" placeholder="ALTER TABLE ${$this-&gt;quoteTableName($table)}..." />
+            <marker date="1453816882000" expanded="true" signature="264273:264416" placeholder="ALTER TABLE ${$this-&gt;quoteTableName($table)}..." />
+            <marker date="1453816882000" expanded="true" signature="264929:265163" placeholder="ALTER TABLE ${$this-&gt;quoteTableName($table)}..." />
+            <marker date="1453816882000" expanded="true" signature="265349:265415" placeholder="ALTER TABLE ${$this-&gt;quoteTableName($table)}..." />
+            <marker date="1453816882000" expanded="true" signature="266316:266470" placeholder="ALTER TABLE ${$this-&gt;quoteTableName($table)}..." />
+            <marker date="1453816882000" expanded="true" signature="266535:266601" placeholder="ALTER TABLE ${$this-&gt;quoteTableName($table)}..." />
+            <marker date="1453816882000" expanded="true" signature="267460:267500" placeholder="SELECT MAX(`..${{$table-&gt;rawName}..." />
+            <marker date="1453816882000" expanded="true" signature="267658:267725" placeholder="UPDATE sqlit..." />
+            <marker date="1453816882000" expanded="true" signature="267992:268069" placeholder="SELECT DISTI..sqlite_master..." />
+            <marker date="1453816882000" expanded="true" signature="270131:270191" placeholder="ALTER TABLE ${$this-&gt;quoteTableName($table)}..." />
+            <marker date="1453816882000" expanded="true" signature="270283:270295" placeholder="DELETE FROM ..." />
+            <marker date="1453816882000" expanded="true" signature="288845:288990" placeholder="INSERT INTO ${$this-&gt;_connection-&gt;quoteTableName($table)}..." />
+            <marker date="1453816882000" expanded="true" signature="289814:289826" placeholder="DELETE FROM ..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/common/models/TransactionalEmail.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="326" column="59" selection-start-line="326" selection-start-column="59" selection-end-line="326" selection-end-column="59" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/common/models/Campaign.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="1236" column="48" selection-start-line="1236" selection-start-column="40" selection-end-line="1236" selection-end-column="48" />
+          <folding>
+            <element signature="n#beforeValidate#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="n#beforeSave#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="n#beforeDelete#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="n#afterFind#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="n#afterConstruct#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="n#afterDelete#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="n#generateUid#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="n#attributeHelpTexts#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="n#attributePlaceholders#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="n#pause#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="n#getRemovable#0;n#Campaign#0;n#!!top" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/console/components/behaviors/CampaignSenderBehavior.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="29" column="8" selection-start-line="29" selection-start-column="8" selection-end-line="29" selection-end-column="38" />
+          <folding>
+            <element signature="n#logDelivery#0;n#CampaignSenderBehavior#0;n#!!top" expanded="false" />
+            <element signature="n#countSubscribers#0;n#CampaignSenderBehavior#0;n#!!top" expanded="false" />
+            <element signature="n#findSubscribers#0;n#CampaignSenderBehavior#0;n#!!top" expanded="false" />
+            <element signature="n#sortSubscribers#0;n#CampaignSenderBehavior#0;n#!!top" expanded="false" />
+            <element signature="n#prepareEmail#0;n#CampaignSenderBehavior#0;n#!!top" expanded="false" />
+            <element signature="n#markCampaignSent#0;n#CampaignSenderBehavior#0;n#!!top" expanded="false" />
+            <element signature="n#sendCampaignStats#0;n#CampaignSenderBehavior#0;n#!!top" expanded="false" />
+            <element signature="n#getFailStatusFromResponse#0;n#CampaignSenderBehavior#0;n#!!top" expanded="false" />
+            <marker date="1462443580000" expanded="true" signature="2012:2466" placeholder="SELECT MAX(i..mw_list_subscriber..." />
+            <marker date="1462443580000" expanded="true" signature="2191:2386" placeholder="SELECT subsc..mw_list_subscriber..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/console/components/behaviors/TransactionalEmailSenderBehavior.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="39" column="27" selection-start-line="33" selection-start-column="10" selection-end-line="39" selection-end-column="27" />
+          <folding>
+            <marker date="1462824526000" expanded="true" signature="1734:2214" placeholder="SELECT MAX(i..mw_list_subscriber..." />
+            <marker date="1462824526000" expanded="true" signature="1925:2132" placeholder="SELECT subsc..mw_list_subscriber..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/console/commands/SendCampaignsCommand.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="197" column="17" selection-start-line="103" selection-start-column="7" selection-end-line="197" selection-end-column="17" />
+          <folding>
+            <element signature="n#init#0;n#SendCampaignsCommand#0;n#!!top" expanded="false" />
+            <element signature="n#_handleExternalSignal#0;n#SendCampaignsCommand#0;n#!!top" expanded="false" />
+            <element signature="n#_restoreStates#0;n#SendCampaignsCommand#0;n#!!top" expanded="false" />
+            <element signature="n#actionIndex#0;n#SendCampaignsCommand#0;n#!!top" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/TransactionalEmailGroupController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-43.153847">
+          <caret line="74" column="56" selection-start-line="74" selection-start-column="56" selection-end-line="74" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/migrations/00100_create_transactional_email_groups.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5394737">
+          <caret line="41" column="10" selection-start-line="41" selection-start-column="10" selection-end-line="41" selection-end-column="10" />
+          <folding>
+            <marker date="1463057958000" expanded="true" signature="585:982" placeholder="CREATE TABLE..mw_transactional_email_options..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/common/models/SendingDomain.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-18.615385">
+          <caret line="358" column="25" selection-start-line="358" selection-start-column="25" selection-end-line="358" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/console/commands/SendTransactionalEmailsCommand.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5895404">
+          <caret line="111" column="92" selection-start-line="111" selection-start-column="92" selection-end-line="111" selection-end-column="92" />
           <folding />
         </state>
       </provider>

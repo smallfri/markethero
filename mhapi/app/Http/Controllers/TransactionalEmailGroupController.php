@@ -72,7 +72,7 @@ class TransactionalEmailGroupController extends ApiController
         }
 
 
-        return $this->respond(['transaction_email_group_uid' => $list_uid]);
+        return $this->respond(['transaction_email_group_id' => $TransactionEmailGroup->transactional_email_group_id]);
 
     }
 

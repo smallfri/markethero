@@ -2,9 +2,9 @@
 
 /**
  * TransactionalEmail
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
  * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
@@ -34,6 +34,7 @@
  * @property string $status
  * @property string $date_added
  * @property string $last_updated
+ * @property integer $transactional_email_group_id
  *
  * The followings are the available model relations:
  * @property Customer $customer
@@ -43,9 +44,33 @@ class TransactionalEmail extends ActiveRecord
 {
     const STATUS_SENT    = 'sent';
     const STATUS_UNSENT  = 'unsent';
-    
+    const STATUS_DRAFT = 'draft';
+
+        const STATUS_PENDING_SENDING = 'pending-sending';
+
+        const STATUS_SENDING = 'sending';
+
+        const STATUS_PROCESSING = 'processing';
+
+        const STATUS_PAUSED = 'paused';
+
+        const STATUS_PENDING_DELETE = 'pending-delete';
+
+        const STATUS_IN_COMPLIANCE = 'in-compliance';
+
+        const STATUS_IN_REVIEW = 'in-review‚Ø';
+
+        const TYPE_REGULAR = 'regular';
+
+        const TYPE_AUTORESPONDER = 'autoresponder';
+
+        const BULK_ACTION_PAUSE_UNPAUSE = 'pause-unpause';
+
+        const BULK_ACTION_MARK_SENT = 'mark-sent';
+
+
     public $sendDirectly = false;
-    
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -109,7 +134,7 @@ class TransactionalEmail extends ActiveRecord
 		);
         return CMap::mergeArray($labels, parent::attributeLabels());
 	}
-    
+
     protected function afterConstruct()
     {
         if ($this->send_at == '0000-00-00 00:00:00') {
@@ -117,7 +142,7 @@ class TransactionalEmail extends ActiveRecord
         }
         parent::afterConstruct();
     }
-    
+
     protected function afterFind()
     {
         if ($this->send_at == '0000-00-00 00:00:00') {
@@ -125,7 +150,7 @@ class TransactionalEmail extends ActiveRecord
         }
         parent::afterFind();
     }
-    
+
     protected function beforeValidate()
     {
         if (empty($this->send_at)) {
@@ -133,7 +158,7 @@ class TransactionalEmail extends ActiveRecord
         }
         return parent::beforeValidate();
     }
-    
+
     protected function beforeSave()
     {
         if (empty($this->plain_text) && !empty($this->body)) {
@@ -148,7 +173,7 @@ class TransactionalEmail extends ActiveRecord
         }
         return parent::beforeSave();
     }
-    
+
     // override parent implementation
     public function save($runValidation = true, $attributes = null)
     {
@@ -157,37 +182,37 @@ class TransactionalEmail extends ActiveRecord
         }
         return parent::save($runValidation, $attributes);
     }
-    
+
     public function send()
-    { 
+    {
         static $servers     = array();
         $this->sendDirectly = false;
         $serverParams       = array(
-            'customerCheckQuota' => false, 
-            'serverCheckQuota'   => false, 
+            'customerCheckQuota' => false,
+            'serverCheckQuota'   => false,
             'useFor'             => array(DeliveryServer::USE_FOR_TRANSACTIONAL)
         );
-        
+
         $cid = (int)$this->customer_id;
         if (!array_key_exists($cid, $servers)) {
             $servers[$cid] = DeliveryServer::pickServer(0, $this, $serverParams);
         }
-        
+
         if (empty($servers[$cid])) {
             return false;
         }
-        
+
         $server = $servers[$cid];
-        
+
         if (!$server->canSendToDomainOf($this->to_email)) {
             return false;
         }
-        
+
         if (EmailBlacklist::isBlacklisted($this->to_email)) {
             $this->delete();
             return false;
         }
-        
+
         if ($server->getIsOverQuota()) {
             $currentServerId = $server->server_id;
             if (!($servers[$cid] = DeliveryServer::pickServer($currentServerId, $this, $serverParams))) {
@@ -196,11 +221,11 @@ class TransactionalEmail extends ActiveRecord
             }
             $server = $servers[$cid];
         }
-        
+
         if (!empty($this->customer_id) && $this->customer->getIsOverQuota()) {
             return false;
         }
-        
+
         $emailParams = array(
             'fromName'      => $this->from_name,
             'to'            => array($this->to_email => $this->to_name),
@@ -208,29 +233,29 @@ class TransactionalEmail extends ActiveRecord
             'body'          => $this->body,
             'plainText'     => $this->plain_text,
         );
-        
+
         if (!empty($this->from_email)) {
             $emailParams['from'] = array($this->from_email => $this->from_name);
         }
-        
+
         if (!empty($this->reply_to_name) && !empty($this->reply_to_email)) {
             $emailParams['replyTo'] = array($this->reply_to_email => $this->reply_to_name);
         }
-        
+
         $sent = $server->setDeliveryFor(DeliveryServer::DELIVERY_FOR_TRANSACTIONAL)->setDeliveryObject($this)->sendEmail($emailParams);
         if ($sent) {
             $this->status = TransactionalEmail::STATUS_SENT;
         } else {
             $this->retries++;
         }
-        
+
         $this->save(false);
-        
+
         $log = new TransactionalEmailLog();
         $log->email_id = $this->email_id;
         $log->message  = $server->getMailer()->getLog();
         $log->save(false);
-        
+
         return (bool)$sent;
     }
 
@@ -249,7 +274,7 @@ class TransactionalEmail extends ActiveRecord
 	public function search()
 	{
 		$criteria=new CDbCriteria;
-        
+
 		$criteria->compare('t.to_email', $this->to_email, true);
 		$criteria->compare('t.to_name', $this->to_name, true);
 		$criteria->compare('t.from_email', $this->from_email, true);
@@ -258,9 +283,10 @@ class TransactionalEmail extends ActiveRecord
 		$criteria->compare('t.reply_to_name', $this->reply_to_name, true);
 		$criteria->compare('t.subject', $this->subject, true);
 		$criteria->compare('t.status', $this->status);
-        
+		$criteria->compare('t.transactional_email_group_id', $this->transactional_email_group_id);
+
         $criteria->order = 't.email_id DESC';
-        
+
 		return new CActiveDataProvider(get_class($this), array(
             'criteria'   => $criteria,
             'pagination' => array(
@@ -283,25 +309,36 @@ class TransactionalEmail extends ActiveRecord
 	 */
 	public static function model($className=__CLASS__)
 	{
-		return parent::model($className);
+        return parent::model($className);
 	}
-    
+
     public function findByUid($email_uid)
     {
         return $this->findByAttributes(array(
             'email_uid' => $email_uid,
-        ));    
+        ));
     }
-    
+
+    public function findEmails($params)
+    {
+
+        $criteria = new CDbCriteria();
+        $criteria->compare('transactional_email_group_id', $params['groupId']);
+        $criteria->condition = 'status = "pending-sending"';
+        $criteria->limit = (int)$params['limit'];
+
+        return self::model()->find($criteria);
+    }
+
     public function generateUid()
     {
         $unique = StringHelper::uniqid();
         $exists = $this->findByUid($unique);
-        
+
         if (!empty($exists)) {
             return $this->generateUid();
         }
-        
+
         return $unique;
     }
 
@@ -309,12 +346,12 @@ class TransactionalEmail extends ActiveRecord
     {
         return $this->email_uid;
     }
-    
+
     public function getSendAt()
     {
         return $this->dateTimeFormatter->formatLocalizedDateTime($this->send_at);
     }
-    
+
     public function getStatusesList()
     {
         return array(

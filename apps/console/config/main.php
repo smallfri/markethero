@@ -77,4 +77,9 @@ return array(
             'class' => 'console.components.init.ConsoleSystemInit',
         ),
     ),
+
+    'params'=>array(
+            // list of controllers where the user doesn't have to be logged in.
+            'unprotectedControllers' => array('send-transactional-emails')
+        ),
 );
