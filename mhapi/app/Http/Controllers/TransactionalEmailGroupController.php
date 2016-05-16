@@ -60,19 +60,19 @@ class TransactionalEmailGroupController extends ApiController
 
         $list_uid = uniqid();
 
-        $TransactionEmailGroup = new TransactionalEmailGroupModel();
-        $TransactionEmailGroup->transactional_email_group_uid = $list_uid;
-        $TransactionEmailGroup->customer_id = $data['customer_id'];
-        $TransactionEmailGroup->save();
+        $TransactionalEmailGroup = new TransactionalEmailGroupModel();
+        $TransactionalEmailGroup->transactional_email_group_uid = $list_uid;
+        $TransactionalEmailGroup->customer_id = $data['customer_id'];
+        $TransactionalEmailGroup->save();
 
 
-        if ($TransactionEmailGroup->transactional_email_group_id<1)
+        if ($TransactionalEmailGroup->transactional_email_group_id<1)
         {
             return $this->respondWithError('There was an error, the group was not created.');
         }
 
 
-        return $this->respond(['transaction_email_group_id' => $TransactionEmailGroup->transactional_email_group_id]);
+        return $this->respond(['transaction_email_group_id' => $TransactionalEmailGroup->transactional_email_group_id]);
 
     }
 

@@ -57,6 +57,6 @@ Route::group(['prefix' => 'v1'], function()
     Route::resource('bounce', 'BounceController');
     Route::resource('spam', 'SpamController');
     Route::resource('blacklist', 'BlacklistController');
-    Route::resource('transaction-email-group', 'TransactionalEmailGroupController');
+    Route::resource('transactional-email-group', 'TransactionalEmailGroupController');
 
 });

@@ -25,29 +25,26 @@ $$
 CREATE PROCEDURE migrate_up_00100()
 BEGIN
 
- CREATE TABLE `market_hero`.`mw_transactional_email_options` (
-    `id` INT NOT NULL,
-    `groups_at_once` INT NULL,
-    `emails_at_once` INT NULL,
-    `change_server_at` INT NULL,
-    PRIMARY KEY (`id`),
-      CONSTRAINT `customer_group_id`
-      FOREIGN KEY (`customer_group_id`)
-      REFERENCES `market_hero`.`mw_customer_group` (`group_id`)
-      ON DELETE NO ACTION
-      ON UPDATE NO ACTION);
+ CREATE TABLE `mw_transactional_email_options` (
+   `id` int(11) NOT NULL,
+   `groups_at_once` int(11) DEFAULT NULL,
+   `emails_at_once` int(11) DEFAULT NULL,
+   `change_server_at` int(11) DEFAULT NULL,
+   PRIMARY KEY (`id`)
+ ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
     INSERT INTO `mw_transactional_email_options`
-    (`id`, `send_at_once`, `emails_per_minute`, `change_server_at`)
+    (`id`, `groups_at_once`, `emails_at_once`, `change_server_at`)
     VALUES
-    (25, 100, 1000);
+    (1, 25, 100, 1000);
 
-  CREATE TABLE `market_hero`.`mw_transactional_email_group` (
-    `transactional_email_group_id` INT NOT NULL AUTO_INCREMENT ,
-    `transactional_email_group_uid` INT(11) NOT NULL,
-    `customer_id` INT(11) NOT NULL,
-    PRIMARY KEY (`transactional_email_group_id`),
-    UNIQUE INDEX `transactional_email_group_uid_UNIQUE` (`transactional_email_group_uid` ASC));
+ CREATE TABLE `mw_transactional_email_group` (
+   `transactional_email_group_id` int(11) NOT NULL AUTO_INCREMENT,
+   `transactional_email_group_uid` char(13) NOT NULL,
+   `customer_id` int(11) NOT NULL,
+   PRIMARY KEY (`transactional_email_group_id`),
+   UNIQUE KEY `transactional_email_group_uid_UNIQUE` (`transactional_email_group_uid`)
+ ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
   CREATE TABLE `mw_compliance_level_ids` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
