@@ -117,16 +117,6 @@ class SendTransactionalEmailsCommand extends CConsoleCommand
             }
             $emails->send();
         }
-//
-//        $this->_campaign = null;
-//
-//        if ($this->verbose)
-//        {
-//            echo "[".date("Y-m-d H:i:s")."] Finished the send-campaigns command!\n";
-//        }
-//
-//        return 0;
-
 
         /*
          *

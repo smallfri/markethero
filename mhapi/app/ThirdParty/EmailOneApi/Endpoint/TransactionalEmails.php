@@ -70,7 +70,6 @@ class EmailOneApi_Endpoint_TransactionalEmails extends EmailOneApi_Base
      */
     public function create(array $data)
     {
-        var_dump($data);
         if (!empty($data['body'])) {
             $data['body'] = base64_encode($data['body']);
         }

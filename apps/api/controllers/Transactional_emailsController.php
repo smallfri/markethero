@@ -159,7 +159,7 @@ class Transactional_emailsController extends Controller
          *
          */
         $email->customer_id = $attributes['customer_id'];
-
+        $email->transactional_email_group_id = $attributes['transactional_email_group_id'];
 
         if (!$email->save()) {
             return $this->renderJson(array(
@@ -167,7 +167,7 @@ class Transactional_emailsController extends Controller
                 'error'     => $email->shortErrors->getAll(),
             ), 422);
         }
-        
+
         return $this->renderJson(array(
             'status'     => 'success',
             'email_uid'  => $email->email_uid,

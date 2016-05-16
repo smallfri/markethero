@@ -18,6 +18,7 @@
  * @property string $email_id
  * @property string $email_uid
  * @property integer $customer_id
+ * @property integer $transactional_email_group_id
  * @property string $to_email
  * @property string $to_name
  * @property string $from_email
@@ -34,7 +35,6 @@
  * @property string $status
  * @property string $date_added
  * @property string $last_updated
- * @property integer $transactional_email_group_id
  *
  * The followings are the available model relations:
  * @property Customer $customer
@@ -92,7 +92,7 @@ class TransactionalEmail extends ActiveRecord
             array('send_at', 'date', 'format' => 'yyyy-mm-dd hh:mm:ss'),
 
 			// The following rule is used by search().
-			array('to_email, to_name, from_email, from_name, reply_to_email, reply_to_name, subject, status', 'safe', 'on'=>'search'),
+			array('to_email, to_name, from_email, from_name, reply_to_email, reply_to_name, subject, status, transactional_email_group_id', 'safe', 'on'=>'search'),
 		);
         return CMap::mergeArray($rules, parent::rules());
 	}
@@ -131,6 +131,7 @@ class TransactionalEmail extends ActiveRecord
 			'max_retries'    => Yii::t('transactional_emails', 'Max retries'),
 			'send_at'        => Yii::t('transactional_emails', 'Send at'),
 			'status'         => Yii::t('transactional_emails', 'Status'),
+			'transactional_email_group_id'         => Yii::t('transactional_emails', 'Group ID'),
 		);
         return CMap::mergeArray($labels, parent::attributeLabels());
 	}
