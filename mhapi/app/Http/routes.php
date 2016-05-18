@@ -39,7 +39,8 @@ Route::post('v1/blacklist/subscriber/{email}', 'BlacklistController@store');
 
 Route::group(['prefix' => 'v1'], function()
 {
-    Route::resource('abuse', 'AbuseController');
+    Route::resource('abuse', 'GroupEmailAbuseController');
+//    Route::resource('group-abuse', 'GroupEmailAbuseController');
     Route::resource('customer', 'CustomerController');
     Route::resource('customers', 'CustomersController');
     Route::resource('delivery-servers', 'DeliveryServerController@all');
@@ -57,6 +58,7 @@ Route::group(['prefix' => 'v1'], function()
     Route::resource('bounce', 'BounceController');
     Route::resource('spam', 'SpamController');
     Route::resource('blacklist', 'BlacklistController');
-    Route::resource('transactional-email-group', 'TransactionalEmailGroupController');
+    Route::resource('create-group-email-group', 'GroupEmailsGroupController');
+    Route::resource('create-group-email', 'GroupEmailsController');
 
 });

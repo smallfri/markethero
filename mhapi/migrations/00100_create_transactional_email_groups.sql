@@ -25,7 +25,7 @@ $$
 CREATE PROCEDURE migrate_up_00100()
 BEGIN
 
- CREATE TABLE `mw_transactional_email_options` (
+  CREATE TABLE `mw_group_email_options` (
    `id` int(11) NOT NULL,
    `groups_at_once` int(11) DEFAULT NULL,
    `emails_at_once` int(11) DEFAULT NULL,
@@ -34,17 +34,17 @@ BEGIN
    PRIMARY KEY (`id`)
  ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-    INSERT INTO `mw_transactional_email_options`
-    (`id`, `groups_at_once`, `emails_at_once`, `change_server_at`)
+    INSERT INTO `mw_group_email_options`
+    (`id`, `groups_at_once`, `emails_at_once`, `change_server_at`, `compliance_limit` )
     VALUES
     (1, 25, 100, 1000, 1000);
 
- CREATE TABLE `mw_transactional_email_group` (
-   `transactional_email_group_id` int(11) NOT NULL AUTO_INCREMENT,
-   `transactional_email_group_uid` char(13) NOT NULL,
+ CREATE TABLE `mw_group_email_groups` (
+   `group_email_id` int(11) NOT NULL AUTO_INCREMENT,
+   `group_email_uid` char(13) NOT NULL,
    `customer_id` int(11) NOT NULL,
-   PRIMARY KEY (`transactional_email_group_id`),
-   UNIQUE KEY `transactional_email_group_uid_UNIQUE` (`transactional_email_group_uid`)
+   PRIMARY KEY (`group_email_id`),
+   UNIQUE KEY `group_email_uid_UNIQUE` (`group_email_uid`)
  ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
   CREATE TABLE `mw_compliance_levels` (
@@ -67,8 +67,39 @@ BEGIN
   	(9, 0.90),
   	(10, 1.00);
 
-  CREATE TABLE `mw_transactional_email_compliance` (
-    `transactional_email_group_id` int(11) NOT NULL,
+
+
+  CREATE TABLE `mw_group_email` (
+    `email_id` bigint(20) NOT NULL AUTO_INCREMENT,
+    `email_uid` char(13) NOT NULL,
+    `customer_id` int(11) DEFAULT NULL,
+    `group_email_id` int(11) DEFAULT NULL,
+    `to_email` varchar(150) NOT NULL,
+    `to_name` varchar(150) NOT NULL,
+    `from_email` varchar(150) NOT NULL,
+    `from_name` varchar(150) NOT NULL,
+    `reply_to_email` varchar(150) DEFAULT NULL,
+    `reply_to_name` varchar(150) DEFAULT NULL,
+    `subject` varchar(255) NOT NULL,
+    `body` longblob NOT NULL,
+    `plain_text` longblob NOT NULL,
+    `priority` tinyint(1) NOT NULL DEFAULT '5',
+    `retries` tinyint(1) NOT NULL DEFAULT '0',
+    `max_retries` tinyint(1) NOT NULL DEFAULT '3',
+    `send_at` datetime NOT NULL,
+    `status` char(15) NOT NULL DEFAULT 'unsent',
+    `date_added` datetime NOT NULL,
+    `last_updated` datetime NOT NULL,
+    PRIMARY KEY (`email_id`),
+    UNIQUE KEY `email_uid_UNIQUE` (`email_uid`),
+    KEY `customer_id` (`customer_id`),
+    KEY `group_email_id` (`group_email_id`),
+    CONSTRAINT `mw_group_email_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `mw_customer` (`customer_id`),
+    CONSTRAINT `mw_group_email_ibfk_2` FOREIGN KEY (`group_email_id`) REFERENCES `mw_customer_group` (`group_id`)
+  ) ENGINE=InnoDB AUTO_INCREMENT=334 DEFAULT CHARSET=utf8;
+
+  CREATE TABLE `mw_group_email_compliance` (
+    `group_email_id` int(11) NOT NULL,
     `compliance_level_type_id` int(11) DEFAULT NULL,
     `last_processed_id` bigint(8) DEFAULT NULL,
     `compliance_round` int(11) DEFAULT NULL,
@@ -76,14 +107,30 @@ BEGIN
     `date_added` datetime DEFAULT NULL,
     `last_updated` datetime DEFAULT NULL,
     `offset` int(11) NOT NULL,
-    `compliance_status` VARCHAR (45) NOT NULL,
-    PRIMARY KEY (`transactional_email_group_id`),
-    KEY `fk_compliance_level1` (`compliance_level_type_id`),
-    KEY `fk_approval_user_id` (`compliance_approval_user_id`),
-    CONSTRAINT `fk_approval_user_id` FOREIGN KEY (`compliance_approval_user_id`) REFERENCES `mw_user` (`user_id`),
-    CONSTRAINT `fk_transactional_email_group_id` FOREIGN KEY (`transactional_email_group_id`) REFERENCES `mw_transactional_email_group` (`transactional_email_group_id`),
-    CONSTRAINT `fk_compliance_level1` FOREIGN KEY (`compliance_level_type_id`) REFERENCES `mw_compliance_level_ids` (`id`)
+    `compliance_status` varchar(45) NOT NULL,
+    PRIMARY KEY (`group_email_id`),
+    KEY `compliance_level_type_id` (`compliance_level_type_id`),
+    KEY `compliance_approval_user_id` (`compliance_approval_user_id`),
+    CONSTRAINT `mw_group_email_compliance_ibfk_3` FOREIGN KEY (`group_email_id`) REFERENCES `mw_group_email_groups` (`group_email_id`),
+    CONSTRAINT `mw_group_email_compliance_ibfk_1` FOREIGN KEY (`compliance_level_type_id`) REFERENCES `mw_compliance_levels` (`id`),
+    CONSTRAINT `mw_group_email_compliance_ibfk_2` FOREIGN KEY (`compliance_approval_user_id`) REFERENCES `mw_user` (`user_id`)
   ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+  CREATE TABLE `mw_group_email_abuse_report` (
+    `report_id` int(11) NOT NULL AUTO_INCREMENT,
+    `customer_id` int(11) DEFAULT NULL,
+    `customer_info` varchar(255) NOT NULL,
+    `campaign_info` varchar(255) NOT NULL,
+    `list_info` varchar(255) NOT NULL,
+    `subscriber_info` varchar(255) NOT NULL,
+    `reason` varchar(255) NOT NULL,
+    `log` varchar(255) DEFAULT NULL,
+    `date_added` datetime NOT NULL,
+    `last_updated` datetime NOT NULL,
+    PRIMARY KEY (`report_id`),
+    KEY `customer_id` (`customer_id`),
+    CONSTRAINT `mw_group_email_abuse_report_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `mw_customer` (`customer_id`)
+  ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 END
 $$

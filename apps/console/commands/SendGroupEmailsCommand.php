@@ -1,4 +1,6 @@
-<?php defined('MW_PATH')||exit('No direct script access allowed');
+<?php use App\GroupEmailComplianceModel;
+
+defined('MW_PATH')||exit('No direct script access allowed');
 
 /**
  * SendTransactionalEmailsCommand
@@ -21,12 +23,6 @@ class SendGroupEmailsCommand extends CConsoleCommand
     {
 
         $mutex = Yii::app()->mutex;
-        $lockName = $this->getLockName();
-
-        if (!$mutex->acquire($lockName))
-        {
-            return 1;
-        }
 
         // added in 1.3.4.7
         Yii::app()->hooks->doAction('console_command_transactional_emails_before_process', $this);
@@ -36,7 +32,6 @@ class SendGroupEmailsCommand extends CConsoleCommand
         // added in 1.3.4.7
         Yii::app()->hooks->doAction('console_command_transactional_emails_after_process', $this);
 
-        $mutex->release($lockName);
         return 0;
     }
 
@@ -55,7 +50,7 @@ class SendGroupEmailsCommand extends CConsoleCommand
 
         $options = Yii::app()->db->createCommand()
             ->select('*')
-            ->from('mw_transactional_email_options')
+            ->from('mw_group_email_options')
             ->where('id=:id', array(':id' => 1))
             ->queryRow();
 
@@ -74,15 +69,15 @@ class SendGroupEmailsCommand extends CConsoleCommand
 
         // Get Groups that have status != sent
         $transactionalEmailsGroups = Yii::app()->db->createCommand()
-            ->select('te.transactional_email_group_id, cl.threshold, tec.*')
-            ->from('mw_transactional_email te')
-            ->join('mw_transactional_email_group teg',
-                'te.transactional_email_group_id=teg.transactional_email_group_id')
-            ->join('mw_transactional_email_compliance tec',
-                'tec.transactional_email_group_id=te.transactional_email_group_id')
-            ->join('mw_compliance_levels cl', 'cl.id = tec.compliance_level_type_id')
-            ->where('tec.compliance_status != "sent"')
-            ->group('te.transactional_email_group_id')
+            ->select('ge.group_email_id, cl.threshold, gec.*')
+            ->from('mw_group_email ge')
+            ->join('mw_group_email_groups geg',
+                'ge.group_email_id=geg.group_email_id')
+            ->join('mw_group_email_compliance gec',
+                'gec.group_email_id=ge.group_email_id')
+            ->join('mw_compliance_levels cl', 'cl.id = gec.compliance_level_type_id')
+            ->where('gec.compliance_status != "sent"')
+            ->group('ge.group_email_id')
             ->limit($groupLimit)
             ->queryAll();
 
@@ -121,8 +116,8 @@ class SendGroupEmailsCommand extends CConsoleCommand
             // Get count of emails for this group
             $count = Yii::app()->db->createCommand()
                 ->select('count(*) as count')
-                ->from('mw_transactional_email')
-                ->where('transactional_email_group_id=:id', array(':id' => (int)$group['transactional_email_group_id']))
+                ->from('mw_group_email')
+                ->where('group_email_id=:id', array(':id' => (int)$group['group_email_id']))
                 ->queryRow();
 
             if ($this->verbose)
@@ -132,7 +127,7 @@ class SendGroupEmailsCommand extends CConsoleCommand
 
             $emailsToBeSent = $count['count'];
 
-            //If the count is greater than the option emails at once, set emailsToBeSent to emails at once
+            // If the count is greater than the option emails at once, set emailsToBeSent to emails at once
             if ($count['count']>=$emailsAtOnce)
             {
                 $emailsToBeSent = $emailsAtOnce;
@@ -171,24 +166,25 @@ class SendGroupEmailsCommand extends CConsoleCommand
                 }
 
                 // Update emails to in-review status
-                TransactionalEmail::model()
+                GroupEmail::model()
                     ->updateAll(['status' => 'in-review'],
-                        'transactional_email_group_id= '.$group['transactional_email_group_id'].' AND status = "pending-sending" ORDER BY email_id DESC LIMIT '.$in_review_count
+                        'group_email_id= '.$group['group_email_id'].' AND status = "pending-sending" ORDER BY email_id DESC LIMIT '.$in_review_count
                     );
 
                 //update status of the group so we don't send anymore emails
-                $TransactionalEmailCompliance = TransactionalEmailCompliance::model()
-                    ->findByPk($group['transactional_email_group_id']);
-                $TransactionalEmailCompliance->compliance_status = 'compliance-review';
-                $TransactionalEmailCompliance->update();
+                $GroupEmailCompliance = GroupEmailCompliance::model()
+                    ->findByPk(5);
+                $GroupEmailCompliance->compliance_status = 'compliance-review';
+                $GroupEmailCompliance->update();
+
 
             }
             elseif ($group['compliance_status']=='approved')
             {
                 // Update emails to pending-sending status if this Group is no longer under review
-                TransactionalEmail::model()
+                GroupEmail::model()
                     ->updateAll(['status' => 'pending-sending'],
-                        'transactional_email_group_id= '.$group['transactional_email_group_id'].' AND status = "in-review"'
+                        'group_email_id= '.$group['group_email_id'].' AND status = "in-review"'
                     );
             }
 
@@ -197,15 +193,15 @@ class SendGroupEmailsCommand extends CConsoleCommand
                 echo "[".date("Y-m-d H:i:s")."] Preparing to send ".$emailsToBeSent." email(s)...\n";
             }
 
-            $emails = TransactionalEmail::model()->findAll(array(
+            $emails = GroupEmail::model()->findAll(array(
                 'condition' => '`status` = "pending-sending" AND `send_at` < NOW() AND `retries` < `max_retries`',
                 'order' => 'email_id ASC',
                 'limit' => $emailsToBeSent
-//                'offset' => $group['offset']
             ));
             if ($this->verbose)
             {
                 echo "[".date("Y-m-d H:i:s")."] Emails Count ".count($emails)."...\n";
+
             }
             /*
              * Send emails
@@ -219,63 +215,15 @@ class SendGroupEmailsCommand extends CConsoleCommand
                 echo "[".date("Y-m-d H:i:s")."] Sent ".count($emails)." email(s)...\n";
             }
 
-            // Set offset
-//            $compliance = TransactionalEmailCompliance::model()->findByPk($group['transactional_email_group_id']);
-//            $compliance->offset = count($emails)+$group['offset'];
-//            $compliance->update();
+            Yii::app()->getDb()->createCommand('UPDATE {{group_email}} SET `status` = "sent" WHERE `status` = "unsent" AND send_at < NOW() AND retries >= max_retries')->execute();
+            Yii::app()->getDb()->createCommand('DELETE FROM {{group_email}} WHERE `status` = "sent" AND send_at < NOW() AND date_added < DATE_SUB(NOW(), INTERVAL 1 MONTH)')->execute();
+
 
         }
 
-        /*
-         *
-         * originial code
-         *
-         *
-         */
-//        $offset = (int)Yii::app()->options->get('system.cron.transactional_emails.offset', 0);
-//        $limit = 100;
-//
-//        $emails = TransactionalEmail::model()->findAll(array(
-//            'condition' => '`status` = "unsent" AND `send_at` < NOW() AND `retries` < `max_retries`',
-//            'order' => 'email_id ASC',
-//            'limit' => $limit,
-//            'offset' => $offset
-//        ));
-//
-//        if (empty($emails))
-//        {
-//            Yii::app()->options->set('system.cron.transactional_emails.offset', 0);
-//            return $this;
-//        }
-//        Yii::app()->options->set('system.cron.transactional_emails.offset', $offset+$limit);
-//
-//        foreach ($emails as $email)
-//        {
-//            $email->send();
-//        }
-//
-//        Yii::app()
-//            ->getDb()
-//            ->createCommand('UPDATE {{transactional_email}} SET `status` = "sent" WHERE `status` = "unsent" AND send_at < NOW() AND retries >= max_retries')
-//            ->execute();
-//        Yii::app()
-//            ->getDb()
-//            ->createCommand('DELETE FROM {{transactional_email}} WHERE `status` = "unsent" AND send_at < NOW() AND date_added < DATE_SUB(NOW(), INTERVAL 1 MONTH)')
-//            ->execute();
-//
-//        return $this;
+
     }
 
-    protected function getLockName()
-    {
-
-        if ($this->_lockName!==null)
-        {
-            return $this->_lockName;
-        }
-        $offset = (int)Yii::app()->options->get('system.cron.transactional_emails.offset', 0);
-        return $this->_lockName = md5(__FILE__.__CLASS__.$offset);
-    }
 
 }
 

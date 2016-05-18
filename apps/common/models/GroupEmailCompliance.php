@@ -6,12 +6,12 @@
  */
 
 /**
- * This is the model class for table "{{transactional_email_compliance}}".
+ * This is the model class for table "{{group_email_compliance}}".
  *
- * The followings are the available columns in table '{{transactional_email_compliance}}':
+ * The followings are the available columns in table '{{group_email_compliance}}':
  *
  *
- * @property integer transactional_email_group_id
+ * @property integer group_email_id
  * @property integer compliance_level_type_id
  * @property integer last_processed_id
  * @property integer compliance_approval_user_id
@@ -21,7 +21,7 @@
  * @property string compliance_status
  *
  */
-class TransactionalEmailCompliance extends ActiveRecord
+class GroupEmailCompliance extends ActiveRecord
 {
 
     public $sendDirectly = false;
@@ -31,7 +31,7 @@ class TransactionalEmailCompliance extends ActiveRecord
 	 */
 	public function tableName()
 	{
-		return '{{transactional_email_compliance}}';
+		return '{{group_email_compliance}}';
 	}
 
 	/**
@@ -40,11 +40,11 @@ class TransactionalEmailCompliance extends ActiveRecord
 	public function rules()
 	{
 		$rules = array(
-			array('transactional_email_group_id, compliance_level_type_id, date_added, last_updated', 'required'),
+			array('group_email_id, compliance_level_type_id, date_added, last_updated', 'required'),
             array('date_added, last_updated', 'date', 'format' => 'yyyy-mm-dd hh:mm:ss'),
 
 			// The following rule is used by search().
-			array('transactional_email_group_id, compliance_level_type_id, date_added, last_updated, compliance_status, offset, compliance_approval_user_id, last_processed_id', 'safe', 'on'=>'search'),
+			array('group_email_id, compliance_level_type_id, date_added, last_updated, compliance_status, offset, compliance_approval_user_id, last_processed_id', 'safe', 'on'=>'search'),
 		);
         return CMap::mergeArray($rules, parent::rules());
 	}
@@ -56,14 +56,14 @@ class TransactionalEmailCompliance extends ActiveRecord
 	public function attributeLabels()
 	{
 		$labels = array(
-			'transactional_email_group_id'       => Yii::t('transactional_email_compliance', 'Group ID'),
-			'compliance_level_type_id'           => Yii::t('transactional_email_compliance', 'Compliance Level'),
-			'last_processed_id'                  => Yii::t('transactional_email_compliance', 'Last Processed ID'),
-			'compliance_approval_user_id'        => Yii::t('transactional_email_compliance', 'Approval User ID'),
-			'date_added'                         => Yii::t('transactional_email_compliance', 'Date Added'),
-			'last_updated'                       => Yii::t('transactional_email_compliance', 'Last Updated'),
-			'offset'                             => Yii::t('transactional_email_compliance', 'Offset'),
-			'compliance_status'                  => Yii::t('transactional_email_compliance', 'Compliance Status'),
+			'group_email_id'       => Yii::t('group_email_compliance', 'Group ID'),
+			'compliance_level_type_id'           => Yii::t('group_email_compliance', 'Compliance Level'),
+			'last_processed_id'                  => Yii::t('group_email_compliance', 'Last Processed ID'),
+			'compliance_approval_user_id'        => Yii::t('group_email_compliance', 'Approval User ID'),
+			'date_added'                         => Yii::t('group_email_compliance', 'Date Added'),
+			'last_updated'                       => Yii::t('group_email_compliance', 'Last Updated'),
+			'offset'                             => Yii::t('group_email_compliance', 'Offset'),
+			'compliance_status'                  => Yii::t('group_email_compliance', 'Compliance Status'),
 		);
         return CMap::mergeArray($labels, parent::attributeLabels());
 	}
@@ -129,7 +129,7 @@ class TransactionalEmailCompliance extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('t.transactional_email_group_id', $this->transactional_email_group_id, true);
+		$criteria->compare('t.group_email_id', $this->transactional_email_group_id, true);
 		$criteria->compare('t.compliance_level_type_id', $this->compliance_level_type_id, true);
 		$criteria->compare('t.date_added', $this->date_added, true);
 		$criteria->compare('t.last_updated', $this->last_updated, true);
@@ -138,7 +138,7 @@ class TransactionalEmailCompliance extends ActiveRecord
 		$criteria->compare('t.compliance_approval_user_id', $this->compliance_approval_user_id, true);
 		$criteria->compare('t.last_processed_id', $this->last_processed_id);
 
-        $criteria->order = 't.transactional_email_group_id DESC';
+        $criteria->order = 't.group_email_id DESC';
 		return new CActiveDataProvider(get_class($this), array(
             'criteria'   => $criteria,
             'pagination' => array(
@@ -175,7 +175,7 @@ class TransactionalEmailCompliance extends ActiveRecord
     {
 
         $criteria = new CDbCriteria();
-        $criteria->condition = 'transactional_email_group_id = 1';
+        $criteria->condition = 'group_email_id = 1';
         $criteria->condition = 'status = "pending-sending"';
 //        $criteria->limit = 3;
 

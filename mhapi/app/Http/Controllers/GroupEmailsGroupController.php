@@ -9,11 +9,11 @@
 namespace App\Http\Controllers;
 
 use App\Logger;
-use App\TransactionalEmailGroupModel;
-use App\TransactionalEmailComplianceModel;
+use App\GroupEmailGroupsModel;
+use App\GroupEmailComplianceModel;
 use Faker\Provider\zh_TW\DateTime;
 
-class TransactionalEmailGroupController extends ApiController
+class GroupEmailsGroupController extends ApiController
 {
 
     function __construct()
@@ -62,30 +62,30 @@ class TransactionalEmailGroupController extends ApiController
 
         $list_uid = uniqid();
 
-        $TransactionalEmailGroup = new TransactionalEmailGroupModel();
-        $TransactionalEmailGroup->transactional_email_group_uid = $list_uid;
-        $TransactionalEmailGroup->customer_id = $data['customer_id'];
-        $TransactionalEmailGroup->save();
+        $GroupEmailGroups = new GroupEmailGroupsModel();
+        $GroupEmailGroups->group_email_uid = $list_uid;
+        $GroupEmailGroups->customer_id = $data['customer_id'];
+        $GroupEmailGroups->save();
 
-        $TransactionalEmailCompliance = new TransactionalEmailComplianceModel();
-        $TransactionalEmailCompliance->transactional_email_group_id
-            = $TransactionalEmailGroup->transactional_email_group_id;
+        $GroupEmailCompliance = new GroupEmailComplianceModel();
+        $GroupEmailCompliance->group_email_id
+            = $GroupEmailGroups->group_email_id;
 
-        $TransactionalEmailCompliance->compliance_status = 'first-review';
-        $TransactionalEmailCompliance->compliance_level_type_id = 2;
-        $TransactionalEmailCompliance->date_added = new \DateTime();
-        $TransactionalEmailCompliance->last_updated = new \DateTime();
-        $TransactionalEmailCompliance->save();
+        $GroupEmailCompliance->compliance_status = 'first-review';
+        $GroupEmailCompliance->compliance_level_type_id = 2;
+        $GroupEmailCompliance->date_added = new \DateTime();
+        $GroupEmailCompliance->last_updated = new \DateTime();
+        $GroupEmailCompliance->save();
 
-        if ($TransactionalEmailGroup->transactional_email_group_id<1)
+        if ($GroupEmailGroups->group_email_id<1)
         {
             return $this->respondWithError('There was an error, the group was not created.');
         }
 
-        Logger::addProgress('(Transaction Email Group) Created '.print_r($TransactionalEmailGroup, true),
+        Logger::addProgress('(Transaction Email Group) Created '.print_r($GroupEmailGroups, true),
                         '(Transaction Email Group) Created');
 
-        return $this->respond(['transaction_email_group_id' => $TransactionalEmailGroup->transactional_email_group_id]);
+        return $this->respond(['group' => $GroupEmailGroups->group_email_id]);
 
     }
 
