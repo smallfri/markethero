@@ -10,6 +10,8 @@ namespace App\Http\Controllers;
 
 use App\Logger;
 use App\TransactionalEmailGroupModel;
+use App\TransactionalEmailComplianceModel;
+use Faker\Provider\zh_TW\DateTime;
 
 class TransactionalEmailGroupController extends ApiController
 {
@@ -65,12 +67,23 @@ class TransactionalEmailGroupController extends ApiController
         $TransactionalEmailGroup->customer_id = $data['customer_id'];
         $TransactionalEmailGroup->save();
 
+        $TransactionalEmailCompliance = new TransactionalEmailComplianceModel();
+        $TransactionalEmailCompliance->transactional_email_group_id
+            = $TransactionalEmailGroup->transactional_email_group_id;
+
+        $TransactionalEmailCompliance->compliance_status = 'first-review';
+        $TransactionalEmailCompliance->compliance_level_type_id = 2;
+        $TransactionalEmailCompliance->date_added = new \DateTime();
+        $TransactionalEmailCompliance->last_updated = new \DateTime();
+        $TransactionalEmailCompliance->save();
 
         if ($TransactionalEmailGroup->transactional_email_group_id<1)
         {
             return $this->respondWithError('There was an error, the group was not created.');
         }
 
+        Logger::addProgress('(Transaction Email Group) Created '.print_r($TransactionalEmailGroup, true),
+                        '(Transaction Email Group) Created');
 
         return $this->respond(['transaction_email_group_id' => $TransactionalEmailGroup->transactional_email_group_id]);
 

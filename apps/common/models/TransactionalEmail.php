@@ -324,9 +324,9 @@ class TransactionalEmail extends ActiveRecord
     {
 
         $criteria = new CDbCriteria();
-        $criteria->compare('transactional_email_group_id', $params['groupId']);
+        $criteria->condition = 'transactional_email_group_id = 1';
         $criteria->condition = 'status = "pending-sending"';
-        $criteria->limit = (int)$params['limit'];
+//        $criteria->limit = 3;
 
         return self::model()->find($criteria);
     }

@@ -30,13 +30,14 @@ BEGIN
    `groups_at_once` int(11) DEFAULT NULL,
    `emails_at_once` int(11) DEFAULT NULL,
    `change_server_at` int(11) DEFAULT NULL,
+   `compliance_limit` int(11) DEFAULT NULL,
    PRIMARY KEY (`id`)
  ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
     INSERT INTO `mw_transactional_email_options`
     (`id`, `groups_at_once`, `emails_at_once`, `change_server_at`)
     VALUES
-    (1, 25, 100, 1000);
+    (1, 25, 100, 1000, 1000);
 
  CREATE TABLE `mw_transactional_email_group` (
    `transactional_email_group_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -46,13 +47,13 @@ BEGIN
    UNIQUE KEY `transactional_email_group_uid_UNIQUE` (`transactional_email_group_uid`)
  ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
-  CREATE TABLE `mw_compliance_level_ids` (
+  CREATE TABLE `mw_compliance_levels` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `threshold` float(10,2) DEFAULT NULL,
     PRIMARY KEY (`id`)
   ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 
-  INSERT INTO `mw_compliance_level_ids` (`id`, `threshold`)
+  INSERT INTO `mw_compliance_levels` (`id`, `threshold`)
   VALUES
   	(0, 0.00),
   	(1, 0.10),
@@ -74,6 +75,8 @@ BEGIN
     `compliance_approval_user_id` int(11) DEFAULT NULL,
     `date_added` datetime DEFAULT NULL,
     `last_updated` datetime DEFAULT NULL,
+    `offset` int(11) NOT NULL,
+    `compliance_status` VARCHAR (45) NOT NULL,
     PRIMARY KEY (`transactional_email_group_id`),
     KEY `fk_compliance_level1` (`compliance_level_type_id`),
     KEY `fk_approval_user_id` (`compliance_approval_user_id`),
