@@ -29,61 +29,6 @@ class CampaignSenderBehavior extends CBehavior
     {
         $campaign = $this->getOwner();
 
-
-        //get count for thresholding
-        $count = Yii::app()->db->createCommand()
-            ->select('count(1) as count')
-            ->from('mw_list_subscriber')
-            ->where('list_id=:id', array(':id' => (int)$campaign->list_id))
-            ->queryRow();
-
-
-        if ($this->verbose)
-        {
-            echo "[".date("Y-m-d H:i:s")."] Subscriber count ".$count['count']."\n";
-        }
-
-        //get threshold value
-        $limit = Yii::app()->db->createCommand()
-            ->select('threshold')
-            ->from('mw_campaign AS c')
-            ->join('mw_campaign_compliance As cc', 'c.campaign_id=cc.campaign_id')
-            ->join('mw_compliance_levels AS mcl', 'cc.compliance_levels_id=mcl.id')
-            ->where('list_id=:id', array(':id' => (int)$campaign->list_id))
-            ->queryRow();
-
-        //make limit based on threshold value x count
-        $threshold = round($limit['threshold'] * $count['count'], 0);
-
-        if ($this->verbose)
-        {
-            echo "[".date("Y-m-d H:i:s")."] Subscriber threshold ".$threshold."\n";
-        }
-
-        //get last processed id
-        $id = Yii::app()->db->createCommand(
-            'SELECT
-              MAX(ids.subscriber_id) AS last_processed_id
-            FROM
-              mw_list_subscriber as mls
-            INNER JOIN
-                (
-                SELECT
-                  subscriber_id
-                FROM
-                  mw_list_subscriber
-                WHERE
-                  list_id = 96
-                ORDER BY subscriber_id LIMIT '.$threshold.') as ids
-                 ON mls.subscriber_id = ids.subscriber_id'
-        )->queryRow();
-
-        if ($this->verbose)
-        {
-            echo "[".date("Y-m-d H:i:s")."] Subscriber last processed id ".$id['last_processed_id']."\n";
-        }
-
-
         // this should never happen unless the list is removed while sending
         if (empty($campaign->list) || empty($campaign->list->customer)) {
             return 0;
@@ -97,31 +42,31 @@ class CampaignSenderBehavior extends CBehavior
             echo "[".date("Y-m-d H:i:s")."] Processing the campaign " . $campaign->name . " having the uid: " . $campaign->campaign_uid;
             echo " belonging to the customer: " . $customer->fullName . "(" . $customer->customer_id . ")\n";
         }
-        
+
         // since 1.3.5
         if (!$customer->getIsActive()) {
             Yii::log(Yii::t('campaigns', 'This customer is inactive!'), CLogger::LEVEL_ERROR);
             $campaign->saveStatus(Campaign::STATUS_PAUSED);
-            
+
             if ($this->verbose) {
                 echo "[".date("Y-m-d H:i:s")."] The above customer is not active, campaign has been paused!\n";
             }
-            
+
             return 0;
         }
-        
+
         if ($this->verbose) {
             echo "[".date("Y-m-d H:i:s")."] Checking customer quota before we start...";
         }
-        
+
         if ($customer->getIsOverQuota()) {
             Yii::log(Yii::t('campaigns', 'This customer(ID:{cid}) reached the assigned quota!', array('{cid}' => $customer->customer_id)), CLogger::LEVEL_ERROR);
             $campaign->saveStatus(Campaign::STATUS_PAUSED);
-            
+
             if ($this->verbose) {
                 echo "Customer is over quota, the campaign has been paused!\n";
             }
-            
+
             return 0;
         }
 
@@ -129,19 +74,19 @@ class CampaignSenderBehavior extends CBehavior
             echo "OK\n";
             echo "[".date("Y-m-d H:i:s")."] Picking a delivery server...";
         }
-        
+
         $dsParams = array('customerCheckQuota' => false, 'useFor' => array(DeliveryServer::USE_FOR_CAMPAIGNS));
         $server   = DeliveryServer::pickServer(0, $campaign, $dsParams);
         if (empty($server)) {
             Yii::log(Yii::t('campaigns', 'Cannot find a valid server to send the campaign email, aborting until a delivery server is available!'), CLogger::LEVEL_ERROR);
-            
+
             if ($this->verbose) {
                 echo "\n[".date("Y-m-d H:i:s")."] Unable to find a valid delivery server, aborting until a delivery server is available!\n";
             }
-            
+
             return 0;
         }
-        
+
         if ($this->verbose) {
             echo "OK\n";
         }
@@ -150,39 +95,39 @@ class CampaignSenderBehavior extends CBehavior
             $language = Language::model()->findByPk((int)$customer->language_id);
             if (!empty($language)) {
                 Yii::app()->setLanguage($language->getLanguageAndLocaleCode());
-            }    
+            }
         }
 
         // put proper status
         $campaign->saveStatus(Campaign::STATUS_PROCESSING);
-        
+
         if ($this->verbose) {
             $timeStart = microtime(true);
             echo "[".date("Y-m-d H:i:s")."] Campaign status has been set to PROCESSING.\n";
             echo "[".date("Y-m-d H:i:s")."] Searching for subscribers to send for this campaign...";
         }
-        
+
         // find the subscribers we need to send these emails at
         $limit = (int)$customer->getGroupOption('campaigns.subscribers_at_once', (int)Yii::app()->options->get('system.cron.send_campaigns.subscribers_at_once', 300));
         $subscribers = $this->findSubscribers($limit);
-        
+
         if ($this->verbose) {
-            echo "done, took " . round(microtime(true) - $timeStart, 3) . " seconds.\n";    
+            echo "done, took " . round(microtime(true) - $timeStart, 3) . " seconds.\n";
         }
-        
+
         // in case we are done
         if (empty($subscribers)) {
             if ($this->verbose) {
                 $timeStart = microtime(true);
-                echo "[".date("Y-m-d H:i:s")."] Did not find any subscriber for sending, marking campaign as sent...\n";    
+                echo "[".date("Y-m-d H:i:s")."] Did not find any subscriber for sending, marking campaign as sent...\n";
             }
-            
+
             $this->markCampaignSent();
-            
+
             if ($this->verbose) {
-                echo "[".date("Y-m-d H:i:s")."] Campaign has been marked as sent, took " . round(microtime(true) - $timeStart, 3) . " seconds.\n";    
+                echo "[".date("Y-m-d H:i:s")."] Campaign has been marked as sent, took " . round(microtime(true) - $timeStart, 3) . " seconds.\n";
             }
-            
+
             return 0;
         }
 
@@ -191,7 +136,7 @@ class CampaignSenderBehavior extends CBehavior
             $mailerPlugins = array(
                 'loggerPlugin' => true,
             );
-            
+
             $sendAtOnce = (int)$customer->getGroupOption('campaigns.send_at_once', (int)$options->get('system.cron.send_campaigns.send_at_once', 0));
             if (!empty($sendAtOnce)) {
                 $mailerPlugins['antiFloodPlugin'] = array(
@@ -199,14 +144,14 @@ class CampaignSenderBehavior extends CBehavior
                     'pause'         => (int)$customer->getGroupOption('campaigns.pause', (int)$options->get('system.cron.send_campaigns.pause', 0)),
                 );
             }
-            
+
             $perMinute = (int)$customer->getGroupOption('campaigns.emails_per_minute', (int)$options->get('system.cron.send_campaigns.emails_per_minute', 0));
             if (!empty($perMinute)) {
                 $mailerPlugins['throttlePlugin'] = array(
                     'perMinute' => $perMinute,
                 );
             }
-            
+
             $attachments = CampaignAttachment::model()->findAll(array(
                 'select'    => 'file',
                 'condition' => 'campaign_id = :cid',
@@ -216,28 +161,28 @@ class CampaignSenderBehavior extends CBehavior
             $processedCounter = 0;
             $serverHasChanged = false;
             $changeServerAt   = (int)$customer->getGroupOption('campaigns.change_server_at', (int)$options->get('system.cron.send_campaigns.change_server_at', 0));
-            
+
             //since 1.3.4.9
             $dsParams = array(
-                'customerCheckQuota' => false, 
+                'customerCheckQuota' => false,
                 'serverCheckQuota'   => false,
                 'useFor'             => array(DeliveryServer::USE_FOR_CAMPAIGNS),
             );
-            
+
             if ($this->verbose) {
-                echo "[".date("Y-m-d H:i:s")."] Running subscribers cleanup for " . count($subscribers) . " subscribers...\n";    
+                echo "[".date("Y-m-d H:i:s")."] Running subscribers cleanup for " . count($subscribers) . " subscribers...\n";
             }
-            
+
             // run some cleanup on subscribers
             $notAllowedEmailChars = array('-', '_');
             $subscribersQueue     = array();
-            
+
             foreach ($subscribers as $index => $subscriber) {
                 if (isset($subscribersQueue[$subscriber->subscriber_id])) {
                     unset($subscribers[$index]);
                     continue;
                 }
-                
+
                 $containsNotAllowedEmailChars = false;
                 $part = explode('@', $subscriber->email);
                 $part = $part[0];
@@ -248,122 +193,103 @@ class CampaignSenderBehavior extends CBehavior
                         break;
                     }
                 }
-                
+
                 if ($containsNotAllowedEmailChars) {
                     unset($subscribers[$index]);
                     continue;
                 }
-                
+
                 $subscribersQueue[$subscriber->subscriber_id] = true;
             }
             unset($subscribersQueue);
-            
+
             // reset the keys
             $subscribers = array_values($subscribers);
-            
+
             // since 1.3.5.7
             if (empty($subscribers)) {
                 if ($this->verbose) {
-                    echo "[".date("Y-m-d H:i:s")."] Subscribers cleanup completed, no valid subscribers left, we are marking this campaign as sent.\n"; 
+                    echo "[".date("Y-m-d H:i:s")."] Subscribers cleanup completed, no valid subscribers left, we are marking this campaign as sent.\n";
                 }
                 $this->markCampaignSent();
                 return 0;
             }
-            
+
             if ($this->verbose) {
                 $beforeForeachTime = microtime(true);
                 $sendingAloneTime  = 0;
-                echo "[".date("Y-m-d H:i:s")."] Subscribers cleanup completed.\n"; 
-                echo "[".date("Y-m-d H:i:s")."] Entering into the foreach loop to send for all " . count($subscribers) . " subscribers.\n";    
+                echo "[".date("Y-m-d H:i:s")."] Subscribers cleanup completed.\n";
+                echo "[".date("Y-m-d H:i:s")."] Entering into the foreach loop to send for all " . count($subscribers) . " subscribers.\n";
             }
-            
+
             // sort subscribers
             $subscribers = $this->sortSubscribers($subscribers);
 
-
-            if ($this->verbose)
-            {
-                echo "\n[".date("Y-m-d H:i:s")."] Compliance last id ".$id['last_processed_id']."\n";
-            }
-            
             foreach ($subscribers as $index => $subscriber) {
-
-                //throttle
-                if ($subscriber->subscriber_id>$id['last_processed_id'])
-                {
-                    $this->logDelivery($subscriber, Yii::t('campaigns', 'In compliance review'),
-                        CampaignDeliveryLog::STATUS_COMPLIANCE_REVIEW);
-                    if ($this->verbose)
-                    {
-                        echo "\n[".date("Y-m-d H:i:s")."] The email address is in compliance review\n";
-                    }
-                    continue;
-                }
-
 
                 if ($this->verbose) {
                     $timeStart = microtime(true);
-                    echo "\n[".date("Y-m-d H:i:s")."] Current progress: " . ($index + 1) . " out of " . count($subscribers);   
-                    echo "\n[".date("Y-m-d H:i:s")."] Checking if the delivery server is allowed to send to the subscriber email address domain...";    
+                    echo "\n[".date("Y-m-d H:i:s")."] Current progress: " . ($index + 1) . " out of " . count($subscribers);
+                    echo "\n[".date("Y-m-d H:i:s")."] Checking if the delivery server is allowed to send to the subscriber email address domain...";
                 }
-            
+
                 // if this server is not allowed to send to this email domain, then just skip it.
                 if (!$server->canSendToDomainOf($subscriber->email)) {
                     if ($this->verbose) {
-                        echo "\n[".date("Y-m-d H:i:s")."] Server is not allowed to send to the subscriber domain, skipping this subscriber!\n";    
+                        echo "\n[".date("Y-m-d H:i:s")."] Server is not allowed to send to the subscriber domain, skipping this subscriber!\n";
                     }
                     continue;
                 }
-                
+
                 if ($this->verbose) {
                     echo "OK, took " . round(microtime(true) - $timeStart, 3) . " seconds.\n";
-                    echo "[".date("Y-m-d H:i:s")."] Checking the subscriber email address into the blacklist...";  
-                    $timeStart = microtime(true);  
+                    echo "[".date("Y-m-d H:i:s")."] Checking the subscriber email address into the blacklist...";
+                    $timeStart = microtime(true);
                 }
-                
+
                 // if blacklisted, goodbye.
                 if ($subscriber->getIsBlacklisted()) {
                     $this->logDelivery($subscriber, Yii::t('campaigns', 'This email is blacklisted. Sending is denied!'), CampaignDeliveryLog::STATUS_BLACKLISTED);
                     if ($this->verbose) {
-                        echo "\n[".date("Y-m-d H:i:s")."] The email address has been found into the blacklist, sending is denied!\n";    
+                        echo "\n[".date("Y-m-d H:i:s")."] The email address has been found into the blacklist, sending is denied!\n";
                     }
                     continue;
                 }
-                
+
                 if ($this->verbose) {
                     echo "OK, took " . round(microtime(true) - $timeStart, 3) . " seconds.\n";
-                    echo "[".date("Y-m-d H:i:s")."] Checking server sending quota...";  
-                    $timeStart = microtime(true);  
+                    echo "[".date("Y-m-d H:i:s")."] Checking server sending quota...";
+                    $timeStart = microtime(true);
                 }
-                
+
                 // in case the server is over quota
                 if ($server->getIsOverQuota()) {
                     if ($this->verbose) {
-                        echo "\n[".date("Y-m-d H:i:s")."] The delivery server is over quota, picking another one...\n";    
+                        echo "\n[".date("Y-m-d H:i:s")."] The delivery server is over quota, picking another one...\n";
                     }
                     $currentServerId = $server->server_id;
                     if (!($server = DeliveryServer::pickServer($currentServerId, $campaign, $dsParams))) {
                         throw new Exception(Yii::t('campaigns', 'Cannot find a valid server to send the campaign email, aborting until a delivery server is available!'), 99);
                     }
                 }
-                
+
                 if ($this->verbose) {
                     echo "OK, took " . round(microtime(true) - $timeStart, 3) . " seconds.\n";
-                    echo "[".date("Y-m-d H:i:s")."] Checking customer sending quota...";   
-                    $timeStart = microtime(true); 
+                    echo "[".date("Y-m-d H:i:s")."] Checking customer sending quota...";
+                    $timeStart = microtime(true);
                 }
-                
+
                 // in case current customer is over quota
                 if ($customer->getIsOverQuota()) {
                     if ($this->verbose) {
-                        echo "\n[".date("Y-m-d H:i:s")."] The customer is over quota, pausing campaign!\n";    
+                        echo "\n[".date("Y-m-d H:i:s")."] The customer is over quota, pausing campaign!\n";
                     }
                     throw new Exception(Yii::t('campaigns', 'This customer reached the assigned quota!'), 98);
                 }
-                
+
                 if ($this->verbose) {
-                    echo "OK, took " . round(microtime(true) - $timeStart, 3) . " seconds.\n";    
-                    echo "[".date("Y-m-d H:i:s")."] Preparing email...";  
+                    echo "OK, took " . round(microtime(true) - $timeStart, 3) . " seconds.\n";
+                    echo "[".date("Y-m-d H:i:s")."] Preparing email...";
                     $timeStart = microtime(true);
                 }
 
@@ -373,37 +299,37 @@ class CampaignSenderBehavior extends CBehavior
                     $this->logDelivery($subscriber, Yii::t('campaigns', 'Unable to prepare the email content!'), CampaignDeliveryLog::STATUS_ERROR);
                     continue;
                 }
-                
+
                 if ($changeServerAt > 0 && $processedCounter >= $changeServerAt && !$serverHasChanged) {
                     $currentServerId = $server->server_id;
                     if ($newServer = DeliveryServer::pickServer($currentServerId, $campaign, $dsParams)) {
                         $server = $newServer;
                         unset($newServer);
                     }
-                    
+
                     $processedCounter = 0;
                     $serverHasChanged = true;
                 }
-                
+
                 $listUnsubscribeHeaderValue = $options->get('system.urls.frontend_absolute_url');
                 $listUnsubscribeHeaderValue .= 'lists/'.$list->list_uid.'/unsubscribe/'.$subscriber->subscriber_uid . '/' . $campaign->campaign_uid;
                 $listUnsubscribeHeaderValue = '<'.$listUnsubscribeHeaderValue.'>';
-                
+
                 $reportAbuseUrl  = $options->get('system.urls.frontend_absolute_url');
                 $reportAbuseUrl .= 'campaigns/'. $campaign->campaign_uid . '/report-abuse/' . $list->list_uid . '/' . $subscriber->subscriber_uid;
-                
+
                 // since 1.3.4.9
                 if (!empty($campaign->reply_to)) {
                     $_subject = 'Unsubscribe';
                     $_body    = 'Please unsubscribe me from ' . $list->display_name . ' list.';
                     $mailToUnsubscribeHeader    = sprintf(', <mailto:%s?subject=%s&body=%s>', '[LIST_UNSUBSCRIBE_EMAIL]', $_subject, $_body);
-                    $listUnsubscribeHeaderValue .= $mailToUnsubscribeHeader;    
+                    $listUnsubscribeHeaderValue .= $mailToUnsubscribeHeader;
                 }
-                
+
                 $headerPrefix = Yii::app()->params['email.custom.header.prefix'];
                 $emailParams['headers'] = array(
                     $headerPrefix . 'Campaign-Uid'     => $campaign->campaign_uid,
-                    $headerPrefix . 'Subscriber-Uid'   => $subscriber->subscriber_uid, 
+                    $headerPrefix . 'Subscriber-Uid'   => $subscriber->subscriber_uid,
                     $headerPrefix . 'Customer-Uid'     => $customer->customer_uid,
                     $headerPrefix . 'Customer-Gid'     => (string)intval($customer->group_id), // because of sendgrid
                     $headerPrefix . 'Delivery-Sid'     => (string)intval($server->server_id), // because of sendgrid
@@ -416,7 +342,7 @@ class CampaignSenderBehavior extends CBehavior
                 // since 1.3.4.6
                 $headers = !empty($server->additional_headers) && is_array($server->additional_headers) ? $server->additional_headers : array();
                 $headers = (array)Yii::app()->hooks->applyFilters('console_command_send_campaigns_campaign_custom_headers', $headers, $campaign, $subscriber, $customer, $server, $emailParams);
-                
+
                 if (!empty($headers)) {
                     $headerSearchReplace = array(
                         '[CAMPAIGN_UID]'    => $campaign->campaign_uid,
@@ -425,11 +351,11 @@ class CampaignSenderBehavior extends CBehavior
                     );
                     foreach ($headers as $name => $value) {
                         $headers[$name] = str_replace(array_keys($headerSearchReplace), array_values($headerSearchReplace), $value);
-                    }  
+                    }
                     $emailParams['headers'] = array_merge($headers, $emailParams['headers']);
-                    unset($headers);  
+                    unset($headers);
                 }
-  
+
                 $emailParams['mailerPlugins'] = $mailerPlugins;
 
                 if (!empty($attachments)) {
@@ -443,13 +369,13 @@ class CampaignSenderBehavior extends CBehavior
                 if ($processedCounter >= $changeServerAt) {
                     $serverHasChanged = false;
                 }
-                
+
                 // since 1.3.4.6
                 Yii::app()->hooks->doAction('console_command_send_campaigns_before_send_to_subscriber', $campaign, $subscriber, $customer, $server, $emailParams);
-                
+
                 if ($this->verbose) {
                     echo "done, took " . round(microtime(true) - $timeStart, 3) . " seconds.\n";
-                    echo "[".date("Y-m-d H:i:s")."] -> Sending the email for " . $subscriber->email;  
+                    echo "[".date("Y-m-d H:i:s")."] -> Sending the email for " . $subscriber->email;
                     if ($server->getUseQueue()) {
                         echo " by using the queue method";
                     } else {
@@ -457,132 +383,132 @@ class CampaignSenderBehavior extends CBehavior
                     }
                     echo "...";
                 }
-                
+
                 // set delivery object
                 $server->setDeliveryFor(DeliveryServer::DELIVERY_FOR_CAMPAIGN)->setDeliveryObject($campaign);
-                
+
                 // default status
                 $status = CampaignDeliveryLog::STATUS_SUCCESS;
-                
+
                 // since 1.3.5 - try via queue
                 $sent = null;
                 if ($server->getUseQueue()) {
                     $sent = array('message_id' => $server->server_id . StringHelper::random(40));
                     $response = 'OK';
                     $allParams = array_merge(array(
-                        'server_id'   => $server->server_id, 
-                        'server_type' => $server->type, 
-                        'campaign_id' => $campaign->campaign_id, 
+                        'server_id'   => $server->server_id,
+                        'server_type' => $server->type,
+                        'campaign_id' => $campaign->campaign_id,
                         'params'      => $emailParams
                     ), $sent);
-                    
+
                     if ($server->getCampaignQueueEmailsChunkSize() > 1) {
                         if (!$server->pushEmailInCampaignQueue($allParams)) {
                             $sent = $response = null;
                         } else {
                             $server->logUsage();
-                        }    
+                        }
                     } else {
                         if (!Yii::app()->queue->enqueue($server->getQueueName(), 'SendEmailFromQueue', $allParams)) {
                             $sent = $response = null;
                         } else {
                             $server->logUsage();
-                        }    
+                        }
                     }
 
                     unset($allParams);
                 }
-                
+
                 // if not via queue or queue failed
                 if (!$sent) {
                     $sent     = $server->sendEmail($emailParams);
                     $response = $server->getMailer()->getLog();
                 }
-                
+
                 $messageId = null;
-                
+
                 if ($this->verbose) {
                     $timeTook = round(microtime(true) - $timeStart, 3);
                     $sendingAloneTime += $timeTook;
-                    echo "done, took " . $timeTook . " seconds.\n";  
+                    echo "done, took " . $timeTook . " seconds.\n";
                 }
-                
+
                 // make sure we're still connected to database...
                 Yii::app()->getDb()->setActive(true);
-                   
+
                 if (!$sent) {
                     $status = $this->getFailStatusFromResponse($response);
                 }
-                
+
                 if ($sent && is_array($sent) && !empty($sent['message_id'])) {
                     $messageId = $sent['message_id'];
                 }
-                
+
                 if ($this->verbose) {
                     if ($sent) {
                         echo "[".date("Y-m-d H:i:s")."] The email has been sent successfully!\n";
                     } else {
                         echo "[".date("Y-m-d H:i:s")."] The email has failed sending with the message " . $response . "\n";
-                    } 
+                    }
                 }
-                
-                if ($this->verbose) {    
-                    echo "[".date("Y-m-d H:i:s")."] Logging delivery...";  
+
+                if ($this->verbose) {
+                    echo "[".date("Y-m-d H:i:s")."] Logging delivery...";
                     $timeStart = microtime(true);
                 }
-                
+
                 $this->logDelivery($subscriber, $response, $status, $messageId);
-                
+
                 if ($this->verbose) {
                     echo "done, took " . round(microtime(true) - $timeStart, 3) . " seconds.\n";
                 }
-                
+
                 // since 1.3.4.6
                 Yii::app()->hooks->doAction('console_command_send_campaigns_after_send_to_subscriber', $campaign, $subscriber, $customer, $server, $sent, $response, $status);
             }
-            
+
             if ($this->verbose) {
-                echo "\n[".date("Y-m-d H:i:s")."] Exiting from the foreach loop, took " . round(microtime(true) - $beforeForeachTime, 3) . " seconds to send for all " . count($subscribers) . " subscribers from which " . round($sendingAloneTime, 3) . " seconds only to communicate with remote ends.\n";    
+                echo "\n[".date("Y-m-d H:i:s")."] Exiting from the foreach loop, took " . round(microtime(true) - $beforeForeachTime, 3) . " seconds to send for all " . count($subscribers) . " subscribers from which " . round($sendingAloneTime, 3) . " seconds only to communicate with remote ends.\n";
             }
-            
+
         } catch (Exception $e) {
-            
+
             // exception code to be returned later
             $code = (int)$e->getCode();
-            
+
             // make sure sending is resumed next time.
             $campaign->status = Campaign::STATUS_SENDING;
-            
+
             // pause the campaigns of customers that reached the quota
             // they will only delay processing of other campaigns otherwise.
             if ($code == 98) {
                 $campaign->status = Campaign::STATUS_PAUSED;
             }
-            
+
             // save the changes, but no validation
             $campaign->saveStatus();
-            
-            // log the error so we can reference it    
+
+            // log the error so we can reference it
             Yii::log($e->getMessage(), CLogger::LEVEL_ERROR);
-            
+
             if ($this->verbose) {
                 echo "[".date("Y-m-d H:i:s")."] Cought exception with message: " . $e->getMessage() . "\n";
                 echo "[".date("Y-m-d H:i:s")."] Campaign status has been changed to: " . strtoupper($campaign->status) . "\n";
             }
-            
+
             // return the exception code
             return $code;
         }
-        
-        // since 1.3.5        
+
+        // since 1.3.5
         try {
             // make sure we're still connected to database...
             Yii::app()->getDb()->setActive(true);
         } catch (Exception $e) {
-            // log the error so we can reference it    
+            // log the error so we can reference it
             Yii::log($e->getMessage(), CLogger::LEVEL_ERROR);
-        }                
-        
+        }
+
         // do a final check for this campaign to see if it still exists or has been somehow changed from web interface.
         // this used to exist in the foreach loop but would cause so much overhead that i think is better to move it here
         // since if a campaign is paused from web interface it will keep that status anyway so it won't affect customers and will improve performance
@@ -598,48 +524,47 @@ class CampaignSenderBehavior extends CBehavior
             }
             return 0;
         }
-        
-        // the sending batch is over. 
+
+        // the sending batch is over.
         // if we don't have enough subscribers for next batch, we stop.
         $subscribers = $this->countSubscribers();
-
         if (empty($subscribers)) {
             $this->markCampaignSent();
             return 0;
         }
-        
+
         // make sure sending is resumed next time
         $campaign->saveStatus(Campaign::STATUS_SENDING);
-        
+
         if ($this->verbose) {
             echo "[".date("Y-m-d H:i:s")."] Campaign status has been changed to: " . strtoupper($campaign->status) . "\n";
         }
-            
+
         return 0;
     }
-    
+
     protected function logDelivery(ListSubscriber $subscriber, $message, $status, $messageId = null)
     {
         $campaign = $this->getOwner();
-        
+
         $deliveryLog = CampaignDeliveryLog::model()->findByAttributes(array(
             'campaign_id'   => (int)$campaign->campaign_id,
             'subscriber_id' => (int)$subscriber->subscriber_id,
         ));
-        
-        if (empty($deliveryLog)) {   
+
+        if (empty($deliveryLog)) {
             $deliveryLog = new CampaignDeliveryLog();
             $deliveryLog->campaign_id = $campaign->campaign_id;
             $deliveryLog->subscriber_id = $subscriber->subscriber_id;
         }
-        
+
         $deliveryLog->email_message_id = $messageId;
         $deliveryLog->message = str_replace("\n\n", "\n", $message);
         $deliveryLog->status = $status;
 
         return $deliveryLog->save();
     }
-    
+
     protected function countSubscribers()
     {
         $criteria = new CDbCriteria();
@@ -651,10 +576,10 @@ class CampaignSenderBehavior extends CBehavior
             'condition' => '(deliveryLogs.subscriber_id IS NULL OR deliveryLogs.`status` = :tstatus)',
             'params'    => array(':cid' => $this->getOwner()->campaign_id, ':tstatus' => CampaignDeliveryLog::STATUS_TEMPORARY_ERROR),
         );
-        
+
         return $this->getOwner()->countSubscribers($criteria);
     }
-    
+
     // find subscribers
     protected function findSubscribers($limit = 300)
     {
@@ -667,15 +592,15 @@ class CampaignSenderBehavior extends CBehavior
             'condition' => '(deliveryLogs.subscriber_id IS NULL OR deliveryLogs.`status` = :tstatus)',
             'params'    => array(':cid' => $this->getOwner()->campaign_id, ':tstatus' => CampaignDeliveryLog::STATUS_TEMPORARY_ERROR),
         );
-        
+
         // and find them
         return $this->getOwner()->findSubscribers(0, $limit, $criteria);
     }
-    
+
     /**
-     * Tries to: 
+     * Tries to:
      * 1. Group the subscribers by domain
-     * 2. Sort them so that we don't send to same domain two times in a row. 
+     * 2. Sort them so that we don't send to same domain two times in a row.
      */
     protected function sortSubscribers($subscribers)
     {
@@ -690,7 +615,7 @@ class CampaignSenderBehavior extends CBehavior
             $_subscribers[$domainName][] = $subscriber;
             unset($subscribers[$index]);
         }
-        
+
         $subscribers = array();
         while ($subscribersCount > 0) {
             foreach ($_subscribers as $domainName => $subs) {
@@ -702,21 +627,19 @@ class CampaignSenderBehavior extends CBehavior
             }
             $subscribersCount--;
         }
-        
+
         return $subscribers;
     }
-    
+
     protected function prepareEmail($subscriber)
     {
-
-
         $campaign = $this->getOwner();
 
         // how come ?
         if (empty($campaign->template)) {
             return false;
         }
-        
+
         $list           = $campaign->list;
         $customer       = $list->customer;
         $emailContent   = $campaign->template->content;
@@ -727,6 +650,11 @@ class CampaignSenderBehavior extends CBehavior
 
         if(!$onlyPlainText)
         {
+
+//            if(!empty($campaign->option)&&$campaign->option->send_referral_url==1)
+//            {
+//                $emailContent = CampaignHelper::injectReferralLink($emailContent,$campaign->customer_id);
+//            }
 
             if(($emailFooter = $customer->getGroupOption('campaigns.email_footer'))&&strlen(trim($emailFooter))>5)
             {

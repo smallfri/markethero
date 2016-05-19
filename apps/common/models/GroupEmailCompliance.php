@@ -129,7 +129,7 @@ class GroupEmailCompliance extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('t.group_email_id', $this->transactional_email_group_id, true);
+		$criteria->compare('t.group_email_id', $this->group_email_id, true);
 		$criteria->compare('t.compliance_level_type_id', $this->compliance_level_type_id, true);
 		$criteria->compare('t.date_added', $this->date_added, true);
 		$criteria->compare('t.last_updated', $this->last_updated, true);

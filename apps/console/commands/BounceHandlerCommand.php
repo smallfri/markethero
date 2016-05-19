@@ -117,7 +117,7 @@ class BounceHandlerCommand extends CConsoleCommand
             'limit'     => (int)$limit,
             'offset'    => (int)$offset,
         ));
-        
+
         if (empty($servers)) {
             return $this;
         }
@@ -160,6 +160,9 @@ class BounceHandlerCommand extends CConsoleCommand
                 ));
                 
                 $results = $bounceHandler->getResults();
+
+
+                print_r($results);
                 
                 // re-open the db connection
                 Yii::app()->getDb()->setActive(true);

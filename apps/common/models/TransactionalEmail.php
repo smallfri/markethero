@@ -131,7 +131,6 @@ class TransactionalEmail extends ActiveRecord
 			'max_retries'    => Yii::t('transactional_emails', 'Max retries'),
 			'send_at'        => Yii::t('transactional_emails', 'Send at'),
 			'status'         => Yii::t('transactional_emails', 'Status'),
-			'transactional_email_group_id'         => Yii::t('transactional_emails', 'Group ID'),
 		);
         return CMap::mergeArray($labels, parent::attributeLabels());
 	}
@@ -284,7 +283,6 @@ class TransactionalEmail extends ActiveRecord
 		$criteria->compare('t.reply_to_name', $this->reply_to_name, true);
 		$criteria->compare('t.subject', $this->subject, true);
 		$criteria->compare('t.status', $this->status);
-		$criteria->compare('t.transactional_email_group_id', $this->transactional_email_group_id);
 
         $criteria->order = 't.email_id DESC';
 
@@ -324,7 +322,6 @@ class TransactionalEmail extends ActiveRecord
     {
 
         $criteria = new CDbCriteria();
-        $criteria->condition = 'transactional_email_group_id = 1';
         $criteria->condition = 'status = "pending-sending"';
 //        $criteria->limit = 3;
 

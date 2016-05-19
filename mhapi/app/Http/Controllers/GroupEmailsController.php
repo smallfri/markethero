@@ -62,7 +62,7 @@ class GroupEmailsController extends ApiController
         }
 
         $emailUid = uniqid();
-
+//TODO check for $data['group_id'] and if it doesn't exist return error.
         $EmailGroup = new GroupEmailModel();
         $EmailGroup->email_uid = $emailUid;
         $EmailGroup->to_name = $data['to_name'];
