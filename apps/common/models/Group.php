@@ -1,46 +1,22 @@
 <?php defined('MW_PATH') || exit('No direct script access allowed');
 
 /**
- * GroupEmail
+ * This is the model class for table "{{group_email_groups}}".
  *
- * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com>
- * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
- * @license http://www.mailwizz.com/license/
- * @since 1.3.4.5
- */
-
-/**
- * This is the model class for table "{{group_email}}".
- *
- * The followings are the available columns in table '{{group_email}}':
- * @property string $email_id
- * @property string $email_uid
+ * The followings are the available columns in table '{{group_email_groups}}':
+ * @property string $group_email_id
+ * @property string $group_email_uid
  * @property integer $customer_id
- * @property integer $group_email_id
- * @property string $to_email
- * @property string $to_name
- * @property string $from_email
- * @property string $from_name
- * @property string $reply_to_email
- * @property string $reply_to_name
- * @property string $subject
- * @property string $body
- * @property string $plain_text
- * @property integer $priority
- * @property integer $retries
- * @property integer $max_retries
  * @property string $send_at
  * @property string $status
- * @property string $date_added
- * @property string $last_updated
+
+
  *   The followings are the available model relations:
   * @property Customer $customer
   * @property GroupEmailLog[] $logs
  *
  */
-class GroupEmail extends ActiveRecord
+class Group extends ActiveRecord
 {
     const STATUS_SENT    = 'sent';
     const STATUS_UNSENT  = 'unsent';
@@ -71,12 +47,16 @@ class GroupEmail extends ActiveRecord
 
     public $sendDirectly = false;
 
+public $group_email_id;
+public $group_email_uid;
+public  $customer_id;
+
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return '{{group_email}}';
+		return '{{group_email_groups}}';
 	}
 
 	/**
@@ -115,42 +95,31 @@ class GroupEmail extends ActiveRecord
 	public function attributeLabels()
 	{
 		$labels = array(
-			'email_id'       => Yii::t('group_emails', 'Email'),
-			'customer_id'    => Yii::t('group_emails', 'Customer'),
-			'to_email'       => Yii::t('group_emails', 'To email'),
-			'to_name'        => Yii::t('group_emails', 'To name'),
-			'from_email'     => Yii::t('group_emails', 'From email'),
-			'from_name'      => Yii::t('group_emails', 'From name'),
-			'reply_to_email' => Yii::t('group_emails', 'Reply to email'),
-			'reply_to_name'  => Yii::t('group_emails', 'Reply to name'),
-			'subject'        => Yii::t('group_emails', 'Subject'),
-			'body'           => Yii::t('group_emails', 'Body'),
-			'plain_text'     => Yii::t('group_emails', 'Plain text'),
-			'priority'       => Yii::t('group_emails', 'Priority'),
-			'retries'        => Yii::t('group_emails', 'Retries'),
-			'max_retries'    => Yii::t('group_emails', 'Max retries'),
-			'send_at'        => Yii::t('group_emails', 'Send at'),
-			'status'         => Yii::t('group_emails', 'Status'),
-			'group_email_id'         => Yii::t('group_emails', 'Group ID'),
+			'group_email_id'       => Yii::t('group', 'Email'),
+			'group_email_uid'       => Yii::t('group', 'Email'),
+			'customer_id'       => Yii::t('group', 'Customer ID'),
+			'send_at'       => Yii::t('group', 'Send at'),
+			'status'       => Yii::t('group', 'status'),
+
 		);
         return CMap::mergeArray($labels, parent::attributeLabels());
 	}
 
-    protected function afterConstruct()
-    {
-        if ($this->send_at == '0000-00-00 00:00:00') {
-            $this->send_at = null;
-        }
-        parent::afterConstruct();
-    }
-
-    protected function afterFind()
-    {
-        if ($this->send_at == '0000-00-00 00:00:00') {
-            $this->send_at = null;
-        }
-        parent::afterFind();
-    }
+//    protected function afterConstruct()
+//    {
+//        if ($this->send_at == '0000-00-00 00:00:00') {
+//            $this->send_at = null;
+//        }
+//        parent::afterConstruct();
+//    }
+//
+//    protected function afterFind()
+//    {
+//        if ($this->send_at == '0000-00-00 00:00:00') {
+//            $this->send_at = null;
+//        }
+//        parent::afterFind();
+//    }
 
     protected function beforeValidate()
     {
@@ -320,12 +289,11 @@ class GroupEmail extends ActiveRecord
         ));
     }
 
-    public function findEmails($params)
+    public function getByKey($groupId)
     {
 
         $criteria = new CDbCriteria();
-        $criteria->condition = 'group_email_id = 1';
-        $criteria->condition = 'status = "pending-sending"';
+        $criteria->condition = 'group_email_id ='.$groupId;
 //        $criteria->limit = 3;
 
         return self::model()->find($criteria);

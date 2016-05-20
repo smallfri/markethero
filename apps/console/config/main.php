@@ -59,7 +59,7 @@ return array(
             'class' => 'console.commands.SendTransactionalEmailsCommand'
         ),
         'send-group-emails' => array(
-            'class' => 'console.commands.SendGroupEmailsCommand'
+            'class' => 'console.commands.SendGroupsCommand'
         ),
         'daily' => array(
             'class' => 'console.commands.DailyCommand'
