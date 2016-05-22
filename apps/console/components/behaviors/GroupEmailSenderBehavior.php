@@ -35,6 +35,110 @@ class GroupEmailSenderBehavior extends CBehavior
             echo "[".date("Y-m-d H:i:s")."] Sending group id ".$group->group_email_id."!\n";
         }
 
+        $options = Yii::app()->db->createCommand()
+                   ->select('*')
+                   ->from('mw_group_email_options')
+                   ->where('id=:id', array(':id' => 1))
+                   ->queryRow();
+
+
+               if ($this->verbose)
+               {
+                   echo "[".date("Y-m-d H:i:s")."] Options ".print_r($options, true)."\n";
+               }
+
+               // Set Options
+
+               $emailsAtOnce = $options['emails_at_once'];
+
+               $complianceLimit = $options['compliance_limit'];
+
+
+        // Get count of emails for this group
+        $count = Yii::app()->db->createCommand()
+            ->select('count(*) as count')
+            ->from('mw_group_email')
+            ->where('group_email_id=:id AND status = "pending-sending"', array(':id' => (int)$group->group_email_id))
+            ->queryRow();
+
+        if ($this->verbose)
+        {
+            echo "[".date("Y-m-d H:i:s")."] Found ".$count['count']." email(s)...\n";
+        }
+
+
+        $emailsToBeSent = $count['count'];
+
+        // If the count is greater than the option emails at once, set emailsToBeSent to emails at once
+        if ($count['count']>=$emailsAtOnce)
+        {
+            $emailsToBeSent = $emailsAtOnce;
+        }
+
+        if ($this->verbose)
+        {
+            echo "[".date("Y-m-d H:i:s")."] There are ".$emailsToBeSent." emails to be sent...\n";
+        }
+
+        /*
+         * Check whether or not this group is in compliance review
+         *
+         */
+
+        if ($group->compliance->compliance_status=='first-review' AND $count['count']>=$complianceLimit)
+        {
+            if ($this->verbose)
+            {
+                echo "[".date("Y-m-d H:i:s")."] This Group is in Compliance Review...\n";
+            }
+
+            // Set emails to be sent = threshold X count
+            $emailsToBeSent = round($count['count']*$group->compliance->compliance_levels->threshold);
+
+            if ($this->verbose)
+            {
+                echo "[".date("Y-m-d H:i:s")."] There are ".$emailsToBeSent." emails to be sent...\n";
+            }
+
+            // Determine how many emails should be set to in-review status
+            $in_review_count = $count['count']-$emailsToBeSent;
+
+            if ($this->verbose)
+            {
+                echo "[".date("Y-m-d H:i:s")."] Setting ".$in_review_count." emails to in-review...\n";
+            }
+
+            // Update emails to in-review status
+            GroupEmail::model()
+                ->updateAll(['status' => 'in-review'],
+                    'group_email_id= '.$group->group_email_id.' AND status = "pending-sending" ORDER BY email_id DESC LIMIT '.$in_review_count
+                );
+
+            //update status of the group so we don't send anymore emails
+            $GroupEmailCompliance = GroupEmailCompliance::model()
+                ->findByPk(5);
+            $GroupEmailCompliance->compliance_status = 'compliance-review';
+            $GroupEmailCompliance->update();
+
+        }
+        elseif ($group->compliance->compliance_status=='approved')
+        {
+            // Update emails to pending-sending status if this Group is no longer under review
+            GroupEmail::model()
+                ->updateAll(['status' => 'pending-sending'],
+                    'group_email_id= '.$group['group_email_id'].' AND status = "in-review"'
+                );
+        }
+
+
+
+
+
+
+
+
+
+
         $emails = GroupEmail::model()->findAll(array(
             'condition' => '`status` = "pending-sending" AND `send_at` < NOW() AND `retries` < `max_retries` AND group_email_id = '.$group->group_email_id,
             'order' => 'email_id ASC',
@@ -42,7 +146,7 @@ class GroupEmailSenderBehavior extends CBehavior
         ));
         if ($this->verbose)
         {
-            echo "[".date("Y-m-d H:i:s")."] Emails Count ".count($emails)."...\n";
+            echo "[".date("Y-m-d H:i:s")."] Gross Emails Count ".count($emails)."...\n";
 
         }
 
@@ -69,8 +173,19 @@ class GroupEmailSenderBehavior extends CBehavior
         if ($this->verbose) {
             $timeStart = microtime(true);
             echo "[".date("Y-m-d H:i:s")."] Campaign status has been set to PROCESSING.\n";
-            echo "[".date("Y-m-d H:i:s")."] Searching for subscribers to send for this campaign...";
+            echo "[".date("Y-m-d H:i:s")."] Searching for emails to send for this group...\n";
         }
+
+
+
+
+
+
+
+
+
+
+
 
         try
         {

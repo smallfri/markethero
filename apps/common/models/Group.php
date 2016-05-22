@@ -9,6 +9,7 @@
  * @property integer $customer_id
  * @property string $send_at
  * @property string $status
+ * @property string $finished_at
  *   The followings are the available model relations:
  * @property Customer $customer
  * @property Customer $compliance
@@ -52,6 +53,8 @@ class Group extends ActiveRecord
     public $group_email_uid;
 
     public $customer_id;
+
+    public $status;
 
     /**
      * @return string the associated database table name
@@ -405,4 +408,20 @@ class Group extends ActiveRecord
 
         return $blacklisted;
     }
+
+    public function saveStatus($status = null)
+    {
+        if (empty($this->group_email_id)) {
+            return false;
+        }
+        if ($status) {
+            $this->status = $status;
+        }
+        $attributes = array('status' => $this->status);
+        if ($this->status == self::STATUS_SENT) {
+            $this->finished_at = $attributes['finished_at'] = new CDbExpression('NOW()');
+        }
+        return Yii::app()->getDb()->createCommand()->update($this->tableName(), $attributes, 'group_email_id = :geid', array(':geid' => (int)$this->group_email_id));
+    }
+
 }

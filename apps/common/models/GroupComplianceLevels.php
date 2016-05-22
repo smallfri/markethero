@@ -11,17 +11,14 @@
  * The followings are the available columns in table '{{group_email_compliance}}':
  *
  *
- * @property integer group_email_id
- * @property integer compliance_level_type_id
- * @property integer last_processed_id
- * @property integer compliance_approval_user_id
- * @property string date_added
- * @property string last_updated
- * @property integer offset
- * @property string compliance_status
+ * @property integer id
+ * @property float threshold
+ *
+ *   The followings are the available model relations:
+ * @property Customer $compliance_levels
  *
  */
-class GroupEmailCompliance extends ActiveRecord
+class GroupComplianceLevels extends ActiveRecord
 {
 
     public $sendDirectly = false;
@@ -31,7 +28,7 @@ class GroupEmailCompliance extends ActiveRecord
 	 */
 	public function tableName()
 	{
-		return '{{group_email_compliance}}';
+		return '{{compliance_levels}}';
 	}
 
 	/**
@@ -49,17 +46,7 @@ class GroupEmailCompliance extends ActiveRecord
         return CMap::mergeArray($rules, parent::rules());
 	}
 
-	/**
-     * @return array relational rules.
-     */
-    public function relations()
-    {
 
-        $relations = array(
-            'compliance_levels' => array(self::BELONGS_TO, 'GroupComplianceLevels', 'compliance_level_type_id'),
-        );
-        return CMap::mergeArray($relations, parent::relations());
-    }
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */

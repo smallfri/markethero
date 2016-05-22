@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c9b7ec24-babb-4088-b4f3-f3a6cadded3c" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/apps/common/models/GroupComplianceLevels.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/apps/SendGroupsCommand.php" afterPath="$PROJECT_DIR$/apps/console/commands/SendGroupsCommand.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/common/models/Group.php" afterPath="$PROJECT_DIR$/apps/common/models/Group.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/common/models/GroupEmailCompliance.php" afterPath="$PROJECT_DIR$/apps/common/models/GroupEmailCompliance.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php" afterPath="$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php" />
     </list>
     <ignored path="MarketHero.iws" />
@@ -28,8 +31,8 @@
             <file leaf-file-name="SendGroupEmailsCommand.php" pinned="false" current-in-tab="true">
               <entry file="file://$PROJECT_DIR$/apps/console/commands/SendGroupEmailsCommand.php">
                 <provider selected="true" editor-type-id="text-editor">
-                  <state vertical-scroll-proportion="0.41395348">
-                    <caret line="125" column="13" selection-start-line="125" selection-start-column="13" selection-end-line="125" selection-end-column="13" />
+                  <state vertical-scroll-proportion="0.49302325">
+                    <caret line="188" column="13" selection-start-line="127" selection-start-column="12" selection-end-line="188" selection-end-column="13" />
                     <folding>
                       <element signature="e#4233#6205#0#PHP" expanded="false" />
                       <marker date="1463740048000" expanded="true" signature="7328:7450" placeholder="DELETE FROM ..." />
@@ -72,12 +75,15 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="GroupEmailSenderBehavior.php" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php">
+      <file leaf-file-name="SendGroupEmailsCommand.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/console/commands/SendGroupEmailsCommand.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.12539515">
-              <caret line="33" column="17" selection-start-line="33" selection-start-column="17" selection-end-line="33" selection-end-column="17" />
-              <folding />
+            <state vertical-scroll-proportion="-9.576923">
+              <caret line="115" column="12" selection-start-line="115" selection-start-column="12" selection-end-line="115" selection-end-column="12" />
+              <folding>
+                <element signature="e#4233#6205#0#PHP" expanded="false" />
+                <marker date="1463740048000" expanded="true" signature="7328:7450" placeholder="DELETE FROM ..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -85,19 +91,289 @@
       <file leaf-file-name="SendGroupsCommand.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/apps/console/commands/SendGroupsCommand.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-8.730769">
-              <caret line="149" column="0" selection-start-line="149" selection-start-column="0" selection-end-line="149" selection-end-column="0" />
+            <state vertical-scroll-proportion="-0.0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SendTransactionalEmailsCommand.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/apps/console/commands/SendTransactionalEmailsCommand.php">
+      <file leaf-file-name="GroupEmailSenderBehavior.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-25.73077">
-              <caret line="60" column="51" selection-start-line="60" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.22998987">
+              <caret line="85" column="11" selection-start-line="85" selection-start-column="11" selection-end-line="85" selection-end-column="11" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GroupEmailCompliance.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/common/models/GroupEmailCompliance.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-6.7460318">
+              <caret line="58" column="112" selection-start-line="58" selection-start-column="112" selection-end-line="58" selection-end-column="112" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GroupComplianceLevels.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/common/models/GroupComplianceLevels.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-1.9615384">
+              <caret line="18" column="2" selection-start-line="18" selection-start-column="2" selection-end-line="18" selection-end-column="2" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Campaign.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/common/models/Campaign.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-15.269231">
+              <caret line="1037" column="5" selection-start-line="1024" selection-start-column="0" selection-end-line="1038" selection-end-column="0" />
+              <folding>
+                <element signature="e#2909#2977#0#PHP" expanded="false" />
+                <element signature="n#tableName#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#3058#3129#0#PHP" expanded="false" />
+                <element signature="n#rules#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#3181#4320#0#PHP" expanded="false" />
+                <element signature="e#4400#4450#0#PHP" expanded="false" />
+                <element signature="n#relations#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#4510#6760#0#PHP" expanded="false" />
+                <element signature="e#6848#6922#0#PHP" expanded="false" />
+                <element signature="n#attributeLabels#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#6985#8474#0#PHP" expanded="false" />
+                <element signature="e#8493#8606#0#PHP" expanded="false" />
+                <element signature="e#8696#9226#0#PHP" expanded="false" />
+                <element signature="n#search#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#9351#9844#0#PHP" expanded="false" />
+                <element signature="e#9397#9831#0#PHP" expanded="false" />
+                <element signature="e#9522#9831#0#PHP" expanded="false" />
+                <element signature="e#9575#9814#0#PHP" expanded="false" />
+                <element signature="e#9885#10285#0#PHP" expanded="false" />
+                <element signature="e#9927#10271#0#PHP" expanded="false" />
+                <element signature="e#10040#10271#0#PHP" expanded="false" />
+                <element signature="e#10089#10254#0#PHP" expanded="false" />
+                <element signature="e#10534#10731#0#PHP" expanded="false" />
+                <element signature="e#10656#10731#0#PHP" expanded="false" />
+                <element signature="e#10856#11243#0#PHP" expanded="false" />
+                <element signature="e#10936#11067#1#PHP" expanded="false" />
+                <element signature="e#11092#11232#1#PHP" expanded="false" />
+                <element signature="e#11134#11217#1#PHP" expanded="false" />
+                <element signature="e#11257#11529#0#PHP" expanded="false" />
+                <element signature="n#model#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="n#beforeValidate#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#11698#13107#0#PHP" expanded="false" />
+                <element signature="e#11909#13006#0#PHP" expanded="false" />
+                <element signature="e#12064#12581#0#PHP" expanded="false" />
+                <element signature="e#12110#12241#0#PHP" expanded="false" />
+                <element signature="e#12262#12563#0#PHP" expanded="false" />
+                <element signature="e#12412#12563#0#PHP" expanded="false" />
+                <element signature="e#12599#12989#0#PHP" expanded="false" />
+                <element signature="e#12710#12931#0#PHP" expanded="false" />
+                <element signature="e#12738#12930#0#PHP" expanded="false" />
+                <element signature="e#12836#12929#0#PHP" expanded="false" />
+                <element signature="e#13032#13093#0#PHP" expanded="false" />
+                <element signature="n#beforeSave#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#13211#13310#0#PHP" expanded="false" />
+                <element signature="e#13328#13702#0#PHP" expanded="false" />
+                <element signature="e#13451#13567#0#PHP" expanded="false" />
+                <element signature="e#13568#13702#0#PHP" expanded="false" />
+                <element signature="n#beforeDelete#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#13827#14051#0#PHP" expanded="false" />
+                <element signature="e#14118#14183#0#PHP" expanded="false" />
+                <element signature="n#afterFind#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#14292#14383#0#PHP" expanded="false" />
+                <element signature="e#14401#14489#0#PHP" expanded="false" />
+                <element signature="n#afterConstruct#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#14593#14681#0#PHP" expanded="false" />
+                <element signature="n#afterDelete#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#14961#15111#0#PHP" expanded="false" />
+                <element signature="e#15272#15428#0#PHP" expanded="false" />
+                <element signature="n#findByUid#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#15546#15632#0#PHP" expanded="false" />
+                <element signature="e#15570#15631#1#PHP" expanded="false" />
+                <element signature="n#generateUid#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#15793#15866#0#PHP" expanded="false" />
+                <element signature="n#attributeHelpTexts#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#15971#17658#0#PHP" expanded="false" />
+                <element signature="n#attributePlaceholders#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#17825#18442#0#PHP" expanded="false" />
+                <element signature="n#pause#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#18587#18654#0#PHP" expanded="false" />
+                <element signature="n#unpause#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#18765#18829#0#PHP" expanded="false" />
+                <element signature="n#pauseUnpause#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#18946#19086#0#PHP" expanded="false" />
+                <element signature="e#19014#19086#0#PHP" expanded="false" />
+                <element signature="n#copy#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#19195#19258#0#PHP" expanded="false" />
+                <element signature="e#19344#28197#0#PHP" expanded="false" />
+                <element signature="e#19950#20253#0#PHP" expanded="false" />
+                <element signature="e#20191#20253#0#PHP" expanded="false" />
+                <element signature="e#20267#20391#0#PHP" expanded="false" />
+                <element signature="e#20652#20766#0#PHP" expanded="false" />
+                <element signature="e#20838#20973#0#PHP" expanded="false" />
+                <element signature="e#20897#20972#1#PHP" expanded="false" />
+                <element signature="e#20987#21407#0#PHP" expanded="false" />
+                <element signature="e#21510#21644#0#PHP" expanded="false" />
+                <element signature="e#21568#21643#1#PHP" expanded="false" />
+                <element signature="e#21658#22087#0#PHP" expanded="false" />
+                <element signature="e#22233#22924#0#PHP" expanded="false" />
+                <element signature="e#22304#22519#0#PHP" expanded="false" />
+                <element signature="e#22370#22518#1#PHP" expanded="false" />
+                <element signature="e#22571#22785#0#PHP" expanded="false" />
+                <element signature="e#22636#22784#1#PHP" expanded="false" />
+                <element signature="e#22852#22924#0#PHP" expanded="false" />
+                <element signature="e#23419#23846#0#PHP" expanded="false" />
+                <element signature="e#23510#23617#0#PHP" expanded="false" />
+                <element signature="e#23651#23832#0#PHP" expanded="false" />
+                <element signature="e#23872#24032#0#PHP" expanded="false" />
+                <element signature="e#24171#24498#0#PHP" expanded="false" />
+                <element signature="e#24218#24405#0#PHP" expanded="false" />
+                <element signature="e#24562#26172#0#PHP" expanded="false" />
+                <element signature="e#24719#25425#0#PHP" expanded="false" />
+                <element signature="e#24789#24895#0#PHP" expanded="false" />
+                <element signature="e#25442#26158#0#PHP" expanded="false" />
+                <element signature="e#25522#25628#0#PHP" expanded="false" />
+                <element signature="e#26238#26640#0#PHP" expanded="false" />
+                <element signature="e#26292#26626#0#PHP" expanded="false" />
+                <element signature="e#26739#27936#0#PHP" expanded="false" />
+                <element signature="e#27106#27345#0#PHP" expanded="false" />
+                <element signature="e#27362#27922#0#PHP" expanded="false" />
+                <element signature="e#27408#27900#0#PHP" expanded="false" />
+                <element signature="e#28062#28197#0#PHP" expanded="false" />
+                <element signature="n#getListsDropDownArray#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#28324#28388#0#PHP" expanded="false" />
+                <element signature="e#28703#28988#0#PHP" expanded="false" />
+                <element signature="e#28791#28973#0#PHP" expanded="false" />
+                <element signature="e#28845#28972#0#PHP" expanded="false" />
+                <element signature="n#getSegmentsDropDownArray#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#29132#29196#0#PHP" expanded="false" />
+                <element signature="e#29214#29292#0#PHP" expanded="false" />
+                <element signature="e#29385#29682#0#PHP" expanded="false" />
+                <element signature="e#29488#29666#0#PHP" expanded="false" />
+                <element signature="e#29542#29665#0#PHP" expanded="false" />
+                <element signature="n#getGroupsDropDownArray#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#29824#29888#0#PHP" expanded="false" />
+                <element signature="e#30128#30655#0#PHP" expanded="false" />
+                <element signature="e#30490#30640#0#PHP" expanded="false" />
+                <element signature="e#30540#30639#0#PHP" expanded="false" />
+                <element signature="n#getRemovable#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#30923#31119#0#PHP" expanded="false" />
+                <element signature="e#31162#31216#0#PHP" expanded="false" />
+                <element signature="n#getEditable#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="n#getAccessOverview#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="n#getCanBePaused#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="n#getIsPaused#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="n#getCanBeResumed#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="n#getCanBeMarkedAsSent#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="n#getIsDraft#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="n#getPendingDelete#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="n#getStartedAt#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#32886#32998#0#PHP" expanded="false" />
+                <element signature="n#getFinishedAt#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#33145#33259#0#PHP" expanded="false" />
+                <element signature="n#getLastOpen#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#33405#33460#0#PHP" expanded="false" />
+                <element signature="e#33764#33817#0#PHP" expanded="false" />
+                <element signature="n#getUid#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="n#getSubjectToNameAvailableTags#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#34031#34186#0#PHP" expanded="false" />
+                <element signature="e#34205#34424#0#PHP" expanded="false" />
+                <element signature="e#34287#34414#0#PHP" expanded="false" />
+                <element signature="n#getDateTimeFormat#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#34576#34700#0#PHP" expanded="false" />
+                <element signature="n#getStatusWithStats#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#35925#36049#0#PHP" expanded="false" />
+                <element signature="e#36067#36260#0#PHP" expanded="false" />
+                <element signature="e#36325#36482#0#PHP" expanded="false" />
+                <element signature="e#36533#36652#0#PHP" expanded="false" />
+                <element signature="e#36581#36651#1#PHP" expanded="false" />
+                <element signature="e#36675#37313#0#PHP" expanded="false" />
+                <element signature="e#36816#37009#0#PHP" expanded="false" />
+                <element signature="e#36924#37009#0#PHP" expanded="false" />
+                <element signature="e#37024#37313#0#PHP" expanded="false" />
+                <element signature="e#37428#37487#0#PHP" expanded="false" />
+                <element signature="e#37522#37668#0#PHP" expanded="false" />
+                <element signature="n#getTypesList#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#38102#38309#0#PHP" expanded="false" />
+                <element signature="n#getTypeName#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#38383#38445#0#PHP" expanded="false" />
+                <element signature="n#getTypeNameDetails#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#38691#38757#0#PHP" expanded="false" />
+                <element signature="e#38766#38829#0#PHP" expanded="false" />
+                <element signature="e#38907#38997#0#PHP" expanded="false" />
+                <element signature="n#getIsAutoresponder#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="n#getIsRegular#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="n#getUniqueOpensCount#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#39778#39865#0#PHP" expanded="false" />
+                <element signature="n#getListSegmentName#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#39983#40080#0#PHP" expanded="false" />
+                <element signature="e#40473#40964#0#PHP" expanded="false" />
+                <element signature="e#40524#40954#0#PHP" expanded="false" />
+                <element signature="n#countForwards#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="n#countAbuseReports#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="n#saveStatus#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#41431#41499#0#PHP" expanded="false" />
+                <element signature="e#41508#41569#0#PHP" expanded="false" />
+                <element signature="e#41634#41775#0#PHP" expanded="false" />
+                <element signature="n#saveSendAt#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#42006#42074#0#PHP" expanded="false" />
+                <element signature="e#42083#42145#0#PHP" expanded="false" />
+                <element signature="n#getIsRecurring#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="n#tryReschedule#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#42719#42799#0#PHP" expanded="false" />
+                <element signature="e#42835#42915#0#PHP" expanded="false" />
+                <element signature="e#42924#42982#0#PHP" expanded="false" />
+                <element signature="e#43012#44027#0#PHP" expanded="false" />
+                <element signature="e#43579#43696#0#PHP" expanded="false" />
+                <element signature="e#43970#44027#0#PHP" expanded="false" />
+                <element signature="n#getDeliveryLogsArchived#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="n#getTotalDeliveryTime#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#44243#44380#0#PHP" expanded="false" />
+                <element signature="e#44511#44573#0#PHP" expanded="false" />
+                <element signature="n#countSubscribers#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#44746#44948#0#PHP" expanded="false" />
+                <element signature="e#44864#44948#0#PHP" expanded="false" />
+                <element signature="n#findSubscribers#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#45096#45342#0#PHP" expanded="false" />
+                <element signature="e#45236#45342#0#PHP" expanded="false" />
+                <element signature="n#getBulkActionsList#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#45445#45764#0#PHP" expanded="false" />
+                <element signature="n#countSubscribersByListSegment#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#46064#46177#0#PHP" expanded="false" />
+                <element signature="e#46195#46296#0#PHP" expanded="false" />
+                <element signature="e#46314#46395#0#PHP" expanded="false" />
+                <element signature="n#findSubscribersByListSegment#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#46854#46973#0#PHP" expanded="false" />
+                <element signature="e#46991#47098#0#PHP" expanded="false" />
+                <element signature="e#47116#47197#0#PHP" expanded="false" />
+                <element signature="n#countSubscribersByList#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#47573#47686#0#PHP" expanded="false" />
+                <element signature="e#47704#47805#0#PHP" expanded="false" />
+                <element signature="e#47823#47904#0#PHP" expanded="false" />
+                <element signature="n#findSubscribersByList#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#48562#48681#0#PHP" expanded="false" />
+                <element signature="e#48699#48806#0#PHP" expanded="false" />
+                <element signature="e#48816#48897#0#PHP" expanded="false" />
+                <element signature="n#addRegularCriteria#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#49130#50656#0#PHP" expanded="false" />
+                <element signature="e#49257#50620#0#PHP" expanded="false" />
+                <element signature="e#49405#49945#0#PHP" expanded="false" />
+                <element signature="e#49994#50620#0#PHP" expanded="false" />
+                <element signature="e#50148#50572#0#PHP" expanded="false" />
+                <element signature="n#addAutoresponderCriteria#0;n#Campaign#0;n#!!top" expanded="false" />
+                <element signature="e#50783#51000#0#PHP" expanded="false" />
+                <element signature="e#51163#52546#0#PHP" expanded="false" />
+                <element signature="e#51514#52503#0#PHP" expanded="false" />
+                <element signature="e#51631#51734#0#PHP" expanded="false" />
+                <element signature="e#51747#51837#0#PHP" expanded="false" />
+                <element signature="e#51882#52363#0#PHP" expanded="false" />
+                <element signature="e#52504#52546#0#PHP" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -105,8 +381,8 @@
       <file leaf-file-name="Group.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/apps/common/models/Group.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-13.730769">
-              <caret line="96" column="47" selection-start-line="96" selection-start-column="47" selection-end-line="96" selection-end-column="47" />
+            <state vertical-scroll-proportion="-24.846153">
+              <caret line="102" column="5" selection-start-line="90" selection-start-column="3" selection-end-line="102" selection-end-column="5" />
               <folding>
                 <element signature="n#search#0;n#Group#0;n#!!top" expanded="false" />
               </folding>
@@ -122,7 +398,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/AbuseController.php" />
         <option value="$PROJECT_DIR$/mhapi/vendor/laravel/framework/src/Illuminate/Auth/Middleware/AuthenticateWithBasicAuth.php" />
         <option value="$PROJECT_DIR$/mhapi/vendor/laravel/framework/src/Illuminate/Auth/SessionGuard.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/BlacklistController.php" />
@@ -152,7 +427,6 @@
         <option value="$PROJECT_DIR$/mhapi/app/GroupEmailAbuseModel.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailAbuseController.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/routes.php" />
-        <option value="$PROJECT_DIR$/apps/common/models/GroupEmailCompliance.php" />
         <option value="$PROJECT_DIR$/apps/common/models/TransactionalEmail.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsGroupController.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsController.php" />
@@ -170,8 +444,10 @@
         <option value="$PROJECT_DIR$/apps/console/config/main.php" />
         <option value="$PROJECT_DIR$/apps/common/models/DeliveryServerSmtp.php" />
         <option value="$PROJECT_DIR$/apps/common/models/DeliveryServer.php" />
-        <option value="$PROJECT_DIR$/apps/common/models/Group.php" />
         <option value="$PROJECT_DIR$/apps/console/commands/SendGroupsCommand.php" />
+        <option value="$PROJECT_DIR$/apps/common/models/Group.php" />
+        <option value="$PROJECT_DIR$/apps/common/models/GroupComplianceLevels.php" />
+        <option value="$PROJECT_DIR$/apps/common/models/GroupEmailCompliance.php" />
         <option value="$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php" />
       </list>
     </option>
@@ -441,17 +717,18 @@
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder3" value="3" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/apps/api/controllers" />
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/eoneapi/public" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/apps/common/models" />
       <recent name="$PROJECT_DIR$/apps/console/commands" />
       <recent name="$PROJECT_DIR$/apps/console/components/behaviors" />
       <recent name="$PROJECT_DIR$/mhapi/app" />
       <recent name="$PROJECT_DIR$/mhapi/app/Http/Controllers" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/apps/console/commands" />
+      <recent name="$PROJECT_DIR$/apps/api/controllers" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/eoneapi/public" />
     </key>
   </component>
   <component name="RunManager">
@@ -511,7 +788,7 @@
     <editor active="true" />
     <layout>
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32971016" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26344085" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26344085" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26766917" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.45090908" sideWeight="0.50213677" order="7" side_tool="true" content_ui="tabs" />
@@ -606,17 +883,17 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php</url>
-          <line>487</line>
+          <line>428</line>
           <option name="timeStamp" value="10" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php</url>
-          <line>711</line>
+          <line>652</line>
           <option name="timeStamp" value="11" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php</url>
-          <line>31</line>
+          <line>30</line>
           <option name="timeStamp" value="12" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
@@ -629,24 +906,12 @@
           <line>1268</line>
           <option name="timeStamp" value="14" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php</url>
-          <line>70</line>
-          <option name="timeStamp" value="15" />
-        </line-breakpoint>
       </breakpoints>
       <option name="time" value="16" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/apps/common/models/SendingDomain.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-18.615385">
-          <caret line="358" column="25" selection-start-line="358" selection-start-column="25" selection-end-line="358" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/apps/api/components/db/ar/ActiveRecord.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.17456555">
@@ -847,254 +1112,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/common/models/Campaign.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.584615">
-          <caret line="29" column="28" selection-start-line="29" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
-          <folding>
-            <element signature="e#2909#2977#0#PHP" expanded="false" />
-            <element signature="n#tableName#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#3058#3129#0#PHP" expanded="false" />
-            <element signature="n#rules#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#3181#4320#0#PHP" expanded="false" />
-            <element signature="e#4400#4450#0#PHP" expanded="false" />
-            <element signature="n#relations#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#4510#6760#0#PHP" expanded="false" />
-            <element signature="e#6848#6922#0#PHP" expanded="false" />
-            <element signature="n#attributeLabels#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#6985#8474#0#PHP" expanded="false" />
-            <element signature="e#8493#8606#0#PHP" expanded="false" />
-            <element signature="e#8696#9226#0#PHP" expanded="false" />
-            <element signature="n#search#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#9351#9844#0#PHP" expanded="false" />
-            <element signature="e#9397#9831#0#PHP" expanded="false" />
-            <element signature="e#9522#9831#0#PHP" expanded="false" />
-            <element signature="e#9575#9814#0#PHP" expanded="false" />
-            <element signature="e#9885#10285#0#PHP" expanded="false" />
-            <element signature="e#9927#10271#0#PHP" expanded="false" />
-            <element signature="e#10040#10271#0#PHP" expanded="false" />
-            <element signature="e#10089#10254#0#PHP" expanded="false" />
-            <element signature="e#10534#10731#0#PHP" expanded="false" />
-            <element signature="e#10656#10731#0#PHP" expanded="false" />
-            <element signature="e#10856#11243#0#PHP" expanded="false" />
-            <element signature="e#10936#11067#1#PHP" expanded="false" />
-            <element signature="e#11092#11232#1#PHP" expanded="false" />
-            <element signature="e#11134#11217#1#PHP" expanded="false" />
-            <element signature="e#11257#11529#0#PHP" expanded="false" />
-            <element signature="n#model#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="n#beforeValidate#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#11698#13107#0#PHP" expanded="false" />
-            <element signature="e#11909#13006#0#PHP" expanded="false" />
-            <element signature="e#12064#12581#0#PHP" expanded="false" />
-            <element signature="e#12110#12241#0#PHP" expanded="false" />
-            <element signature="e#12262#12563#0#PHP" expanded="false" />
-            <element signature="e#12412#12563#0#PHP" expanded="false" />
-            <element signature="e#12599#12989#0#PHP" expanded="false" />
-            <element signature="e#12710#12931#0#PHP" expanded="false" />
-            <element signature="e#12738#12930#0#PHP" expanded="false" />
-            <element signature="e#12836#12929#0#PHP" expanded="false" />
-            <element signature="e#13032#13093#0#PHP" expanded="false" />
-            <element signature="n#beforeSave#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#13211#13310#0#PHP" expanded="false" />
-            <element signature="e#13328#13702#0#PHP" expanded="false" />
-            <element signature="e#13451#13567#0#PHP" expanded="false" />
-            <element signature="e#13568#13702#0#PHP" expanded="false" />
-            <element signature="n#beforeDelete#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#13827#14051#0#PHP" expanded="false" />
-            <element signature="e#14118#14183#0#PHP" expanded="false" />
-            <element signature="n#afterFind#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#14292#14383#0#PHP" expanded="false" />
-            <element signature="e#14401#14489#0#PHP" expanded="false" />
-            <element signature="n#afterConstruct#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#14593#14681#0#PHP" expanded="false" />
-            <element signature="n#afterDelete#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#14961#15111#0#PHP" expanded="false" />
-            <element signature="e#15272#15428#0#PHP" expanded="false" />
-            <element signature="n#findByUid#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#15546#15632#0#PHP" expanded="false" />
-            <element signature="e#15570#15631#1#PHP" expanded="false" />
-            <element signature="n#generateUid#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#15793#15866#0#PHP" expanded="false" />
-            <element signature="n#attributeHelpTexts#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#15971#17658#0#PHP" expanded="false" />
-            <element signature="n#attributePlaceholders#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#17825#18442#0#PHP" expanded="false" />
-            <element signature="n#pause#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#18587#18654#0#PHP" expanded="false" />
-            <element signature="n#unpause#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#18765#18829#0#PHP" expanded="false" />
-            <element signature="n#pauseUnpause#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#18946#19086#0#PHP" expanded="false" />
-            <element signature="e#19014#19086#0#PHP" expanded="false" />
-            <element signature="n#copy#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#19195#19258#0#PHP" expanded="false" />
-            <element signature="e#19344#28197#0#PHP" expanded="false" />
-            <element signature="e#19950#20253#0#PHP" expanded="false" />
-            <element signature="e#20191#20253#0#PHP" expanded="false" />
-            <element signature="e#20267#20391#0#PHP" expanded="false" />
-            <element signature="e#20652#20766#0#PHP" expanded="false" />
-            <element signature="e#20838#20973#0#PHP" expanded="false" />
-            <element signature="e#20897#20972#1#PHP" expanded="false" />
-            <element signature="e#20987#21407#0#PHP" expanded="false" />
-            <element signature="e#21510#21644#0#PHP" expanded="false" />
-            <element signature="e#21568#21643#1#PHP" expanded="false" />
-            <element signature="e#21658#22087#0#PHP" expanded="false" />
-            <element signature="e#22233#22924#0#PHP" expanded="false" />
-            <element signature="e#22304#22519#0#PHP" expanded="false" />
-            <element signature="e#22370#22518#1#PHP" expanded="false" />
-            <element signature="e#22571#22785#0#PHP" expanded="false" />
-            <element signature="e#22636#22784#1#PHP" expanded="false" />
-            <element signature="e#22852#22924#0#PHP" expanded="false" />
-            <element signature="e#23419#23846#0#PHP" expanded="false" />
-            <element signature="e#23510#23617#0#PHP" expanded="false" />
-            <element signature="e#23651#23832#0#PHP" expanded="false" />
-            <element signature="e#23872#24032#0#PHP" expanded="false" />
-            <element signature="e#24171#24498#0#PHP" expanded="false" />
-            <element signature="e#24218#24405#0#PHP" expanded="false" />
-            <element signature="e#24562#26172#0#PHP" expanded="false" />
-            <element signature="e#24719#25425#0#PHP" expanded="false" />
-            <element signature="e#24789#24895#0#PHP" expanded="false" />
-            <element signature="e#25442#26158#0#PHP" expanded="false" />
-            <element signature="e#25522#25628#0#PHP" expanded="false" />
-            <element signature="e#26238#26640#0#PHP" expanded="false" />
-            <element signature="e#26292#26626#0#PHP" expanded="false" />
-            <element signature="e#26739#27936#0#PHP" expanded="false" />
-            <element signature="e#27106#27345#0#PHP" expanded="false" />
-            <element signature="e#27362#27922#0#PHP" expanded="false" />
-            <element signature="e#27408#27900#0#PHP" expanded="false" />
-            <element signature="e#28062#28197#0#PHP" expanded="false" />
-            <element signature="n#getListsDropDownArray#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#28324#28388#0#PHP" expanded="false" />
-            <element signature="e#28703#28988#0#PHP" expanded="false" />
-            <element signature="e#28791#28973#0#PHP" expanded="false" />
-            <element signature="e#28845#28972#0#PHP" expanded="false" />
-            <element signature="n#getSegmentsDropDownArray#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#29132#29196#0#PHP" expanded="false" />
-            <element signature="e#29214#29292#0#PHP" expanded="false" />
-            <element signature="e#29385#29682#0#PHP" expanded="false" />
-            <element signature="e#29488#29666#0#PHP" expanded="false" />
-            <element signature="e#29542#29665#0#PHP" expanded="false" />
-            <element signature="n#getGroupsDropDownArray#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#29824#29888#0#PHP" expanded="false" />
-            <element signature="e#30128#30655#0#PHP" expanded="false" />
-            <element signature="e#30490#30640#0#PHP" expanded="false" />
-            <element signature="e#30540#30639#0#PHP" expanded="false" />
-            <element signature="n#getRemovable#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#30923#31119#0#PHP" expanded="false" />
-            <element signature="e#31162#31216#0#PHP" expanded="false" />
-            <element signature="n#getEditable#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="n#getAccessOverview#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="n#getCanBePaused#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="n#getIsPaused#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="n#getCanBeResumed#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="n#getCanBeMarkedAsSent#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="n#getIsDraft#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="n#getPendingDelete#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="n#getStartedAt#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#32886#32998#0#PHP" expanded="false" />
-            <element signature="n#getFinishedAt#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#33145#33259#0#PHP" expanded="false" />
-            <element signature="n#getLastOpen#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#33405#33460#0#PHP" expanded="false" />
-            <element signature="e#33764#33817#0#PHP" expanded="false" />
-            <element signature="n#getUid#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="n#getSubjectToNameAvailableTags#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#34031#34186#0#PHP" expanded="false" />
-            <element signature="e#34205#34424#0#PHP" expanded="false" />
-            <element signature="e#34287#34414#0#PHP" expanded="false" />
-            <element signature="n#getDateTimeFormat#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#34576#34700#0#PHP" expanded="false" />
-            <element signature="n#getStatusWithStats#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#35925#36049#0#PHP" expanded="false" />
-            <element signature="e#36067#36260#0#PHP" expanded="false" />
-            <element signature="e#36325#36482#0#PHP" expanded="false" />
-            <element signature="e#36533#36652#0#PHP" expanded="false" />
-            <element signature="e#36581#36651#1#PHP" expanded="false" />
-            <element signature="e#36675#37313#0#PHP" expanded="false" />
-            <element signature="e#36816#37009#0#PHP" expanded="false" />
-            <element signature="e#36924#37009#0#PHP" expanded="false" />
-            <element signature="e#37024#37313#0#PHP" expanded="false" />
-            <element signature="e#37428#37487#0#PHP" expanded="false" />
-            <element signature="e#37522#37668#0#PHP" expanded="false" />
-            <element signature="n#getTypesList#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#38102#38309#0#PHP" expanded="false" />
-            <element signature="n#getTypeName#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#38383#38445#0#PHP" expanded="false" />
-            <element signature="n#getTypeNameDetails#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#38691#38757#0#PHP" expanded="false" />
-            <element signature="e#38766#38829#0#PHP" expanded="false" />
-            <element signature="e#38907#38997#0#PHP" expanded="false" />
-            <element signature="n#getIsAutoresponder#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="n#getIsRegular#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="n#getUniqueOpensCount#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#39778#39865#0#PHP" expanded="false" />
-            <element signature="n#getListSegmentName#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#39983#40080#0#PHP" expanded="false" />
-            <element signature="e#40473#40964#0#PHP" expanded="false" />
-            <element signature="e#40524#40954#0#PHP" expanded="false" />
-            <element signature="n#countForwards#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="n#countAbuseReports#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="n#saveStatus#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#41431#41499#0#PHP" expanded="false" />
-            <element signature="e#41508#41569#0#PHP" expanded="false" />
-            <element signature="e#41634#41775#0#PHP" expanded="false" />
-            <element signature="n#saveSendAt#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#42006#42074#0#PHP" expanded="false" />
-            <element signature="e#42083#42145#0#PHP" expanded="false" />
-            <element signature="n#getIsRecurring#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="n#tryReschedule#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#42719#42799#0#PHP" expanded="false" />
-            <element signature="e#42835#42915#0#PHP" expanded="false" />
-            <element signature="e#42924#42982#0#PHP" expanded="false" />
-            <element signature="e#43012#44027#0#PHP" expanded="false" />
-            <element signature="e#43579#43696#0#PHP" expanded="false" />
-            <element signature="e#43970#44027#0#PHP" expanded="false" />
-            <element signature="n#getDeliveryLogsArchived#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="n#getTotalDeliveryTime#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#44243#44380#0#PHP" expanded="false" />
-            <element signature="e#44511#44573#0#PHP" expanded="false" />
-            <element signature="n#countSubscribers#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#44746#44948#0#PHP" expanded="false" />
-            <element signature="e#44864#44948#0#PHP" expanded="false" />
-            <element signature="n#findSubscribers#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#45096#45342#0#PHP" expanded="false" />
-            <element signature="e#45236#45342#0#PHP" expanded="false" />
-            <element signature="n#getBulkActionsList#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#45445#45764#0#PHP" expanded="false" />
-            <element signature="n#countSubscribersByListSegment#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#46064#46177#0#PHP" expanded="false" />
-            <element signature="e#46195#46296#0#PHP" expanded="false" />
-            <element signature="e#46314#46395#0#PHP" expanded="false" />
-            <element signature="n#findSubscribersByListSegment#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#46854#46973#0#PHP" expanded="false" />
-            <element signature="e#46991#47098#0#PHP" expanded="false" />
-            <element signature="e#47116#47197#0#PHP" expanded="false" />
-            <element signature="n#countSubscribersByList#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#47573#47686#0#PHP" expanded="false" />
-            <element signature="e#47704#47805#0#PHP" expanded="false" />
-            <element signature="e#47823#47904#0#PHP" expanded="false" />
-            <element signature="n#findSubscribersByList#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#48562#48681#0#PHP" expanded="false" />
-            <element signature="e#48699#48806#0#PHP" expanded="false" />
-            <element signature="e#48816#48897#0#PHP" expanded="false" />
-            <element signature="n#addRegularCriteria#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#49130#50656#0#PHP" expanded="false" />
-            <element signature="e#49257#50620#0#PHP" expanded="false" />
-            <element signature="e#49405#49945#0#PHP" expanded="false" />
-            <element signature="e#49994#50620#0#PHP" expanded="false" />
-            <element signature="e#50148#50572#0#PHP" expanded="false" />
-            <element signature="n#addAutoresponderCriteria#0;n#Campaign#0;n#!!top" expanded="false" />
-            <element signature="e#50783#51000#0#PHP" expanded="false" />
-            <element signature="e#51163#52546#0#PHP" expanded="false" />
-            <element signature="e#51514#52503#0#PHP" expanded="false" />
-            <element signature="e#51631#51734#0#PHP" expanded="false" />
-            <element signature="e#51747#51837#0#PHP" expanded="false" />
-            <element signature="e#51882#52363#0#PHP" expanded="false" />
-            <element signature="e#52504#52546#0#PHP" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/apps/common/models/GroupEmail.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-43.615383">
@@ -1187,14 +1204,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/console/commands/SendTransactionalEmailsCommand.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-25.73077">
-          <caret line="60" column="51" selection-start-line="60" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1483,26 +1492,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/common/models/GroupEmailCompliance.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.576923">
-          <caret line="131" column="68" selection-start-line="131" selection-start-column="68" selection-end-line="131" selection-end-column="68" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/apps/console/components/db/ar/ActiveRecord.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.21539961">
           <caret line="13" column="6" selection-start-line="13" selection-start-column="6" selection-end-line="13" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/common/models/GroupBounceLog.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.3216374">
-          <caret line="106" column="61" selection-start-line="106" selection-start-column="61" selection-end-line="106" selection-end-column="61" />
           <folding />
         </state>
       </provider>
@@ -1515,20 +1508,282 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/common/models/Group.php">
+    <entry file="file://$PROJECT_DIR$/apps/console/commands/SendTransactionalEmailsCommand.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-13.730769">
-          <caret line="96" column="47" selection-start-line="96" selection-start-column="47" selection-end-line="96" selection-end-column="47" />
+        <state vertical-scroll-proportion="-25.73077">
+          <caret line="60" column="51" selection-start-line="60" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/console/commands/SendGroupsCommand.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/common/models/Campaign.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-15.269231">
+          <caret line="1037" column="5" selection-start-line="1024" selection-start-column="0" selection-end-line="1038" selection-end-column="0" />
           <folding>
-            <element signature="n#search#0;n#Group#0;n#!!top" expanded="false" />
+            <element signature="e#2909#2977#0#PHP" expanded="false" />
+            <element signature="n#tableName#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#3058#3129#0#PHP" expanded="false" />
+            <element signature="n#rules#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#3181#4320#0#PHP" expanded="false" />
+            <element signature="e#4400#4450#0#PHP" expanded="false" />
+            <element signature="n#relations#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#4510#6760#0#PHP" expanded="false" />
+            <element signature="e#6848#6922#0#PHP" expanded="false" />
+            <element signature="n#attributeLabels#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#6985#8474#0#PHP" expanded="false" />
+            <element signature="e#8493#8606#0#PHP" expanded="false" />
+            <element signature="e#8696#9226#0#PHP" expanded="false" />
+            <element signature="n#search#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#9351#9844#0#PHP" expanded="false" />
+            <element signature="e#9397#9831#0#PHP" expanded="false" />
+            <element signature="e#9522#9831#0#PHP" expanded="false" />
+            <element signature="e#9575#9814#0#PHP" expanded="false" />
+            <element signature="e#9885#10285#0#PHP" expanded="false" />
+            <element signature="e#9927#10271#0#PHP" expanded="false" />
+            <element signature="e#10040#10271#0#PHP" expanded="false" />
+            <element signature="e#10089#10254#0#PHP" expanded="false" />
+            <element signature="e#10534#10731#0#PHP" expanded="false" />
+            <element signature="e#10656#10731#0#PHP" expanded="false" />
+            <element signature="e#10856#11243#0#PHP" expanded="false" />
+            <element signature="e#10936#11067#1#PHP" expanded="false" />
+            <element signature="e#11092#11232#1#PHP" expanded="false" />
+            <element signature="e#11134#11217#1#PHP" expanded="false" />
+            <element signature="e#11257#11529#0#PHP" expanded="false" />
+            <element signature="n#model#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="n#beforeValidate#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#11698#13107#0#PHP" expanded="false" />
+            <element signature="e#11909#13006#0#PHP" expanded="false" />
+            <element signature="e#12064#12581#0#PHP" expanded="false" />
+            <element signature="e#12110#12241#0#PHP" expanded="false" />
+            <element signature="e#12262#12563#0#PHP" expanded="false" />
+            <element signature="e#12412#12563#0#PHP" expanded="false" />
+            <element signature="e#12599#12989#0#PHP" expanded="false" />
+            <element signature="e#12710#12931#0#PHP" expanded="false" />
+            <element signature="e#12738#12930#0#PHP" expanded="false" />
+            <element signature="e#12836#12929#0#PHP" expanded="false" />
+            <element signature="e#13032#13093#0#PHP" expanded="false" />
+            <element signature="n#beforeSave#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#13211#13310#0#PHP" expanded="false" />
+            <element signature="e#13328#13702#0#PHP" expanded="false" />
+            <element signature="e#13451#13567#0#PHP" expanded="false" />
+            <element signature="e#13568#13702#0#PHP" expanded="false" />
+            <element signature="n#beforeDelete#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#13827#14051#0#PHP" expanded="false" />
+            <element signature="e#14118#14183#0#PHP" expanded="false" />
+            <element signature="n#afterFind#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#14292#14383#0#PHP" expanded="false" />
+            <element signature="e#14401#14489#0#PHP" expanded="false" />
+            <element signature="n#afterConstruct#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#14593#14681#0#PHP" expanded="false" />
+            <element signature="n#afterDelete#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#14961#15111#0#PHP" expanded="false" />
+            <element signature="e#15272#15428#0#PHP" expanded="false" />
+            <element signature="n#findByUid#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#15546#15632#0#PHP" expanded="false" />
+            <element signature="e#15570#15631#1#PHP" expanded="false" />
+            <element signature="n#generateUid#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#15793#15866#0#PHP" expanded="false" />
+            <element signature="n#attributeHelpTexts#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#15971#17658#0#PHP" expanded="false" />
+            <element signature="n#attributePlaceholders#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#17825#18442#0#PHP" expanded="false" />
+            <element signature="n#pause#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#18587#18654#0#PHP" expanded="false" />
+            <element signature="n#unpause#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#18765#18829#0#PHP" expanded="false" />
+            <element signature="n#pauseUnpause#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#18946#19086#0#PHP" expanded="false" />
+            <element signature="e#19014#19086#0#PHP" expanded="false" />
+            <element signature="n#copy#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#19195#19258#0#PHP" expanded="false" />
+            <element signature="e#19344#28197#0#PHP" expanded="false" />
+            <element signature="e#19950#20253#0#PHP" expanded="false" />
+            <element signature="e#20191#20253#0#PHP" expanded="false" />
+            <element signature="e#20267#20391#0#PHP" expanded="false" />
+            <element signature="e#20652#20766#0#PHP" expanded="false" />
+            <element signature="e#20838#20973#0#PHP" expanded="false" />
+            <element signature="e#20897#20972#1#PHP" expanded="false" />
+            <element signature="e#20987#21407#0#PHP" expanded="false" />
+            <element signature="e#21510#21644#0#PHP" expanded="false" />
+            <element signature="e#21568#21643#1#PHP" expanded="false" />
+            <element signature="e#21658#22087#0#PHP" expanded="false" />
+            <element signature="e#22233#22924#0#PHP" expanded="false" />
+            <element signature="e#22304#22519#0#PHP" expanded="false" />
+            <element signature="e#22370#22518#1#PHP" expanded="false" />
+            <element signature="e#22571#22785#0#PHP" expanded="false" />
+            <element signature="e#22636#22784#1#PHP" expanded="false" />
+            <element signature="e#22852#22924#0#PHP" expanded="false" />
+            <element signature="e#23419#23846#0#PHP" expanded="false" />
+            <element signature="e#23510#23617#0#PHP" expanded="false" />
+            <element signature="e#23651#23832#0#PHP" expanded="false" />
+            <element signature="e#23872#24032#0#PHP" expanded="false" />
+            <element signature="e#24171#24498#0#PHP" expanded="false" />
+            <element signature="e#24218#24405#0#PHP" expanded="false" />
+            <element signature="e#24562#26172#0#PHP" expanded="false" />
+            <element signature="e#24719#25425#0#PHP" expanded="false" />
+            <element signature="e#24789#24895#0#PHP" expanded="false" />
+            <element signature="e#25442#26158#0#PHP" expanded="false" />
+            <element signature="e#25522#25628#0#PHP" expanded="false" />
+            <element signature="e#26238#26640#0#PHP" expanded="false" />
+            <element signature="e#26292#26626#0#PHP" expanded="false" />
+            <element signature="e#26739#27936#0#PHP" expanded="false" />
+            <element signature="e#27106#27345#0#PHP" expanded="false" />
+            <element signature="e#27362#27922#0#PHP" expanded="false" />
+            <element signature="e#27408#27900#0#PHP" expanded="false" />
+            <element signature="e#28062#28197#0#PHP" expanded="false" />
+            <element signature="n#getListsDropDownArray#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#28324#28388#0#PHP" expanded="false" />
+            <element signature="e#28703#28988#0#PHP" expanded="false" />
+            <element signature="e#28791#28973#0#PHP" expanded="false" />
+            <element signature="e#28845#28972#0#PHP" expanded="false" />
+            <element signature="n#getSegmentsDropDownArray#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#29132#29196#0#PHP" expanded="false" />
+            <element signature="e#29214#29292#0#PHP" expanded="false" />
+            <element signature="e#29385#29682#0#PHP" expanded="false" />
+            <element signature="e#29488#29666#0#PHP" expanded="false" />
+            <element signature="e#29542#29665#0#PHP" expanded="false" />
+            <element signature="n#getGroupsDropDownArray#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#29824#29888#0#PHP" expanded="false" />
+            <element signature="e#30128#30655#0#PHP" expanded="false" />
+            <element signature="e#30490#30640#0#PHP" expanded="false" />
+            <element signature="e#30540#30639#0#PHP" expanded="false" />
+            <element signature="n#getRemovable#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#30923#31119#0#PHP" expanded="false" />
+            <element signature="e#31162#31216#0#PHP" expanded="false" />
+            <element signature="n#getEditable#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="n#getAccessOverview#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="n#getCanBePaused#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="n#getIsPaused#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="n#getCanBeResumed#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="n#getCanBeMarkedAsSent#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="n#getIsDraft#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="n#getPendingDelete#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="n#getStartedAt#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#32886#32998#0#PHP" expanded="false" />
+            <element signature="n#getFinishedAt#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#33145#33259#0#PHP" expanded="false" />
+            <element signature="n#getLastOpen#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#33405#33460#0#PHP" expanded="false" />
+            <element signature="e#33764#33817#0#PHP" expanded="false" />
+            <element signature="n#getUid#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="n#getSubjectToNameAvailableTags#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#34031#34186#0#PHP" expanded="false" />
+            <element signature="e#34205#34424#0#PHP" expanded="false" />
+            <element signature="e#34287#34414#0#PHP" expanded="false" />
+            <element signature="n#getDateTimeFormat#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#34576#34700#0#PHP" expanded="false" />
+            <element signature="n#getStatusWithStats#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#35925#36049#0#PHP" expanded="false" />
+            <element signature="e#36067#36260#0#PHP" expanded="false" />
+            <element signature="e#36325#36482#0#PHP" expanded="false" />
+            <element signature="e#36533#36652#0#PHP" expanded="false" />
+            <element signature="e#36581#36651#1#PHP" expanded="false" />
+            <element signature="e#36675#37313#0#PHP" expanded="false" />
+            <element signature="e#36816#37009#0#PHP" expanded="false" />
+            <element signature="e#36924#37009#0#PHP" expanded="false" />
+            <element signature="e#37024#37313#0#PHP" expanded="false" />
+            <element signature="e#37428#37487#0#PHP" expanded="false" />
+            <element signature="e#37522#37668#0#PHP" expanded="false" />
+            <element signature="n#getTypesList#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#38102#38309#0#PHP" expanded="false" />
+            <element signature="n#getTypeName#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#38383#38445#0#PHP" expanded="false" />
+            <element signature="n#getTypeNameDetails#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#38691#38757#0#PHP" expanded="false" />
+            <element signature="e#38766#38829#0#PHP" expanded="false" />
+            <element signature="e#38907#38997#0#PHP" expanded="false" />
+            <element signature="n#getIsAutoresponder#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="n#getIsRegular#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="n#getUniqueOpensCount#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#39778#39865#0#PHP" expanded="false" />
+            <element signature="n#getListSegmentName#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#39983#40080#0#PHP" expanded="false" />
+            <element signature="e#40473#40964#0#PHP" expanded="false" />
+            <element signature="e#40524#40954#0#PHP" expanded="false" />
+            <element signature="n#countForwards#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="n#countAbuseReports#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="n#saveStatus#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#41431#41499#0#PHP" expanded="false" />
+            <element signature="e#41508#41569#0#PHP" expanded="false" />
+            <element signature="e#41634#41775#0#PHP" expanded="false" />
+            <element signature="n#saveSendAt#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#42006#42074#0#PHP" expanded="false" />
+            <element signature="e#42083#42145#0#PHP" expanded="false" />
+            <element signature="n#getIsRecurring#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="n#tryReschedule#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#42719#42799#0#PHP" expanded="false" />
+            <element signature="e#42835#42915#0#PHP" expanded="false" />
+            <element signature="e#42924#42982#0#PHP" expanded="false" />
+            <element signature="e#43012#44027#0#PHP" expanded="false" />
+            <element signature="e#43579#43696#0#PHP" expanded="false" />
+            <element signature="e#43970#44027#0#PHP" expanded="false" />
+            <element signature="n#getDeliveryLogsArchived#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="n#getTotalDeliveryTime#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#44243#44380#0#PHP" expanded="false" />
+            <element signature="e#44511#44573#0#PHP" expanded="false" />
+            <element signature="n#countSubscribers#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#44746#44948#0#PHP" expanded="false" />
+            <element signature="e#44864#44948#0#PHP" expanded="false" />
+            <element signature="n#findSubscribers#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#45096#45342#0#PHP" expanded="false" />
+            <element signature="e#45236#45342#0#PHP" expanded="false" />
+            <element signature="n#getBulkActionsList#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#45445#45764#0#PHP" expanded="false" />
+            <element signature="n#countSubscribersByListSegment#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#46064#46177#0#PHP" expanded="false" />
+            <element signature="e#46195#46296#0#PHP" expanded="false" />
+            <element signature="e#46314#46395#0#PHP" expanded="false" />
+            <element signature="n#findSubscribersByListSegment#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#46854#46973#0#PHP" expanded="false" />
+            <element signature="e#46991#47098#0#PHP" expanded="false" />
+            <element signature="e#47116#47197#0#PHP" expanded="false" />
+            <element signature="n#countSubscribersByList#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#47573#47686#0#PHP" expanded="false" />
+            <element signature="e#47704#47805#0#PHP" expanded="false" />
+            <element signature="e#47823#47904#0#PHP" expanded="false" />
+            <element signature="n#findSubscribersByList#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#48562#48681#0#PHP" expanded="false" />
+            <element signature="e#48699#48806#0#PHP" expanded="false" />
+            <element signature="e#48816#48897#0#PHP" expanded="false" />
+            <element signature="n#addRegularCriteria#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#49130#50656#0#PHP" expanded="false" />
+            <element signature="e#49257#50620#0#PHP" expanded="false" />
+            <element signature="e#49405#49945#0#PHP" expanded="false" />
+            <element signature="e#49994#50620#0#PHP" expanded="false" />
+            <element signature="e#50148#50572#0#PHP" expanded="false" />
+            <element signature="n#addAutoresponderCriteria#0;n#Campaign#0;n#!!top" expanded="false" />
+            <element signature="e#50783#51000#0#PHP" expanded="false" />
+            <element signature="e#51163#52546#0#PHP" expanded="false" />
+            <element signature="e#51514#52503#0#PHP" expanded="false" />
+            <element signature="e#51631#51734#0#PHP" expanded="false" />
+            <element signature="e#51747#51837#0#PHP" expanded="false" />
+            <element signature="e#51882#52363#0#PHP" expanded="false" />
+            <element signature="e#52504#52546#0#PHP" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/common/models/GroupBounceLog.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.65384614">
+          <caret line="106" column="61" selection-start-line="106" selection-start-column="61" selection-end-line="106" selection-end-column="61" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/apps/console/commands/SendGroupEmailsCommand.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.41395348">
-          <caret line="125" column="13" selection-start-line="125" selection-start-column="13" selection-end-line="125" selection-end-column="13" />
+        <state vertical-scroll-proportion="-9.576923">
+          <caret line="115" column="12" selection-start-line="115" selection-start-column="12" selection-end-line="115" selection-end-column="12" />
           <folding>
             <element signature="e#4233#6205#0#PHP" expanded="false" />
             <marker date="1463740048000" expanded="true" signature="7328:7450" placeholder="DELETE FROM ..." />
@@ -1536,18 +1791,36 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/console/commands/SendGroupsCommand.php">
+    <entry file="file://$PROJECT_DIR$/apps/common/models/Group.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-8.730769">
-          <caret line="149" column="0" selection-start-line="149" selection-start-column="0" selection-end-line="149" selection-end-column="0" />
+        <state vertical-scroll-proportion="-24.846153">
+          <caret line="102" column="5" selection-start-line="90" selection-start-column="3" selection-end-line="102" selection-end-column="5" />
+          <folding>
+            <element signature="n#search#0;n#Group#0;n#!!top" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/common/models/GroupComplianceLevels.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.9615384">
+          <caret line="18" column="2" selection-start-line="18" selection-start-column="2" selection-end-line="18" selection-end-column="2" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/common/models/GroupEmailCompliance.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-6.7460318">
+          <caret line="58" column="112" selection-start-line="58" selection-start-column="112" selection-end-line="58" selection-end-column="112" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.12539515">
-          <caret line="33" column="17" selection-start-line="33" selection-start-column="17" selection-end-line="33" selection-end-column="17" />
+        <state vertical-scroll-proportion="0.22998987">
+          <caret line="85" column="11" selection-start-line="85" selection-start-column="11" selection-end-line="85" selection-end-column="11" />
           <folding />
         </state>
       </provider>
