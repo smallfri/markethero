@@ -101,9 +101,11 @@ class GroupEmailSenderBehavior extends CBehavior
 //            echo "OK\n";
 //            echo "[".date("Y-m-d H:i:s")."] Picking a delivery server...";
 //        }
+//        print_r($group);
 
-//        $dsParams = array('customerCheckQuota' => false, 'useFor' => array(DeliveryServer::USE_FOR_groups));
-//        $server   = DeliveryServer::pickServer(0, $campaign, $dsParams);
+        $dsParams = array('customerCheckQuota' => false, 'useFor' => array(DeliveryServer::USE_FOR_GROUPS));
+        $server   = DeliveryServer::pickGroupServers(0, $group, $dsParams);
+\//        print_r($server);
 //        if (empty($server)) {
 //            Yii::log(Yii::t('groups', 'Cannot find a valid server to send the campaign email, aborting until a delivery server is available!'), CLogger::LEVEL_ERROR);
 //
@@ -254,14 +256,13 @@ class GroupEmailSenderBehavior extends CBehavior
 //            // sort subscribers
 //            $subscribers = $this->sortSubscribers($subscribers);
             $index = 0;
-            echo "FOREACH";
             foreach ($emails AS $email)
             {
                 if ($this->verbose)
                 {
                     $timeStart = microtime(true);
                     echo "\n[".date("Y-m-d H:i:s")."] Current progress: ".($index+1)." out of ".count($emails);
-                    echo "\n[".date("Y-m-d H:i:s")."] Checking if the delivery server is allowed to send to the subscriber email address domain...";
+                    echo "\n[".date("Y-m-d H:i:s")."] Checking if the delivery server is allowed to send to the subscriber email address domain...\n";
                 }
 //
 //                // if this server is not allowed to send to this email domain, then just skip it.
@@ -278,31 +279,30 @@ class GroupEmailSenderBehavior extends CBehavior
 //                    $timeStart = microtime(true);
 //                }
 //
-//                // if blacklisted, goodbye.
-//                if ($subscriber->getIsBlacklisted()) {
-//                    $this->logDelivery($subscriber, Yii::t('groups', 'This email is blacklisted. Sending is denied!'), CampaignDeliveryLog::STATUS_BLACKLISTED);
+                // if blacklisted, goodbye.
+//                if ($email->getIsBlacklisted()) {
 //                    if ($this->verbose) {
 //                        echo "\n[".date("Y-m-d H:i:s")."] The email address has been found into the blacklist, sending is denied!\n";
 //                    }
 //                    continue;
 //                }
-//
+////
 //                if ($this->verbose) {
 //                    echo "OK, took " . round(microtime(true) - $timeStart, 3) . " seconds.\n";
 //                    echo "[".date("Y-m-d H:i:s")."] Checking server sending quota...";
-//                    $timeStart = microtime(true);
+                    $timeStart = microtime(true);
 //                }
 //
 //                // in case the server is over quota
-//                if ($server->getIsOverQuota()) {
-//                    if ($this->verbose) {
-//                        echo "\n[".date("Y-m-d H:i:s")."] The delivery server is over quota, picking another one...\n";
-//                    }
-//                    $currentServerId = $server->server_id;
-//                    if (!($server = DeliveryServer::pickServer($currentServerId, $campaign, $dsParams))) {
-//                        throw new Exception(Yii::t('groups', 'Cannot find a valid server to send the campaign email, aborting until a delivery server is available!'), 99);
-//                    }
-//                }
+                if ($server->getIsOverQuota()) {
+                    if ($this->verbose) {
+                        echo "\n[".date("Y-m-d H:i:s")."] The delivery server is over quota, picking another one...\n";
+                    }
+                    $currentServerId = $server->server_id;
+                    if (!($server = DeliveryServer::pickGroupServers($currentServerId, $group, $dsParams))) {
+                        throw new Exception(Yii::t('groups', 'Cannot find a valid server to send the campaign email, aborting until a delivery server is available!'), 99);
+                    }
+                }
 //
 //                if ($this->verbose) {
 //                    echo "OK, took " . round(microtime(true) - $timeStart, 3) . " seconds.\n";
@@ -332,9 +332,8 @@ class GroupEmailSenderBehavior extends CBehavior
 //                    $this->logDelivery($subscriber, Yii::t('groups', 'Unable to prepare the email content!'), CampaignDeliveryLog::STATUS_ERROR);
 //                    continue;
 //                }
-
-                $server = DeliveryServer::pickServer(5, $group, $dsParams);
-
+                $server = DeliveryServer::pickGroupServers($currentServerId, $group, $dsParams);
+//print_r($server);
 //
 //                if ($changeServerAt > 0 && $processedCounter >= $changeServerAt && !$serverHasChanged) {
 //                    $currentServerId = 5;
@@ -393,7 +392,7 @@ class GroupEmailSenderBehavior extends CBehavior
 //                    foreach ($headers as $name => $value) {
 //                        $headers[$name] = str_replace(array_keys($headerSearchReplace), array_values($headerSearchReplace), $value);
 //                    }
-//                    $emailParams['headers'] = array_merge($headers, $emailParams['headers']);
+//                    $emailParaΩms['headers'] = array_merge($headers, $emailParams['headers']);
 //                    unset($headers);
 //                }
                 $emailParams['mailerPlugins'] = $mailerPlugins;

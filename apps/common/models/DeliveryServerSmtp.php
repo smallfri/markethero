@@ -10,7 +10,6 @@
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
-
 class DeliveryServerSmtp extends DeliveryServer
 {
     protected $serverType = 'smtp';

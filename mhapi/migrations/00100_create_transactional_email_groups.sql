@@ -142,6 +142,20 @@ BEGIN
     CONSTRAINT `mw_group_email_log_ibfk_2` FOREIGN KEY (`email_id`) REFERENCES `mw_group_email` (`email_id`)
   ) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8;
 
+  CREATE TABLE `mw_group_email_bounce_log` (
+    `log_id` bigint(20) NOT NULL AUTO_INCREMENT,
+    `customer_id` int(11) NOT NULL,
+    `group_uid` char(13) NOT NULL DEFAULT '',
+    `message` text,
+    `bounce_type` enum('hard','soft') NOT NULL DEFAULT 'hard',
+    `processed` enum('yes','no') NOT NULL DEFAULT 'no',
+    `date_added` datetime NOT NULL,
+    PRIMARY KEY (`log_id`),
+    UNIQUE KEY `group_uid` (`group_uid`),
+    KEY `customer_id` (`customer_id`),
+    CONSTRAINT `mw_group_email_bounce_log_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `mw_customer` (`customer_id`)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 END
 $$
 FLUSH PRIVILEGES;

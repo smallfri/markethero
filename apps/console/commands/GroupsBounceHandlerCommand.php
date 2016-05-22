@@ -11,7 +11,7 @@
  * @since 1.0
  */
 
-class BounceHandlerCommand extends CConsoleCommand
+class GroupsBounceHandlerCommand extends CConsoleCommand
 {
     // lock name
     protected $_lockName;
@@ -154,13 +154,13 @@ class BounceHandlerCommand extends CConsoleCommand
                     'searchCharset'     => $this->_server->getSearchCharset(),
                     'imapOpenParams'    => $this->_server->getImapOpenParams(),
                     'requiredHeaders'   => array(
-                        $headerPrefix . 'Campaign-Uid',
-                        $headerPrefix . 'Subscriber-Uid'
+                        $headerPrefix . 'Group-Uid',
+                        $headerPrefix . 'Customer-Id'
                     ),
                 ));
                 
                 $results = $bounceHandler->getResults();
-
+                
                 // re-open the db connection
                 Yii::app()->getDb()->setActive(true);
                 
@@ -182,32 +182,32 @@ class BounceHandlerCommand extends CConsoleCommand
                         $result['originalEmailHeadersArray'][strtoupper($key)] = $value;
                     }
                     
-                    if (!isset($result['originalEmailHeadersArray'][$headerPrefixUp . 'CAMPAIGN-UID'], $result['originalEmailHeadersArray'][$headerPrefixUp . 'SUBSCRIBER-UID'])) {
+                    if (!isset($result['originalEmailHeadersArray'][$headerPrefixUp . 'CAMPAIGN-UID'], $result['originalEmailHeadersArray'][$headerPrefixUp . 'CUSTOMER-ID'])) {
                         continue;
                     }
 
-                    $campaignUid    = trim($result['originalEmailHeadersArray'][$headerPrefixUp . 'CAMPAIGN-UID']);
-                    $subscriberUid  = trim($result['originalEmailHeadersArray'][$headerPrefixUp . 'SUBSCRIBER-UID']);
+                    $groupUid    = trim($result['originalEmailHeadersArray'][$headerPrefixUp . 'GROUP-UID']);
+                    $customerId = trim($result['originalEmailHeadersArray'][$headerPrefixUp . 'CUSTOMER-ID']);
 
-                    $campaign = Campaign::model()->findByUid($campaignUid);
-                    if (empty($campaign)) {
-                        continue;
-                    }
-
-                    $subscriber = ListSubscriber::model()->findByAttributes(array(
-                        'list_id'           => $campaign->list->list_id,
-                        'subscriber_uid'    => $subscriberUid,
-                        'status'            => ListSubscriber::STATUS_CONFIRMED,
-                    ));
-
-                    if (empty($subscriber)) {
-                        continue;
-                    }
+//                    $campaign = Campaign::model()->findByUid($campaignUid);
+//                    if (empty($campaign)) {
+//                        continue;
+//                    }
+//
+//                    $subscriber = ListSubscriber::model()->findByAttributes(array(
+//                        'list_id'           => $campaign->list->list_id,
+//                        'subscriber_uid'    => $subscriberUid,
+//                        'status'            => ListSubscriber::STATUS_CONFIRMED,
+//                    ));
+//
+//                    if (empty($subscriber)) {
+//                        continue;
+//                    }
 
                     // since 1.3.5.5
-                    $bounceLog = CampaignBounceLog::model()->findByAttributes(array(
-                        'campaign_id'   => $campaign->campaign_id,
-                        'subscriber_id' => $subscriber->subscriber_id,
+                    $bounceLog = GroupBounceLog::model()->findByAttributes(array(
+                        'customer_id'   => $customerId,
+                        'subscriber_id' => $groupUid,
                     ));
 
                     if (!empty($bounceLog)) {
@@ -219,25 +219,25 @@ class BounceHandlerCommand extends CConsoleCommand
                     // i.e: when same bounce server twice and the messages were not removed!
                     // the probability is small, but it's there
                     if (in_array($result['bounceType'], array(BounceHandler::BOUNCE_SOFT, CampaignBounceLog::BOUNCE_HARD))) {
-                        $bounceLog = new CampaignBounceLog();
-                        $bounceLog->campaign_id     = $campaign->campaign_id;
-                        $bounceLog->subscriber_id   = $subscriber->subscriber_id;
+                        $bounceLog = new GroupnBounceLog();
+                        $bounceLog->group_uid     = $groupUid;
+                        $bounceLog->customer_id   = $customerId;
                         $bounceLog->message         = $result['diagnosticCode'];
                         $bounceLog->bounce_type     = $result['bounceType'] == BounceHandler::BOUNCE_HARD ? CampaignBounceLog::BOUNCE_HARD : CampaignBounceLog::BOUNCE_SOFT;
                         $bounceLog->save();
                     } else {
-                        if ($options->get('system.cron.process_feedback_loop_servers.subscriber_action', 'unsubscribe') == 'delete') {
-                            $subscriber->delete();
-                        } else {
-                            $subscriber->status = ListSubscriber::STATUS_UNSUBSCRIBED;
-                            $subscriber->save(false);
-
-                            $trackUnsubscribe = new CampaignTrackUnsubscribe();
-                            $trackUnsubscribe->campaign_id   = $campaign->campaign_id;
-                            $trackUnsubscribe->subscriber_id = $subscriber->subscriber_id;
-                            $trackUnsubscribe->note          = 'Unsubscribed via FBL Report!';
-                            $trackUnsubscribe->save(false);
-                        }
+//                        if ($options->get('system.cron.process_feedback_loop_servers.subscriber_action', 'unsubscribe') == 'delete') {
+//                            $subscriber->delete();
+//                        } else {
+//                            $subscriber->status = ListSubscriber::STATUS_UNSUBSCRIBED;
+//                            $subscriber->save(false);
+//
+//                            $trackUnsubscribe = new CampaignTrackUnsubscribe();
+//                            $trackUnsubscribe->campaign_id   = $campaign->campaign_id;
+//                            $trackUnsubscribe->subscriber_id = $groupUid;
+//                            $trackUnsubscribe->note          = 'Unsubscribed via FBL Report!';
+//                            $trackUnsubscribe->save(false);
+//                        }
                     }
                 }
 

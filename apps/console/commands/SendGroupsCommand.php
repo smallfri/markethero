@@ -142,15 +142,11 @@ class SendGroupsCommand extends CConsoleCommand
             $groupsIds[] = $group['group_email_id'];
         }
 
-//        print_r($groupsIds);
 //        if ($memoryLimit = $options->get('system.cron.send_groups.memory_limit')) {
 //            ini_set('memory_limit', $memoryLimit);
 //        }
-        
         foreach ($groupsIds as $groupsId) {
-
             $this->_groups = Group::model()->getByKey((int)$groupsId);
-
 //            $this->_groups = GroupEmail::model()->findAll(array(
 //                           'condition' => '`status` = "pending-sending" AND `send_at` < NOW() AND `retries` < `max_retries`',
 //                           'order' => 'email_id ASC',

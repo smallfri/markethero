@@ -42,6 +42,9 @@ return array(
         'bounce-handler' => array(
             'class' => 'console.commands.BounceHandlerCommand'
         ),
+        'group-bounce-handler' => array(
+            'class' => 'console.commands.GroupBounceHandlerCommand'
+        ),
         'process-delivery-and-bounce-log' => array(
             'class' => 'console.commands.ProcessDeliveryAndBounceLogCommand'
         ),
