@@ -11,6 +11,7 @@
  * @property string $status
  *   The followings are the available model relations:
  * @property Customer $customer
+ * @property Customer $compliance
  * @property GroupEmailLog[] $logs
  *
  */
@@ -93,6 +94,7 @@ class Group extends ActiveRecord
         $relations = array(
             'customer' => array(self::BELONGS_TO, 'Customer', 'customer_id'),
             'logs' => array(self::HAS_MANY, 'GroupEmailLog', 'email_id'),
+            'compliance' => array(self::HAS_ONE, 'GroupEmailCompliance', 'group_email_id'),
         );
         return CMap::mergeArray($relations, parent::relations());
     }

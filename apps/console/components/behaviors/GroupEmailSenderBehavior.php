@@ -28,7 +28,6 @@ class GroupEmailSenderBehavior extends CBehavior
     public function sendGroups()
     {
 
-
         $group = $this->getOwner();
 
         if ($this->verbose)
@@ -46,120 +45,33 @@ class GroupEmailSenderBehavior extends CBehavior
             echo "[".date("Y-m-d H:i:s")."] Emails Count ".count($emails)."...\n";
 
         }
-        /*
-         * Send emails
-         */
-//                   foreach ($emails as $email)
-//                   {
-//                       $email->send();
-//                   }
-//
-//        return 0;
-
-        // this should never happen unless the list is removed while sending
-//        if (empty($campaign->list) || empty($campaign->list->customer)) {
-//            return 0;
-//        }
-//
-//        $options  = Yii::app()->options;
-//        $list     = $campaign->list;
-//        $customer = $list->customer;
-//
-//        if ($this->verbose) {
-//            echo "[".date("Y-m-d H:i:s")."] Processing the campaign " . $campaign->name . " having the uid: " . $campaign->campaign_uid;
-//            echo " belonging to the customer: " . $customer->fullName . "(" . $customer->customer_id . ")\n";
-//        }
-//
-//        // since 1.3.5
-//        if (!$customer->getIsActive()) {
-//            Yii::log(Yii::t('groups', 'This customer is inactive!'), CLogger::LEVEL_ERROR);
-//            $campaign->saveStatus(Campaign::STATUS_PAUSED);
-//
-//            if ($this->verbose) {
-//                echo "[".date("Y-m-d H:i:s")."] The above customer is not active, campaign has been paused!\n";
-//            }
-//
-//            return 0;
-//        }
-//
-//        if ($this->verbose) {
-//            echo "[".date("Y-m-d H:i:s")."] Checking customer quota before we start...";
-//        }
-//
-//        if ($customer->getIsOverQuota()) {
-//            Yii::log(Yii::t('groups', 'This customer(ID:{cid}) reached the assigned quota!', array('{cid}' => $customer->customer_id)), CLogger::LEVEL_ERROR);
-//            $campaign->saveStatus(Campaign::STATUS_PAUSED);
-//
-//            if ($this->verbose) {
-//                echo "Customer is over quota, the campaign has been paused!\n";
-//            }
-//
-//            return 0;
-//        }
-//
-//        if ($this->verbose) {
-//            echo "OK\n";
-//            echo "[".date("Y-m-d H:i:s")."] Picking a delivery server...";
-//        }
-//        print_r($group);
 
         $dsParams = array('customerCheckQuota' => false, 'useFor' => array(DeliveryServer::USE_FOR_GROUPS));
         $server   = DeliveryServer::pickGroupServers(0, $group, $dsParams);
-//        echo "sever #";
-//        print_r($server);
-//        if (empty($server)) {
-//            Yii::log(Yii::t('groups', 'Cannot find a valid server to send the campaign email, aborting until a delivery server is available!'), CLogger::LEVEL_ERROR);
-//
-//            if ($this->verbose) {
-//                echo "\n[".date("Y-m-d H:i:s")."] Unable to find a valid delivery server, aborting until a delivery server is available!\n";
-//            }
-//
-//            return 0;
-//        }
-//
-//        if ($this->verbose) {
-//            echo "OK\n";
-//        }
-//
-//        if (!empty($customer->language_id)) {
-//            $language = Language::model()->findByPk((int)$customer->language_id);
-//            if (!empty($language)) {
-//                Yii::app()->setLanguage($language->getLanguageAndLocaleCode());
-//            }
-//        }
-//
-//        // put proper status
-//        $campaign->saveStatus(Campaign::STATUS_PROCESSING);
-//
-//        if ($this->verbose) {
-//            $timeStart = microtime(true);
-//            echo "[".date("Y-m-d H:i:s")."] Campaign status has been set to PROCESSING.\n";
-//            echo "[".date("Y-m-d H:i:s")."] Searching for subscribers to send for this campaign...";
-//        }
-//
-//        // find the subscribers we need to send these emails at
-//        $limit = (int)$customer->getGroupOption('groups.subscribers_at_once', (int)Yii::app()->options->get('system.cron.send_groups.subscribers_at_once', 300));
-//        $subscribers = $this->findSubscribers($limit);
-//
-//        if ($this->verbose) {
-//            echo "done, took " . round(microtime(true) - $timeStart, 3) . " seconds.\n";
-//        }
-//
-//        // in case we are done
-//        if (empty($subscribers)) {
-//            if ($this->verbose) {
-//                $timeStart = microtime(true);
-//                echo "[".date("Y-m-d H:i:s")."] Did not find any subscriber for sending, marking campaign as sent...\n";
-//            }
-//
-//            $this->markgroupsent();
-//
-//            if ($this->verbose) {
-//                echo "[".date("Y-m-d H:i:s")."] Campaign has been marked as sent, took " . round(microtime(true) - $timeStart, 3) . " seconds.\n";
-//            }
-//
-//            return 0;
-//        }
+
+        if (empty($server)) {
+            Yii::log(Yii::t('groups', 'Cannot find a valid server to send the Group email, aborting until a delivery server is available!'), CLogger::LEVEL_ERROR);
+
+            if ($this->verbose) {
+                echo "\n[".date("Y-m-d H:i:s")."] Unable to find a valid delivery server, aborting until a delivery server is available!\n";
+            }
+
+            return 0;
+        }
+
+        if ($this->verbose) {
+            echo "OK\n";
+        }
+
+        // put proper status
+        $group->saveStatus(Group::STATUS_PROCESSING);
+
+        if ($this->verbose) {
+            $timeStart = microtime(true);
+            echo "[".date("Y-m-d H:i:s")."] Campaign status has been set to PROCESSING.\n";
+            echo "[".date("Y-m-d H:i:s")."] Searching for subscribers to send for this campaign...";
+        }
+
         try
         {
 
@@ -184,12 +96,6 @@ class GroupEmailSenderBehavior extends CBehavior
                 );
             }
 
-//            $attachments = CampaignAttachment::model()->findAll(array(
-//                'select'    => 'file',
-//                'condition' => 'campaign_id = :cid',
-//                'params'    => array(':cid' => $campaign->campaign_id),
-//            ));
-
             $processedCounter = 0;
             $serverHasChanged = false;
             $changeServerAt = 100;
@@ -201,63 +107,14 @@ class GroupEmailSenderBehavior extends CBehavior
                 'useFor' => array(DeliveryServer::USE_FOR_CAMPAIGNS),
             );
 
-//            if ($this->verbose) {
-//                echo "[".date("Y-m-d H:i:s")."] Running subscribers cleanup for " . count($subscribers) . " subscribers...\n";
-//            }
+            if ($this->verbose) {
+                echo "[".date("Y-m-d H:i:s")."] Running email cleanup for " . count($emails) . " emails...\n";
+            }
 
-            // run some cleanup on subscribers
-            $notAllowedEmailChars = array('-', '_');
-            $subscribersQueue = array();
-
-//            foreach ($subscribers as $index => $subscriber) {
-//                if (isset($subscribersQueue[$subscriber->subscriber_id])) {
-//                    unset($subscribers[$index]);
-//                    continue;
-//                }
-//
-//                $containsNotAllowedEmailChars = false;
-//                $part = explode('@', $subscriber->email);
-//                $part = $part[0];
-//                foreach ($notAllowedEmailChars as $chr) {
-//                    if (strpos($part, $chr) === 0 || strrpos($part, $chr) === 0) {
-//                        $subscriber->addToBlacklist('Invalid email address format!');
-//                        $containsNotAllowedEmailChars = true;
-//                        break;
-//                    }
-//                }
-//
-//                if ($containsNotAllowedEmailChars) {
-//                    unset($subscribers[$index]);
-//                    continue;
-//                }
-//
-//                $subscribersQueue[$subscriber->subscriber_id] = true;
-//            }
-//            unset($subscribersQueue);
-
-            // reset the keys
-//            $subscribers = array_values($subscribers);
-
-            // since 1.3.5.7
-//            if (empty($subscribers)) {
-//                if ($this->verbose) {
-//                    echo "[".date("Y-m-d H:i:s")."] Subscribers cleanup completed, no valid subscribers left, we are marking this campaign as sent.\n";
-//                }
-//                $this->markgroupsent();
-//                return 0;
-//            }
-//
-//            if ($this->verbose) {
             $beforeForeachTime = microtime(true);
             $sendingAloneTime = 0;
-//                echo "[".date("Y-m-d H:i:s")."] Subscribers cleanup completed.\n";
-//                echo "[".date("Y-m-d H:i:s")."] Entering into the foreach loop to send for all " . count($subscribers) . " subscribers.\n";
-//            }
-//
-//            // sort subscribers
-//            $subscribers = $this->sortSubscribers($subscribers);
+
             $index = 0;
-//            echo "FOREACH";
             foreach ($emails AS $email)
             {
                 if ($this->verbose)
@@ -305,21 +162,6 @@ class GroupEmailSenderBehavior extends CBehavior
                         throw new Exception(Yii::t('groups', 'Cannot find a valid server to send the campaign email, aborting until a delivery server is available!'), 99);
                     }
                 }
-//
-//                if ($this->verbose) {
-//                    echo "OK, took " . round(microtime(true) - $timeStart, 3) . " seconds.\n";
-//                    echo "[".date("Y-m-d H:i:s")."] Checking customer sending quota...";
-//                    $timeStart = microtime(true);
-//                }
-//
-//                // in case current customer is over quota
-//                if ($customer->getIsOverQuota()) {
-//                    if ($this->verbose) {
-//                        echo "\n[".date("Y-m-d H:i:s")."] The customer is over quota, pausing campaign!\n";
-//                    }
-//                    throw new Exception(Yii::t('groups', 'This customer reached the assigned quota!'), 98);
-//                }
-
 
                 if ($this->verbose)
                 {
@@ -328,15 +170,7 @@ class GroupEmailSenderBehavior extends CBehavior
                     $timeStart = microtime(true);
                 }
 
-//                $emailParams = $this->prepareEmail($email);
-
-//                if (empty($emailParams) || !is_array($emailParams)) {
-//                    $this->logDelivery($subscriber, Yii::t('groups', 'Unable to prepare the email content!'), CampaignDeliveryLog::STATUS_ERROR);
-//                    continue;
-//                }
                 $server = DeliveryServer::pickGroupServers($currentServerId, $group, $dsParams);
-//                echo "server # ";
-//print_r($server);
 //
 //                if ($changeServerAt > 0 && $processedCounter >= $changeServerAt && !$serverHasChanged) {
 //                    $currentServerId = 5;
@@ -390,7 +224,7 @@ class GroupEmailSenderBehavior extends CBehavior
 //                if (!empty($headers)) {
 //                    $headerSearchReplace = array(
 //                        '[CAMPAIGN_UID]'    => $group->group_email_uid,
-////                        '[SUBSCRIBER_EMAIL]'=> $subscriber->email,
+//                        '[SUBSCRIBER_EMAIL]'=> $subscriber->email,
 //                    );
 //                    foreach ($headers as $name => $value) {
 //                        $headers[$name] = str_replace(array_keys($headerSearchReplace), array_values($headerSearchReplace), $value);
@@ -400,12 +234,7 @@ class GroupEmailSenderBehavior extends CBehavior
 //                }
                 $emailParams['mailerPlugins'] = $mailerPlugins;
 
-//                if (!empty($attachments)) {
-//                    $emailParams['attachments'] = array();
-//                    foreach ($attachments as $attachment) {
-//                        $emailParams['attachments'][] = Yii::getPathOfAlias('root') . $attachment->file;
-//                    }
-//                }
+
 //
 //                $processedCounter++;
 //                if ($processedCounter >= $changeServerAt) {
