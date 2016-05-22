@@ -105,7 +105,8 @@ class GroupEmailSenderBehavior extends CBehavior
 
         $dsParams = array('customerCheckQuota' => false, 'useFor' => array(DeliveryServer::USE_FOR_GROUPS));
         $server   = DeliveryServer::pickGroupServers(0, $group, $dsParams);
-\//        print_r($server);
+//        echo "sever #";
+//        print_r($server);
 //        if (empty($server)) {
 //            Yii::log(Yii::t('groups', 'Cannot find a valid server to send the campaign email, aborting until a delivery server is available!'), CLogger::LEVEL_ERROR);
 //
@@ -256,6 +257,7 @@ class GroupEmailSenderBehavior extends CBehavior
 //            // sort subscribers
 //            $subscribers = $this->sortSubscribers($subscribers);
             $index = 0;
+//            echo "FOREACH";
             foreach ($emails AS $email)
             {
                 if ($this->verbose)
@@ -333,6 +335,7 @@ class GroupEmailSenderBehavior extends CBehavior
 //                    continue;
 //                }
                 $server = DeliveryServer::pickGroupServers($currentServerId, $group, $dsParams);
+//                echo "server # ";
 //print_r($server);
 //
 //                if ($changeServerAt > 0 && $processedCounter >= $changeServerAt && !$serverHasChanged) {
