@@ -5,10 +5,15 @@ $$
 
 CREATE PROCEDURE migrate_down_00100()
 BEGIN
-  drop table if exists mw_transactiona_email_options;
-  drop table if exists mw_transactional_email_group;
+  drop table if exists mw_group_email_options;
+  drop table if exists mw_group_email_groups;
   drop table if exists mw_compliance_level_ids;
-  drop table if exists mw_transactional_email_compliance;
+  drop table if exists mw_compliance_levels;
+  drop table if exists mw_group_email;
+  drop table if exists mw_group_email_compliance;
+  drop table if exists mw_group_email_abuse_report;
+  drop table if exists mw_group_email_log;
+  drop table if exists mw_group_email_bounce_log;
 END
 $$
 

@@ -12,9 +12,9 @@
  */
  
 /**
- * This is the model class for table "group_bounce_log".
+ * This is the model class for table "group_email_bounce_log".
  *
- * The followings are the available columns in table 'campaign_bounce_log':
+ * The followings are the available columns in table 'group_email_bounce_log':
  * @property string $log_id
  * @property integer $customer_id
  * @property integer $group_uid
@@ -41,7 +41,7 @@ class GroupBounceLog extends ActiveRecord
      */
     public function tableName()
     {
-        return '{{group_bounce_log}}';
+        return '{{group_email_bounce_log}}';
     }
 
     /**

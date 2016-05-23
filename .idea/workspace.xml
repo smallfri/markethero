@@ -2,12 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c9b7ec24-babb-4088-b4f3-f3a6cadded3c" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/apps/common/models/GroupComplianceLevels.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/apps/SendGroupsCommand.php" afterPath="$PROJECT_DIR$/apps/console/commands/SendGroupsCommand.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/common/models/Group.php" afterPath="$PROJECT_DIR$/apps/common/models/Group.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/common/models/GroupEmailCompliance.php" afterPath="$PROJECT_DIR$/apps/common/models/GroupEmailCompliance.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/common/models/GroupBounceLog.php" afterPath="$PROJECT_DIR$/apps/common/models/GroupBounceLog.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php" afterPath="$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/console/config/main.php" afterPath="$PROJECT_DIR$/apps/console/config/main.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/migrations/00100_create_transactional_email_groups.sql" afterPath="$PROJECT_DIR$/mhapi/migrations/00100_create_transactional_email_groups.sql" />
     </list>
     <ignored path="MarketHero.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -23,76 +22,27 @@
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
   </component>
-  <component name="DockManager">
-    <window id="3">
-      <content type="file-editors">
-        <state>
-          <leaf SIDE_TABS_SIZE_LIMIT_KEY="450">
-            <file leaf-file-name="SendGroupEmailsCommand.php" pinned="false" current-in-tab="true">
-              <entry file="file://$PROJECT_DIR$/apps/console/commands/SendGroupEmailsCommand.php">
-                <provider selected="true" editor-type-id="text-editor">
-                  <state vertical-scroll-proportion="0.49302325">
-                    <caret line="188" column="13" selection-start-line="127" selection-start-column="12" selection-end-line="188" selection-end-column="13" />
-                    <folding>
-                      <element signature="e#4233#6205#0#PHP" expanded="false" />
-                      <marker date="1463740048000" expanded="true" signature="7328:7450" placeholder="DELETE FROM ..." />
-                    </folding>
-                  </state>
-                </provider>
-              </entry>
-            </file>
-            <file leaf-file-name="CampaignSenderBehavior.php" pinned="false" current-in-tab="false">
-              <entry file="file://$PROJECT_DIR$/apps/console/components/behaviors/CampaignSenderBehavior.php">
-                <provider selected="true" editor-type-id="text-editor">
-                  <state vertical-scroll-proportion="-28.76923">
-                    <caret line="319" column="0" selection-start-line="319" selection-start-column="0" selection-end-line="319" selection-end-column="0" />
-                    <folding>
-                      <element signature="e#919#1016#0#PHP" expanded="false" />
-                      <element signature="e#1453#1834#0#PHP" expanded="false" />
-                      <element signature="e#1844#1964#0#PHP" expanded="false" />
-                      <element signature="e#1974#2392#0#PHP" expanded="false" />
-                      <element signature="e#2402#2533#0#PHP" expanded="false" />
-                      <element signature="e#2728#3142#0#PHP" expanded="false" />
-                      <element signature="e#3218#3478#0#PHP" expanded="false" />
-                      <element signature="e#4303#4813#0#PHP" expanded="false" />
-                      <element signature="e#28027#29747#0#PHP" expanded="false" />
-                      <element signature="e#29879#30525#0#PHP" expanded="false" />
-                      <element signature="n#markCampaignSent#0;n#CampaignSenderBehavior#0;n#!!top" expanded="false" />
-                      <element signature="n#sendCampaignStats#0;n#CampaignSenderBehavior#0;n#!!top" expanded="false" />
-                    </folding>
-                  </state>
-                </provider>
-              </entry>
-            </file>
-          </leaf>
-        </state>
-      </content>
-    </window>
-  </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
     <favorites_list name="MarketHero" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="SendGroupEmailsCommand.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/apps/console/commands/SendGroupEmailsCommand.php">
+      <file leaf-file-name="SendGroupsCommand.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/console/commands/SendGroupsCommand.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-9.576923">
-              <caret line="115" column="12" selection-start-line="115" selection-start-column="12" selection-end-line="115" selection-end-column="12" />
-              <folding>
-                <element signature="e#4233#6205#0#PHP" expanded="false" />
-                <marker date="1463740048000" expanded="true" signature="7328:7450" placeholder="DELETE FROM ..." />
-              </folding>
+            <state vertical-scroll-proportion="-16.73077">
+              <caret line="152" column="0" selection-start-line="152" selection-start-column="0" selection-end-line="152" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SendGroupsCommand.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/apps/console/commands/SendGroupsCommand.php">
+      <file leaf-file-name="GroupEmail.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/common/models/GroupEmail.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state vertical-scroll-proportion="-11.769231">
+              <caret line="245" column="0" selection-start-line="245" selection-start-column="0" selection-end-line="245" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -101,291 +51,19 @@
       <file leaf-file-name="GroupEmailSenderBehavior.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.22998987">
-              <caret line="85" column="11" selection-start-line="85" selection-start-column="11" selection-end-line="85" selection-end-column="11" />
+            <state vertical-scroll-proportion="0.46467817">
+              <caret line="349" column="55" selection-start-line="349" selection-start-column="55" selection-end-line="349" selection-end-column="55" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GroupEmailCompliance.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/apps/common/models/GroupEmailCompliance.php">
+      <file leaf-file-name="BounceHandler.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/common/vendors/BounceHandler/BounceHandler.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-6.7460318">
-              <caret line="58" column="112" selection-start-line="58" selection-start-column="112" selection-end-line="58" selection-end-column="112" />
+            <state vertical-scroll-proportion="-10.8">
+              <caret line="505" column="27" selection-start-line="504" selection-start-column="21" selection-end-line="504" selection-end-column="27" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GroupComplianceLevels.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/apps/common/models/GroupComplianceLevels.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-1.9615384">
-              <caret line="18" column="2" selection-start-line="18" selection-start-column="2" selection-end-line="18" selection-end-column="2" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Campaign.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/apps/common/models/Campaign.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-15.269231">
-              <caret line="1037" column="5" selection-start-line="1024" selection-start-column="0" selection-end-line="1038" selection-end-column="0" />
-              <folding>
-                <element signature="e#2909#2977#0#PHP" expanded="false" />
-                <element signature="n#tableName#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#3058#3129#0#PHP" expanded="false" />
-                <element signature="n#rules#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#3181#4320#0#PHP" expanded="false" />
-                <element signature="e#4400#4450#0#PHP" expanded="false" />
-                <element signature="n#relations#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#4510#6760#0#PHP" expanded="false" />
-                <element signature="e#6848#6922#0#PHP" expanded="false" />
-                <element signature="n#attributeLabels#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#6985#8474#0#PHP" expanded="false" />
-                <element signature="e#8493#8606#0#PHP" expanded="false" />
-                <element signature="e#8696#9226#0#PHP" expanded="false" />
-                <element signature="n#search#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#9351#9844#0#PHP" expanded="false" />
-                <element signature="e#9397#9831#0#PHP" expanded="false" />
-                <element signature="e#9522#9831#0#PHP" expanded="false" />
-                <element signature="e#9575#9814#0#PHP" expanded="false" />
-                <element signature="e#9885#10285#0#PHP" expanded="false" />
-                <element signature="e#9927#10271#0#PHP" expanded="false" />
-                <element signature="e#10040#10271#0#PHP" expanded="false" />
-                <element signature="e#10089#10254#0#PHP" expanded="false" />
-                <element signature="e#10534#10731#0#PHP" expanded="false" />
-                <element signature="e#10656#10731#0#PHP" expanded="false" />
-                <element signature="e#10856#11243#0#PHP" expanded="false" />
-                <element signature="e#10936#11067#1#PHP" expanded="false" />
-                <element signature="e#11092#11232#1#PHP" expanded="false" />
-                <element signature="e#11134#11217#1#PHP" expanded="false" />
-                <element signature="e#11257#11529#0#PHP" expanded="false" />
-                <element signature="n#model#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="n#beforeValidate#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#11698#13107#0#PHP" expanded="false" />
-                <element signature="e#11909#13006#0#PHP" expanded="false" />
-                <element signature="e#12064#12581#0#PHP" expanded="false" />
-                <element signature="e#12110#12241#0#PHP" expanded="false" />
-                <element signature="e#12262#12563#0#PHP" expanded="false" />
-                <element signature="e#12412#12563#0#PHP" expanded="false" />
-                <element signature="e#12599#12989#0#PHP" expanded="false" />
-                <element signature="e#12710#12931#0#PHP" expanded="false" />
-                <element signature="e#12738#12930#0#PHP" expanded="false" />
-                <element signature="e#12836#12929#0#PHP" expanded="false" />
-                <element signature="e#13032#13093#0#PHP" expanded="false" />
-                <element signature="n#beforeSave#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#13211#13310#0#PHP" expanded="false" />
-                <element signature="e#13328#13702#0#PHP" expanded="false" />
-                <element signature="e#13451#13567#0#PHP" expanded="false" />
-                <element signature="e#13568#13702#0#PHP" expanded="false" />
-                <element signature="n#beforeDelete#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#13827#14051#0#PHP" expanded="false" />
-                <element signature="e#14118#14183#0#PHP" expanded="false" />
-                <element signature="n#afterFind#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#14292#14383#0#PHP" expanded="false" />
-                <element signature="e#14401#14489#0#PHP" expanded="false" />
-                <element signature="n#afterConstruct#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#14593#14681#0#PHP" expanded="false" />
-                <element signature="n#afterDelete#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#14961#15111#0#PHP" expanded="false" />
-                <element signature="e#15272#15428#0#PHP" expanded="false" />
-                <element signature="n#findByUid#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#15546#15632#0#PHP" expanded="false" />
-                <element signature="e#15570#15631#1#PHP" expanded="false" />
-                <element signature="n#generateUid#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#15793#15866#0#PHP" expanded="false" />
-                <element signature="n#attributeHelpTexts#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#15971#17658#0#PHP" expanded="false" />
-                <element signature="n#attributePlaceholders#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#17825#18442#0#PHP" expanded="false" />
-                <element signature="n#pause#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#18587#18654#0#PHP" expanded="false" />
-                <element signature="n#unpause#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#18765#18829#0#PHP" expanded="false" />
-                <element signature="n#pauseUnpause#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#18946#19086#0#PHP" expanded="false" />
-                <element signature="e#19014#19086#0#PHP" expanded="false" />
-                <element signature="n#copy#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#19195#19258#0#PHP" expanded="false" />
-                <element signature="e#19344#28197#0#PHP" expanded="false" />
-                <element signature="e#19950#20253#0#PHP" expanded="false" />
-                <element signature="e#20191#20253#0#PHP" expanded="false" />
-                <element signature="e#20267#20391#0#PHP" expanded="false" />
-                <element signature="e#20652#20766#0#PHP" expanded="false" />
-                <element signature="e#20838#20973#0#PHP" expanded="false" />
-                <element signature="e#20897#20972#1#PHP" expanded="false" />
-                <element signature="e#20987#21407#0#PHP" expanded="false" />
-                <element signature="e#21510#21644#0#PHP" expanded="false" />
-                <element signature="e#21568#21643#1#PHP" expanded="false" />
-                <element signature="e#21658#22087#0#PHP" expanded="false" />
-                <element signature="e#22233#22924#0#PHP" expanded="false" />
-                <element signature="e#22304#22519#0#PHP" expanded="false" />
-                <element signature="e#22370#22518#1#PHP" expanded="false" />
-                <element signature="e#22571#22785#0#PHP" expanded="false" />
-                <element signature="e#22636#22784#1#PHP" expanded="false" />
-                <element signature="e#22852#22924#0#PHP" expanded="false" />
-                <element signature="e#23419#23846#0#PHP" expanded="false" />
-                <element signature="e#23510#23617#0#PHP" expanded="false" />
-                <element signature="e#23651#23832#0#PHP" expanded="false" />
-                <element signature="e#23872#24032#0#PHP" expanded="false" />
-                <element signature="e#24171#24498#0#PHP" expanded="false" />
-                <element signature="e#24218#24405#0#PHP" expanded="false" />
-                <element signature="e#24562#26172#0#PHP" expanded="false" />
-                <element signature="e#24719#25425#0#PHP" expanded="false" />
-                <element signature="e#24789#24895#0#PHP" expanded="false" />
-                <element signature="e#25442#26158#0#PHP" expanded="false" />
-                <element signature="e#25522#25628#0#PHP" expanded="false" />
-                <element signature="e#26238#26640#0#PHP" expanded="false" />
-                <element signature="e#26292#26626#0#PHP" expanded="false" />
-                <element signature="e#26739#27936#0#PHP" expanded="false" />
-                <element signature="e#27106#27345#0#PHP" expanded="false" />
-                <element signature="e#27362#27922#0#PHP" expanded="false" />
-                <element signature="e#27408#27900#0#PHP" expanded="false" />
-                <element signature="e#28062#28197#0#PHP" expanded="false" />
-                <element signature="n#getListsDropDownArray#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#28324#28388#0#PHP" expanded="false" />
-                <element signature="e#28703#28988#0#PHP" expanded="false" />
-                <element signature="e#28791#28973#0#PHP" expanded="false" />
-                <element signature="e#28845#28972#0#PHP" expanded="false" />
-                <element signature="n#getSegmentsDropDownArray#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#29132#29196#0#PHP" expanded="false" />
-                <element signature="e#29214#29292#0#PHP" expanded="false" />
-                <element signature="e#29385#29682#0#PHP" expanded="false" />
-                <element signature="e#29488#29666#0#PHP" expanded="false" />
-                <element signature="e#29542#29665#0#PHP" expanded="false" />
-                <element signature="n#getGroupsDropDownArray#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#29824#29888#0#PHP" expanded="false" />
-                <element signature="e#30128#30655#0#PHP" expanded="false" />
-                <element signature="e#30490#30640#0#PHP" expanded="false" />
-                <element signature="e#30540#30639#0#PHP" expanded="false" />
-                <element signature="n#getRemovable#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#30923#31119#0#PHP" expanded="false" />
-                <element signature="e#31162#31216#0#PHP" expanded="false" />
-                <element signature="n#getEditable#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="n#getAccessOverview#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="n#getCanBePaused#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="n#getIsPaused#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="n#getCanBeResumed#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="n#getCanBeMarkedAsSent#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="n#getIsDraft#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="n#getPendingDelete#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="n#getStartedAt#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#32886#32998#0#PHP" expanded="false" />
-                <element signature="n#getFinishedAt#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#33145#33259#0#PHP" expanded="false" />
-                <element signature="n#getLastOpen#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#33405#33460#0#PHP" expanded="false" />
-                <element signature="e#33764#33817#0#PHP" expanded="false" />
-                <element signature="n#getUid#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="n#getSubjectToNameAvailableTags#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#34031#34186#0#PHP" expanded="false" />
-                <element signature="e#34205#34424#0#PHP" expanded="false" />
-                <element signature="e#34287#34414#0#PHP" expanded="false" />
-                <element signature="n#getDateTimeFormat#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#34576#34700#0#PHP" expanded="false" />
-                <element signature="n#getStatusWithStats#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#35925#36049#0#PHP" expanded="false" />
-                <element signature="e#36067#36260#0#PHP" expanded="false" />
-                <element signature="e#36325#36482#0#PHP" expanded="false" />
-                <element signature="e#36533#36652#0#PHP" expanded="false" />
-                <element signature="e#36581#36651#1#PHP" expanded="false" />
-                <element signature="e#36675#37313#0#PHP" expanded="false" />
-                <element signature="e#36816#37009#0#PHP" expanded="false" />
-                <element signature="e#36924#37009#0#PHP" expanded="false" />
-                <element signature="e#37024#37313#0#PHP" expanded="false" />
-                <element signature="e#37428#37487#0#PHP" expanded="false" />
-                <element signature="e#37522#37668#0#PHP" expanded="false" />
-                <element signature="n#getTypesList#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#38102#38309#0#PHP" expanded="false" />
-                <element signature="n#getTypeName#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#38383#38445#0#PHP" expanded="false" />
-                <element signature="n#getTypeNameDetails#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#38691#38757#0#PHP" expanded="false" />
-                <element signature="e#38766#38829#0#PHP" expanded="false" />
-                <element signature="e#38907#38997#0#PHP" expanded="false" />
-                <element signature="n#getIsAutoresponder#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="n#getIsRegular#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="n#getUniqueOpensCount#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#39778#39865#0#PHP" expanded="false" />
-                <element signature="n#getListSegmentName#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#39983#40080#0#PHP" expanded="false" />
-                <element signature="e#40473#40964#0#PHP" expanded="false" />
-                <element signature="e#40524#40954#0#PHP" expanded="false" />
-                <element signature="n#countForwards#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="n#countAbuseReports#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="n#saveStatus#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#41431#41499#0#PHP" expanded="false" />
-                <element signature="e#41508#41569#0#PHP" expanded="false" />
-                <element signature="e#41634#41775#0#PHP" expanded="false" />
-                <element signature="n#saveSendAt#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#42006#42074#0#PHP" expanded="false" />
-                <element signature="e#42083#42145#0#PHP" expanded="false" />
-                <element signature="n#getIsRecurring#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="n#tryReschedule#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#42719#42799#0#PHP" expanded="false" />
-                <element signature="e#42835#42915#0#PHP" expanded="false" />
-                <element signature="e#42924#42982#0#PHP" expanded="false" />
-                <element signature="e#43012#44027#0#PHP" expanded="false" />
-                <element signature="e#43579#43696#0#PHP" expanded="false" />
-                <element signature="e#43970#44027#0#PHP" expanded="false" />
-                <element signature="n#getDeliveryLogsArchived#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="n#getTotalDeliveryTime#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#44243#44380#0#PHP" expanded="false" />
-                <element signature="e#44511#44573#0#PHP" expanded="false" />
-                <element signature="n#countSubscribers#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#44746#44948#0#PHP" expanded="false" />
-                <element signature="e#44864#44948#0#PHP" expanded="false" />
-                <element signature="n#findSubscribers#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#45096#45342#0#PHP" expanded="false" />
-                <element signature="e#45236#45342#0#PHP" expanded="false" />
-                <element signature="n#getBulkActionsList#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#45445#45764#0#PHP" expanded="false" />
-                <element signature="n#countSubscribersByListSegment#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#46064#46177#0#PHP" expanded="false" />
-                <element signature="e#46195#46296#0#PHP" expanded="false" />
-                <element signature="e#46314#46395#0#PHP" expanded="false" />
-                <element signature="n#findSubscribersByListSegment#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#46854#46973#0#PHP" expanded="false" />
-                <element signature="e#46991#47098#0#PHP" expanded="false" />
-                <element signature="e#47116#47197#0#PHP" expanded="false" />
-                <element signature="n#countSubscribersByList#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#47573#47686#0#PHP" expanded="false" />
-                <element signature="e#47704#47805#0#PHP" expanded="false" />
-                <element signature="e#47823#47904#0#PHP" expanded="false" />
-                <element signature="n#findSubscribersByList#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#48562#48681#0#PHP" expanded="false" />
-                <element signature="e#48699#48806#0#PHP" expanded="false" />
-                <element signature="e#48816#48897#0#PHP" expanded="false" />
-                <element signature="n#addRegularCriteria#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#49130#50656#0#PHP" expanded="false" />
-                <element signature="e#49257#50620#0#PHP" expanded="false" />
-                <element signature="e#49405#49945#0#PHP" expanded="false" />
-                <element signature="e#49994#50620#0#PHP" expanded="false" />
-                <element signature="e#50148#50572#0#PHP" expanded="false" />
-                <element signature="n#addAutoresponderCriteria#0;n#Campaign#0;n#!!top" expanded="false" />
-                <element signature="e#50783#51000#0#PHP" expanded="false" />
-                <element signature="e#51163#52546#0#PHP" expanded="false" />
-                <element signature="e#51514#52503#0#PHP" expanded="false" />
-                <element signature="e#51631#51734#0#PHP" expanded="false" />
-                <element signature="e#51747#51837#0#PHP" expanded="false" />
-                <element signature="e#51882#52363#0#PHP" expanded="false" />
-                <element signature="e#52504#52546#0#PHP" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Group.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/apps/common/models/Group.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-24.846153">
-              <caret line="102" column="5" selection-start-line="90" selection-start-column="3" selection-end-line="102" selection-end-column="5" />
-              <folding>
-                <element signature="n#search#0;n#Group#0;n#!!top" expanded="false" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -398,9 +76,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/mhapi/vendor/laravel/framework/src/Illuminate/Auth/Middleware/AuthenticateWithBasicAuth.php" />
-        <option value="$PROJECT_DIR$/mhapi/vendor/laravel/framework/src/Illuminate/Auth/SessionGuard.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/BlacklistController.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceController.php" />
         <option value="$PROJECT_DIR$/mhapi/migrations/0001_create_transactional_email_groups.php" />
         <option value="$PROJECT_DIR$/mhapi/migrations/0001_create_transactional_email_groups.sql" />
@@ -436,18 +111,21 @@
         <option value="$PROJECT_DIR$/apps/console/components/behaviors/CampaignSenderBehavior.php" />
         <option value="$PROJECT_DIR$/apps/console/commands/SendGroupEmailsCommand.php" />
         <option value="$PROJECT_DIR$/apps/common/models/Campaign.php" />
-        <option value="$PROJECT_DIR$/apps/common/models/GroupEmail.php" />
         <option value="$PROJECT_DIR$/apps/console/commands/BounceHandlerCommand.php" />
-        <option value="$PROJECT_DIR$/apps/console/commands/GroupsBounceHandlerCommand.php" />
-        <option value="$PROJECT_DIR$/mhapi/migrations/00100_create_transactional_email_groups.sql" />
-        <option value="$PROJECT_DIR$/apps/common/models/GroupBounceLog.php" />
-        <option value="$PROJECT_DIR$/apps/console/config/main.php" />
-        <option value="$PROJECT_DIR$/apps/common/models/DeliveryServerSmtp.php" />
         <option value="$PROJECT_DIR$/apps/common/models/DeliveryServer.php" />
-        <option value="$PROJECT_DIR$/apps/console/commands/SendGroupsCommand.php" />
         <option value="$PROJECT_DIR$/apps/common/models/Group.php" />
         <option value="$PROJECT_DIR$/apps/common/models/GroupComplianceLevels.php" />
         <option value="$PROJECT_DIR$/apps/common/models/GroupEmailCompliance.php" />
+        <option value="$PROJECT_DIR$/apps/common/models/SendingDomain.php" />
+        <option value="$PROJECT_DIR$/mhapi/migrations/00100_create_transactional_email_groups.sql" />
+        <option value="$PROJECT_DIR$/apps/console/config/main.php" />
+        <option value="$PROJECT_DIR$/apps/common/models/GroupBounceLog.php" />
+        <option value="$PROJECT_DIR$/apps/common/components/mailer/MailerPHPMailer.php" />
+        <option value="$PROJECT_DIR$/apps/console/commands/GroupsBounceHandlerCommand.php" />
+        <option value="$PROJECT_DIR$/apps/common/models/DeliveryServerSmtp.php" />
+        <option value="$PROJECT_DIR$/apps/common/vendors/BounceHandler/BounceHandler.php" />
+        <option value="$PROJECT_DIR$/apps/console/commands/SendGroupsCommand.php" />
+        <option value="$PROJECT_DIR$/apps/common/models/GroupEmail.php" />
         <option value="$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php" />
       </list>
     </option>
@@ -465,7 +143,7 @@
     <option name="x" value="-1920" />
     <option name="y" value="23" />
     <option name="width" value="1920" />
-    <option name="height" value="1173" />
+    <option name="height" value="1177" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -521,6 +199,104 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="mhapi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mhapi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="migrations" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mhapi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mhapi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Http" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mhapi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Http" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Controllers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="apps" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -540,6 +316,28 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="console" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apps" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="console" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="config" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -562,36 +360,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="components" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MarketHero" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MarketHero" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="apps" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="console" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="components" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="db" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ar" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -679,7 +447,117 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="vendors" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apps" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="common" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vendors" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="BounceHandler" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apps" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="common" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="models" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apps" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="common" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="components" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apps" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="common" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="components" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mailer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="api" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -699,13 +577,13 @@
     <property name="WebServerToolWindowPanel.toolwindow.show.permissions" value="false" />
     <property name="WebServerToolWindowPanel.toolwindow.highlight.symlinks" value="true" />
     <property name="WebServerToolWindowPanel.toolwindow.highlight.mappings" value="true" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="227" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="209" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder0" value="0" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="253" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="232" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder1" value="1" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth2" value="256" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth2" value="235" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder2" value="2" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth3" value="1082" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth3" value="1142" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder3" value="3" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="222" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder0" value="0" />
@@ -784,17 +662,17 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1920" y="23" width="1920" height="1173" extended-state="6" />
+    <frame x="-1920" y="23" width="1920" height="1177" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32971016" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26344085" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26344085" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26766917" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.45090908" sideWeight="0.50213677" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15589081" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32481202" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32596686" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32477063" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32477063" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2496" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39042357" sideWeight="0.49786323" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
@@ -883,12 +761,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php</url>
-          <line>428</line>
+          <line>453</line>
           <option name="timeStamp" value="10" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php</url>
-          <line>652</line>
+          <line>677</line>
           <option name="timeStamp" value="11" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
@@ -912,41 +790,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/apps/api/components/db/ar/ActiveRecord.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.17456555">
-          <caret line="13" column="6" selection-start-line="13" selection-start-column="6" selection-end-line="13" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/ThirdParty/EmailOneApi/Config.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.9799197">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/ThirdParty/EmailOneApi/Endpoint/TransactionalEmails.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.022757698">
-          <caret line="18" column="6" selection-start-line="18" selection-start-column="6" selection-end-line="18" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/api/controllers/CampaignsController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="213.15384">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/api/controllers/Transactional_emailsController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5196232">
-          <caret line="161" column="0" selection-start-line="161" selection-start-column="0" selection-end-line="161" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mhapi/app/GroupEmailGroupsModelRepository.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.053375196">
@@ -1112,14 +955,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/common/models/GroupEmail.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-43.615383">
-          <caret line="368" column="0" selection-start-line="368" selection-start-column="0" selection-end-line="368" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/apps/common/components/utils/MailSender.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="4.7440944">
@@ -1134,69 +969,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/migrations/00100_create_transactional_email_groups.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.97376543">
-          <caret line="156" column="39" selection-start-line="156" selection-start-column="39" selection-end-line="156" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/console/config/main.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-17.807692">
-          <caret line="44" column="40" selection-start-line="44" selection-start-column="40" selection-end-line="44" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/console/commands/GroupsBounceHandlerCommand.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="3.1547618">
-          <caret line="229" column="49" selection-start-line="229" selection-start-column="49" selection-end-line="229" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/apps/console/commands/BounceHandlerCommand.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="162" column="0" selection-start-line="162" selection-start-column="0" selection-end-line="162" selection-end-column="0" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/common/models/DeliveryServerSmtp.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-11.346154">
-          <caret line="28" column="7" selection-start-line="28" selection-start-column="7" selection-end-line="28" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/console/commands/SendCampaignsCommand.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.019767443">
-          <caret line="141" column="21" selection-start-line="119" selection-start-column="8" selection-end-line="129" selection-end-column="57" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/console/components/behaviors/CampaignSenderBehavior.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-28.76923">
-          <caret line="319" column="0" selection-start-line="319" selection-start-column="0" selection-end-line="319" selection-end-column="0" />
-          <folding>
-            <element signature="e#919#1016#0#PHP" expanded="false" />
-            <element signature="e#1453#1834#0#PHP" expanded="false" />
-            <element signature="e#1844#1964#0#PHP" expanded="false" />
-            <element signature="e#1974#2392#0#PHP" expanded="false" />
-            <element signature="e#2402#2533#0#PHP" expanded="false" />
-            <element signature="e#2728#3142#0#PHP" expanded="false" />
-            <element signature="e#3218#3478#0#PHP" expanded="false" />
-            <element signature="e#4303#4813#0#PHP" expanded="false" />
-            <element signature="e#28027#29747#0#PHP" expanded="false" />
-            <element signature="e#29879#30525#0#PHP" expanded="false" />
-            <element signature="n#markCampaignSent#0;n#CampaignSenderBehavior#0;n#!!top" expanded="false" />
-            <element signature="n#sendCampaignStats#0;n#CampaignSenderBehavior#0;n#!!top" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1212,283 +989,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-5.0615387">
           <caret line="1637" column="0" selection-start-line="1637" selection-start-column="0" selection-end-line="1637" selection-end-column="0" />
-          <folding>
-            <element signature="e#70#346#0#PHP" expanded="false" />
-            <element signature="e#349#1705#0#PHP" expanded="false" />
-            <element signature="e#4259#4327#0#PHP" expanded="false" />
-            <element signature="n#tableName#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#4419#4484#0#PHP" expanded="false" />
-            <element signature="n#behaviors#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#4538#4745#0#PHP" expanded="false" />
-            <element signature="e#4555#4723#0#PHP" expanded="false" />
-            <element signature="e#4595#4712#1#PHP" expanded="false" />
-            <element signature="e#4762#4833#0#PHP" expanded="false" />
-            <element signature="n#rules#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#4885#6704#0#PHP" expanded="false" />
-            <element signature="e#6788#6838#0#PHP" expanded="false" />
-            <element signature="n#relations#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#6898#7659#0#PHP" expanded="false" />
-            <element signature="e#7747#7821#0#PHP" expanded="false" />
-            <element signature="n#attributeLabels#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#7884#9887#0#PHP" expanded="false" />
-            <element signature="e#9982#10190#0#PHP" expanded="false" />
-            <element signature="n#search#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#10278#10908#0#PHP" expanded="false" />
-            <element signature="e#10324#10898#0#PHP" expanded="false" />
-            <element signature="e#10449#10898#0#PHP" expanded="false" />
-            <element signature="e#10490#10883#0#PHP" expanded="false" />
-            <element signature="e#10531#10865#1#PHP" expanded="false" />
-            <element signature="e#10736#10842#1#PHP" expanded="false" />
-            <element signature="e#11420#11803#0#PHP" expanded="false" />
-            <element signature="e#11500#11636#1#PHP" expanded="false" />
-            <element signature="e#11658#11792#1#PHP" expanded="false" />
-            <element signature="e#11700#11777#1#PHP" expanded="false" />
-            <element signature="e#11821#12099#0#PHP" expanded="false" />
-            <element signature="n#afterConstruct#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="n#afterFind#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="n#sendEmail#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="n#getMailer#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#12859#12954#0#PHP" expanded="false" />
-            <element signature="n#afterValidate#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#13050#13709#0#PHP" expanded="false" />
-            <element signature="e#13103#13196#0#PHP" expanded="false" />
-            <element signature="e#13384#13491#0#PHP" expanded="false" />
-            <element signature="e#13504#13699#0#PHP" expanded="false" />
-            <element signature="e#13546#13685#0#PHP" expanded="false" />
-            <element signature="n#beforeSave#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#13915#13995#0#PHP" expanded="false" />
-            <element signature="e#14004#14120#0#PHP" expanded="false" />
-            <element signature="n#beforeDelete#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#14221#14289#0#PHP" expanded="false" />
-            <element signature="n#attributeHelpTexts#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#14413#17668#0#PHP" expanded="false" />
-            <element signature="e#15298#15508#1#PHP" expanded="false" />
-            <element signature="e#16322#16587#1#PHP" expanded="false" />
-            <element signature="e#16624#16862#1#PHP" expanded="false" />
-            <element signature="n#attributePlaceholders#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#17835#18229#0#PHP" expanded="false" />
-            <element signature="n#getBounceServersArray#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#18417#18481#0#PHP" expanded="false" />
-            <element signature="e#18617#18724#0#PHP" expanded="false" />
-            <element signature="e#18987#19158#0#PHP" expanded="false" />
-            <element signature="n#getDisplayBounceServer#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#19264#19327#0#PHP" expanded="false" />
-            <element signature="n#getBounceServerNotSupportedTypes#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#19577#19967#0#PHP" expanded="false" />
-            <element signature="n#getBounceServerNotSupported#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="n#getSigningSupportedTypes#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#20323#20535#0#PHP" expanded="false" />
-            <element signature="n#getTrackingDomainsArray#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#20756#20820#0#PHP" expanded="false" />
-            <element signature="e#20933#21040#0#PHP" expanded="false" />
-            <element signature="e#21216#21312#0#PHP" expanded="false" />
-            <element signature="n#getProtocolsArray#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#21420#21595#0#PHP" expanded="false" />
-            <element signature="n#getProtocolName#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="n#getProbabilityArray#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#21961#22089#0#PHP" expanded="false" />
-            <element signature="e#22005#22079#0#PHP" expanded="false" />
-            <element signature="n#getDefaultParamsArray#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#22194#23624#0#PHP" expanded="false" />
-            <element signature="e#23723#24927#0#PHP" expanded="false" />
-            <element signature="e#23779#24293#0#PHP" expanded="false" />
-            <element signature="e#24306#24917#0#PHP" expanded="false" />
-            <element signature="e#24945#25124#0#PHP" expanded="false" />
-            <element signature="e#25142#25250#0#PHP" expanded="false" />
-            <element signature="e#25268#26084#0#PHP" expanded="false" />
-            <element signature="e#25348#25693#0#PHP" expanded="false" />
-            <element signature="e#25706#25870#0#PHP" expanded="false" />
-            <element signature="e#25883#26070#0#PHP" expanded="false" />
-            <element signature="e#26102#26696#0#PHP" expanded="false" />
-            <element signature="e#26314#26686#0#PHP" expanded="false" />
-            <element signature="e#26361#26672#0#PHP" expanded="false" />
-            <element signature="e#26414#26512#0#PHP" expanded="false" />
-            <element signature="e#26598#26672#0#PHP" expanded="false" />
-            <element signature="e#26706#26918#0#PHP" expanded="false" />
-            <element signature="n#getParamsArray#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#27304#27485#0#PHP" expanded="false" />
-            <element signature="e#27348#27475#0#PHP" expanded="false" />
-            <element signature="e#27591#27789#0#PHP" expanded="false" />
-            <element signature="n#getFromEmail#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="n#getFromName#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="n#getSenderEmail#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#28216#28404#0#PHP" expanded="false" />
-            <element signature="n#requirementsFailed#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="n#getNameByType#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#28591#28656#0#PHP" expanded="false" />
-            <element signature="e#30007#30282#0#PHP" expanded="false" />
-            <element signature="n#getCustomerTypesMapping#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#30517#30587#0#PHP" expanded="false" />
-            <element signature="e#30649#30904#0#PHP" expanded="false" />
-            <element signature="e#30790#30904#0#PHP" expanded="false" />
-            <element signature="e#30922#31210#0#PHP" expanded="false" />
-            <element signature="e#30973#31086#0#PHP" expanded="false" />
-            <element signature="e#31099#31200#0#PHP" expanded="false" />
-            <element signature="n#getStatusesList#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#31402#31758#0#PHP" expanded="false" />
-            <element signature="n#getTypesList#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#31852#31968#0#PHP" expanded="false" />
-            <element signature="n#getCustomerTypesList#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#32091#32215#0#PHP" expanded="false" />
-            <element signature="n#setDeliveryObject#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="n#getDeliveryObject#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="n#setDeliveryFor#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="n#getDeliveryFor#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="n#isDeliveryFor#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#32803#32870#0#PHP" expanded="false" />
-            <element signature="n#markHourlyUsage#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="n#logUsage#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#33033#33137#0#PHP" expanded="false" />
-            <element signature="e#33178#33238#0#PHP" expanded="false" />
-            <element signature="e#33359#33638#0#PHP" expanded="false" />
-            <element signature="e#33488#33628#0#PHP" expanded="false" />
-            <element signature="e#33719#34007#0#PHP" expanded="false" />
-            <element signature="e#33895#33997#0#PHP" expanded="false" />
-            <element signature="n#getDeliveryIsCountableForCustomer#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#34120#34210#0#PHP" expanded="false" />
-            <element signature="e#34228#34322#0#PHP" expanded="false" />
-            <element signature="e#34501#34601#0#PHP" expanded="false" />
-            <element signature="e#34611#35116#0#PHP" expanded="false" />
-            <element signature="e#34665#34861#0#PHP" expanded="false" />
-            <element signature="e#34874#35080#0#PHP" expanded="false" />
-            <element signature="e#35134#35443#0#PHP" expanded="false" />
-            <element signature="e#35201#35407#0#PHP" expanded="false" />
-            <element signature="e#35461#35736#0#PHP" expanded="false" />
-            <element signature="e#35512#35700#0#PHP" expanded="false" />
-            <element signature="e#35754#36060#0#PHP" expanded="false" />
-            <element signature="e#35818#36024#0#PHP" expanded="false" />
-            <element signature="n#countHourlyUsage#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="n#getCanHaveHourlyQuota#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="n#getIsOverQuota#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#36687#36793#0#PHP" expanded="false" />
-            <element signature="e#36802#36898#0#PHP" expanded="false" />
-            <element signature="e#36908#37050#0#PHP" expanded="false" />
-            <element signature="n#getCanBeDeleted#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="n#getCanBeUpdated#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="n#setIsInUse#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#37446#37508#0#PHP" expanded="false" />
-            <element signature="e#37608#37663#0#PHP" expanded="false" />
-            <element signature="n#setIsNotInUse#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#37771#37834#0#PHP" expanded="false" />
-            <element signature="e#37934#37989#0#PHP" expanded="false" />
-            <element signature="n#getIsInUse#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="n#getIsLocked#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="n#getDisplayName#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="n#canSendToDomainOf#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#38449#38570#0#PHP" expanded="false" />
-            <element signature="n#getNeverAllowedHeaders#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#38752#39055#0#PHP" expanded="false" />
-            <element signature="n#getCustomerByDeliveryObject#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="n#parseDeliveryObjectForCustomer#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#39490#40407#0#PHP" expanded="false" />
-            <element signature="e#39555#40397#0#PHP" expanded="false" />
-            <element signature="e#39657#39860#0#PHP" expanded="false" />
-            <element signature="e#39861#40016#0#PHP" expanded="false" />
-            <element signature="e#40017#40188#0#PHP" expanded="false" />
-            <element signature="e#40189#40397#0#PHP" expanded="false" />
-            <element signature="e#40416#40578#0#PHP" expanded="false" />
-            <element signature="n#_validateAdditionalHeaders#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#40736#40823#0#PHP" expanded="false" />
-            <element signature="e#41213#42132#0#PHP" expanded="false" />
-            <element signature="e#41280#41431#0#PHP" expanded="false" />
-            <element signature="e#41685#41905#0#PHP" expanded="false" />
-            <element signature="e#41931#42070#0#PHP" expanded="false" />
-            <element signature="n#pickServer#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#42480#45417#0#PHP" expanded="false" />
-            <element signature="e#42689#42782#0#PHP" expanded="false" />
-            <element signature="e#43515#43583#0#PHP" expanded="false" />
-            <element signature="e#43597#45249#0#PHP" expanded="false" />
-            <element signature="e#43696#44260#0#PHP" expanded="false" />
-            <element signature="e#44104#44242#0#PHP" expanded="false" />
-            <element signature="e#44277#45235#0#PHP" expanded="false" />
-            <element signature="e#45133#45217#0#PHP" expanded="false" />
-            <element signature="e#45275#45407#0#PHP" expanded="false" />
-            <element signature="n#processPickServerCriteria#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#46338#48195#0#PHP" expanded="false" />
-            <element signature="e#46643#48185#0#PHP" expanded="false" />
-            <element signature="e#46697#46844#0#PHP" expanded="false" />
-            <element signature="e#46752#46843#1#PHP" expanded="false" />
-            <element signature="e#46862#47795#0#PHP" expanded="false" />
-            <element signature="e#47286#47777#0#PHP" expanded="false" />
-            <element signature="e#47465#47755#0#PHP" expanded="false" />
-            <element signature="e#47623#47755#0#PHP" expanded="false" />
-            <element signature="e#47997#48125#0#PHP" expanded="false" />
-            <element signature="e#48305#48467#0#PHP" expanded="false" />
-            <element signature="e#49437#49496#0#PHP" expanded="false" />
-            <element signature="e#49583#49706#0#PHP" expanded="false" />
-            <element signature="e#51418#51533#0#PHP" expanded="false" />
-            <element signature="e#51534#51674#0#PHP" expanded="false" />
-            <element signature="n#saveStatus#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#51780#51846#0#PHP" expanded="false" />
-            <element signature="e#51855#51916#0#PHP" expanded="false" />
-            <element signature="n#_handleTrackingDomain#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#52230#52377#0#PHP" expanded="false" />
-            <element signature="e#52386#54181#0#PHP" expanded="false" />
-            <element signature="e#52820#54171#0#PHP" expanded="false" />
-            <element signature="e#52918#53298#0#PHP" expanded="false" />
-            <element signature="e#53648#54028#0#PHP" expanded="false" />
-            <element signature="e#53734#54010#0#PHP" expanded="false" />
-            <element signature="e#53808#53988#0#PHP" expanded="false" />
-            <element signature="n#copy#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#54292#54355#0#PHP" expanded="false" />
-            <element signature="e#54441#55959#0#PHP" expanded="false" />
-            <element signature="e#54791#55169#0#PHP" expanded="false" />
-            <element signature="e#54836#55155#0#PHP" expanded="false" />
-            <element signature="e#55087#55155#0#PHP" expanded="false" />
-            <element signature="e#55195#55315#0#PHP" expanded="false" />
-            <element signature="e#55341#55809#0#PHP" expanded="false" />
-            <element signature="e#55394#55795#0#PHP" expanded="false" />
-            <element signature="e#55888#55959#0#PHP" expanded="false" />
-            <element signature="n#getIsDisabled#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="n#getIsActive#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="n#enable#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#56251#56317#0#PHP" expanded="false" />
-            <element signature="n#disable#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#56453#56517#0#PHP" expanded="false" />
-            <element signature="n#getForceFromOptions#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#56674#56996#0#PHP" expanded="false" />
-            <element signature="n#getForceReplyToOptions#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#57079#57294#0#PHP" expanded="false" />
-            <element signature="n#getUseForOptions#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#57371#57685#0#PHP" expanded="false" />
-            <element signature="n#getUseFor#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="n#getUseForCampaigns#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="n#getUseForTransactional#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="n#getQueueName#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="n#getUseQueue#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="n#enableLogUsage#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="n#disableLogUsage#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="n#getCanUseQueue#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#58581#58642#0#PHP" expanded="false" />
-            <element signature="e#58660#58733#0#PHP" expanded="false" />
-            <element signature="e#58825#58963#0#PHP" expanded="false" />
-            <element signature="e#58972#59112#0#PHP" expanded="false" />
-            <element signature="e#59051#59112#0#PHP" expanded="false" />
-            <element signature="n#getSigningEnabled#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="n#getTrackingEnabled#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="n#getImportExportAllowedAttributes#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#59592#59895#0#PHP" expanded="false" />
-            <element signature="n#getCampaignQueueEmailsChunkSize#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#60135#60207#0#PHP" expanded="false" />
-            <element signature="n#pushEmailInCampaignQueue#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#60424#60558#0#PHP" expanded="false" />
-            <element signature="e#60661#60776#0#PHP" expanded="false" />
-            <element signature="n#__destruct#0;n#DeliveryServer#0;n#!!top" expanded="false" />
-            <element signature="e#60910#61365#0#PHP" expanded="false" />
-            <element signature="e#60989#61355#0#PHP" expanded="false" />
-            <element signature="e#61160#61341#0#PHP" expanded="false" />
-            <element signature="e#65247#65498#0#PHP" expanded="false" />
-            <element signature="e#65293#65424#0#PHP" expanded="false" />
-            <element signature="e#65752#65926#0#PHP" expanded="false" />
-            <element signature="e#65995#66150#0#PHP" expanded="false" />
-            <element signature="e#66316#66599#0#PHP" expanded="false" />
-            <element signature="e#66373#66585#0#PHP" expanded="false" />
-            <element signature="e#66617#66760#0#PHP" expanded="false" />
-            <element signature="e#67057#67572#0#PHP" expanded="false" />
-            <element signature="e#67169#67299#0#PHP" expanded="false" />
-            <element signature="e#67300#67423#0#PHP" expanded="false" />
-            <element signature="e#67424#67572#0#PHP" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1512,14 +1013,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-25.73077">
           <caret line="60" column="51" selection-start-line="60" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/console/commands/SendGroupsCommand.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1772,35 +1265,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/common/models/GroupBounceLog.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.65384614">
-          <caret line="106" column="61" selection-start-line="106" selection-start-column="61" selection-end-line="106" selection-end-column="61" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/console/commands/SendGroupEmailsCommand.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-9.576923">
-          <caret line="115" column="12" selection-start-line="115" selection-start-column="12" selection-end-line="115" selection-end-column="12" />
-          <folding>
-            <element signature="e#4233#6205#0#PHP" expanded="false" />
-            <marker date="1463740048000" expanded="true" signature="7328:7450" placeholder="DELETE FROM ..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/common/models/Group.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-24.846153">
-          <caret line="102" column="5" selection-start-line="90" selection-start-column="3" selection-end-line="102" selection-end-column="5" />
-          <folding>
-            <element signature="n#search#0;n#Group#0;n#!!top" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/apps/common/models/GroupComplianceLevels.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-1.9615384">
@@ -1817,10 +1281,146 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/DeliveryServerController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-36.615383">
+          <caret line="71" column="13" selection-start-line="71" selection-start-column="13" selection-end-line="71" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/common/models/SendingDomain.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-21.153847">
+          <caret line="379" column="24" selection-start-line="379" selection-start-column="24" selection-end-line="379" selection-end-column="24" />
+          <folding>
+            <marker date="1463930004000" expanded="true" signature="13568:13602" placeholder="..." />
+            <marker date="1463930004000" expanded="true" signature="14526:14573" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/common/models/Group.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="45.76923">
+          <caret line="102" column="5" selection-start-line="90" selection-start-column="3" selection-end-line="102" selection-end-column="5" />
+          <folding>
+            <element signature="n#search#0;n#Group#0;n#!!top" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/console/commands/SendGroupEmailsCommand.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-18.73077">
+          <caret line="210" column="28" selection-start-line="210" selection-start-column="24" selection-end-line="210" selection-end-column="28" />
+          <folding>
+            <element signature="e#4233#6205#0#PHP" expanded="false" />
+            <marker date="1463740048000" expanded="true" signature="7328:7450" placeholder="DELETE FROM ..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/migrations/00100_create_transactional_email_groups.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.75852275">
+          <caret line="161" column="39" selection-start-line="149" selection-start-column="2" selection-end-line="161" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/common/models/GroupBounceLog.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="5.230769">
+          <caret line="16" column="76" selection-start-line="16" selection-start-column="76" selection-end-line="16" selection-end-column="76" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/console/commands/SendCampaignsCommand.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-18.307692">
+          <caret line="90" column="70" selection-start-line="90" selection-start-column="37" selection-end-line="90" selection-end-column="70" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/common/components/mailer/MailerPHPMailer.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-20.384615">
+          <caret line="309" column="49" selection-start-line="309" selection-start-column="49" selection-end-line="309" selection-end-column="49" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/console/components/behaviors/CampaignSenderBehavior.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.42427185">
+          <caret line="343" column="107" selection-start-line="343" selection-start-column="107" selection-end-line="343" selection-end-column="107" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/console/config/main.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33009708">
+          <caret line="45" column="47" selection-start-line="45" selection-start-column="47" selection-end-line="45" selection-end-column="47" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/SMTPServer.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/common/models/DeliveryServerSmtp.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5543689">
+          <caret line="43" column="0" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/common/vendors/BounceHandler/BounceHandler.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-10.8">
+          <caret line="505" column="27" selection-start-line="504" selection-start-column="21" selection-end-line="504" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/console/commands/SendGroupsCommand.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-16.73077">
+          <caret line="152" column="0" selection-start-line="152" selection-start-column="0" selection-end-line="152" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/console/commands/GroupsBounceHandlerCommand.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.75626045">
+          <caret line="170" column="23" selection-start-line="169" selection-start-column="16" selection-end-line="170" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/common/models/GroupEmail.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-11.769231">
+          <caret line="245" column="0" selection-start-line="245" selection-start-column="0" selection-end-line="245" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.22998987">
-          <caret line="85" column="11" selection-start-line="85" selection-start-column="11" selection-end-line="85" selection-end-column="11" />
+        <state vertical-scroll-proportion="0.46467817">
+          <caret line="349" column="55" selection-start-line="349" selection-start-column="55" selection-end-line="349" selection-end-column="55" />
           <folding />
         </state>
       </provider>

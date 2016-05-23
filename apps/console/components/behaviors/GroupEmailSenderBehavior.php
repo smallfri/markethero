@@ -285,7 +285,7 @@ class GroupEmailSenderBehavior extends CBehavior
                     $timeStart = microtime(true);
                 }
 
-                $server = DeliveryServer::pickGroupServers($currentServerId, $group, $dsParams);
+//                $server = DeliveryServer::pickGroupServers($currentServerId, $group, $dsParams);
 //
 //                if ($changeServerAt > 0 && $processedCounter >= $changeServerAt && !$serverHasChanged) {
 //                    $currentServerId = 5;
@@ -316,15 +316,38 @@ class GroupEmailSenderBehavior extends CBehavior
 //                }
 
 
-                $headerPrefix = null;
-                $emailParams['body'] = $email['body'];
-                $emailParams['subject'] = $email['subject'];
-                $emailParams['to'] = $email['to_email'];
-                $emailParams['email_id'] = $email['email_id'];
+                $headerPrefix = 'X-Mw-';
+//                $emailParams['body'] = $email['body'];
+//                $emailParams['subject'] = $email['subject'];
+//                $emailParams['to'] = $email['to_email'];
+//                $emailParams['sender'] = $email['from_email'];
+//                $emailParams['replyTo'] = $email['from_email'];
+//                $emailParams['from_email'] = $email['from_email'];
+//                $emailParams['from_name'] = $email['from_name'];
+//                $emailParams['on-behalf-of'] = $email['from_email'];
+//                $emailParams['reply_to_email'] = $email['from_email'];
+//                $emailParams['email_id'] = $email['email_id'];
+//
+//
+
+
+
+                $emailParams = array(
+                                         'from'          => array($email['from_email'] => $email['from_name']),
+                                         'fromName'      => $email['from_name'],
+                                         'email_id'      => $email['email_id'],
+                                         'from_email'      => $email['from_email'],
+                                         'from_name'      => $email['from_name'],
+                                         'to'            => array($email['to_email'] => $email['to_name']),
+                                         'subject'       => $email['subject'],
+                                         'replyTo'       => $email['reply_to_email'],
+                                         'body'          => $email['body'],
+                                         'plainText'     => $email['plain_text'],
+                                     );
 
                 $emailParams['headers'] = array(
                     $headerPrefix.'Group-Uid' => $group->group_email_uid,
-                    $headerPrefix.'Customer-id' => $group->customer_id
+                    $headerPrefix.'Customer-Id' => $group->customer_id
 //                    $headerPrefix . 'Customer-Gid'     => (string)intval($customer->group_id), // because of sendgrid
 //                    $headerPrefix . 'Delivery-Sid'     => (string)intval($server->server_id), // because of sendgrid
 //                    $headerPrefix . 'Tracking-Did'     => (string)intval($server->tracking_domain_id), // because of sendgrid
@@ -358,6 +381,8 @@ class GroupEmailSenderBehavior extends CBehavior
 
 
                 $sent = $server->sendEmail($emailParams);
+
+                print_r($sent);
 
                 $email->status = 'sent';
                 $email->save();
