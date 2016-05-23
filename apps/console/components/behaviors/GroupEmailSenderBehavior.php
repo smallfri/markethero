@@ -168,7 +168,7 @@ class GroupEmailSenderBehavior extends CBehavior
         }
 
         // put proper status
-        $group->saveStatus(Group::STATUS_PROCESSING);
+//        $group->saveStatus(Group::STATUS_PROCESSING);
 
         if ($this->verbose) {
             $timeStart = microtime(true);
@@ -337,6 +337,8 @@ class GroupEmailSenderBehavior extends CBehavior
                                          'fromName'      => $email['from_name'],
                                          'email_id'      => $email['email_id'],
                                          'from_email'      => $email['from_email'],
+                                         'return_path'      => 'bounces@marketherobounce1.com',
+                                         'Return_Path'      => 'bounces@marketherobounce1.com',
                                          'from_name'      => $email['from_name'],
                                          'to'            => array($email['to_email'] => $email['to_name']),
                                          'subject'       => $email['subject'],

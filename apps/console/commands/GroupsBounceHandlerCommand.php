@@ -144,7 +144,7 @@ class GroupsBounceHandlerCommand extends CConsoleCommand
                 // close the db connection because it will time out!
                 Yii::app()->getDb()->setActive(false);
 
-                $headerPrefix = Yii::app()->params['email.custom.header.prefix'];
+                $headerPrefix = 'X-Mw-';
                 $headerPrefixUp = strtoupper($headerPrefix);
 
                 $bounceHandler = new BounceHandler($this->_server->getConnectionString(), $this->_server->username, $this->_server->password, array(
@@ -158,9 +158,11 @@ class GroupsBounceHandlerCommand extends CConsoleCommand
                         $headerPrefix . 'Customer-Id'
                     ),
                 ));
-                
+
                 $results = $bounceHandler->getResults();
-                
+
+                print_r($results);
+
                 // re-open the db connection
                 Yii::app()->getDb()->setActive(true);
                 
@@ -175,57 +177,37 @@ class GroupsBounceHandlerCommand extends CConsoleCommand
                     }
                     continue;
                 }
-                
                 foreach ($results as $result) {
                     foreach ($result['originalEmailHeadersArray'] as $key => $value) {
                         unset($result['originalEmailHeadersArray'][$key]);
                         $result['originalEmailHeadersArray'][strtoupper($key)] = $value;
                     }
+
+
+                    print_r($result['originalEmailHeadersArray']);
                     
-                    if (!isset($result['originalEmailHeadersArray'][$headerPrefixUp . 'CAMPAIGN-UID'], $result['originalEmailHeadersArray'][$headerPrefixUp . 'CUSTOMER-ID'])) {
+                    if (!isset(
+                        $result['originalEmailHeadersArray'][$headerPrefixUp . 'GROUP-UID'],
+                        $result['originalEmailHeadersArray'][$headerPrefixUp . 'CUSTOMER-ID'],
+                        $result['originalEmailHeadersArray']['FROM']
+                        ))
+                    {
                         continue;
                     }
 
                     $groupUid    = trim($result['originalEmailHeadersArray'][$headerPrefixUp . 'GROUP-UID']);
                     $customerId = trim($result['originalEmailHeadersArray'][$headerPrefixUp . 'CUSTOMER-ID']);
+                    $email = trim($result['originalEmailHeadersArray']['FROM']);
 
-//                    $campaign = Campaign::model()->findByUid($campaignUid);
-//                    if (empty($campaign)) {
-//                        continue;
-//                    }
-//
-//                    $subscriber = ListSubscriber::model()->findByAttributes(array(
-//                        'list_id'           => $campaign->list->list_id,
-//                        'subscriber_uid'    => $subscriberUid,
-//                        'status'            => ListSubscriber::STATUS_CONFIRMED,
-//                    ));
-//
-//                    if (empty($subscriber)) {
-//                        continue;
-//                    }
 
-                    // since 1.3.5.5
-                    $bounceLog = GroupBounceLog::model()->findByAttributes(array(
-                        'customer_id'   => $customerId,
-                        'subscriber_id' => $groupUid,
-                    ));
-
-                    if (!empty($bounceLog)) {
-                        continue;
-                    }
-
-                    // NOTE:
-                    // in various circumstances this can produce duplicate results,
-                    // i.e: when same bounce server twice and the messages were not removed!
-                    // the probability is small, but it's there
-                    if (in_array($result['bounceType'], array(BounceHandler::BOUNCE_SOFT, CampaignBounceLog::BOUNCE_HARD))) {
-                        $bounceLog = new GroupnBounceLog();
+                        $bounceLog = new GroupBounceLog();
                         $bounceLog->group_uid     = $groupUid;
                         $bounceLog->customer_id   = $customerId;
+                        $bounceLog->email   = $email;
                         $bounceLog->message         = $result['diagnosticCode'];
                         $bounceLog->bounce_type     = $result['bounceType'] == BounceHandler::BOUNCE_HARD ? CampaignBounceLog::BOUNCE_HARD : CampaignBounceLog::BOUNCE_SOFT;
                         $bounceLog->save();
-                    } else {
+//                    } else {
 //                        if ($options->get('system.cron.process_feedback_loop_servers.subscriber_action', 'unsubscribe') == 'delete') {
 //                            $subscriber->delete();
 //                        } else {
@@ -238,7 +220,7 @@ class GroupsBounceHandlerCommand extends CConsoleCommand
 //                            $trackUnsubscribe->note          = 'Unsubscribed via FBL Report!';
 //                            $trackUnsubscribe->save(false);
 //                        }
-                    }
+//                    }
                 }
 
                 $this->_server = BounceServer::model()->findByPk((int)$this->_server->server_id);

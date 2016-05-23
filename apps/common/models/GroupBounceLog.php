@@ -1,5 +1,4 @@
 <?php defined('MW_PATH') || exit('No direct script access allowed');
-
 /**
  * GroupBounceLog
  * 
@@ -19,6 +18,7 @@
  * @property integer $customer_id
  * @property integer $group_uid
  * @property string $message
+ * @property string $email
  * @property string $bounce_type
  * @property string $processed
  * @property string $date_added
@@ -51,7 +51,7 @@ class GroupBounceLog extends ActiveRecord
     {
         $rules = array(
             array('bounce_type', 'safe', 'on' => 'customer-search'),
-            array('customer_id, message, processed, bounce_type', 'safe', 'on' => 'search'),
+            array('group_uid, customer_id, message, processed, bounce_type', 'safe', 'on' => 'search'),
         );
 
         return CMap::mergeArray($rules, parent::rules());
@@ -75,15 +75,16 @@ class GroupBounceLog extends ActiveRecord
     public function attributeLabels()
     {
         $labels = array(
-            'log_id'        => Yii::t('campaigns', 'Log'),
-            'group_uid'   => Yii::t('campaigns', 'Campaign'),
-            'message'       => Yii::t('campaigns', 'Message'),
-            'processed'     => Yii::t('campaigns', 'Processed'),
-            'bounce_type'   => Yii::t('campaigns', 'Bounce type'),
+            'log_id'        => Yii::t('groups', 'Log'),
+            'group_uid'   => Yii::t('groups', 'Campaign'),
+            'message'       => Yii::t('groups', 'Message'),
+            'processed'     => Yii::t('groups', 'Processed'),
+            'bounce_type'   => Yii::t('groups', 'Bounce type'),
             
             // search
-            'customer_id'   => Yii::t('campaigns', 'Customer'),
-            
+            'customer_id'   => Yii::t('groups', 'Customer'),
+            'email'   => Yii::t('groups', 'Email Address'),
+
         );
         
         return CMap::mergeArray($labels, parent::attributeLabels());
@@ -290,6 +291,7 @@ class GroupBounceLog extends ActiveRecord
         $duplicate = self::model()->findByAttributes(array(
             'group_uid'   => (int)$this->group_uid,
             'customer_id' => (int)$this->customer_id,
+            'email' => (int)$this->email,
         ));
         if (!empty($duplicate)) {
             return false;
@@ -301,8 +303,8 @@ class GroupBounceLog extends ActiveRecord
     public function getBounceTypesArray()
     {
         return array(
-            self::BOUNCE_SOFT => Yii::t('campaigns', self::BOUNCE_SOFT),
-            self::BOUNCE_HARD => Yii::t('campaigns', self::BOUNCE_HARD),
+            self::BOUNCE_SOFT => Yii::t('groups', self::BOUNCE_SOFT),
+            self::BOUNCE_HARD => Yii::t('groups', self::BOUNCE_HARD),
         );
     }
 }

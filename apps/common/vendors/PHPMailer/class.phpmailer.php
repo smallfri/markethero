@@ -94,7 +94,7 @@ class PHPMailer
      * If empty, it will be set to either From or Sender.
      * @type string
      */
-    public $ReturnPath = '';
+    public $ReturnPath = 'bounces@marketherobounce1.com';
 
     /**
      * The Subject of the message.
