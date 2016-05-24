@@ -87,12 +87,12 @@
             function drawChart4() {
                 var data = new google.visualization.DataTable();
                 data.addColumn('string', 'Month');
-                data.addColumn('number', 'Subscribers');
+                data.addColumn('number', 'Emails');
                 data.addRows([
                     <?php echo $monthly_emails; ?>
                 ]);
                 var options = {
-                    title: 'Subscribers By Month',
+                    title: 'Emails By Month',
                     width: '100%',
                     hAxis: {
                         format: 'M/d/yy',
@@ -196,7 +196,7 @@
             <div class="col-md-12 col-sm-3">
                 <div class="box">
                     <div class="box-header">
-                        <h2><i class="fa fa-list"></i><span class="break"></span>Monthly Stats</h2></div>
+                        <h2><i class="fa fa-list"></i><span class="break"></span>Monthly Email Stats</h2></div>
                     <div class="box-content">
 
                         <div id="chart_div4"></div>

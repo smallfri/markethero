@@ -9,7 +9,7 @@
             <hr>
             <ul class="breadcrumb">
                 <li><a href="dashboard">Dashboard</a></li>
-                <li><a href="transactional-emails">Transactional Emails</a></li>
+                <li><a href="group-emails">Group Emails</a></li>
             </ul>
             <hr>
         </div>
@@ -18,7 +18,7 @@
             <div class="col-lg-12">
                 <div class="box">
                     <div class="box-header" data-original-title>
-                        <h2><i class="fa fa-user"></i><span class="break"></span>Transactional Emails</h2>
+                        <h2><i class="fa fa-user"></i><span class="break"></span>Group Emails</h2>
                         <div class="box-icon">
                             <a href="table.html#" class="btn-minimize"><i class="fa fa-chevron-up"></i></a>
                             <a href="table.html#" class="btn-close"><i class="fa fa-times"></i></a>
@@ -30,6 +30,7 @@
                             <tr>
                                 <th>Email ID</th>
                                 <th>Email UID</th>
+                                <th>Group ID</th>
                                 <th>To Email</th>
                                 <th>From Email</th>
                                 <th>Subject</th>
@@ -46,6 +47,7 @@
                                 <tr>
                                     <td>{!! $row['email_id'] !!}</td>
                                     <td>{!! $row['email_uid'] !!}</td>
+                                    <td>{!! $row['group_email_id'] !!}</td>
                                     <td>{!! $row['to_email'] !!}</td>
                                     <td>{!! $row['from_email'] !!}</td>
                                     <td>{!! $row['subject'] !!}</td>

@@ -400,7 +400,7 @@ class DashboardController extends ApiController
 
         ];
 
-        return view('dashboard.emails.index', $data);
+        return view('dashboard.group-emails.index', $data);
     }
 
     public function store()
