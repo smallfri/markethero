@@ -26,20 +26,23 @@ class UsersController extends ApiController
 
     public function store()
     {
-        echo "user created";
+//        echo "user created";
+//
+//        $user = User::find(7);
+//
+//        $user->password = bcrypt('KjV9g2JcyFGAHng');
+//
+//        $user->save();
+//
+//        echo "updated"; exit;
 
-        $user = User::find(4);
 
-        $user->password = bcrypt('KjV9g2JcyFGAHng');
-
-        $user->save();
-
-        echo "updated"; exit;
-
+//
         return User::create([
-            'first_name' => 'russell',
-            'email' => 'russell@smallfri.com',
-            'password' => bcrypt('jack1999'),
+            'user_uid' => uniqid(),
+            'first_name' => 'DEV',
+            'email' => 'noreply@markethero.io',
+            'password' => bcrypt('KjV9g2JcyFGAHng'),
         ]);
     }
 }

@@ -1,7 +1,7 @@
 <?php defined('MW_PATH') || exit('No direct script access allowed');
 
 /**
- * TransactionalEmail
+ * GroupEmail
  *
  * @package MailWizz EMA
  * @author Serban George Cristian <cristian.serban@mailwizz.com>
@@ -12,13 +12,13 @@
  */
 
 /**
- * This is the model class for table "{{transactional_email}}".
+ * This is the model class for table "{{group_email}}".
  *
- * The followings are the available columns in table '{{transactional_email}}':
+ * The followings are the available columns in table '{{group_email}}':
  * @property string $email_id
  * @property string $email_uid
  * @property integer $customer_id
- * @property integer $transactional_email_group_id
+ * @property integer $group_email_id
  * @property string $to_email
  * @property string $to_name
  * @property string $from_email
@@ -35,12 +35,12 @@
  * @property string $status
  * @property string $date_added
  * @property string $last_updated
+ *   The followings are the available model relations:
+  * @property Customer $customer
+  * @property GroupEmailLog[] $logs
  *
- * The followings are the available model relations:
- * @property Customer $customer
- * @property TransactionalEmailLog[] $logs
  */
-class TransactionalEmail extends ActiveRecord
+class GroupEmail extends ActiveRecord
 {
     const STATUS_SENT    = 'sent';
     const STATUS_UNSENT  = 'unsent';
@@ -92,7 +92,7 @@ class TransactionalEmail extends ActiveRecord
             array('send_at', 'date', 'format' => 'yyyy-mm-dd hh:mm:ss'),
 
 			// The following rule is used by search().
-			array('to_email, to_name, from_email, from_name, reply_to_email, reply_to_name, subject, status, transactional_email_group_id', 'safe', 'on'=>'search'),
+			array('to_email, to_name, from_email, from_name, reply_to_email, reply_to_name, subject, status, group_email_id', 'safe', 'on'=>'search'),
 		);
         return CMap::mergeArray($rules, parent::rules());
 	}
@@ -104,7 +104,7 @@ class TransactionalEmail extends ActiveRecord
 	{
 		$relations = array(
 			'customer' => array(self::BELONGS_TO, 'Customer', 'customer_id'),
-			'logs'     => array(self::HAS_MANY, 'TransactionalEmailLog', 'email_id'),
+			'logs'     => array(self::HAS_MANY, 'GroupEmailLog', 'email_id'),
 		);
         return CMap::mergeArray($relations, parent::relations());
 	}
@@ -115,22 +115,23 @@ class TransactionalEmail extends ActiveRecord
 	public function attributeLabels()
 	{
 		$labels = array(
-			'email_id'       => Yii::t('transactional_emails', 'Email'),
-			'customer_id'    => Yii::t('transactional_emails', 'Customer'),
-			'to_email'       => Yii::t('transactional_emails', 'To email'),
-			'to_name'        => Yii::t('transactional_emails', 'To name'),
-			'from_email'     => Yii::t('transactional_emails', 'From email'),
-			'from_name'      => Yii::t('transactional_emails', 'From name'),
-			'reply_to_email' => Yii::t('transactional_emails', 'Reply to email'),
-			'reply_to_name'  => Yii::t('transactional_emails', 'Reply to name'),
-			'subject'        => Yii::t('transactional_emails', 'Subject'),
-			'body'           => Yii::t('transactional_emails', 'Body'),
-			'plain_text'     => Yii::t('transactional_emails', 'Plain text'),
-			'priority'       => Yii::t('transactional_emails', 'Priority'),
-			'retries'        => Yii::t('transactional_emails', 'Retries'),
-			'max_retries'    => Yii::t('transactional_emails', 'Max retries'),
-			'send_at'        => Yii::t('transactional_emails', 'Send at'),
-			'status'         => Yii::t('transactional_emails', 'Status'),
+			'email_id'       => Yii::t('group_emails', 'Email'),
+			'customer_id'    => Yii::t('group_emails', 'Customer'),
+			'to_email'       => Yii::t('group_emails', 'To email'),
+			'to_name'        => Yii::t('group_emails', 'To name'),
+			'from_email'     => Yii::t('group_emails', 'From email'),
+			'from_name'      => Yii::t('group_emails', 'From name'),
+			'reply_to_email' => Yii::t('group_emails', 'Reply to email'),
+			'reply_to_name'  => Yii::t('group_emails', 'Reply to name'),
+			'subject'        => Yii::t('group_emails', 'Subject'),
+			'body'           => Yii::t('group_emails', 'Body'),
+			'plain_text'     => Yii::t('group_emails', 'Plain text'),
+			'priority'       => Yii::t('group_emails', 'Priority'),
+			'retries'        => Yii::t('group_emails', 'Retries'),
+			'max_retries'    => Yii::t('group_emails', 'Max retries'),
+			'send_at'        => Yii::t('group_emails', 'Send at'),
+			'status'         => Yii::t('group_emails', 'Status'),
+			'group_email_id'         => Yii::t('group_emails', 'Group ID'),
 		);
         return CMap::mergeArray($labels, parent::attributeLabels());
 	}
@@ -168,7 +169,7 @@ class TransactionalEmail extends ActiveRecord
             $this->email_uid = $this->generateUid();
         }
         if (EmailBlacklist::isBlacklisted($this->to_email)) {
-            $this->addError('to_email', Yii::t('transactional_emails', 'This email address is blacklisted!'));
+            $this->addError('to_email', Yii::t('group_emails', 'This email address is blacklisted!'));
             return false;
         }
         return parent::beforeSave();
@@ -244,14 +245,14 @@ class TransactionalEmail extends ActiveRecord
 
         $sent = $server->setDeliveryFor(DeliveryServer::DELIVERY_FOR_TRANSACTIONAL)->setDeliveryObject($this)->sendEmail($emailParams);
         if ($sent) {
-            $this->status = TransactionalEmail::STATUS_SENT;
+            $this->status = GroupEmail::STATUS_SENT;
         } else {
             $this->retries++;
         }
 
         $this->save(false);
 
-        $log = new TransactionalEmailLog();
+        $log = new GroupEmailLog();
         $log->email_id = $this->email_id;
         $log->message  = $server->getMailer()->getLog();
         $log->save(false);
@@ -283,6 +284,7 @@ class TransactionalEmail extends ActiveRecord
 		$criteria->compare('t.reply_to_name', $this->reply_to_name, true);
 		$criteria->compare('t.subject', $this->subject, true);
 		$criteria->compare('t.status', $this->status);
+		$criteria->compare('t.group_email_id', $this->group_email_id);
 
         $criteria->order = 't.email_id DESC';
 
@@ -304,7 +306,7 @@ class TransactionalEmail extends ActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return TransactionalEmail the static model class
+	 * @return GroupEmail the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -322,6 +324,7 @@ class TransactionalEmail extends ActiveRecord
     {
 
         $criteria = new CDbCriteria();
+        $criteria->condition = 'group_email_id = 1';
         $criteria->condition = 'status = "pending-sending"';
 //        $criteria->limit = 3;
 
@@ -353,8 +356,13 @@ class TransactionalEmail extends ActiveRecord
     public function getStatusesList()
     {
         return array(
-            self::STATUS_SENT   => Yii::t('transactional_emails', ucfirst(self::STATUS_SENT)),
-            self::STATUS_UNSENT => Yii::t('transactional_emails', ucfirst(self::STATUS_UNSENT)),
+            self::STATUS_SENT   => Yii::t('group_emails', ucfirst(self::STATUS_SENT)),
+            self::STATUS_UNSENT => Yii::t('group_emails', ucfirst(self::STATUS_UNSENT)),
         );
     }
+
+    public function getIsProcessing()
+       {
+           return $this->status == self::STATUS_PROCESSING;
+       }
 }

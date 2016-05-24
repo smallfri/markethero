@@ -1,12 +1,12 @@
-<?php defined('MW_PATH') || exit('No direct script access allowed');
+<?php defined('MW_PATH')||exit('No direct script access allowed');
 
 /**
  * Console application main configuration file
- * 
+ *
  * This file should not be altered in any way!
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
  * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
@@ -15,23 +15,23 @@
 
 return array(
     'basePath' => Yii::getPathOfAlias('console'),
-    
+
     'preload' => array(
         'consoleSystemInit'
     ),
-    
-    'import' => array(      
+
+    'import' => array(
         'console.components.*',
         'console.components.db.*',
         'console.components.db.ar.*',
     ),
-    
+
     'commandMap' => array(
         'migrate' => array(
-            'class'             => 'system.cli.commands.MigrateCommand',
-            'migrationPath'     => 'console.migrations',
-            'migrationTable'    => '{{migration}}',
-            'connectionID'      => 'db',
+            'class' => 'system.cli.commands.MigrateCommand',
+            'migrationPath' => 'console.migrations',
+            'migrationTable' => '{{migration}}',
+            'connectionID' => 'db',
         ),
         'hello' => array(
             'class' => 'console.commands.HelloCommand'
@@ -41,6 +41,9 @@ return array(
         ),
         'bounce-handler' => array(
             'class' => 'console.commands.BounceHandlerCommand'
+        ),
+        'group-bounce-handler' => array(
+            'class' => 'console.commands.GroupsBounceHandlerCommand'
         ),
         'process-delivery-and-bounce-log' => array(
             'class' => 'console.commands.ProcessDeliveryAndBounceLogCommand'
@@ -58,6 +61,9 @@ return array(
         'send-transactional-emails' => array(
             'class' => 'console.commands.SendTransactionalEmailsCommand'
         ),
+        'send-group-emails' => array(
+            'class' => 'console.commands.SendGroupsCommand'
+        ),
         'daily' => array(
             'class' => 'console.commands.DailyCommand'
         ),
@@ -71,10 +77,15 @@ return array(
             'class' => 'console.commands.RedisQueueCommand'
         ),
     ),
-    
+
     'components' => array(
         'consoleSystemInit' => array(
             'class' => 'console.components.init.ConsoleSystemInit',
         ),
+    ),
+
+    'params' => array(
+        // list of controllers where the user doesn't have to be logged in.
+        'unprotectedControllers' => array('send-transactional-emails')
     ),
 );

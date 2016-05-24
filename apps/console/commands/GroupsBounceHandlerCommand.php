@@ -11,7 +11,7 @@
  * @since 1.0
  */
 
-class BounceHandlerCommand extends CConsoleCommand
+class GroupsBounceHandlerCommand extends CConsoleCommand
 {
     // lock name
     protected $_lockName;
@@ -144,7 +144,7 @@ class BounceHandlerCommand extends CConsoleCommand
                 // close the db connection because it will time out!
                 Yii::app()->getDb()->setActive(false);
 
-                $headerPrefix = Yii::app()->params['email.custom.header.prefix'];
+                $headerPrefix = 'X-Mw-';
                 $headerPrefixUp = strtoupper($headerPrefix);
 
                 $bounceHandler = new BounceHandler($this->_server->getConnectionString(), $this->_server->username, $this->_server->password, array(
@@ -154,12 +154,14 @@ class BounceHandlerCommand extends CConsoleCommand
                     'searchCharset'     => $this->_server->getSearchCharset(),
                     'imapOpenParams'    => $this->_server->getImapOpenParams(),
                     'requiredHeaders'   => array(
-                        $headerPrefix . 'Campaign-Uid',
-                        $headerPrefix . 'Subscriber-Uid'
+                        $headerPrefix . 'Group-Uid',
+                        $headerPrefix . 'Customer-Id'
                     ),
                 ));
-                
+
                 $results = $bounceHandler->getResults();
+
+                print_r($results);
 
                 // re-open the db connection
                 Yii::app()->getDb()->setActive(true);
@@ -175,70 +177,50 @@ class BounceHandlerCommand extends CConsoleCommand
                     }
                     continue;
                 }
-                
                 foreach ($results as $result) {
                     foreach ($result['originalEmailHeadersArray'] as $key => $value) {
                         unset($result['originalEmailHeadersArray'][$key]);
                         $result['originalEmailHeadersArray'][strtoupper($key)] = $value;
                     }
+
+
+                    print_r($result['originalEmailHeadersArray']);
                     
-                    if (!isset($result['originalEmailHeadersArray'][$headerPrefixUp . 'CAMPAIGN-UID'], $result['originalEmailHeadersArray'][$headerPrefixUp . 'SUBSCRIBER-UID'])) {
+                    if (!isset(
+                        $result['originalEmailHeadersArray'][$headerPrefixUp . 'GROUP-UID'],
+                        $result['originalEmailHeadersArray'][$headerPrefixUp . 'CUSTOMER-ID'],
+                        $result['originalEmailHeadersArray']['FROM']
+                        ))
+                    {
                         continue;
                     }
 
-                    $campaignUid    = trim($result['originalEmailHeadersArray'][$headerPrefixUp . 'CAMPAIGN-UID']);
-                    $subscriberUid  = trim($result['originalEmailHeadersArray'][$headerPrefixUp . 'SUBSCRIBER-UID']);
+                    $groupUid    = trim($result['originalEmailHeadersArray'][$headerPrefixUp . 'GROUP-UID']);
+                    $customerId = trim($result['originalEmailHeadersArray'][$headerPrefixUp . 'CUSTOMER-ID']);
+                    $email = trim($result['originalEmailHeadersArray']['FROM']);
 
-                    $campaign = Campaign::model()->findByUid($campaignUid);
-                    if (empty($campaign)) {
-                        continue;
-                    }
 
-                    $subscriber = ListSubscriber::model()->findByAttributes(array(
-                        'list_id'           => $campaign->list->list_id,
-                        'subscriber_uid'    => $subscriberUid,
-                        'status'            => ListSubscriber::STATUS_CONFIRMED,
-                    ));
-
-                    if (empty($subscriber)) {
-                        continue;
-                    }
-
-                    // since 1.3.5.5
-                    $bounceLog = CampaignBounceLog::model()->findByAttributes(array(
-                        'campaign_id'   => $campaign->campaign_id,
-                        'subscriber_id' => $subscriber->subscriber_id,
-                    ));
-
-                    if (!empty($bounceLog)) {
-                        continue;
-                    }
-
-                    // NOTE:
-                    // in various circumstances this can produce duplicate results,
-                    // i.e: when same bounce server twice and the messages were not removed!
-                    // the probability is small, but it's there
-                    if (in_array($result['bounceType'], array(BounceHandler::BOUNCE_SOFT, CampaignBounceLog::BOUNCE_HARD))) {
-                        $bounceLog = new CampaignBounceLog();
-                        $bounceLog->campaign_id     = $campaign->campaign_id;
-                        $bounceLog->subscriber_id   = $subscriber->subscriber_id;
+                        $bounceLog = new GroupBounceLog();
+                        $bounceLog->group_uid     = $groupUid;
+                        $bounceLog->customer_id   = $customerId;
+                        $bounceLog->email   = $email;
                         $bounceLog->message         = $result['diagnosticCode'];
                         $bounceLog->bounce_type     = $result['bounceType'] == BounceHandler::BOUNCE_HARD ? CampaignBounceLog::BOUNCE_HARD : CampaignBounceLog::BOUNCE_SOFT;
                         $bounceLog->save();
-                    } else {
-                        if ($options->get('system.cron.process_feedback_loop_servers.subscriber_action', 'unsubscribe') == 'delete') {
-                            $subscriber->delete();
-                        } else {
-                            $subscriber->status = ListSubscriber::STATUS_UNSUBSCRIBED;
-                            $subscriber->save(false);
-
-                            $trackUnsubscribe = new CampaignTrackUnsubscribe();
-                            $trackUnsubscribe->campaign_id   = $campaign->campaign_id;
-                            $trackUnsubscribe->subscriber_id = $subscriber->subscriber_id;
-                            $trackUnsubscribe->note          = 'Unsubscribed via FBL Report!';
-                            $trackUnsubscribe->save(false);
-                        }
-                    }
+//                    } else {
+//                        if ($options->get('system.cron.process_feedback_loop_servers.subscriber_action', 'unsubscribe') == 'delete') {
+//                            $subscriber->delete();
+//                        } else {
+//                            $subscriber->status = ListSubscriber::STATUS_UNSUBSCRIBED;
+//                            $subscriber->save(false);
+//
+//                            $trackUnsubscribe = new CampaignTrackUnsubscribe();
+//                            $trackUnsubscribe->campaign_id   = $campaign->campaign_id;
+//                            $trackUnsubscribe->subscriber_id = $groupUid;
+//                            $trackUnsubscribe->note          = 'Unsubscribed via FBL Report!';
+//                            $trackUnsubscribe->save(false);
+//                        }
+//                    }
                 }
 
                 $this->_server = BounceServer::model()->findByPk((int)$this->_server->server_id);

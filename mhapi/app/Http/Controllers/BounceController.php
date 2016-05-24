@@ -28,7 +28,7 @@ class BounceController extends ApiController
 
         if(empty($Bounce[0]))
         {
-            Logger::addError('(Bounces) No Bounces Found '.print_r($Bounce,true),'(Bounces) No Bounces Found');
+            Logger::addProgress('(Bounces) No Bounces Found '.print_r($Bounce,true),'(Bounces) No Bounces Found');
 
            return $this->respondWithError('No Bounces not found.');
         }
@@ -46,7 +46,7 @@ class BounceController extends ApiController
 
         if(empty($Bounces[0]))
         {
-            Logger::addError('(Bounces) No Bounces Found '.print_r($Bounces,true),'(Bounces) No Bounces Found');
+            Logger::addProgress('(Bounces) No Bounces Found '.print_r($Bounces,true),'(Bounces) No Bounces Found');
 
             return $this->respondWithError('No Bounces found.');
         }

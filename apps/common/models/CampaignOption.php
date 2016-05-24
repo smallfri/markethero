@@ -27,7 +27,6 @@
  * @property string $autoresponder_include_imported
  * @property string $autoresponder_open_campaign_id;
  * @property string $email_stats
- * @property integer $send_referral_url
  * @property string $regular_open_unopen_action
  * @property integer $regular_open_unopen_campaign_id
  * @property string $cronjob

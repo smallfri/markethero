@@ -41,6 +41,8 @@ class CampaignDeliveryLog extends ActiveRecord
     const STATUS_TEMPORARY_ERROR = 'temporary-error';
 
     const STATUS_BLACKLISTED = 'blacklisted';
+
+    const STATUS_COMPLIANCE_REVIEW = 'in-compliance';
     
     public $customer_id;
     

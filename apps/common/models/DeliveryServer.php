@@ -89,13 +89,17 @@ class DeliveryServer extends ActiveRecord
     const DELIVERY_FOR_TEMPLATE_TEST = 'template-test';
     
     const DELIVERY_FOR_CAMPAIGN = 'campaign';
-    
+
+    const DELIVERY_FOR_GROUP = 'groups';
+
     const DELIVERY_FOR_LIST = 'list';
     
     const DELIVERY_FOR_TRANSACTIONAL = 'transactional';
     
     const USE_FOR_ALL = 'all';
-    
+
+    const USE_FOR_GROUPS = 'groups';
+
     const USE_FOR_TRANSACTIONAL = 'transactional';
     
     const USE_FOR_CAMPAIGNS = 'campaigns';
@@ -725,7 +729,7 @@ class DeliveryServer extends ActiveRecord
             self::TRANSPORT_ELASTICEMAIL_WEB_API => 'DeliveryServerElasticemailWebApi',
             self::TRANSPORT_SPARKPOST_WEB_API    => 'DeliveryServerSparkpostWebApi',
         ));
-        
+
         return (array)Yii::app()->hooks->applyFilters('delivery_servers_get_types_mapping', $mapping);
     }
     
@@ -1203,7 +1207,7 @@ class DeliveryServer extends ActiveRecord
         $_criteria->addInCondition('t.status', array(self::STATUS_ACTIVE, self::STATUS_IN_USE));
         
         // since 1.3.5
-        if (!empty($params['useFor']) && is_array($params['useFor']) && array_search(self::USE_FOR_ALL, $params['useFor']) === false) {
+        if (!empty($params['useFor']) && is_array($params['useFor']) && array_search(self::USE_FOR_GROUPS, $params['useFor']) === false) {
             $_criteria->addInCondition('t.use_for', array_merge(array(self::USE_FOR_ALL), $params['useFor']));
         }
         //
@@ -1224,11 +1228,10 @@ class DeliveryServer extends ActiveRecord
             }
             $_servers[$index] = self::model($mapping[$srv->type])->findByPk($srv->server_id);
         }
-
         if (empty($_servers)) {
             return false;
         }
-        
+
         $probabilities  = array();
         foreach ($_servers as $srv) {
             if (!isset($probabilities[$srv->probability])) {
@@ -1276,8 +1279,8 @@ class DeliveryServer extends ActiveRecord
         
         if (empty($deliveryObject)) {
             $server->setDeliveryFor(self::DELIVERY_FOR_SYSTEM);
-        } elseif ($deliveryObject instanceof Campaign) {
-            $server->setDeliveryFor(self::DELIVERY_FOR_CAMPAIGN);
+        } elseif ($deliveryObject instanceof Group) {
+            $server->setDeliveryFor(self::DELIVERY_FOR_GROUP);
         } elseif ($deliveryObject instanceof Lists) {
             $server->setDeliveryFor(self::DELIVERY_FOR_LIST);
         } elseif ($deliveryObject instanceof CustomerEmailTemplate) {
@@ -1564,4 +1567,215 @@ class DeliveryServer extends ActiveRecord
             }
         }
     }
+    
+    protected static function processPickGroupServerCriteria(CDbCriteria $criteria, $currentServerId = 0, $deliveryObject = null, $params = array())
+        {
+            static $groupServers = array();
+//            $campaign_id = !empty($deliveryObject) && $deliveryObject instanceof Group ? (int)$deliveryObject->campaign_id : 0;
+            
+//            if ($campaign_id > 0 && !isset($groupServers[$campaign_id])) {
+//                $groupServers[$campaign_id] = array();
+//
+//                $customer  = $deliveryObject->customer;
+//                $canSelect = $customer->getGroupOption('servers.can_select_delivery_servers_for_campaign', 'no') == 'yes';
+//
+//                if ($canSelect) {
+//                    $_campaignServers = CampaignToDeliveryServer::model()->findAllByAttributes(array(
+//                        'campaign_id' => $deliveryObject->campaign_id,
+//                    ));
+//                    foreach ($_campaignServers as $mdl) {
+//                        $_criteria = new CDbCriteria();
+//                        $_criteria->select = 'server_id, hourly_quota';
+//                        $_criteria->compare('server_id', (int)$mdl->server_id);
+//                        $_criteria->addInCondition('status', array(self::STATUS_ACTIVE, self::STATUS_IN_USE));
+//                        $server = self::model()->find($_criteria);
+//                        if (!empty($server)) {
+//                            $checkQuota = is_array($params) && isset($params['serverCheckQuota']) ? $params['serverCheckQuota'] : true;
+//                            if ($checkQuota && !$server->getIsOverQuota()) {
+//                                $groupServers[$campaign_id][] = $server->server_id;
+//                            } elseif (!$checkQuota) {
+//                                $groupServers[$campaign_id][] = $server->server_id;
+//                            }
+//                        }
+//                    }
+//                    // if there are campaign servers specified but there are no valid servers, we stop!
+//                    // note, not a final decision, maybe just allow this case after all.
+//                    if (count($_campaignServers) > 0 && empty($groupServers[$campaign_id])) {
+//                        return false;
+//                    }
+//                    unset($_campaignServers);
+//                }
+//            }
+            
+            $_criteria = new CDbCriteria();
+            $_criteria->select = 't.server_id, t.type';
+//            if ($campaign_id > 0 && !empty($groupServers[$campaign_id])) {
+//                $_criteria->addInCondition('t.server_id', $groupServers[$campaign_id]);
+//            }
+            $_criteria->addInCondition('t.status', array(self::STATUS_ACTIVE, self::STATUS_IN_USE));
+            
+            // since 1.3.5
+            if (!empty($params['useFor']) && is_array($params['useFor']) && array_search(self::USE_FOR_GROUPS, $params['useFor']) === false) {
+                $_criteria->addInCondition('t.use_for', array_merge(array(self::USE_FOR_GROUPS), $params['useFor']));
+            }
+            //
+            
+            $_criteria->order = 't.probability DESC';
+            $_criteria->mergeWith($criteria);
+
+            $_servers = self::model()->findAll($_criteria);
+
+            if (empty($_servers)) {
+                return false;
+            }
+            $mapping = self::getTypesMapping();
+            foreach ($_servers as $index => $srv) {
+
+                if (!isset($mapping[$srv->type])) {
+                    unset($_servers[$index]);
+                    continue;
+                }
+                $_servers[$index] = self::model($mapping[$srv->type])->findByPk($srv->server_id);
+            }
+
+            if (empty($_servers)) {
+                return false;
+            }
+            
+            $probabilities  = array();
+
+            foreach ($_servers as $srv) {
+                if (!isset($probabilities[$srv->probability])) {
+                    $probabilities[$srv->probability] = array();
+                }
+                $probabilities[$srv->probability][] = $srv;
+            }
+            
+            $server                 = null;
+            $probabilitySum         = array_sum(array_keys($probabilities));
+            $probabilityPercentage  = array();
+            $cumulative             = array();
+            
+            foreach ($probabilities as $probability => $probabilityServers) {
+                $probabilityPercentage[$probability] = ($probability / $probabilitySum) * 100;
+            }
+            asort($probabilityPercentage);
+            
+            foreach ($probabilityPercentage as $probability => $percentage) {
+                $cumulative[$probability] = end($cumulative) + $percentage;
+            }
+            asort($cumulative);
+            
+            $lowest      = floor(current($cumulative));
+            $probability = rand($lowest, 100);
+    
+            foreach($cumulative as $key => $value) {
+                if ($value > $probability)  {
+                    $rand   = array_rand(array_keys($probabilities[$key]), 1);
+                    $server = $probabilities[$key][$rand];
+                    break;
+                }
+            }
+    
+            if (empty($server)) {
+                $rand   = array_rand(array_keys($_servers), 1);
+                $server = $_servers[$rand];
+            }
+            
+            if (count($_servers) > 1 && $currentServerId > 0 && $server->server_id == $currentServerId) {
+                return self::processPickServerCriteria($criteria, $server->server_id, $deliveryObject);
+            }
+
+
+            $server->getMailer()->reset();
+
+
+            if (empty($deliveryObject)) {
+                $server->setDeliveryFor(self::DELIVERY_FOR_SYSTEM);
+            } elseif ($deliveryObject instanceof Campaign) {
+                $server->setDeliveryFor(self::DELIVERY_FOR_CAMPAIGN);
+            } elseif ($deliveryObject instanceof Lists) {
+                $server->setDeliveryFor(self::DELIVERY_FOR_LIST);
+            } elseif ($deliveryObject instanceof CustomerEmailTemplate) {
+                $server->setDeliveryFor(self::DELIVERY_FOR_TEMPLATE_TEST);
+            }
+            return $server;
+        }
+
+    public static function pickGroupServers($currentServerId = 0, $deliveryObject = null, $params = array())
+       {
+           $logTableName = DeliveryServerUsageLog::model()->tableName();
+//           $options      = Yii::app()->options;
+
+//           if ($customer = self::parseDeliveryObjectForCustomer($deliveryObject)) {
+//               $checkQuota = is_array($params) && isset($params['customerCheckQuota']) ? $params['customerCheckQuota'] : true;
+//               if ($checkQuota && $customer->getIsOverQuota()) {
+//                   return false;
+//               }
+//
+               $condition = 't.customer_id > 0 AND (
+               `t`.`hourly_quota` = 0 OR `t`.`hourly_quota` > (
+                   SELECT COUNT(*) FROM `'.$logTableName.'`
+                       WHERE server_id = `t`.`server_id` AND
+                       `date_added` BETWEEN DATE_FORMAT(NOW(), "%Y-%m-%d %H:00:00") AND DATE_FORMAT(NOW() + INTERVAL 1 HOUR, "%Y-%m-%d %H:00:00")
+                   )
+               )';
+
+//        print_r($condition);
+
+               $criteria = new CDbCriteria();
+               $criteria->condition = $condition;
+//               $criteria->params[':customer_id'] = (int)$customer->customer_id;
+
+               $server = self::processPickGroupServerCriteria($criteria, $currentServerId, $deliveryObject, $params);
+               if (!empty($server)) {
+                   return $server;
+               }
+
+//               if (!empty($customer->group_id)) {
+//                   static $groupServers = array();
+//                   if (!isset($groupServers[$customer->group_id])) {
+//                       $groupServers[$customer->group_id] = array();
+//                       $criteria = new CDbCriteria();
+//                       $criteria->select = 'server_id';
+//                       $criteria->compare('group_id', (int)$customer->group_id);
+//                       $models = DeliveryServerToCustomerGroup::model()->findAll($criteria);
+//                       foreach ($models as $model) {
+//                           $groupServers[$customer->group_id][] = (int)$model->server_id;
+//                       }
+//                   }
+//                   if (!empty($groupServers[$customer->group_id])) {
+//                       $condition = 't.customer_id IS NULL AND t.server_id IN('. implode(', ', array_map('intval', $groupServers[$customer->group_id])) .') AND (
+//                       `t`.`hourly_quota` = 0 OR `t`.`hourly_quota` > (
+//                           SELECT COUNT(*) FROM `'.$logTableName.'`
+//                               WHERE server_id = `t`.`server_id` AND
+//                               `date_added` BETWEEN DATE_FORMAT(NOW(), "%Y-%m-%d %H:00:00") AND DATE_FORMAT(NOW() + INTERVAL 1 HOUR, "%Y-%m-%d %H:00:00")
+//                           )
+//                       )';
+//                       $criteria = new CDbCriteria();
+//                       $criteria->condition = $condition;
+//                       $server = self::processPickServerCriteria($criteria, $currentServerId, $deliveryObject, $params);
+//                       if (!empty($server)) {
+//                           return $server;
+//                       }
+//                   }
+//               }
+
+//               if ($customer->getGroupOption('servers.can_send_from_system_servers', 'yes') != 'yes') {
+//                   return false;
+//               }
+//           }
+
+           $condition = 't.customer_id IS NULL AND (
+           `t`.`hourly_quota` = 0 OR `t`.`hourly_quota` > (
+               SELECT COUNT(*) FROM `'.$logTableName.'`
+                   WHERE server_id = `t`.`server_id` AND
+                   `date_added` BETWEEN DATE_FORMAT(NOW(), "%Y-%m-%d %H:00:00") AND DATE_FORMAT(NOW() + INTERVAL 1 HOUR, "%Y-%m-%d %H:00:00")
+               )
+           )';
+
+           $criteria = new CDbCriteria();
+           $criteria->condition = $condition;
+           return self::processPickGroupServerCriteria($criteria, $currentServerId, $deliveryObject, $params);
+       }
 }

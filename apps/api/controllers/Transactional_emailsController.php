@@ -160,14 +160,13 @@ class Transactional_emailsController extends Controller
          */
         $email->customer_id = $attributes['customer_id'];
 
-
         if (!$email->save()) {
             return $this->renderJson(array(
                 'status'    => 'error',
                 'error'     => $email->shortErrors->getAll(),
             ), 422);
         }
-        
+
         return $this->renderJson(array(
             'status'     => 'success',
             'email_uid'  => $email->email_uid,

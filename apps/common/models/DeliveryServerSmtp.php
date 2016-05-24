@@ -10,7 +10,6 @@
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
 class DeliveryServerSmtp extends DeliveryServer
 {
     protected $serverType = 'smtp';
@@ -43,7 +42,7 @@ class DeliveryServerSmtp extends DeliveryServer
         $params = (array)Yii::app()->hooks->applyFilters('delivery_server_before_send_email', $this->getParamsArray($params), $this);
 
         if ($sent = $this->getMailer()->send($params)) {
-            $sent = array('message_id' => $this->getMailer()->getEmailMessageId());
+            $sent = array('email_id' => $params['email_id']);
             $this->logUsage();
         }
         

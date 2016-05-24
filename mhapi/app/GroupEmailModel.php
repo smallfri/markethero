@@ -4,11 +4,11 @@ namespace App;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class TransactionalEmailModel extends Authenticatable
+class GroupEmailModel extends Authenticatable
 {
     public $timestamps = false;
 
-    protected $table = 'mw_transactional_email';
+    protected $table = 'mw_group_email';
     protected $primaryKey = "email_id";
     /**
      * The attributes that are mass assignable.
@@ -16,7 +16,6 @@ class TransactionalEmailModel extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'customer_id'
 
     ];
 

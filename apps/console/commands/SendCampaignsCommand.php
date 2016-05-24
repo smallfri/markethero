@@ -36,28 +36,28 @@ class SendCampaignsCommand extends CConsoleCommand
     
     // whether this should be verbose and output to console
     public $verbose = 0;
-    
+
     public function init()
     {
         parent::init();
-        
+
         // this will catch exit signals and restore states
         if (CommonHelper::functionExists('pcntl_signal')) {
             declare(ticks = 1);
-            pcntl_signal(SIGINT,  array($this, '_handleExternalSignal'));  
+            pcntl_signal(SIGINT,  array($this, '_handleExternalSignal'));
             pcntl_signal(SIGTERM, array($this, '_handleExternalSignal'));
             pcntl_signal(SIGHUP,  array($this, '_handleExternalSignal'));
         }
-        
+
         register_shutdown_function(array($this, '_restoreStates'));
         Yii::app()->attachEventHandler('onError', array($this, '_restoreStates'));
         Yii::app()->attachEventHandler('onException', array($this, '_restoreStates'));
-        
+
         // if more than 1 hour then something is def. wrong?
         ini_set('max_execution_time', 3600);
         set_time_limit(3600);
     }
-    
+
     public function _handleExternalSignal($signalNumber)
     {
         // this will trigger all the handlers attached via register_shutdown_function
@@ -84,21 +84,21 @@ class SendCampaignsCommand extends CConsoleCommand
             }
         }
     }
-    
+
     public function actionIndex()
     {
         // added in 1.3.4.7
         Yii::app()->hooks->doAction('console_command_send_campaigns_before_process', $this);
-        
+
         $result = $this->process();
-        
+
         // added in 1.3.4.7
         Yii::app()->hooks->doAction('console_command_send_campaigns_after_process', $this);
-        
+
         return $result;
     }
-    
-    protected function process() 
+
+    protected function process()
     {
         if ($this->verbose) {
             echo "[".date("Y-m-d H:i:s")."] Starting the send-campaigns command...\n";
