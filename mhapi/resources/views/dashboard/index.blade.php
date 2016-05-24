@@ -20,7 +20,7 @@
             google.charts.setOnLoadCallback(drawChart);
             google.charts.setOnLoadCallback(drawChart2);
             google.charts.setOnLoadCallback(drawChart3);
-            google.charts.setOnLoadCallback(drawChart4);
+                        google.charts.setOnLoadCallback(drawChart4);
             function drawChart() {
                 var data = new google.visualization.DataTable();
                 data.addColumn('string', 'Day');
@@ -89,9 +89,8 @@
                 data.addColumn('string', 'Month');
                 data.addColumn('number', 'Subscribers');
                 data.addRows([
-                    <?php echo $monthly_subscriptions; ?>
+                    <?php echo $monthly_emails; ?>
                 ]);
-
                 var options = {
                     title: 'Subscribers By Month',
                     width: '100%',
@@ -121,59 +120,37 @@
         </script>
 
         <div class="row">
-
             <div class="col-sm-2 col-xs-6">
-                <a class="quick-button" href="subscribers"  target="_blank">
-                    <i class="fa  fa-users"></i>
+                <a class="quick-button" href="customers" target="_blank">
+                    <i class="fa fa-users"></i>
 
-                    <p>Subscribers</p>
-                    <span class="notification">{!! $subscribers !!}</span>
+                    <p>Customers</p>
+                    <span class="notification red">{!! $customer_count !!}</span>
                 </a>
-            </div>
-            <!--/col-->
+            </div><!--/col-->
             <div class="col-sm-2 col-xs-6">
-                <a class="quick-button" href="subscribers" target="_blank">
-                    <i class="fa   fa-user"></i>
+                <a class="quick-button" href="groups" target="_blank">
+                    <i class="fa fa-user"></i>
 
-                    <p>Unique Subscribers</p>
-                    <span class="notification">{!! $unigue_subscribers !!}</span>
+                    <p>Groups</p>
+                    <span class="notification red">{!! $groups !!}</span>
+                </a>
+            </div><!--/col-->
+            <div class="col-sm-2 col-xs-6">
+                <a class="quick-button" href="group-emails" target="_blank">
+                    <i class="fa fa-envelope"></i>
+
+                    <p>Group Emails</p>
+                    <span class="notification red">{!! $group_emails_count !!}</span>
                 </a>
             </div><!--/col-->
 
             <div class="col-sm-2 col-xs-6">
-                <a class="quick-button" href="campaigns"  target="_blank">
-                    <i class="fa fa-gamepad"></i>
-
-                    <p>Campaigns</p>
-                    <span class="notification red">{!! $campaigns !!}</span>
-                </a>
-            </div><!--/col-->
-
-            <div class="col-sm-2 col-xs-6">
-                <a class="quick-button">
-                    <i class="fa  fa-list"></i>
-
-                    <p>Lists</p>
-                    <span class="notification">{!! $lists !!}</span>
-
-                </a>
-            </div><!--/col-->
-
-            <div class="col-sm-2 col-xs-6">
-                <a class="quick-button" href="transactional-emails"  target="_blank">
+                <a class="quick-button" href="transactional-emails" target="_blank">
                     <i class="fa  fa-envelope"></i>
 
                     <p>Transactional Emails</p>
                     <span class="notification">{!! $transactionals !!}</span>
-
-                </a>
-            </div><!--/col-->
-            <div class="col-sm-2 col-xs-6">
-                <a class="quick-button">
-                    <i class="fa  fa-puzzle-piece"></i>
-
-                    <p>Segments</p>
-                    <span class="notification">{!! $segments !!}</span>
 
                 </a>
             </div><!--/col-->

@@ -48,6 +48,8 @@ class SendTransactionalEmailsCommand extends CConsoleCommand
             'offset'    => $offset
         ));
 
+        print_r($emails);
+
         if (empty($emails)) {
             Yii::app()->options->set('system.cron.transactional_emails.offset', 0);
             return $this;

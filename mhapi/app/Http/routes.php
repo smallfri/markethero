@@ -15,8 +15,10 @@ Route::resource('dashboard', 'DashboardController');
 Route::resource('logs', 'LogsController');
 Route::resource('logs/viewLog', 'LogsController@viewLog');
 Route::resource('subscribers', 'DashboardController@subscribers');
-Route::resource('campaigns', 'DashboardController@campaigns');
+Route::resource('groups', 'DashboardController@groups');
 Route::resource('transactional-emails', 'DashboardController@transactional_emails');
+Route::resource('group-emails', 'DashboardController@group_emails');
+Route::resource('customers', 'DashboardController@customers');
 
 Route::resource('v1/unsubscribe', 'ListSubscribersController@unsubscribe');
 //Route::resource('v1/subscriber', 'ListSubscribersController@search');

@@ -18,7 +18,6 @@
  * @property string $email_id
  * @property string $email_uid
  * @property integer $customer_id
- * @property integer $transactional_email_group_id
  * @property string $to_email
  * @property string $to_name
  * @property string $from_email
@@ -44,30 +43,6 @@ class TransactionalEmail extends ActiveRecord
 {
     const STATUS_SENT    = 'sent';
     const STATUS_UNSENT  = 'unsent';
-    const STATUS_DRAFT = 'draft';
-
-        const STATUS_PENDING_SENDING = 'pending-sending';
-
-        const STATUS_SENDING = 'sending';
-
-        const STATUS_PROCESSING = 'processing';
-
-        const STATUS_PAUSED = 'paused';
-
-        const STATUS_PENDING_DELETE = 'pending-delete';
-
-        const STATUS_IN_COMPLIANCE = 'in-compliance';
-
-        const STATUS_IN_REVIEW = 'in-review‚Ø';
-
-        const TYPE_REGULAR = 'regular';
-
-        const TYPE_AUTORESPONDER = 'autoresponder';
-
-        const BULK_ACTION_PAUSE_UNPAUSE = 'pause-unpause';
-
-        const BULK_ACTION_MARK_SENT = 'mark-sent';
-
 
     public $sendDirectly = false;
 
@@ -76,7 +51,7 @@ class TransactionalEmail extends ActiveRecord
 	 */
 	public function tableName()
 	{
-		return '{{group_email}}';
+		return '{{transactional_email}}';
 	}
 
 	/**
@@ -92,7 +67,7 @@ class TransactionalEmail extends ActiveRecord
             array('send_at', 'date', 'format' => 'yyyy-mm-dd hh:mm:ss'),
 
 			// The following rule is used by search().
-			array('to_email, to_name, from_email, from_name, reply_to_email, reply_to_name, subject, status, transactional_email_group_id', 'safe', 'on'=>'search'),
+			array('to_email, to_name, from_email, from_name, reply_to_email, reply_to_name, subject, status', 'safe', 'on'=>'search'),
 		);
         return CMap::mergeArray($rules, parent::rules());
 	}
@@ -308,7 +283,7 @@ class TransactionalEmail extends ActiveRecord
 	 */
 	public static function model($className=__CLASS__)
 	{
-        return parent::model($className);
+		return parent::model($className);
 	}
 
     public function findByUid($email_uid)
@@ -316,16 +291,6 @@ class TransactionalEmail extends ActiveRecord
         return $this->findByAttributes(array(
             'email_uid' => $email_uid,
         ));
-    }
-
-    public function findEmails($params)
-    {
-
-        $criteria = new CDbCriteria();
-        $criteria->condition = 'status = "pending-sending"';
-//        $criteria->limit = 3;
-
-        return self::model()->find($criteria);
     }
 
     public function generateUid()

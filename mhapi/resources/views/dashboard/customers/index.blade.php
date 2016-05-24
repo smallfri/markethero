@@ -9,7 +9,7 @@
             <hr>
             <ul class="breadcrumb">
                 <li><a href="dashboard">Dashboard</a></li>
-                <li><a href="subscribers">Subscribers</a></li>
+                <li><a href="campaigns">Campaigns</a></li>
             </ul>
             <hr>
         </div>
@@ -18,7 +18,7 @@
             <div class="col-lg-12">
                 <div class="box">
                     <div class="box-header" data-original-title>
-                        <h2><i class="fa fa-user"></i><span class="break"></span>Subscribers</h2>
+                        <h2><i class="fa fa-user"></i><span class="break"></span>Groups</h2>
                         <div class="box-icon">
                             <a href="table.html#" class="btn-minimize"><i class="fa fa-chevron-up"></i></a>
                             <a href="table.html#" class="btn-close"><i class="fa fa-times"></i></a>
@@ -28,32 +28,24 @@
                         <table class="table table-striped table-bordered bootstrap-datatable datatable">
                             <thead>
                             <tr>
-                                <th>Subscriber ID</th>
-                                <th>Subscriber UID</th>
-                                <th>List ID</th>
+                                <th>Customer ID</th>
+                                <th>Name</th>
                                 <th>Email</th>
-                                <th>IP</th>
-                                <th>Source</th>
                                 <th>Status</th>
                                 <th>Date Added</th>
-                                <th>Date Updated</th>
 
                             </tr>
                             </thead>
                             <tbody>
 
-                            @foreach($subscribers AS $row)
+                            @foreach($customers AS $row)
 
                                 <tr>
-                                    <td>{!! $row['subscriber_id'] !!}</td>
-                                    <td>{!! $row['subscriber_uid'] !!}</td>
-                                    <td>{!! $row['list_id'] !!}</td>
+                                    <td>{!! $row['customer_id'] !!}</td>
+                                    <td>{!! $row['first_name'].' '.$row['last_name'] !!}</td>
                                     <td>{!! $row['email'] !!}</td>
-                                    <td>{!! $row['ip_address'] !!}</td>
-                                    <td>{!! $row['source'] !!}</td>
                                     <td>{!! $row['status'] !!}</td>
                                     <td>{!! $row['date_added'] !!}</td>
-                                    <td>{!! $row['last_updated'] !!}</td>
                                 </tr>
                             @endforeach
 

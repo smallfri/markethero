@@ -8,7 +8,7 @@ class Bounce extends Authenticatable
 {
     public $timestamps = false;
 
-    protected $table = 'mw_campaign_bounce_log';
+    protected $table = 'mw_group_email_bounce_log';
     protected $primaryKey = "log_id";
     /**
      * The attributes that are mass assignable.

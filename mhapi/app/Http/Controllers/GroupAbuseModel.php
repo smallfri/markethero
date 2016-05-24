@@ -4,12 +4,12 @@ namespace App;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class DeliveryLogModel extends Authenticatable
+class GroupAbuseModel extends Authenticatable
 {
     public $timestamps = false;
 
-    protected $table = 'mw_group_email_log';
-    protected $primaryKey = "log_id";
+    protected $table = 'mw_group_email_abuse_report';
+    protected $primaryKey = "report_id";
     /**
      * The attributes that are mass assignable.
      *
