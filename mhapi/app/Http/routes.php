@@ -23,6 +23,7 @@ Route::resource('customers', 'DashboardController@customers');
 Route::resource('v1/unsubscribe', 'ListSubscribersController@unsubscribe');
 //Route::resource('v1/subscriber', 'ListSubscribersController@search');
 Route::post('v1/subscriber/update', 'ListSubscribersController@update');
+Route::get('v1/groups/{group_id}/approve', 'ManageGroupController@approve');
 
 
 /*

@@ -389,9 +389,22 @@ class DashboardController extends ApiController
     public function group_emails()
     {
 
-        $Emails = GroupEmailModel::select('mw_group_email.*', 'log.message')
-            ->join('mw_group_email_log AS log', 'log.email_id', '=', 'mw_group_email.email_id')
+        if(isset($_GET['id']))
+
+        {
+            $Emails = GroupEmailModel::select('mw_group_email.*', 'log.message')
+                       ->leftJoin('mw_group_email_log AS log', 'log.email_id', '=', 'mw_group_email.email_id')
+                ->where('group_email_id','=',$_GET['id'])
+                       ->get();
+        }
+        else
+        {
+            $Emails = GroupEmailModel::select('mw_group_email.*', 'log.message')
+            ->leftJoin('mw_group_email_log AS log', 'log.email_id', '=', 'mw_group_email.email_id')
             ->get();
+        }
+
+
 
 
         $data = [

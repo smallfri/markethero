@@ -29,13 +29,13 @@
                             <thead>
                             <tr>
                                 <th>Email ID</th>
-                                <th>Email UID</th>
                                 <th>Group ID</th>
                                 <th>To Email</th>
                                 <th>From Email</th>
                                 <th>Subject</th>
                                 <th>Retries</th>
                                 <th>Status</th>
+                                <th>Log Message</th>
                                 <th>Date Updated</th>
 
                             </tr>
@@ -46,13 +46,13 @@
 
                                 <tr>
                                     <td>{!! $row['email_id'] !!}</td>
-                                    <td>{!! $row['email_uid'] !!}</td>
-                                    <td>{!! $row['group_email_id'] !!}</td>
+                                    <td><a href="group-emails?id=<?php echo $row['group_email_id']?>"><?php echo $row['group_email_id']?></a></td>
                                     <td>{!! $row['to_email'] !!}</td>
                                     <td>{!! $row['from_email'] !!}</td>
                                     <td>{!! $row['subject'] !!}</td>
                                     <td>{!! $row['retries'] !!}</td>
                                     <td>{!! $row['status'] !!}</td>
+                                    <td>{!! $row['message'] !!}</td>
                                     <td>{!! $row['last_updated'] !!}</td>
                                 </tr>
                             @endforeach

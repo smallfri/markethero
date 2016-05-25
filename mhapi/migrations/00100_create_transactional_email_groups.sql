@@ -143,7 +143,6 @@ BEGIN
     `message` text NOT NULL,
     `date_added` datetime NOT NULL,
     PRIMARY KEY (`log_id`),
-    KEY `fk_transactional_email_log_transactional_email1_idx` (`email_id`),
     CONSTRAINT `mw_group_email_log_ibfk_2` FOREIGN KEY (`email_id`) REFERENCES `mw_group_email` (`email_id`)
   ) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8;
 

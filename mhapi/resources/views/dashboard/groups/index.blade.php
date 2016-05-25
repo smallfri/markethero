@@ -35,7 +35,7 @@
                                 <th>Email</th>
                                 <th>Status</th>
                                 <th>Date Added</th>
-
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -43,13 +43,14 @@
                             @foreach($groups AS $row)
 
                                 <tr>
-                                    <td>{!! $row['group_email_id'] !!}</td>
+                                    <td><a href="group-emails?id=<?php echo $row['group_email_id']?>"><?php echo $row['group_email_id']?></a></td>
                                     <td>{!! $row['group_email_uid'] !!}</td>
                                     <td>{!! $row['customer_id'] !!}</td>
                                     <td>{!! $row['first_name'].' '.$row['last_name'] !!}</td>
                                     <td>{!! $row['email'] !!}</td>
                                     <td>{!! $row['status'] !!}</td>
                                     <td>{!! $row['date_added'] !!}</td>
+                                    <td style="text-align: center"><a href="v1/groups/<?php echo $row['group_email_id'];?>/approve" class="btn btn-primary" style="vertical-align: middle">Approve</a></td>
                                 </tr>
                             @endforeach
 
