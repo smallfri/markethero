@@ -14,11 +14,12 @@ use App\CampaignModel;
 use App\Customer;
 use App\DeliveryLogModel;
 use App\GroupAbuseModel;
+use App\GroupControlsModel;
 use App\GroupEmailGroupsModel;
 use App\GroupEmailModel;
 use App\Lists;
 use App\Segment;
-use App\SubscriberModel;
+use Illuminate\Http\Request;
 use App\TransactionalEmailModel;
 use App\User;
 use Carbon\Carbon;
@@ -208,83 +209,82 @@ class DashboardController extends ApiController
          */
 
         $thisWeek
-                   = DB::select(DB::raw('select DATE(date_added) AS date_added,COUNT(report_id) AS count from `mw_group_email_abuse_report` where `date_added` between "'.$this_week1.'" and "'.$this_week2.'" GROUP BY DATE(date_added)'));
-               $lastWeek
-                   = DB::select(DB::raw('select DATE(date_added) AS date_added,COUNT(report_id) AS COUNT from `mw_group_email_abuse_report` where `date_added` between "'.$last_week1.'" and "'.$last_week2.'" GROUP BY DATE(date_added)'));
-       
-               $last_week = [];
-               foreach ($lastWeek AS $key => $value)
-               {
-                   $last_week[date('D', strtotime($value->date_added))] = $value->count;
-               }
-       
-               $this_week = [];
-               foreach ($thisWeek AS $key => $value)
-               {
-                   $this_week[date('D', strtotime($value->date_added))] = $value->count;
-               }
-       
-               $d = 1;
-               $abuse_stats = [];
-               for ($i = 1;$i<7;$i++)
-               {
-       
-                   switch ($d)
-                   {
-                       case 1:
-                           $day = "Sun";
-                           break;
-                       case 2:
-                           $day = "Mon";
-                           break;
-                       case 3:
-                           $day = "Tues";
-                           break;
-                       case 4:
-                           $day = "Wed";
-                           break;
-                       case 5:
-                           $day = "Thurs";
-                           break;
-                       case 6:
-                           $day = "Fri";
-                           break;
-                       case 7:
-                           $day = "Sat";
-                           break;
-       
-                   }
-       
-                   if (array_key_exists($day, $this_week))
-                   {
-                       $abuse_stats[$day] = $day.','.$this_week[$day];
-                   }
-                   else
-                   {
-                       $abuse_stats[$day] = $day.',0';
-                   }
-       
-                   if (array_key_exists($day, $last_week))
-                   {
-                       $abuse_stats[$day] = $abuse_stats[$day].','.$last_week[$day];
-                   }
-                   else
-                   {
-                       $abuse_stats[$day] = $abuse_stats[$day].',0';
-                   }
-       
-                   $d++;
-       
-               }
-               $a_stats = null;
-               foreach ($abuse_stats AS $key => $value)
-               {
-                   $newkey = '"'.$key.'"';
-                   $value = str_replace($key, $newkey, $value);
-                   $a_stats .= '['.$value.'],';
-               }
-               $abuse_stats = rtrim($a_stats, ",");
+            = DB::select(DB::raw('select DATE(date_added) AS date_added,COUNT(report_id) AS count from `mw_group_email_abuse_report` where `date_added` between "'.$this_week1.'" and "'.$this_week2.'" GROUP BY DATE(date_added)'));
+        $lastWeek
+            = DB::select(DB::raw('select DATE(date_added) AS date_added,COUNT(report_id) AS COUNT from `mw_group_email_abuse_report` where `date_added` between "'.$last_week1.'" and "'.$last_week2.'" GROUP BY DATE(date_added)'));
 
+        $last_week = [];
+        foreach ($lastWeek AS $key => $value)
+        {
+            $last_week[date('D', strtotime($value->date_added))] = $value->count;
+        }
+
+        $this_week = [];
+        foreach ($thisWeek AS $key => $value)
+        {
+            $this_week[date('D', strtotime($value->date_added))] = $value->count;
+        }
+
+        $d = 1;
+        $abuse_stats = [];
+        for ($i = 1;$i<7;$i++)
+        {
+
+            switch ($d)
+            {
+                case 1:
+                    $day = "Sun";
+                    break;
+                case 2:
+                    $day = "Mon";
+                    break;
+                case 3:
+                    $day = "Tues";
+                    break;
+                case 4:
+                    $day = "Wed";
+                    break;
+                case 5:
+                    $day = "Thurs";
+                    break;
+                case 6:
+                    $day = "Fri";
+                    break;
+                case 7:
+                    $day = "Sat";
+                    break;
+
+            }
+
+            if (array_key_exists($day, $this_week))
+            {
+                $abuse_stats[$day] = $day.','.$this_week[$day];
+            }
+            else
+            {
+                $abuse_stats[$day] = $day.',0';
+            }
+
+            if (array_key_exists($day, $last_week))
+            {
+                $abuse_stats[$day] = $abuse_stats[$day].','.$last_week[$day];
+            }
+            else
+            {
+                $abuse_stats[$day] = $abuse_stats[$day].',0';
+            }
+
+            $d++;
+
+        }
+        $a_stats = null;
+        foreach ($abuse_stats AS $key => $value)
+        {
+            $newkey = '"'.$key.'"';
+            $value = str_replace($key, $newkey, $value);
+            $a_stats .= '['.$value.'],';
+        }
+        $abuse_stats = rtrim($a_stats, ",");
 
 
         $emails_monthly = GroupEmailModel::select('email_id', 'date_added', DB::raw('count(1) AS count'))
@@ -389,22 +389,20 @@ class DashboardController extends ApiController
     public function group_emails()
     {
 
-        if(isset($_GET['id']))
+        if (isset($_GET['id']))
 
         {
             $Emails = GroupEmailModel::select('mw_group_email.*', 'log.message')
-                       ->leftJoin('mw_group_email_log AS log', 'log.email_id', '=', 'mw_group_email.email_id')
-                ->where('group_email_id','=',$_GET['id'])
-                       ->get();
+                ->leftJoin('mw_group_email_log AS log', 'log.email_id', '=', 'mw_group_email.email_id')
+                ->where('group_email_id', '=', $_GET['id'])
+                ->get();
         }
         else
         {
             $Emails = GroupEmailModel::select('mw_group_email.*', 'log.message')
-            ->leftJoin('mw_group_email_log AS log', 'log.email_id', '=', 'mw_group_email.email_id')
-            ->get();
+                ->leftJoin('mw_group_email_log AS log', 'log.email_id', '=', 'mw_group_email.email_id')
+                ->get();
         }
-
-
 
 
         $data = [
@@ -414,6 +412,26 @@ class DashboardController extends ApiController
         ];
 
         return view('dashboard.group-emails.index', $data);
+    }
+
+    public function controls(Request $request)
+    {
+
+
+        $Controls = GroupControlsModel::find(1);
+        if($request->input('submit'))
+        {
+
+
+        $Controls->groups_at_once = $request->input('groups_at_once');
+        $Controls->emails_at_once = $request->input('emails_at_once');
+        $Controls->change_server_at = $request->input('change_server_at');
+        $Controls->compliance_limit = $request->input('compliance_limit');
+            $Controls->save();
+    }
+        $data = ['controls' => $Controls];
+        return view('dashboard.groups.controls', $data);
+
     }
 
     public function store()

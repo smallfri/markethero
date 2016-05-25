@@ -16,6 +16,7 @@ Route::resource('logs', 'LogsController');
 Route::resource('logs/viewLog', 'LogsController@viewLog');
 Route::resource('subscribers', 'DashboardController@subscribers');
 Route::resource('groups', 'DashboardController@groups');
+Route::resource('controls', 'DashboardController@controls');
 Route::resource('transactional-emails', 'DashboardController@transactional_emails');
 Route::resource('group-emails', 'DashboardController@group_emails');
 Route::resource('customers', 'DashboardController@customers');

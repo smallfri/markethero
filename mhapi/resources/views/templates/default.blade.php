@@ -62,7 +62,6 @@
 			      <span class="icon-bar"></span>
 			</button>
 			<a class="navbar-brand" href="/dashboard"> <img alt="Perfectum Dashboard" src="/mhapi/public/assets/img/market_hero_logo.jpg" style="height: 30px;"/> <span>Market Hero</span></a>
-							
 			<!-- start: Header Menu -->
 			<div class="header-nav">
 				<ul class="nav navbar-nav pull-right">
@@ -316,6 +315,7 @@
 				<div class="sidebar-nav nav-collapse collapse navbar-collapse">
 					<ul class="nav nav-tabs nav-stacked main-menu">
 						<li><a href="dashboard"><i class="fa fa-home icon"></i><span class="hidden-sm"> Dashboard</span></a></li>
+						<li><a href="controls"><i class="fa fa-home icon"></i><span class="hidden-sm"> Controls</span></a></li>
 						{{--<li><a href="ui.html"><i class="fa fa-eye"></i><span class="hidden-sm"> UI Features</span></a></li>--}}
 						{{--<li><a href="forms.html"><i class="fa fa-edit"></i><span class="hidden-sm"> Forms</span></a></li>--}}
 						{{--<li><a href="charts.html"><i class="fa fa-bar-chart-o"></i><span class="hidden-sm"> Charts</span></a></li>--}}
