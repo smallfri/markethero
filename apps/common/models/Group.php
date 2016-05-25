@@ -397,11 +397,12 @@ class Group extends ActiveRecord
 
         $blacklisted = EmailBlacklist::isBlacklisted($this->email, $this);
 
+        print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
         // since 1.3.4.7
         if ($blacklisted&&$this->status!=self::STATUS_BLACKLISTED)
         {
             $criteria = new CDbCriteria();
-            $criteria->compare('subscriber_id', (int)$this->subscriber_id);
+            $criteria->compare('email_id', (int)$this->subscriber_id);
             ListSubscriber::model()->updateAll(array('status' => self::STATUS_BLACKLISTED), $criteria);
             $this->status = self::STATUS_BLACKLISTED;
         }

@@ -30,7 +30,6 @@ class DashboardController extends ApiController
 
     function __construct()
     {
-
     }
 
     public function index()
@@ -419,16 +418,16 @@ class DashboardController extends ApiController
 
 
         $Controls = GroupControlsModel::find(1);
-        if($request->input('submit'))
+        if ($request->input('submit'))
         {
 
 
-        $Controls->groups_at_once = $request->input('groups_at_once');
-        $Controls->emails_at_once = $request->input('emails_at_once');
-        $Controls->change_server_at = $request->input('change_server_at');
-        $Controls->compliance_limit = $request->input('compliance_limit');
+            $Controls->groups_at_once = $request->input('groups_at_once');
+            $Controls->emails_at_once = $request->input('emails_at_once');
+            $Controls->change_server_at = $request->input('change_server_at');
+            $Controls->compliance_limit = $request->input('compliance_limit');
             $Controls->save();
-    }
+        }
         $data = ['controls' => $Controls];
         return view('dashboard.groups.controls', $data);
 

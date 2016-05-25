@@ -16,7 +16,7 @@ class GroupEmailModel extends Authenticatable
      * @var array
      */
     protected $fillable = [
-
+        'status'
     ];
 
     /**

@@ -32,7 +32,7 @@ class BlacklistController extends ApiController
 
         if(empty($Blacklist[0]))
         {
-            Logger::addError('(BlackList) No BlackList Found '.print_r($Blacklist,true),'(BlackList) No BlackList Found');
+            Logger::addProgress('(BlackList) No BlackList Found '.print_r($Blacklist,true),'(BlackList) No BlackList Found');
 
             return $this->respondWithError('No Blacklists found.');
         }
@@ -50,7 +50,7 @@ class BlacklistController extends ApiController
 
         if(empty($Blacklist[0]))
         {
-            Logger::addError('(BlackList) No BlackList Found '.print_r($Blacklist,true),'(BlackList) No BlackList Found');
+            Logger::addProgress('(BlackList) No BlackList Found '.print_r($Blacklist,true),'(BlackList) No BlackList Found');
 
            return $this->respondWithError('No Blacklist found.');
         }
@@ -67,7 +67,7 @@ class BlacklistController extends ApiController
 
         if (empty($Subscriber[0]))
         {
-            Logger::addError('(BlackList) No Subscriber Found '.print_r($email, true),
+            Logger::addProgress('(BlackList) No Subscriber Found '.print_r($email, true),
                 '(BlackList) No Subscriber Found');
 
             return $this->respondWithError('No Subscriber found.');
@@ -79,7 +79,7 @@ class BlacklistController extends ApiController
 
         if (!empty($Exist[0]))
         {
-            Logger::addError('(BlackList) Subscriber is already blaclisted '.print_r($email, true),
+            Logger::addProgress('(BlackList) Subscriber is already blaclisted '.print_r($email, true),
                 '(BlackList) Subscriber is already blaclisted');
 
             return $this->respondWithError('Subscriber is already blaclisted.');

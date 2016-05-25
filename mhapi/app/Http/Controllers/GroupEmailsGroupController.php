@@ -54,7 +54,7 @@ class GroupEmailsGroupController extends ApiController
 
         if (!empty($missing_fields))
         {
-            Logger::addError('(Transaction Email Group) Missing Fields '.print_r($missing_fields, true),
+            Logger::addProgress('(Transaction Email Group) Missing Fields '.print_r($missing_fields, true),
                 '(Transaction Email Group) Missing Fields');
 
             return $this->respondWithError($missing_fields);

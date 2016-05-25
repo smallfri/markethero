@@ -73,7 +73,7 @@ class AbuseController extends ApiController
         }
         else
         {
-            Logger::addError('(Abuse) ERROR '.print_r($Abuse, true),
+            Logger::addProgress('(Abuse) ERROR '.print_r($Abuse, true),
                             '(Abuse) ERROR');
 
             return $this->respondWithError('There was an error with this abuse report.');

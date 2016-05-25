@@ -36,22 +36,22 @@ class GroupEmailSenderBehavior extends CBehavior
         }
 
         $options = Yii::app()->db->createCommand()
-                   ->select('*')
-                   ->from('mw_group_email_options')
-                   ->where('id=:id', array(':id' => 1))
-                   ->queryRow();
+            ->select('*')
+            ->from('mw_group_email_options')
+            ->where('id=:id', array(':id' => 1))
+            ->queryRow();
 
 
-               if ($this->verbose)
-               {
-                   echo "[".date("Y-m-d H:i:s")."] Options ".print_r($options, true)."\n";
-               }
+        if ($this->verbose)
+        {
+            echo "[".date("Y-m-d H:i:s")."] Options ".print_r($options, true)."\n";
+        }
 
-               // Set Options
+        // Set Options
 
-               $emailsAtOnce = $options['emails_at_once'];
+        $emailsAtOnce = $options['emails_at_once'];
 
-               $complianceLimit = $options['compliance_limit'];
+        $complianceLimit = $options['compliance_limit'];
 
 
         // Get count of emails for this group
@@ -131,14 +131,6 @@ class GroupEmailSenderBehavior extends CBehavior
         }
 
 
-
-
-
-
-
-
-
-
         $emails = GroupEmail::model()->findAll(array(
             'condition' => '`status` = "pending-sending" AND `send_at` < NOW() AND `retries` < `max_retries` AND group_email_id = '.$group->group_email_id,
             'order' => 'email_id ASC',
@@ -151,40 +143,36 @@ class GroupEmailSenderBehavior extends CBehavior
         }
 
         $dsParams = array('customerCheckQuota' => false, 'useFor' => array(DeliveryServer::USE_FOR_GROUPS));
-        $server   = DeliveryServer::pickGroupServers(0, $group, $dsParams);
+        $server = DeliveryServer::pickGroupServers(0, $group, $dsParams);
 
-        if (empty($server)) {
-            Yii::log(Yii::t('groups', 'Cannot find a valid server to send the Group email, aborting until a delivery server is available!'), CLogger::LEVEL_ERROR);
+        if (empty($server))
+        {
+            Yii::log(Yii::t('groups',
+                'Cannot find a valid server to send the Group email, aborting until a delivery server is available!'),
+                CLogger::LEVEL_ERROR);
 
-            if ($this->verbose) {
+            if ($this->verbose)
+            {
                 echo "\n[".date("Y-m-d H:i:s")."] Unable to find a valid delivery server, aborting until a delivery server is available!\n";
             }
 
             return 0;
         }
 
-        if ($this->verbose) {
+        if ($this->verbose)
+        {
             echo "OK\n";
         }
 
         // put proper status
 //        $group->saveStatus(Group::STATUS_PROCESSING);
 
-        if ($this->verbose) {
+        if ($this->verbose)
+        {
             $timeStart = microtime(true);
             echo "[".date("Y-m-d H:i:s")."] Campaign status has been set to PROCESSING.\n";
             echo "[".date("Y-m-d H:i:s")."] Searching for emails to send for this group...\n";
         }
-
-
-
-
-
-
-
-
-
-
 
 
         try
@@ -222,8 +210,9 @@ class GroupEmailSenderBehavior extends CBehavior
                 'useFor' => array(DeliveryServer::USE_FOR_CAMPAIGNS),
             );
 
-            if ($this->verbose) {
-                echo "[".date("Y-m-d H:i:s")."] Running email cleanup for " . count($emails) . " emails...\n";
+            if ($this->verbose)
+            {
+                echo "[".date("Y-m-d H:i:s")."] Running email cleanup for ".count($emails)." emails...\n";
             }
 
             $beforeForeachTime = microtime(true);
@@ -254,27 +243,34 @@ class GroupEmailSenderBehavior extends CBehavior
 //                }
 //
                 // if blacklisted, goodbye.
-//                if ($email->getIsBlacklisted()) {
-//                    if ($this->verbose) {
-//                        echo "\n[".date("Y-m-d H:i:s")."] The email address has been found into the blacklist, sending is denied!\n";
-//                    }
-//                    continue;
-//                }
+                if ($email->getIsBlacklisted())
+                {
+                    if ($this->verbose)
+                    {
+                        echo "\n[".date("Y-m-d H:i:s")."] The email address has been found in the blacklist, sending is denied!\n";
+                    }
+                    continue;
+                }
 ////
 //                if ($this->verbose) {
 //                    echo "OK, took " . round(microtime(true) - $timeStart, 3) . " seconds.\n";
 //                    echo "[".date("Y-m-d H:i:s")."] Checking server sending quota...";
-                    $timeStart = microtime(true);
+                $timeStart = microtime(true);
 //                }
 //
 //                // in case the server is over quota
-                if ($server->getIsOverQuota()) {
-                    if ($this->verbose) {
+                if ($server->getIsOverQuota())
+                {
+                    if ($this->verbose)
+                    {
                         echo "\n[".date("Y-m-d H:i:s")."] The delivery server is over quota, picking another one...\n";
                     }
                     $currentServerId = $server->server_id;
-                    if (!($server = DeliveryServer::pickGroupServers($currentServerId, $group, $dsParams))) {
-                        throw new Exception(Yii::t('groups', 'Cannot find a valid server to send the campaign email, aborting until a delivery server is available!'), 99);
+                    if (!($server = DeliveryServer::pickGroupServers($currentServerId, $group, $dsParams)))
+                    {
+                        throw new Exception(Yii::t('groups',
+                            'Cannot find a valid server to send the campaign email, aborting until a delivery server is available!'),
+                            99);
                     }
                 }
 
@@ -288,7 +284,7 @@ class GroupEmailSenderBehavior extends CBehavior
 //                $server = DeliveryServer::pickGroupServers($currentServerId, $group, $dsParams);
 //
 //                if ($changeServerAt > 0 && $processedCounter >= $changeServerAt && !$serverHasChanged) {
-//                    $currentServerId = 5;
+//                    $currentServerId = $server->server_id;;
 //                    if ($newServer = DeliveryServer::pickServer($currentServerId, $group, $dsParams)) {
 //                        $server = $newServer;
 //                        print_r($server);
@@ -317,35 +313,20 @@ class GroupEmailSenderBehavior extends CBehavior
 
 
                 $headerPrefix = 'X-Mw-';
-//                $emailParams['body'] = $email['body'];
-//                $emailParams['subject'] = $email['subject'];
-//                $emailParams['to'] = $email['to_email'];
-//                $emailParams['sender'] = $email['from_email'];
-//                $emailParams['replyTo'] = $email['from_email'];
-//                $emailParams['from_email'] = $email['from_email'];
-//                $emailParams['from_name'] = $email['from_name'];
-//                $emailParams['on-behalf-of'] = $email['from_email'];
-//                $emailParams['reply_to_email'] = $email['from_email'];
-//                $emailParams['email_id'] = $email['email_id'];
-//
-//
-
-
-
                 $emailParams = array(
-                                         'from'          => array($email['from_email'] => $email['from_name']),
-                                         'fromName'      => $email['from_name'],
-                                         'email_id'      => $email['email_id'],
-                                         'from_email'      => $email['from_email'],
-                                         'return_path'      => 'bounces@marketherobounce1.com',
-                                         'Return_Path'      => 'bounces@marketherobounce1.com',
-                                         'from_name'      => $email['from_name'],
-                                         'to'            => array($email['to_email'] => $email['to_name']),
-                                         'subject'       => $email['subject'],
-                                         'replyTo'       => $email['reply_to_email'],
-                                         'body'          => $email['body'],
-                                         'plainText'     => $email['plain_text'],
-                                     );
+                    'from' => array($email['from_email'] => $email['from_name']),
+                    'fromName' => $email['from_name'],
+                    'email_id' => $email['email_id'],
+                    'from_email' => $email['from_email'],
+                    'return_path' => 'bounces@marketherobounce1.com',
+                    'Return_Path' => 'bounces@marketherobounce1.com',
+                    'from_name' => $email['from_name'],
+                    'to' => array($email['to_email'] => $email['to_name']),
+                    'subject' => $email['subject'],
+                    'replyTo' => $email['reply_to_email'],
+                    'body' => $email['body'],
+                    'plainText' => $email['plain_text'],
+                );
 
                 $emailParams['headers'] = array(
                     $headerPrefix.'Group-Uid' => $group->group_email_uid,
@@ -369,23 +350,17 @@ class GroupEmailSenderBehavior extends CBehavior
 //                    foreach ($headers as $name => $value) {
 //                        $headers[$name] = str_replace(array_keys($headerSearchReplace), array_values($headerSearchReplace), $value);
 //                    }
-//                    $emailParaΩms['headers'] = array_merge($headers, $emailParams['headers']);
+//                    $emailParams['headers'] = array_merge($headers, $emailParams['headers']);
 //                    unset($headers);
 //                }
                 $emailParams['mailerPlugins'] = $mailerPlugins;
 
-
-//
 //                $processedCounter++;
 //                if ($processedCounter >= $changeServerAt) {
 //                    $serverHasChanged = false;
 //                }
 
-
                 $sent = $server->sendEmail($emailParams);
-
-                print_r($sent);
-
                 $email->status = 'sent';
                 $email->save();
 

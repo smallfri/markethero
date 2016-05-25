@@ -296,7 +296,7 @@
 						</a>
 						<ul class="dropdown-menu">
 							<li><a href="index.html#"><i class="fa fa-user"></i> Profile</a></li>
-							<li><a href="login.html"><i class="fa fa-off"></i> Logout</a></li>
+							<li><a href="logout"><i class="fa fa-off"></i> Logout</a></li>
 						</ul>
 					</li>
 					<!-- end: User Dropdown -->
