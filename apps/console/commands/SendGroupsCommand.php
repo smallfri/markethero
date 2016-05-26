@@ -115,15 +115,13 @@ class SendGroupsCommand extends CConsoleCommand
 
 
         $groups = Yii::app()->db->createCommand()
-                   ->select('ge.group_email_id, cl.threshold, gec.*')
-                   ->from('mw_group_email ge')
-                   ->join('mw_group_email_groups geg',
-                       'ge.group_email_id=geg.group_email_id')
+                   ->select('geg.group_email_id, cl.threshold, gec.*')
+                   ->from('mw_group_email_groups geg')
                    ->join('mw_group_email_compliance gec',
-                       'gec.group_email_id=ge.group_email_id')
+                       'gec.group_email_id=geg.group_email_id')
                    ->join('mw_compliance_levels cl', 'cl.id = gec.compliance_level_type_id')
-                   ->where('gec.compliance_status != "sent"')
-                   ->group('ge.group_email_id')
+                   ->where('gec.compliance_status != "sent" AND geg.status = "pending-sending"')
+                   ->group('geg.group_email_id')
                    ->limit($limit)
                    ->queryAll();
         

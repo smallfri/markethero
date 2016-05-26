@@ -145,24 +145,24 @@ class Group extends ActiveRecord
         return parent::beforeValidate();
     }
 
-    protected function beforeSave()
-    {
-
-        if (empty($this->plain_text)&&!empty($this->body))
-        {
-            $this->plain_text = CampaignHelper::htmlToText($this->body);
-        }
-        if (empty($this->email_uid))
-        {
-            $this->email_uid = $this->generateUid();
-        }
-        if (EmailBlacklist::isBlacklisted($this->to_email))
-        {
-            $this->addError('to_email', Yii::t('group_emails', 'This email address is blacklisted!'));
-            return false;
-        }
-        return parent::beforeSave();
-    }
+//    protected function beforeSave()
+//    {
+//
+//        if (empty($this->plain_text)&&!empty($this->body))
+//        {
+//            $this->plain_text = CampaignHelper::htmlToText($this->body);
+//        }
+////        if (empty($this->email_uid))
+////        {
+////            $this->email_uid = $this->generateUid();
+////        }
+//        if (EmailBlacklist::isBlacklisted($this->to_email))
+//        {
+//            $this->addError('to_email', Yii::t('group_emails', 'This email address is blacklisted!'));
+//            return false;
+//        }
+//        return parent::beforeSave();
+//    }
 
     // override parent implementation
     public function save($runValidation = true, $attributes = null)
@@ -321,13 +321,13 @@ class Group extends ActiveRecord
         return parent::model($className);
     }
 
-    public function findByUid($email_uid)
-    {
-
-        return $this->findByAttributes(array(
-            'email_uid' => $email_uid,
-        ));
-    }
+//    public function findByUid($email_uid)
+//    {
+//
+//        return $this->findByAttributes(array(
+//            'email_uid' => $email_uid,
+//        ));
+//    }
 
     public function getByKey($groupId)
     {
@@ -339,25 +339,25 @@ class Group extends ActiveRecord
         return self::model()->find($criteria);
     }
 
-    public function generateUid()
-    {
+//    public function generateUid()
+//    {
+//
+//        $unique = StringHelper::uniqid();
+//        $exists = $this->findByUid($unique);
+//
+//        if (!empty($exists))
+//        {
+//            return $this->generateUid();
+//        }
+//
+//        return $unique;
+//    }
 
-        $unique = StringHelper::uniqid();
-        $exists = $this->findByUid($unique);
-
-        if (!empty($exists))
-        {
-            return $this->generateUid();
-        }
-
-        return $unique;
-    }
-
-    public function getUid()
-    {
-
-        return $this->email_uid;
-    }
+//    public function getUid()
+//    {
+//
+//        return $this->email_uid;
+//    }
 
     public function getSendAt()
     {
