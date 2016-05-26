@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c9b7ec24-babb-4088-b4f3-f3a6cadded3c" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/common/models/Group.php" afterPath="$PROJECT_DIR$/apps/common/models/Group.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/console/commands/SendGroupsCommand.php" afterPath="$PROJECT_DIR$/apps/console/commands/SendGroupsCommand.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php" afterPath="$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsGroupController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsGroupController.php" />
     </list>
     <ignored path="MarketHero.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -41,8 +37,8 @@
       <file leaf-file-name="GroupEmailSenderBehavior.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.8062563">
-              <caret line="159" column="109" selection-start-line="0" selection-start-column="0" selection-end-line="770" selection-end-column="1" />
+            <state vertical-scroll-proportion="1.1150353">
+              <caret line="147" column="8" selection-start-line="147" selection-start-column="8" selection-end-line="147" selection-end-column="8" />
               <folding>
                 <element signature="e#2403#4277#0#PHP" expanded="false" />
               </folding>
@@ -734,12 +730,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php</url>
-          <line>457</line>
+          <line>455</line>
           <option name="timeStamp" value="10" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php</url>
-          <line>681</line>
+          <line>679</line>
           <option name="timeStamp" value="11" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
@@ -1161,8 +1157,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8062563">
-          <caret line="159" column="109" selection-start-line="0" selection-start-column="0" selection-end-line="770" selection-end-column="1" />
+        <state vertical-scroll-proportion="1.1150353">
+          <caret line="147" column="8" selection-start-line="147" selection-start-column="8" selection-end-line="147" selection-end-column="8" />
           <folding>
             <element signature="e#2403#4277#0#PHP" expanded="false" />
           </folding>

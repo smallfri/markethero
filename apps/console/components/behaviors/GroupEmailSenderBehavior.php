@@ -146,8 +146,6 @@ class GroupEmailSenderBehavior extends CBehavior
                 array(':id' => (int)$group->group_email_id))
             ->queryRow();
 
-        print_r($group->group_email_id);
-
         if ($count['count']<1)
         {
             Group::model()
