@@ -1,6 +1,8 @@
-<?php defined('MW_PATH') || exit('No direct script access allowed');
- 
-class SendGroupsCommand extends CConsoleCommand 
+<?php
+
+defined('MW_PATH') || exit('No direct script access allowed');
+
+class SendGroupsCommand extends CConsoleCommand
 {
     // current groups
     protected $_groups;

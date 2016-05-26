@@ -18,6 +18,7 @@ return array(
 
     'preload' => array(
         'consoleSystemInit'
+
     ),
 
     'import' => array(

@@ -38,7 +38,7 @@ class SendTransactionalEmailsCommand extends CConsoleCommand
 
     protected function process()
     {
-        $offset = (int)Yii::app()->options->get('system.cron.transactional_emails.offset', 0);
+        $offset = 0;
         $limit  = 100;
 
         $emails = TransactionalEmail::model()->findAll(array(
@@ -57,6 +57,8 @@ class SendTransactionalEmailsCommand extends CConsoleCommand
         Yii::app()->options->set('system.cron.transactional_emails.offset', $offset + $limit);
 
         foreach ($emails as $email) {
+            print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
+
             $email->send();
         }
 

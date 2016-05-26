@@ -45,7 +45,7 @@ return array(
         'common.components.web.auth.*',
         'common.components.web.response.*',
         'common.components.web.widgets.*',
-        'common.models.*',  
+        'common.models.*',
         'common.models.option.*',
         'common.vendors.Urlify.*',
     ),

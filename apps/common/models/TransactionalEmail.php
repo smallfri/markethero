@@ -197,9 +197,11 @@ class TransactionalEmail extends ActiveRecord
             $server = $servers[$cid];
         }
 
-        if (!empty($this->customer_id) && $this->customer->getIsOverQuota()) {
-            return false;
-        }
+//        if (!empty($this->customer_id) && $this->customer->getIsOverQuota()) {
+//            print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
+//
+//            return false;
+//        }
 
         $emailParams = array(
             'fromName'      => $this->from_name,
