@@ -25,7 +25,7 @@
                         </div>
                     </div>
                     <div class="box-content">
-                        <form class="form-horizontal" role="form">
+                        {!! Form::open(array( 'method'=>'post')) !!}
                             <div class="form-group">
                                 <label class="control-label col-sm-2" for="email">Groups At Once:</label>
                                 <div class="col-sm-10">
