@@ -342,6 +342,7 @@ class DashboardController extends ApiController
 
         $Groups = GroupEmailGroupsModel::select('mw_customer.*', 'mw_group_email_groups.status AS status', 'mw_group_email_groups.*')
             ->Join('mw_customer', 'mw_customer.customer_id', '=', 'mw_group_email_groups.customer_id')
+            ->orderBy('mw_group_email_groups.group_email_id', 'desc')
             ->get();
 
         $data = [
@@ -373,6 +374,7 @@ class DashboardController extends ApiController
 
         $Emails = TransactionalEmailModel::select('mw_transactional_email.*', 'log.message')
             ->join('mw_transactional_email_log AS log', 'log.email_id', '=', 'mw_transactional_email.email_id')
+            ->orderBy('mw_transactional_email.email_id', 'desc')
             ->get();
 
 
@@ -394,12 +396,14 @@ class DashboardController extends ApiController
             $Emails = GroupEmailModel::select('mw_group_email.*', 'log.message')
                 ->leftJoin('mw_group_email_log AS log', 'log.email_id', '=', 'mw_group_email.email_id')
                 ->where('group_email_id', '=', $_GET['id'])
+                ->orderBy('group_email_id', 'desc')
                 ->get();
         }
         else
         {
             $Emails = GroupEmailModel::select('mw_group_email.*', 'log.message')
                 ->leftJoin('mw_group_email_log AS log', 'log.email_id', '=', 'mw_group_email.email_id')
+                ->orderBy('group_email_id', 'desc')
                 ->get();
         }
 

@@ -25,7 +25,7 @@
                         </div>
                     </div>
                     <div class="box-content">
-                        <table class="table table-striped table-bordered bootstrap-datatable datatable">
+                        <table class="table table-striped table-bordered bootstrap-datatable datatable" id="groups">
                             <thead>
                             <tr>
                                 <th>Group ID</th>
