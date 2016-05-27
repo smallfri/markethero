@@ -32,6 +32,19 @@ class GroupEmailSenderBehavior extends CBehavior
 
         $group = $this->getOwner();
 
+        if (!$group->getIsActive())
+        {
+            Yii::log(Yii::t('groups', 'This customer is inactive!'), CLogger::LEVEL_ERROR);
+            $group->saveStatus(Group::STATUS_PAUSED);
+
+            if ($this->verbose)
+            {
+                echo "[".date("Y-m-d H:i:s")."] The above customer is not active, group has been paused!\n";
+            }
+
+            return 0;
+        }
+
         if ($this->verbose)
         {
             echo "[".date("Y-m-d H:i:s")."] Sending group id ".$group->group_email_id."!\n";
@@ -125,39 +138,18 @@ class GroupEmailSenderBehavior extends CBehavior
         }
         elseif ($group->compliance->compliance_status=='approved')
         {
-            // Update emails to pending-sending status if this Group is no longer under review
-            GroupEmail::model()
-                ->updateAll(['status' => 'pending-sending'],
-                    'group_email_id= '.$group['group_email_id'].' AND status = "in-review"'
-                );
+            $this->setGroupEmailStatusInReview($group);
+
         }
 
 
-        $emails = GroupEmail::model()->findAll(array(
-            'condition' => '`status` = "pending-sending" AND `send_at` < NOW() AND `retries` < `max_retries` AND group_email_id = '.$group->group_email_id,
-            'order' => 'email_id ASC',
-            'limit' => 100
-        ));
+        $emails = $this->findAllGroupEmail($group);
 
-        $count = Yii::app()->db->createCommand()
-            ->select('count(*) as count')
-            ->from('mw_group_email')
-            ->where('group_email_id=:id AND (status = "pending-sending" OR status ="in-review")',
-                array(':id' => (int)$group->group_email_id))
-            ->queryRow();
+        $this->setGroupStatus($group);
 
-        if ($count['count']<1)
+        if ($this->verbose)
         {
-            Group::model()
-                ->updateAll(['status' => 'sent'],
-                    'group_email_id= '.$group->group_email_id.' AND status = "pending-sending"'
-                );
-
-            if ($this->verbose)
-            {
-                echo "[".date("Y-m-d H:i:s")."] No emails pending-sending or in-review, setting group to sent...\n";
-
-            }
+            echo "[".date("Y-m-d H:i:s")."] No emails pending-sending or in-review, setting group to sent...\n";
 
         }
 
@@ -188,9 +180,6 @@ class GroupEmailSenderBehavior extends CBehavior
         {
             echo "OK\n";
         }
-
-        // put proper status
-//        $group->saveStatus(Group::STATUS_PROCESSING);
 
         if ($this->verbose)
         {
@@ -242,6 +231,12 @@ class GroupEmailSenderBehavior extends CBehavior
 
             $beforeForeachTime = microtime(true);
             $sendingAloneTime = 0;
+
+            // sort emails
+            $emails = $this->sortEmails($emails);
+
+            // put proper status
+            $group->saveStatus(Group::STATUS_PROCESSING);
 
             $index = 0;
             foreach ($emails AS $email)
@@ -386,13 +381,9 @@ class GroupEmailSenderBehavior extends CBehavior
 //                }
 
                 $sent = $server->sendEmail($emailParams);
-                $email->status = 'sent';
-                $email->save();
+                $this->setStatus($email);
 
-                $log = new GroupEmailLog();
-                $log->email_id = $sent['email_id'];
-                $log->message = $server->getMailer()->getLog();
-                $log->save(false);
+                $this->logGroupEmailDelivery($sent, $server);
 
                 if ($this->verbose)
                 {
@@ -427,6 +418,80 @@ class GroupEmailSenderBehavior extends CBehavior
 
 
         return 0;
+    }
+
+    /**
+     * @param $email
+     */
+    public function setStatus($email)
+    {
+
+        $email->status = 'sent';
+        $email->save();
+    }
+
+    /**
+     * @param $sent
+     * @param $server
+     */
+    public function logGroupEmailDelivery($sent, $server)
+    {
+
+        $log = new GroupEmailLog();
+        $log->email_id = $sent['email_id'];
+        $log->message = $server->getMailer()->getLog();
+        $log->save(false);
+    }
+
+    /**
+     * @param $group
+     */
+    public function setGroupStatus($group)
+    {
+
+        $count = Yii::app()->db->createCommand()
+            ->select('count(*) as count')
+            ->from('mw_group_email')
+            ->where('group_email_id=:id AND (status = "pending-sending" OR status ="in-review")',
+                array(':id' => (int)$group->group_email_id))
+            ->queryRow();
+
+        if ($count['count']<1)
+        {
+            Group::model()
+                ->updateAll(['status' => 'sent'],
+                    'group_email_id= '.$group->group_email_id.' AND status = "pending-sending"'
+                );
+
+        }
+    }
+
+    /**
+     * @param $group
+     * @return array|mixed|null
+     */
+    public function findAllGroupEmail($group)
+    {
+
+        $emails = GroupEmail::model()->findAll(array(
+            'condition' => '`status` = "pending-sending" AND `send_at` < NOW() AND `retries` < `max_retries` AND group_email_id = '.$group->group_email_id,
+            'order' => 'email_id ASC',
+            'limit' => 100
+        ));
+        return $emails;
+    }
+
+    /**
+     * @param $group
+     */
+    public function setGroupEmailStatusInReview($group)
+    {
+
+// Update emails to pending-sending status if this Group is no longer under review
+        GroupEmail::model()
+            ->updateAll(['status' => 'pending-sending'],
+                'group_email_id= '.$group['group_email_id'].' AND status = "in-review"'
+            );
     }
 
     protected function logDelivery(ListSubscriber $subscriber, $message, $status, $messageId = null)
@@ -498,39 +563,39 @@ class GroupEmailSenderBehavior extends CBehavior
      * 1. Group the subscribers by domain
      * 2. Sort them so that we don't send to same domain two times in a row.
      */
-    protected function sortSubscribers($subscribers)
+    protected function sortEmails($emails)
     {
 
-        $subscribersCount = count($subscribers);
-        $_subscribers = array();
-        foreach ($subscribers as $index => $subscriber)
+        $emailsCount = count($emails);
+        $_emails = array();
+        foreach ($emails as $index => $email)
         {
-            $emailParts = explode('@', $subscriber->email);
+            $emailParts = explode('@', $email->to_email);
             $domainName = $emailParts[1];
-            if (!isset($_subscribers[$domainName]))
+            if (!isset($_emails[$domainName]))
             {
-                $_subscribers[$domainName] = array();
+                $_emails[$domainName] = array();
             }
-            $_subscribers[$domainName][] = $subscriber;
-            unset($subscribers[$index]);
+            $_emails[$domainName][] = $email;
+            unset($emails[$index]);
         }
 
-        $subscribers = array();
-        while ($subscribersCount>0)
+        $emails = array();
+        while ($emailsCount>0)
         {
-            foreach ($_subscribers as $domainName => $subs)
+            foreach ($_emails as $domainName => $subs)
             {
                 foreach ($subs as $index => $sub)
                 {
-                    $subscribers[] = $sub;
-                    unset($_subscribers[$domainName][$index]);
+                    $emails[] = $sub;
+                    unset($_emails[$domainName][$index]);
                     break;
                 }
             }
-            $subscribersCount--;
+            $emailsCount--;
         }
 
-        return $subscribers;
+        return $emails;
     }
 
     protected function prepareEmail($subscriber)
@@ -641,91 +706,91 @@ class GroupEmailSenderBehavior extends CBehavior
         );
     }
 
-    protected function markgroupsent()
-    {
-
-        $campaign = $this->getOwner();
-
-        if ($campaign->isAutoresponder)
-        {
-            $campaign->saveStatus(Campaign::STATUS_SENDING);
-            return;
-        }
-
-        $campaign->saveStatus(Campaign::STATUS_SENT);
-
-        if (Yii::app()->options->get('system.customer.action_logging_enabled', true))
-        {
-            $list = $campaign->list;
-            $customer = $list->customer;
-            if (!($logAction = $customer->asa('logAction')))
-            {
-                $customer->attachBehavior('logAction', array(
-                    'class' => 'customer.components.behaviors.CustomerActionLogBehavior',
-                ));
-                $logAction = $customer->asa('logAction');
-            }
-            $logAction->groupsent($campaign);
-        }
-
-        // since 1.3.4.6
-        Yii::app()->hooks->doAction('console_command_send_groups_campaign_sent', $campaign);
-
-        $this->sendgroupstats();
-
-        // since 1.3.5.3
-        $campaign->tryReschedule(true);
-    }
-
-    protected function sendgroupstats()
-    {
-
-        $campaign = $this->getOwner();
-        if (empty($campaign->option->email_stats))
-        {
-            return $this;
-        }
-
-        if (!($server = DeliveryServer::pickServer(0, $campaign)))
-        {
-            return $this;
-        }
-
-        $campaign->attachBehavior('stats', array(
-            'class' => 'customer.components.behaviors.groupstatsProcessorBehavior',
-        ));
-        $viewData = compact('campaign');
-
-        // prepare and send the email.
-        $emailTemplate = Yii::app()->options->get('system.email_templates.common');
-        $emailBody = Yii::app()->command->renderFile(Yii::getPathOfAlias('console.views.campaign-stats').'.php',
-            $viewData, true);
-        $emailTemplate = str_replace('[CONTENT]', $emailBody, $emailTemplate);
-
-        $recipients = explode(',', $campaign->option->email_stats);
-        $recipients = array_map('trim', $recipients);
-
-        $emailParams = array();
-        $emailParams['fromName'] = $campaign->from_name;
-        $emailParams['replyTo'] = array($campaign->reply_to => $campaign->from_name);
-        $emailParams['subject'] = Yii::t('campaign_reports',
-            'The campaign {name} has finished sending, here are the stats', array('{name}' => $campaign->name));
-        $emailParams['body'] = $emailTemplate;
-
-        foreach ($recipients as $recipient)
-        {
-            if (!filter_var($recipient, FILTER_VALIDATE_EMAIL))
-            {
-                continue;
-            }
-            $emailParams['to'] = array($recipient => $campaign->from_name);
-            $server->setDeliveryFor(DeliveryServer::DELIVERY_FOR_CAMPAIGN)
-                ->setDeliveryObject($campaign)
-                ->sendEmail($emailParams);
-        }
-
-        return $this;
-    }
+//    protected function markgroupsent()
+//    {
+//
+//        $campaign = $this->getOwner();
+//
+//        if ($campaign->isAutoresponder)
+//        {
+//            $campaign->saveStatus(Campaign::STATUS_SENDING);
+//            return;
+//        }
+//
+//        $campaign->saveStatus(Campaign::STATUS_SENT);
+//
+//        if (Yii::app()->options->get('system.customer.action_logging_enabled', true))
+//        {
+//            $list = $campaign->list;
+//            $customer = $list->customer;
+//            if (!($logAction = $customer->asa('logAction')))
+//            {
+//                $customer->attachBehavior('logAction', array(
+//                    'class' => 'customer.components.behaviors.CustomerActionLogBehavior',
+//                ));
+//                $logAction = $customer->asa('logAction');
+//            }
+//            $logAction->groupsent($campaign);
+//        }
+//
+//        // since 1.3.4.6
+//        Yii::app()->hooks->doAction('console_command_send_groups_campaign_sent', $campaign);
+//
+//        $this->sendgroupstats();
+//
+//        // since 1.3.5.3
+//        $campaign->tryReschedule(true);
+//    }
+//
+//    protected function sendgroupstats()
+//    {
+//
+//        $campaign = $this->getOwner();
+//        if (empty($campaign->option->email_stats))
+//        {
+//            return $this;
+//        }
+//
+//        if (!($server = DeliveryServer::pickServer(0, $campaign)))
+//        {
+//            return $this;
+//        }
+//
+//        $campaign->attachBehavior('stats', array(
+//            'class' => 'customer.components.behaviors.groupstatsProcessorBehavior',
+//        ));
+//        $viewData = compact('campaign');
+//
+//        // prepare and send the email.
+//        $emailTemplate = Yii::app()->options->get('system.email_templates.common');
+//        $emailBody = Yii::app()->command->renderFile(Yii::getPathOfAlias('console.views.campaign-stats').'.php',
+//            $viewData, true);
+//        $emailTemplate = str_replace('[CONTENT]', $emailBody, $emailTemplate);
+//
+//        $recipients = explode(',', $campaign->option->email_stats);
+//        $recipients = array_map('trim', $recipients);
+//
+//        $emailParams = array();
+//        $emailParams['fromName'] = $campaign->from_name;
+//        $emailParams['replyTo'] = array($campaign->reply_to => $campaign->from_name);
+//        $emailParams['subject'] = Yii::t('campaign_reports',
+//            'The campaign {name} has finished sending, here are the stats', array('{name}' => $campaign->name));
+//        $emailParams['body'] = $emailTemplate;
+//
+//        foreach ($recipients as $recipient)
+//        {
+//            if (!filter_var($recipient, FILTER_VALIDATE_EMAIL))
+//            {
+//                continue;
+//            }
+//            $emailParams['to'] = array($recipient => $campaign->from_name);
+//            $server->setDeliveryFor(DeliveryServer::DELIVERY_FOR_CAMPAIGN)
+//                ->setDeliveryObject($campaign)
+//                ->sendEmail($emailParams);
+//        }
+//
+//        return $this;
+//    }
 
     protected function getFailStatusFromResponse($response)
     {

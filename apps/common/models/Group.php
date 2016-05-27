@@ -425,4 +425,18 @@ class Group extends ActiveRecord
         return Yii::app()->getDb()->createCommand()->update($this->tableName(), $attributes, 'group_email_id = :geid', array(':geid' => (int)$this->group_email_id));
     }
 
+
+    // since 1.3.5
+        public function getIsActive()
+        {
+
+            $customer = Yii::app()->db->createCommand()
+                        ->select('status')
+                        ->from('mw_customer')
+                        ->where('customer_id=:id', array(':id' => $this->customer_id))
+                        ->queryRow();
+
+            return $customer['status'];
+        }
+
 }
