@@ -18,7 +18,7 @@
             <div class="col-lg-12">
                 <div class="box">
                     <div class="box-header" data-original-title>
-                        <h2><i class="fa fa-user"></i><span class="break"></span>Groups</h2>
+                        <h2><i class="fa fa-user"></i><span class="break"></span>Customers</h2>
                         <div class="box-icon">
                             <a href="table.html#" class="btn-minimize"><i class="fa fa-chevron-up"></i></a>
                             <a href="table.html#" class="btn-close"><i class="fa fa-times"></i></a>

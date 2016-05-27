@@ -139,27 +139,27 @@ class GroupEmailSenderBehavior extends CBehavior
             'limit' => 100
         ));
 
-        $count = Yii::app()->db->createCommand()
-            ->select('count(*) as count')
-            ->from('mw_group_email')
-            ->where('group_email_id=:id AND status = "pending-sending" OR status ="in-review"',
-                array(':id' => (int)$group->group_email_id))
-            ->queryRow();
+//        $count = Yii::app()->db->createCommand()
+//            ->select('count(*) as count')
+//            ->from('mw_group_email')
+//            ->where('group_email_id=:id AND (status = "pending-sending" OR status ="in-review")',
+//                array(':id' => (int)$group->group_email_id))
+//            ->queryRow();
 
-        if ($count['count']<1)
-        {
-            Group::model()
-                ->updateAll(['status' => 'sent'],
-                    'group_email_id= '.$group->group_email_id.' AND status = "pending-sending"'
-                );
-
-            if ($this->verbose)
-            {
-                echo "[".date("Y-m-d H:i:s")."] No emails pending-sending or in-review, setting group to sent...\n";
-
-            }
-
-        }
+//        if ($count['count']<1)
+//        {
+//            Group::model()
+//                ->updateAll(['status' => 'sent'],
+//                    'group_email_id= '.$group->group_email_id.' AND status = "pending-sending"'
+//                );
+//
+//            if ($this->verbose)
+//            {
+//                echo "[".date("Y-m-d H:i:s")."] No emails pending-sending or in-review, setting group to sent...\n";
+//
+//            }
+//
+//        }
 
         if ($this->verbose)
         {
