@@ -84,7 +84,7 @@ class GroupEmailsGroupController extends ApiController
         }
 
         Logger::addProgress('(Transaction Email Group) Created '.print_r($GroupEmailGroups, true),
-                        '(Transaction Email Group) Created');
+            '(Transaction Email Group) Created');
 
         return $this->respond(['group' => $GroupEmailGroups->group_email_id]);
 
@@ -92,7 +92,16 @@ class GroupEmailsGroupController extends ApiController
 
     public function approve($group_email_id)
     {
-        exit($group_email_id);
+
+        $GroupEmailGroups = GroupEmailGroupsModel::find($group_email_id);
+        $GroupEmailGroups->status = 'pending-sending';
+        $GroupEmailGroups->save();
+
+        $GroupEmailCompliance = GroupEmailComplianceModel::find($group_email_id);
+        $GroupEmailCompliance->compliance_status = 'approved';
+        $GroupEmailCompliance->last_updated = new \DateTime();
+        $GroupEmailCompliance->save();
+
     }
 
 }

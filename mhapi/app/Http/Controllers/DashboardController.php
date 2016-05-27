@@ -340,7 +340,7 @@ class DashboardController extends ApiController
     public function groups()
     {
 
-        $Groups = GroupEmailGroupsModel::select('*')
+        $Groups = GroupEmailGroupsModel::select('mw_customer.*', 'mw_group_email_groups.status AS status', 'mw_group_email_groups.*')
             ->Join('mw_customer', 'mw_customer.customer_id', '=', 'mw_group_email_groups.customer_id')
             ->get();
 

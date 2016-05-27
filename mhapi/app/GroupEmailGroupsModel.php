@@ -16,7 +16,7 @@ class GroupEmailGroupsModel extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'customer_id'
+        'customer_id', 'group_email_uid'
 
     ];
 
