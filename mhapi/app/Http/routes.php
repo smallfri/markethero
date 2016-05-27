@@ -60,7 +60,8 @@ Route::group(['prefix' => 'v1'], function()
     Route::resource('fields', 'FieldsController');
     Route::resource('emails', 'TransactionalEmailsController');
     Route::resource('bounce', 'BounceController');
-    Route::resource('spam', 'SpamController');
+    Route::resource('spam', 'GroupEmailAbuseController');
+    Route::resource('unsubscribe', 'UnsubscribeController');
     Route::resource('blacklist', 'BlacklistController');
     Route::resource('create-group-email-group', 'GroupEmailsGroupController');
     Route::resource('create-group-email', 'GroupEmailsController');

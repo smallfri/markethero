@@ -48,9 +48,12 @@ BEGIN
    `group_email_id` int(11) NOT NULL AUTO_INCREMENT,
    `group_email_uid` char(13) NOT NULL,
    `customer_id` int(11) NOT NULL,
+   `send_at` datetime DEFAULT NULL,
+   `status` varchar(45) DEFAULT NULL,
+   `finished_at` datetime DEFAULT NULL,
    PRIMARY KEY (`group_email_id`),
    UNIQUE KEY `group_email_uid_UNIQUE` (`group_email_uid`)
- ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+ ) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=latin1;
 
   CREATE TABLE `mw_compliance_levels` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -160,6 +163,22 @@ BEGIN
    KEY `customer_id` (`customer_id`),
    CONSTRAINT `mw_group_email_bounce_log_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `mw_customer` (`customer_id`)
  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `mw_group_email_unsubscribe` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `group_email_id` int(11) NOT NULL,
+  `customer_id` int(11) NOT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `ip_address` char(15) DEFAULT NULL,
+  `user_agent` varchar(255) DEFAULT NULL,
+  `note` varchar(255) DEFAULT NULL,
+  `date_added` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `group_email_id` (`group_email_id`),
+  KEY `customer_id` (`customer_id`),
+  CONSTRAINT `mw_group_email_unsubscribe_ibfk_1` FOREIGN KEY (`group_email_id`) REFERENCES `mw_group_email_groups` (`group_email_id`),
+  CONSTRAINT `mw_group_email_unsubscribe_ibfk_2` FOREIGN KEY (`customer_id`) REFERENCES `mw_customer` (`customer_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 END
 $$

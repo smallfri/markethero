@@ -4,19 +4,19 @@ namespace App;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Spam extends Authenticatable
+class UnsubscribeModel extends Authenticatable
 {
     public $timestamps = false;
 
-    protected $table = 'mw_campaign_abuse_report';
-    protected $primaryKey = "log_id";
+    protected $table = 'mw_group_email_unsubscribe';
+    public $primaryKey = "id";
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-
+        'id'
     ];
 
     /**

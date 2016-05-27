@@ -121,16 +121,16 @@ class GroupsBounceHandlerCommand extends CConsoleCommand
         if (empty($servers)) {
             return $this;
         }
-        
+
         $serversIds = array();
         foreach ($servers as $server) {
             $serversIds[] = $server->server_id;
         }
         unset($servers, $server);
-        
+
         $options      = Yii::app()->options->resetLoaded();
         $processLimit = (int)$options->get('system.cron.process_bounce_servers.emails_at_once', 500);
-                
+
         try {
             foreach ($serversIds as $serverId) {
                 $this->_server = BounceServer::model()->findByPk((int)$serverId);
@@ -165,7 +165,7 @@ class GroupsBounceHandlerCommand extends CConsoleCommand
 
                 // re-open the db connection
                 Yii::app()->getDb()->setActive(true);
-                
+
                 if (empty($results)) {
                     $this->_server = BounceServer::model()->findByPk((int)$this->_server->server_id);
                     if (empty($this->_server)) {
@@ -185,7 +185,7 @@ class GroupsBounceHandlerCommand extends CConsoleCommand
 
 
                     print_r($result['originalEmailHeadersArray']);
-                    
+
                     if (!isset(
                         $result['originalEmailHeadersArray'][$headerPrefixUp . 'GROUP-UID'],
                         $result['originalEmailHeadersArray'][$headerPrefixUp . 'CUSTOMER-ID'],
@@ -227,18 +227,18 @@ class GroupsBounceHandlerCommand extends CConsoleCommand
                 if (empty($this->_server)) {
                     continue;
                 }
-                
+
                 if ($this->_server->status == BounceServer::STATUS_CRON_RUNNING) {
                     $this->_server->status = BounceServer::STATUS_ACTIVE;
                     $this->_server->saveStatus();
                 }
-                
+
                 // close the db connection, save some resources...
                 Yii::app()->getDb()->setActive(false);
-                
+
                 // sleep
                 sleep((int)$options->get('system.cron.process_bounce_servers.pause', 5));
-                
+
                 // open db connection
                 Yii::app()->getDb()->setActive(true);
             }
@@ -249,13 +249,13 @@ class GroupsBounceHandlerCommand extends CConsoleCommand
                 if (!empty($this->_server) && $this->_server->status == BounceServer::STATUS_CRON_RUNNING) {
                     $this->_server->status = BounceServer::STATUS_ACTIVE;
                     $this->_server->saveStatus();
-                }    
+                }
             }
             Yii::log($e->getMessage(), CLogger::LEVEL_ERROR);
         }
-        
+
         $this->_server = null;
-        
+
         return $this->process($offset + (int)$options->get('system.cron.process_bounce_servers.servers_at_once', 10), $limit);
     }
 }
