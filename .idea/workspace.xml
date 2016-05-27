@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c9b7ec24-babb-4088-b4f3-f3a6cadded3c" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/common/models/Group.php" afterPath="$PROJECT_DIR$/apps/common/models/Group.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php" afterPath="$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php" />
     </list>
     <ignored path="MarketHero.iws" />
@@ -39,8 +37,8 @@
       <file leaf-file-name="GroupEmailSenderBehavior.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.38572904">
-              <caret line="575" column="13" selection-start-line="575" selection-start-column="13" selection-end-line="575" selection-end-column="13" />
+            <state vertical-scroll-proportion="0.42088935">
+              <caret line="402" column="20" selection-start-line="402" selection-start-column="20" selection-end-line="402" selection-end-column="20" />
               <folding />
             </state>
           </provider>
@@ -69,8 +67,8 @@
       <file leaf-file-name="Group.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/apps/common/models/Group.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-3.9230769">
-              <caret line="15" column="23" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="23" />
+            <state vertical-scroll-proportion="-7.5692306">
+              <caret line="36" column="30" selection-start-line="36" selection-start-column="10" selection-end-line="36" selection-end-column="30" />
               <folding />
             </state>
           </provider>
@@ -858,7 +856,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php</url>
-          <line>520</line>
+          <line>496</line>
           <option name="timeStamp" value="10" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
@@ -1267,14 +1265,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/common/models/Group.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-3.9230769">
-          <caret line="15" column="23" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/apps/console/commands/SendGroupsCommand.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="8.384615">
@@ -1283,10 +1273,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/apps/common/models/Group.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-7.5692306">
+          <caret line="36" column="30" selection-start-line="36" selection-start-column="10" selection-end-line="36" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.38572904">
-          <caret line="575" column="13" selection-start-line="575" selection-start-column="13" selection-end-line="575" selection-end-column="13" />
+        <state vertical-scroll-proportion="0.42088935">
+          <caret line="402" column="20" selection-start-line="402" selection-start-column="20" selection-end-line="402" selection-end-column="20" />
           <folding />
         </state>
       </provider>

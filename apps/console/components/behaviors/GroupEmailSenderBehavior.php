@@ -123,29 +123,21 @@ class GroupEmailSenderBehavior extends CBehavior
                 echo "[".date("Y-m-d H:i:s")."] Setting ".$in_review_count." emails to in-review...\n";
             }
 
-            // Update emails to in-review status
-            GroupEmail::model()
-                ->updateAll(['status' => 'in-review'],
-                    'group_email_id= '.$group->group_email_id.' AND status = "pending-sending" ORDER BY email_id DESC LIMIT '.$in_review_count
-                );
+            $this->setComplianceStatus($group, $in_review_count);
 
-            //update status of the group so we don't send anymore emails
-            $GroupEmailCompliance = GroupEmailCompliance::model()
-                ->findByPk(5);
-            $GroupEmailCompliance->compliance_status = 'compliance-review';
-            $GroupEmailCompliance->update();
+            $group->saveStatus(Group::STATUS_IN_COMPLIANCE);
 
         }
         elseif ($group->compliance->compliance_status=='approved')
         {
             $this->setGroupEmailStatusInReview($group);
-
         }
 
 
         $emails = $this->findAllGroupEmail($group);
 
-        $this->setGroupStatus($group);
+        $group->saveStatus(Group::STATUS_PENDING_SENDING);
+
 
         if ($this->verbose)
         {
@@ -248,20 +240,7 @@ class GroupEmailSenderBehavior extends CBehavior
                     echo "\n[".date("Y-m-d H:i:s")."] Checking if the delivery server is allowed to send to the subscriber email address domain...\n";
                 }
                 $index++;
-//                // if this server is not allowed to send to this email domain, then just skip it.
-//                if (!$server->canSendToDomainOf($subscriber->email)) {
-//                    if ($this->verbose) {
-//                        echo "\n[".date("Y-m-d H:i:s")."] Server is not allowed to send to the subscriber domain, skipping this subscriber!\n";
-//                    }
-//                    continue;
-//                }
-//
-//                if ($this->verbose) {
-//                    echo "OK, took " . round(microtime(true) - $timeStart, 3) . " seconds.\n";
-//                    echo "[".date("Y-m-d H:i:s")."] Checking the subscriber email address into the blacklist...";
-//                    $timeStart = microtime(true);
-//                }
-//
+
                 // if blacklisted, goodbye.
                 if ($email->getIsBlacklisted())
                 {
@@ -271,14 +250,14 @@ class GroupEmailSenderBehavior extends CBehavior
                     }
                     continue;
                 }
-////
-//                if ($this->verbose) {
-//                    echo "OK, took " . round(microtime(true) - $timeStart, 3) . " seconds.\n";
-//                    echo "[".date("Y-m-d H:i:s")."] Checking server sending quota...";
-                $timeStart = microtime(true);
-//                }
-//
-//                // in case the server is over quota
+
+                if ($this->verbose)
+                {
+                    echo "OK, took ".round(microtime(true)-$timeStart, 3)." seconds.\n";
+                    echo "[".date("Y-m-d H:i:s")."] Checking server sending quota...";
+                    $timeStart = microtime(true);
+                }
+                // in case the server is over quota
                 if ($server->getIsOverQuota())
                 {
                     if ($this->verbose)
@@ -445,29 +424,6 @@ class GroupEmailSenderBehavior extends CBehavior
 
     /**
      * @param $group
-     */
-    public function setGroupStatus($group)
-    {
-
-        $count = Yii::app()->db->createCommand()
-            ->select('count(*) as count')
-            ->from('mw_group_email')
-            ->where('group_email_id=:id AND (status = "pending-sending" OR status ="in-review")',
-                array(':id' => (int)$group->group_email_id))
-            ->queryRow();
-
-        if ($count['count']<1)
-        {
-            Group::model()
-                ->updateAll(['status' => 'sent'],
-                    'group_email_id= '.$group->group_email_id.' AND status = "pending-sending"'
-                );
-
-        }
-    }
-
-    /**
-     * @param $group
      * @return array|mixed|null
      */
     public function findAllGroupEmail($group)
@@ -492,6 +448,26 @@ class GroupEmailSenderBehavior extends CBehavior
             ->updateAll(['status' => 'pending-sending'],
                 'group_email_id= '.$group['group_email_id'].' AND status = "in-review"'
             );
+    }
+
+    /**
+     * @param $group
+     * @param $in_review_count
+     */
+    public function setComplianceStatus($group, $in_review_count)
+    {
+
+// Update emails to in-review status
+        GroupEmail::model()
+            ->updateAll(['status' => 'in-review'],
+                'group_email_id= '.$group->group_email_id.' AND status = "pending-sending" ORDER BY email_id DESC LIMIT '.$in_review_count
+            );
+
+        //update status of the group so we don't send anymore emails
+        $GroupEmailCompliance = GroupEmailCompliance::model()
+            ->findByPk(5);
+        $GroupEmailCompliance->compliance_status = 'compliance-review';
+        $GroupEmailCompliance->update();
     }
 
     protected function logDelivery(ListSubscriber $subscriber, $message, $status, $messageId = null)
