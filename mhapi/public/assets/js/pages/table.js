@@ -6,6 +6,6 @@ $(document).ready(function(){
 		"oLanguage": {
 			"sLengthMenu": "_MENU_ records per page"
 		},
-		"aaSorting": [[1,'desc']]
+		"aaSorting": [[0,'desc']]
 	});
 });
