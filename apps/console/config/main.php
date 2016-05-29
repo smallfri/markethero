@@ -77,6 +77,9 @@ return array(
         'queue' => array(
             'class' => 'console.commands.RedisQueueCommand'
         ),
+        'compliance' => array(
+            'class' => 'console.commands.GroupsComplianceHandlerCommand'
+        ),
     ),
 
     'components' => array(

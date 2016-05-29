@@ -120,7 +120,7 @@ class SendGroupsCommand extends CConsoleCommand
                    ->join('mw_group_email_compliance gec',
                        'gec.group_email_id=geg.group_email_id')
                    ->join('mw_compliance_levels cl', 'cl.id = gec.compliance_level_type_id')
-                   ->where('gec.compliance_status != "sent" AND geg.status = "pending-sending"')
+                   ->where('gec.compliance_status != "sent" AND geg.status = "pending-sending" OR geg.status = "processing"')
                    ->group('geg.group_email_id')
                    ->limit($limit)
                    ->queryAll();

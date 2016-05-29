@@ -99,13 +99,15 @@ class GroupEmailSenderBehavior extends CBehavior
          * Check whether or not this group is in compliance review
          *
          */
-
+        $complianceReview = false;
         if ($group->compliance->compliance_status=='first-review' AND $count['count']>=$complianceLimit)
         {
             if ($this->verbose)
             {
                 echo "[".date("Y-m-d H:i:s")."] This Group is in Compliance Review...\n";
             }
+
+            $complianceReview = true;
 
             // Set emails to be sent = threshold X count
             $emailsToBeSent = round($count['count']*$group->compliance->compliance_levels->threshold);
@@ -130,20 +132,15 @@ class GroupEmailSenderBehavior extends CBehavior
         }
         elseif ($group->compliance->compliance_status=='approved')
         {
-            $this->setGroupEmailStatusInReview($group);
+            $this->setGroupEmailStatusPendingSending($group);
+
+            $group->saveStatus(Group::STATUS_PENDING_SENDING);
+
         }
 
 
         $emails = $this->findAllGroupEmail($group);
 
-        $group->saveStatus(Group::STATUS_PENDING_SENDING);
-
-
-        if ($this->verbose)
-        {
-            echo "[".date("Y-m-d H:i:s")."] No emails pending-sending or in-review, setting group to sent...\n";
-
-        }
 
         if ($this->verbose)
         {
@@ -176,7 +173,6 @@ class GroupEmailSenderBehavior extends CBehavior
         if ($this->verbose)
         {
             $timeStart = microtime(true);
-            echo "[".date("Y-m-d H:i:s")."] Campaign status has been set to PROCESSING.\n";
             echo "[".date("Y-m-d H:i:s")."] Searching for emails to send for this group...\n";
         }
 
@@ -229,6 +225,23 @@ class GroupEmailSenderBehavior extends CBehavior
 
             // put proper status
             $group->saveStatus(Group::STATUS_PROCESSING);
+
+            if ($this->verbose)
+            {
+                echo "[".date("Y-m-d H:i:s")."] Group status has been set to PROCESSING.\n";
+
+            }
+
+            if ($complianceReview)
+            {
+                $group->saveStatus(Group::STATUS_IN_COMPLIANCE);
+
+                if ($this->verbose)
+                {
+                    echo "[".date("Y-m-d H:i:s")."] Group status has been changed to COMPLIANCE REVIEW.\n";
+
+                }
+            }
 
             $index = 0;
             foreach ($emails AS $email)
@@ -371,6 +384,20 @@ class GroupEmailSenderBehavior extends CBehavior
                 }
 
             }
+
+            $emails = $this->findAllGroupEmail($group);
+
+            if (empty($emails))
+            {
+                $group->saveStatus(Group::STATUS_SENT);
+
+                if ($this->verbose)
+                {
+                    echo "[".date("Y-m-d H:i:s")."] Group status has been set to SENT.\n";
+
+                }
+            }
+
             if ($this->verbose)
             {
                 echo "\n[".date("Y-m-d H:i:s")."] Exiting from the foreach loop, took ".round(microtime(true)-$beforeForeachTime,
@@ -440,13 +467,13 @@ class GroupEmailSenderBehavior extends CBehavior
     /**
      * @param $group
      */
-    public function setGroupEmailStatusInReview($group)
+    public function setGroupEmailStatusPendingSending($group)
     {
 
-// Update emails to pending-sending status if this Group is no longer under review
+        // Update emails to pending-sending status if this Group is no longer under review
         GroupEmail::model()
             ->updateAll(['status' => 'pending-sending'],
-                'group_email_id= '.$group['group_email_id'].' AND status = "in-review"'
+                'group_email_id= '.$group['group_email_id'].' AND status = "first-review"'
             );
     }
 
@@ -459,7 +486,7 @@ class GroupEmailSenderBehavior extends CBehavior
 
 // Update emails to in-review status
         GroupEmail::model()
-            ->updateAll(['status' => 'in-review'],
+            ->updateAll(['status' => 'first-review'],
                 'group_email_id= '.$group->group_email_id.' AND status = "pending-sending" ORDER BY email_id DESC LIMIT '.$in_review_count
             );
 

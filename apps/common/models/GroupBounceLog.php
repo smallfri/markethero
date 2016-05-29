@@ -15,13 +15,14 @@
  *
  * The followings are the available columns in table 'group_email_bounce_log':
  * @property string $log_id
+ * @property integer $group_email_id
  * @property integer $customer_id
- * @property integer $group_uid
  * @property string $message
- * @property string $email
+ * @property string $email_address
  * @property string $bounce_type
  * @property string $processed
  * @property string $date_added
+
  *
  */
 class GroupBounceLog extends ActiveRecord
@@ -29,13 +30,7 @@ class GroupBounceLog extends ActiveRecord
     const BOUNCE_SOFT = 'soft';
     
     const BOUNCE_HARD = 'hard';
-    
-    public $customer_id;
-    
-    public $list_id;
-    
-    public $segment_id;
-    
+
     /**
      * @return string the associated database table name
      */
@@ -51,23 +46,11 @@ class GroupBounceLog extends ActiveRecord
     {
         $rules = array(
             array('bounce_type', 'safe', 'on' => 'customer-search'),
-            array('group_uid, customer_id, message, processed, bounce_type', 'safe', 'on' => 'search'),
+            array('group_email_id, customer_id, message, processed, bounce_type', 'safe', 'on' => 'search'),
         );
 
         return CMap::mergeArray($rules, parent::rules());
     }
-
-    /**
-     * @return array relational rules.
-     */
-//    public function relations()
-//    {
-//        $relations = array(
-//            'campaign' => array(self::BELONGS_TO, 'Campaign', 'campaign_id'),
-//            'subscriber' => array(self::BELONGS_TO, 'ListSubscriber', 'subscriber_id'),
-//        );
-//        return CMap::mergeArray($relations, parent::relations());
-//    }
 
     /**
      * @return array customized attribute labels (name=>label)
@@ -76,14 +59,14 @@ class GroupBounceLog extends ActiveRecord
     {
         $labels = array(
             'log_id'        => Yii::t('groups', 'Log'),
-            'group_uid'   => Yii::t('groups', 'Campaign'),
+            'group_email_id'   => Yii::t('groups', 'Group ID'),
             'message'       => Yii::t('groups', 'Message'),
             'processed'     => Yii::t('groups', 'Processed'),
             'bounce_type'   => Yii::t('groups', 'Bounce type'),
             
             // search
             'customer_id'   => Yii::t('groups', 'Customer'),
-            'email'   => Yii::t('groups', 'Email Address'),
+            'email_address'   => Yii::t('groups', 'Email Address'),
 
         );
         
@@ -105,7 +88,7 @@ class GroupBounceLog extends ActiveRecord
     public function customerSearch()
     {
         $criteria=new CDbCriteria;
-        $criteria->compare('group_uid', (int)$this->group_uid);
+        $criteria->compare('group_email_id', (int)$this->group_email_id);
         $criteria->compare('bounce_type', $this->bounce_type);
         
         return new CActiveDataProvider(get_class($this), array(
@@ -289,9 +272,9 @@ class GroupBounceLog extends ActiveRecord
     {
         // since 1.3.5.8
         $duplicate = self::model()->findByAttributes(array(
-            'group_uid'   => (int)$this->group_uid,
+            'group_email_id'   => (int)$this->group_email_id,
             'customer_id' => (int)$this->customer_id,
-            'email' => (int)$this->email,
+            'email_address' => (int)$this->email_address,
         ));
         if (!empty($duplicate)) {
             return false;

@@ -36,7 +36,7 @@ class Group extends ActiveRecord
 
     const STATUS_IN_COMPLIANCE = 'in-compliance';
 
-    const STATUS_IN_REVIEW = 'in-review‚Ø';
+    const STATUS_IN_REVIEW = 'in-review';
 
     const TYPE_REGULAR = 'regular';
 
