@@ -20,8 +20,6 @@ class GroupEmailSenderBehavior extends CBehavior
 
     // reference flag for groups limit
     public $groups_limit = 0;
-
-    // reference flag for groups offset
     public $groups_offset = 0;
 
     // whether this should be verbose and output to console
@@ -100,7 +98,7 @@ class GroupEmailSenderBehavior extends CBehavior
          *
          */
         $complianceReview = false;
-        if ($group->compliance->compliance_status=='first-review' AND $count['count']>=$complianceLimit)
+        if ($group->compliance->compliance_status==GROUP::STATUS_IN_REVIEW AND $count['count']>=$complianceLimit)
         {
             if ($this->verbose)
             {
@@ -130,7 +128,7 @@ class GroupEmailSenderBehavior extends CBehavior
             $group->saveStatus(Group::STATUS_IN_COMPLIANCE);
 
         }
-        elseif ($group->compliance->compliance_status=='approved')
+        elseif ($group->compliance->compliance_status== GROUP::STATUS_APPROVED)
         {
             $this->setGroupEmailStatusPendingSending($group);
 
@@ -412,7 +410,7 @@ class GroupEmailSenderBehavior extends CBehavior
             $code = (int)$e->getCode();
 
             // make sure sending is resumed next time.
-            $email->status = 'pending-sending';
+            $email->status = GROUP::STATUS_PENDING_SENDING;
             if ($this->verbose)
             {
                 echo "[".date("Y-m-d H:i:s")."] Caught exception with message: ".$e->getMessage()."\n";
@@ -432,7 +430,7 @@ class GroupEmailSenderBehavior extends CBehavior
     public function setStatus($email)
     {
 
-        $email->status = 'sent';
+        $email->status = GROUP::STATUS_SENT;
         $email->save();
     }
 
@@ -457,7 +455,7 @@ class GroupEmailSenderBehavior extends CBehavior
     {
 
         $emails = GroupEmail::model()->findAll(array(
-            'condition' => '`status` = "pending-sending" AND `send_at` < NOW() AND `retries` < `max_retries` AND group_email_id = '.$group->group_email_id,
+            'condition' => '`status` = "'.GROUP::STATUS_PENDING_SENDING.'" AND `send_at` < NOW() AND `retries` < `max_retries` AND group_email_id = '.$group->group_email_id,
             'order' => 'email_id ASC',
             'limit' => 100
         ));
@@ -472,8 +470,8 @@ class GroupEmailSenderBehavior extends CBehavior
 
         // Update emails to pending-sending status if this Group is no longer under review
         GroupEmail::model()
-            ->updateAll(['status' => 'pending-sending'],
-                'group_email_id= '.$group['group_email_id'].' AND status = "first-review"'
+            ->updateAll(['status' => GROUP::STATUS_PENDING_SENDING],
+                'group_email_id= '.$group['group_email_id'].' AND status = "'.GROUP::STATUS_IN_REVIEW.'"'
             );
     }
 
@@ -486,14 +484,14 @@ class GroupEmailSenderBehavior extends CBehavior
 
 // Update emails to in-review status
         GroupEmail::model()
-            ->updateAll(['status' => 'first-review'],
-                'group_email_id= '.$group->group_email_id.' AND status = "pending-sending" ORDER BY email_id DESC LIMIT '.$in_review_count
+            ->updateAll(['status' => GROUP::STATUS_IN_REVIEW],
+                'group_email_id= '.$group->group_email_id.' AND status = "'.GROUP::STATUS_PENDING_SENDING.'" ORDER BY email_id DESC LIMIT '.$in_review_count
             );
 
         //update status of the group so we don't send anymore emails
         $GroupEmailCompliance = GroupEmailCompliance::model()
-            ->findByPk(5);
-        $GroupEmailCompliance->compliance_status = 'compliance-review';
+            ->findByPk($group->group_email_id);
+        $GroupEmailCompliance->compliance_status = GROUP::STATUS_IN_COMPLIANCE;
         $GroupEmailCompliance->update();
     }
 
@@ -519,46 +517,6 @@ class GroupEmailSenderBehavior extends CBehavior
         $deliveryLog->status = $status;
 
         return $deliveryLog->save();
-    }
-
-    protected function countSubscribers()
-    {
-
-        $criteria = new CDbCriteria();
-        $criteria->with['deliveryLogs'] = array(
-            'select' => false,
-            'together' => true,
-            'joinType' => 'LEFT OUTER JOIN',
-            'on' => 'deliveryLogs.campaign_id = :cid',
-            'condition' => '(deliveryLogs.subscriber_id IS NULL OR deliveryLogs.`status` = :tstatus)',
-            'params' => array(
-                ':cid' => $this->getOwner()->campaign_id,
-                ':tstatus' => CampaignDeliveryLog::STATUS_TEMPORARY_ERROR
-            ),
-        );
-
-        return $this->getOwner()->countSubscribers($criteria);
-    }
-
-    // find subscribers
-    protected function findSubscribers($limit = 300)
-    {
-
-        $criteria = new CDbCriteria();
-        $criteria->with['deliveryLogs'] = array(
-            'select' => false,
-            'together' => true,
-            'joinType' => 'LEFT OUTER JOIN',
-            'on' => 'deliveryLogs.campaign_id = :cid',
-            'condition' => '(deliveryLogs.subscriber_id IS NULL OR deliveryLogs.`status` = :tstatus)',
-            'params' => array(
-                ':cid' => $this->getOwner()->campaign_id,
-                ':tstatus' => CampaignDeliveryLog::STATUS_TEMPORARY_ERROR
-            ),
-        );
-
-        // and find them
-        return $this->getOwner()->findSubscribers(0, $limit, $criteria);
     }
 
     /**
@@ -623,39 +581,6 @@ class GroupEmailSenderBehavior extends CBehavior
             = !empty($group->template->only_plain_text)&&$group->template->only_plain_text===CampaignTemplate::TEXT_YES;
         $emailAddress = $subscriber->email;
 
-        if (!$onlyPlainText)
-        {
-
-//            if(!empty($group->option)&&$group->option->send_referral_url==1)
-//            {
-//                $emailContent = CampaignHelper::injectReferralLink($emailContent,$group->customer_id);
-//            }
-
-//            if(($emailFooter = $customer->getGroupOption('groups.email_footer'))&&strlen(trim($emailFooter))>5)
-//            {
-//                $emailContent = CampaignHelper::injectEmailFooter($emailContent,$emailFooter,$group);
-//            }
-//
-//            if (!empty($group->option) && !empty($group->option->embed_images) && $group->option->embed_images == CampaignOption::TEXT_YES) {
-//                list($emailContent, $embedImages) = CampaignHelper::embedContentImages($emailContent, $group);
-//            }
-//
-//            if (!empty($group->option) && $group->option->xml_feed == CampaignOption::TEXT_YES) {
-//                $emailContent = CampaignXmlFeedParser::parseContent($emailContent, $group, $subscriber, true);
-//            }
-//
-//            if (!empty($group->option) && $group->option->json_feed == CampaignOption::TEXT_YES) {
-//                $emailContent = CampaignJsonFeedParser::parseContent($emailContent, $group, $subscriber, true);
-//            }
-//
-//            if (!empty($group->option) && $group->option->url_tracking == CampaignOption::TEXT_YES) {
-//                $emailContent = CampaignHelper::transformLinksForTracking($emailContent, $group, $subscriber, true);
-//            }
-//
-//            $emailData = CampaignHelper::parseContent($emailContent, $group, $subscriber, true);
-//            list($toName, $emailSubject, $emailContent) = $emailData;
-        }
-
         // Plain TEXT only supports basic tags transform, no xml/json feeds nor tracking.
         $emailPlainText = null;
         if (!empty($group->option)&&$group->option->plain_text_email==CampaignOption::TEXT_YES)
@@ -709,129 +634,4 @@ class GroupEmailSenderBehavior extends CBehavior
         );
     }
 
-//    protected function markgroupsent()
-//    {
-//
-//        $campaign = $this->getOwner();
-//
-//        if ($campaign->isAutoresponder)
-//        {
-//            $campaign->saveStatus(Campaign::STATUS_SENDING);
-//            return;
-//        }
-//
-//        $campaign->saveStatus(Campaign::STATUS_SENT);
-//
-//        if (Yii::app()->options->get('system.customer.action_logging_enabled', true))
-//        {
-//            $list = $campaign->list;
-//            $customer = $list->customer;
-//            if (!($logAction = $customer->asa('logAction')))
-//            {
-//                $customer->attachBehavior('logAction', array(
-//                    'class' => 'customer.components.behaviors.CustomerActionLogBehavior',
-//                ));
-//                $logAction = $customer->asa('logAction');
-//            }
-//            $logAction->groupsent($campaign);
-//        }
-//
-//        // since 1.3.4.6
-//        Yii::app()->hooks->doAction('console_command_send_groups_campaign_sent', $campaign);
-//
-//        $this->sendgroupstats();
-//
-//        // since 1.3.5.3
-//        $campaign->tryReschedule(true);
-//    }
-//
-//    protected function sendgroupstats()
-//    {
-//
-//        $campaign = $this->getOwner();
-//        if (empty($campaign->option->email_stats))
-//        {
-//            return $this;
-//        }
-//
-//        if (!($server = DeliveryServer::pickServer(0, $campaign)))
-//        {
-//            return $this;
-//        }
-//
-//        $campaign->attachBehavior('stats', array(
-//            'class' => 'customer.components.behaviors.groupstatsProcessorBehavior',
-//        ));
-//        $viewData = compact('campaign');
-//
-//        // prepare and send the email.
-//        $emailTemplate = Yii::app()->options->get('system.email_templates.common');
-//        $emailBody = Yii::app()->command->renderFile(Yii::getPathOfAlias('console.views.campaign-stats').'.php',
-//            $viewData, true);
-//        $emailTemplate = str_replace('[CONTENT]', $emailBody, $emailTemplate);
-//
-//        $recipients = explode(',', $campaign->option->email_stats);
-//        $recipients = array_map('trim', $recipients);
-//
-//        $emailParams = array();
-//        $emailParams['fromName'] = $campaign->from_name;
-//        $emailParams['replyTo'] = array($campaign->reply_to => $campaign->from_name);
-//        $emailParams['subject'] = Yii::t('campaign_reports',
-//            'The campaign {name} has finished sending, here are the stats', array('{name}' => $campaign->name));
-//        $emailParams['body'] = $emailTemplate;
-//
-//        foreach ($recipients as $recipient)
-//        {
-//            if (!filter_var($recipient, FILTER_VALIDATE_EMAIL))
-//            {
-//                continue;
-//            }
-//            $emailParams['to'] = array($recipient => $campaign->from_name);
-//            $server->setDeliveryFor(DeliveryServer::DELIVERY_FOR_CAMPAIGN)
-//                ->setDeliveryObject($campaign)
-//                ->sendEmail($emailParams);
-//        }
-//
-//        return $this;
-//    }
-
-    protected function getFailStatusFromResponse($response)
-    {
-
-        if (empty($response)||strlen($response)<5)
-        {
-            return CampaignDeliveryLog::STATUS_ERROR;
-        }
-
-        $status = CampaignDeliveryLog::STATUS_TEMPORARY_ERROR;
-
-        if (preg_match('/code\s"(\d+)"/ix', $response, $matches))
-        {
-            $code = (int)$matches[1];
-            if ($code>=450&&!in_array($code, array(503)))
-            {
-                $status = CampaignDeliveryLog::STATUS_FATAL_ERROR;
-            }
-        }
-
-        $temporaryErrors = array(
-            'graylist',
-            'greylist',
-            'nested mail command',
-            'incorrect authentication',
-            'failed',
-            'timed out'
-        );
-
-        foreach ($temporaryErrors as $error)
-        {
-            if (stripos($response, $error)!==false)
-            {
-                $status = CampaignDeliveryLog::STATUS_TEMPORARY_ERROR;
-                break;
-            }
-        }
-
-        return $status;
-    }
 }

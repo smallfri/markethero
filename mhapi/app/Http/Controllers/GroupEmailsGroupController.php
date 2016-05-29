@@ -72,7 +72,7 @@ class GroupEmailsGroupController extends ApiController
         $GroupEmailCompliance->group_email_id
             = $GroupEmailGroups->group_email_id;
 
-        $GroupEmailCompliance->compliance_status = 'first-review';
+        $GroupEmailCompliance->compliance_status = 'in-review';
         $GroupEmailCompliance->compliance_level_type_id = 2;
         $GroupEmailCompliance->date_added = new \DateTime();
         $GroupEmailCompliance->last_updated = new \DateTime();

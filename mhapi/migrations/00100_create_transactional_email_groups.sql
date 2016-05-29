@@ -31,13 +31,16 @@ CREATE PROCEDURE migrate_up_00100()
 BEGIN
 
   CREATE TABLE `mw_group_email_options` (
-   `id` int(11) NOT NULL,
-   `groups_at_once` int(11) DEFAULT NULL,
-   `emails_at_once` int(11) DEFAULT NULL,
-   `change_server_at` int(11) DEFAULT NULL,
-   `compliance_limit` int(11) DEFAULT NULL,
-   PRIMARY KEY (`id`)
- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+    `id` int(11) NOT NULL,
+    `groups_at_once` int(11) DEFAULT NULL,
+    `emails_at_once` int(11) DEFAULT NULL,
+    `change_server_at` int(11) DEFAULT NULL,
+    `compliance_limit` int(11) DEFAULT NULL,
+    `compliance_abuse_range` float(9,3) DEFAULT NULL,
+    `compliance_unsub_range` float(9,3) DEFAULT NULL,
+    `compliance_bounce_range` float(9,3) DEFAULT NULL,
+    PRIMARY KEY (`id`)
+  ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
     INSERT INTO `mw_group_email_options`
     (`id`, `groups_at_once`, `emails_at_once`, `change_server_at`, `compliance_limit` )
@@ -180,17 +183,17 @@ CREATE TABLE `mw_group_email_unsubscribe` (
   CONSTRAINT `mw_group_email_unsubscribe_ibfk_2` FOREIGN KEY (`customer_id`) REFERENCES `mw_customer` (`customer_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `mw_group_email_compliance` (
+CREATE TABLE `mw_group_email_compliance_score` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `bounce_report` int(11) DEFAULT NULL,
-  `abuse_report` int(11) DEFAULT NULL,
-  `unsubscribe_report` int(11) DEFAULT NULL,
-  `score` int(11) DEFAULT NULL,
+  `bounce_report` float(9,2) DEFAULT NULL,
+  `abuse_report` float(9,2) DEFAULT NULL,
+  `unsubscribe_report` float(9,2) DEFAULT NULL,
+  `score` float(9,3) DEFAULT NULL,
   `result` varchar(45) DEFAULT NULL,
   `date_added` datetime DEFAULT NULL,
   `last_updated` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-  ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 END
 $$
