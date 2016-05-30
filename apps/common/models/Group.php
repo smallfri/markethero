@@ -10,6 +10,7 @@
  * @property string $send_at
  * @property string $status
  * @property string $finished_at
+ * @property integer $emails_sent
  *   The followings are the available model relations:
  * @property Customer $customer
  * @property Customer $compliance
@@ -21,7 +22,9 @@ class Group extends ActiveRecord
 {
 
     const STATUS_SENT = 'sent';
+
     const STATUS_UNSENT = 'unsent';
+
     const STATUS_DRAFT = 'draft';
 
     const STATUS_PENDING_SENDING = 'pending-sending';
@@ -50,6 +53,8 @@ class Group extends ActiveRecord
 
     const BULK_ACTION_MARK_SENT = 'mark-sent';
 
+    const EMAILS_SENT = 0;
+
     public $sendDirectly = false;
 
     public $group_email_id;
@@ -59,6 +64,8 @@ class Group extends ActiveRecord
     public $customer_id;
 
     public $status;
+
+    public $emails_sent;
 
     /**
      * @return string the associated database table name
@@ -117,6 +124,7 @@ class Group extends ActiveRecord
             'group_email_uid' => Yii::t('group', 'Email'),
             'customer_id' => Yii::t('group', 'Customer ID'),
             'send_at' => Yii::t('group', 'Send at'),
+            'emails_sent' => Yii::t('group', 'Emails Sent'),
             'status' => Yii::t('group', 'status'),
 
         );
@@ -442,5 +450,15 @@ class Group extends ActiveRecord
 
             return $customer['status'];
         }
+
+    public function saveNumberSent($group, $index)
+    {
+
+        Group::model()->updateByPk(
+            $group->group_email_id,
+            [
+                'emails_sent' => $index
+            ]);
+    }
 
 }

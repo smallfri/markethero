@@ -33,6 +33,8 @@ class GroupsComplianceHandlerCommand extends CConsoleCommand
         $criteria->params = array('id' => 1);
         $normal = GroupOptions::Model()->findAll($criteria);
 
+        Yii::log(Yii::t('groups', 'Group Normal Parameters'), CLogger::LEVEL_INFO);
+
         if ($this->verbose)
         {
             echo "[".date("Y-m-d H:i:s")."] Selecting Groups that are in-review...\n";
@@ -42,6 +44,8 @@ class GroupsComplianceHandlerCommand extends CConsoleCommand
         $criteria = new CDbCriteria();
         $criteria->addCondition('status = "in-review"');
         $Groups = Group::model()->findAll($criteria);
+
+
 
         $compliance = [];
         $GroupIds = null;
@@ -54,6 +58,8 @@ class GroupsComplianceHandlerCommand extends CConsoleCommand
             echo "[".date("Y-m-d H:i:s")."] Groups that are in-review ".rtrim($GroupIds, ',')."...\n";
         }
 
+        Yii::log(Yii::t('groups', 'Groups in-review '.rtrim($GroupIds, ',')), CLogger::LEVEL_INFO);
+
         foreach ($Groups as $group)
         {
             if ($this->verbose)
@@ -61,11 +67,16 @@ class GroupsComplianceHandlerCommand extends CConsoleCommand
                 echo "[".date("Y-m-d H:i:s")."] Group ID ".$group->group_email_id."...\n";
             }
 
+            Yii::log(Yii::t('groups', 'Groups ID '.$group->group_email_id), CLogger::LEVEL_INFO);
+
             //Get Bounces order by group id
             $criteria = new CDbCriteria();
             $criteria->addCondition('group_email_id = :group_email_id');
             $criteria->params = array('group_email_id' => $group->group_email_id);
             $bounce = GroupBounceLog::Model()->findAll($criteria);
+
+            Yii::log(Yii::t('groups', 'Groups ID '.$group->group_email_id.' bounces: '.count($bounce)), CLogger::LEVEL_INFO);
+
 
             if ($this->verbose)
             {
@@ -83,6 +94,9 @@ class GroupsComplianceHandlerCommand extends CConsoleCommand
                 echo "[".date("Y-m-d H:i:s")."] Emails Count: ".count($emails)."...\n";
             }
 
+            Yii::log(Yii::t('groups', 'Groups ID '.$group->group_email_id.' emails: '.count($emails)), CLogger::LEVEL_INFO);
+
+
             $compliance[$group->group_email_id] = [
                 'customer_id' => $group->customer_id,
                 'email_count' => count($emails),
@@ -95,6 +109,8 @@ class GroupsComplianceHandlerCommand extends CConsoleCommand
             $criteria->addCondition('customer_id = :customer_id');
             $criteria->params = array('customer_id' => $group->customer_id);
             $abuse = GroupAbuseReport::Model()->findAll($criteria);
+
+            Yii::log(Yii::t('groups', 'Groups ID '.$group->group_email_id.' abuse reports: '.count($abuse)), CLogger::LEVEL_INFO);
 
             if ($this->verbose)
             {
@@ -109,6 +125,11 @@ class GroupsComplianceHandlerCommand extends CConsoleCommand
             $criteria->params = array('group_email_id' => $group->group_email_id);
             $unsub = GroupUnsubscribeReport::Model()->findAll($criteria);
 
+            Yii::log(Yii::t('groups', 'Groups ID '.$group->group_email_id.' unsubs: '.count($unsub)), CLogger::LEVEL_INFO);
+
+            $score = $bounceScore = $abuseScore = $unsubScore = null;
+
+            Yii::log(Yii::t('groups', 'Groups ID '.$group->group_email_id.' score: '.$score), CLogger::LEVEL_INFO);
 
             if ($this->verbose)
             {
@@ -129,7 +150,7 @@ class GroupsComplianceHandlerCommand extends CConsoleCommand
 
             if (count($abuse)>0)
             {
-                $abuseScore = count($abuse)/count($emails);
+                $abuseScore = count($abuse)/count($emails)*2.0; //weighted to count more
 
                 if ($this->verbose)
                 {
@@ -139,13 +160,15 @@ class GroupsComplianceHandlerCommand extends CConsoleCommand
 
             if (count($unsub)>0)
             {
-                $unsubScore = count($unsub)/count($emails);
+                $unsubScore = count($unsub)/count($emails)*1.5; //weighted to count more
 
                 if ($this->verbose)
                 {
                     echo "[".date("Y-m-d H:i:s")."] Unsubscribe Score: ".$unsubScore."...\n";
                 }
             }
+
+            $score = $bounceScore + $abuseScore + $unsubScore / 3;
 
             $compliance_status = $group_status = $group_email_status = null;
             if (
@@ -160,8 +183,11 @@ class GroupsComplianceHandlerCommand extends CConsoleCommand
                 }
 
                 $compliance_status = $this->setComplianceStatus($group, GROUP::STATUS_APPROVED);
-                $group_status = $this->setGroupStatus($group, GROUP::STATUS_PENDING_SENDING);
-                $group_email_status = $this->setGroupEmailStatus($group, GROUP::STATUS_PENDING_SENDING);
+                $this->setGroupStatus($group, GROUP::STATUS_PENDING_SENDING);
+                $this->setGroupEmailStatus($group, GROUP::STATUS_PENDING_SENDING);
+
+                Yii::log(Yii::t('groups', 'Groups ID '.$group->group_email_id.' compliance status set to approved'), CLogger::LEVEL_INFO);
+
             }
             else
             {
@@ -171,10 +197,11 @@ class GroupsComplianceHandlerCommand extends CConsoleCommand
                 }
 
                 $compliance_status = $this->setComplianceStatus($group, GROUP::STATUS_MANUAL_REVIEW);
-                $group_status = $this->setGroupStatus($group, GROUP::STATUS_MANUAL_REVIEW);
+                $this->setGroupStatus($group, GROUP::STATUS_MANUAL_REVIEW);
             }
 
-            $this->setGroupEmailComplianceReport($bounceScore, $abuseScore, $unsubScore, $compliance_status);
+            $this->setGroupEmailComplianceReport($bounceScore, $abuseScore, $unsubScore, $compliance_status, $score);
+            Yii::log(Yii::t('groups', 'Groups ID '.$group->group_email_id.' compliance status set to '.GROUP::STATUS_MANUAL_REVIEW), CLogger::LEVEL_INFO);
 
 
         }
@@ -235,9 +262,10 @@ class GroupsComplianceHandlerCommand extends CConsoleCommand
      * @param $bounceScore
      * @param $abuseScore
      * @param $unsubScore
+     * @param $score
      * @param $compliance_status
      */
-    public function setGroupEmailComplianceReport($bounceScore, $abuseScore, $unsubScore, $compliance_status)
+    public function setGroupEmailComplianceReport($bounceScore, $abuseScore, $unsubScore, $compliance_status, $score)
     {
 
         $sql
@@ -245,6 +273,7 @@ class GroupsComplianceHandlerCommand extends CConsoleCommand
               bounce_report ='.$bounceScore.'
               , abuse_report='.$abuseScore.'
               , unsubscribe_report = '.$unsubScore.'
+              , score = '.$score.'
               , result = "'.$compliance_status.'"
               , date_added = now()';
         Yii::app()->db->createCommand($sql)->query();

@@ -54,9 +54,10 @@ BEGIN
    `send_at` datetime DEFAULT NULL,
    `status` varchar(45) DEFAULT NULL,
    `finished_at` datetime DEFAULT NULL,
+   `emails_sent` int(11) DEFAULT NULL,
    PRIMARY KEY (`group_email_id`),
    UNIQUE KEY `group_email_uid_UNIQUE` (`group_email_uid`)
- ) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=latin1;
+ ) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=latin1;
 
   CREATE TABLE `mw_compliance_levels` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
