@@ -80,6 +80,9 @@ return array(
         'compliance' => array(
             'class' => 'console.commands.GroupsComplianceHandlerCommand'
         ),
+        'compliance-average' => array(
+            'class' => 'console.commands.GroupsComplianceScoreCommand'
+        ),
     ),
 
     'components' => array(

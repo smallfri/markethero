@@ -2,11 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c9b7ec24-babb-4088-b4f3-f3a6cadded3c" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/apps/console/commands/GroupsComplianceScoreCommand.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/common/models/Group.php" afterPath="$PROJECT_DIR$/apps/common/models/Group.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/console/commands/GroupsComplianceHandlerCommand.php" afterPath="$PROJECT_DIR$/apps/console/commands/GroupsComplianceHandlerCommand.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php" afterPath="$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/migrations/00100_create_transactional_email_groups.sql" afterPath="$PROJECT_DIR$/mhapi/migrations/00100_create_transactional_email_groups.sql" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/console/config/main.php" afterPath="$PROJECT_DIR$/apps/console/config/main.php" />
     </list>
     <ignored path="MarketHero.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -31,11 +30,44 @@
       <file leaf-file-name="GroupsComplianceHandlerCommand.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/apps/console/commands/GroupsComplianceHandlerCommand.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-1.0615385">
-              <caret line="208" column="8" selection-start-line="208" selection-start-column="8" selection-end-line="213" selection-end-column="15" />
+            <state vertical-scroll-proportion="-9.153846">
+              <caret line="44" column="67" selection-start-line="33" selection-start-column="12" selection-end-line="44" selection-end-column="67" />
               <folding>
-                <marker date="1464606252000" expanded="true" signature="7664:7975" placeholder="INSERT INTO mw_group_email_compliance_score..." />
+                <marker date="1464608612000" expanded="true" signature="684:933" placeholder="SELECT bounc..mw_group_email_compliance_average..." />
+                <marker date="1464608612000" expanded="true" signature="935:936" placeholder="INSERT INTO mw_group_email_compliance_score..." />
+                <marker date="1464608612000" expanded="true" signature="9382:9693" placeholder="INSERT INTO mw_group_email_compliance_score..." />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GroupsComplianceScoreCommand.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/apps/console/commands/GroupsComplianceScoreCommand.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.8017493">
+              <caret line="60" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="62" selection-end-column="1" />
+              <folding>
+                <marker date="1464609863000" expanded="true" signature="1158:1251" placeholder="UPDATE mw_gr..." />
+                <marker date="1464609863000" expanded="true" signature="1158:1261" placeholder="UPDATE mw_gr..." />
+                <marker date="1464609863000" expanded="true" signature="1158:1279" placeholder="UPDATE mw_gr..." />
+                <marker date="1464609863000" expanded="true" signature="1158:1312" placeholder="UPDATE mw_gr..." />
+                <marker date="1464609863000" expanded="true" signature="1158:1378" placeholder="UPDATE mw_gr..." />
+                <marker date="1464609863000" expanded="true" signature="1158:1437" placeholder="UPDATE mw_gr..." />
+                <marker date="1464609863000" expanded="true" signature="1158:1496" placeholder="UPDATE mw_gr..." />
+                <marker date="1464609863000" expanded="true" signature="1158:1522" placeholder="UPDATE mw_gr..." />
+                <marker date="1464609863000" expanded="true" signature="1158:1537" placeholder="UPDATE mw_gr..." />
+                <marker date="1464609863000" expanded="true" signature="1459:1496" placeholder="SELECT AVG (..mw_group_email_compliance_score..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="main.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/console/config/main.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-17.26923">
+              <caret line="80" column="4" selection-start-line="80" selection-start-column="4" selection-end-line="85" selection-end-column="6" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -50,11 +82,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GroupEmailSenderBehavior.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="GroupEmailSenderBehavior.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="6.617021">
-              <caret line="404" column="0" selection-start-line="404" selection-start-column="0" selection-end-line="404" selection-end-column="0" />
+            <state vertical-scroll-proportion="-6.8">
+              <caret line="462" column="37" selection-start-line="462" selection-start-column="0" selection-end-line="463" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CLogger.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/common/framework/logging/CLogger.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-15.423077">
+              <caret line="36" column="20" selection-start-line="36" selection-start-column="10" selection-end-line="36" selection-end-column="20" />
               <folding />
             </state>
           </provider>
@@ -88,7 +130,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/ManageGroupController.php" />
         <option value="$PROJECT_DIR$/mhapi/resources/views/dashboard/group-emails/index.blade.php" />
         <option value="$PROJECT_DIR$/mhapi/app/GroupControlsModel.php" />
         <option value="$PROJECT_DIR$/mhapi/app/GroupEmailModel.php" />
@@ -125,7 +166,6 @@
         <option value="$PROJECT_DIR$/mhapi/app/SpamController.php" />
         <option value="$PROJECT_DIR$/mhapi/app/CampaignAbuseModel.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/routes.php" />
-        <option value="$PROJECT_DIR$/apps/console/config/main.php" />
         <option value="$PROJECT_DIR$/apps/common/models/GroupBounceLog.php" />
         <option value="$PROJECT_DIR$/apps/console/commands/SendGroupsCommand.php" />
         <option value="$PROJECT_DIR$/apps/common/models/GroupAbuseReport.php" />
@@ -135,10 +175,12 @@
         <option value="$PROJECT_DIR$/apps/common/models/GroupOptions.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsGroupController.php" />
         <option value="$PROJECT_DIR$/apps/common/models/GroupComplianceScoreLog.php" />
-        <option value="$PROJECT_DIR$/apps/console/commands/GroupsComplianceHandlerCommand.php" />
         <option value="$PROJECT_DIR$/mhapi/migrations/00100_create_transactional_email_groups.sql" />
-        <option value="$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php" />
         <option value="$PROJECT_DIR$/apps/common/models/Group.php" />
+        <option value="$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php" />
+        <option value="$PROJECT_DIR$/apps/console/commands/GroupsComplianceHandlerCommand.php" />
+        <option value="$PROJECT_DIR$/apps/console/config/main.php" />
+        <option value="$PROJECT_DIR$/apps/console/commands/GroupsComplianceScoreCommand.php" />
       </list>
     </option>
   </component>
@@ -519,36 +561,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="db" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MarketHero" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MarketHero" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="apps" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="console" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="components" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="behaviors" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -659,6 +671,32 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="logging" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apps" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="common" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="framework" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="db" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -729,9 +767,9 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/apps/console/commands" />
       <recent name="$PROJECT_DIR$/apps/common/models" />
       <recent name="$PROJECT_DIR$/mhapi/app" />
-      <recent name="$PROJECT_DIR$/apps/console/commands" />
       <recent name="$PROJECT_DIR$/mhapi/app/Http/Controllers" />
       <recent name="$PROJECT_DIR$/apps/common/components/logger" />
     </key>
@@ -794,7 +832,7 @@
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32477063" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32406014" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33494624" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2421731" sideWeight="0.49786323" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2421731" sideWeight="0.49786323" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
@@ -896,16 +934,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/apps/console/commands/SendTransactionalEmailsCommand.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-11.769231">
-          <caret line="40" column="19" selection-start-line="40" selection-start-column="19" selection-end-line="40" selection-end-column="19" />
-          <folding>
-            <marker date="1464287079000" expanded="true" signature="2017:2149" placeholder="DELETE FROM ..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/apps/common/models/DeliveryServer.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-25.961538">
@@ -1139,13 +1167,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/console/config/main.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-26.26923">
-          <caret line="79" column="19" selection-start-line="79" selection-start-column="9" selection-end-line="79" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/apps/console/commands/GroupsBounceHandlerCommand.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-18.153847">
@@ -1258,16 +1279,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/console/commands/GroupsComplianceHandlerCommand.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.0615385">
-          <caret line="208" column="8" selection-start-line="208" selection-start-column="8" selection-end-line="213" selection-end-column="15" />
-          <folding>
-            <marker date="1464606252000" expanded="true" signature="7664:7975" placeholder="INSERT INTO mw_group_email_compliance_score..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mhapi/migrations/00100_create_transactional_email_groups.sql">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-6.5540543">
@@ -1284,11 +1295,58 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/apps/common/framework/logging/CLogger.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-15.423077">
+          <caret line="36" column="20" selection-start-line="36" selection-start-column="10" selection-end-line="36" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="6.617021">
-          <caret line="404" column="0" selection-start-line="404" selection-start-column="0" selection-end-line="404" selection-end-column="0" />
+        <state vertical-scroll-proportion="-6.8">
+          <caret line="462" column="37" selection-start-line="462" selection-start-column="0" selection-end-line="463" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/console/commands/GroupsComplianceHandlerCommand.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-9.153846">
+          <caret line="44" column="67" selection-start-line="33" selection-start-column="12" selection-end-line="44" selection-end-column="67" />
+          <folding>
+            <marker date="1464608612000" expanded="true" signature="684:933" placeholder="SELECT bounc..mw_group_email_compliance_average..." />
+            <marker date="1464608612000" expanded="true" signature="935:936" placeholder="INSERT INTO mw_group_email_compliance_score..." />
+            <marker date="1464608612000" expanded="true" signature="9382:9693" placeholder="INSERT INTO mw_group_email_compliance_score..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/console/config/main.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-17.26923">
+          <caret line="80" column="4" selection-start-line="80" selection-start-column="4" selection-end-line="85" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/console/commands/GroupsComplianceScoreCommand.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8017493">
+          <caret line="60" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="62" selection-end-column="1" />
+          <folding>
+            <marker date="1464609863000" expanded="true" signature="1158:1251" placeholder="UPDATE mw_gr..." />
+            <marker date="1464609863000" expanded="true" signature="1158:1261" placeholder="UPDATE mw_gr..." />
+            <marker date="1464609863000" expanded="true" signature="1158:1279" placeholder="UPDATE mw_gr..." />
+            <marker date="1464609863000" expanded="true" signature="1158:1312" placeholder="UPDATE mw_gr..." />
+            <marker date="1464609863000" expanded="true" signature="1158:1378" placeholder="UPDATE mw_gr..." />
+            <marker date="1464609863000" expanded="true" signature="1158:1437" placeholder="UPDATE mw_gr..." />
+            <marker date="1464609863000" expanded="true" signature="1158:1496" placeholder="UPDATE mw_gr..." />
+            <marker date="1464609863000" expanded="true" signature="1158:1522" placeholder="UPDATE mw_gr..." />
+            <marker date="1464609863000" expanded="true" signature="1158:1537" placeholder="UPDATE mw_gr..." />
+            <marker date="1464609863000" expanded="true" signature="1459:1496" placeholder="SELECT AVG (..mw_group_email_compliance_score..." />
+          </folding>
         </state>
       </provider>
     </entry>
