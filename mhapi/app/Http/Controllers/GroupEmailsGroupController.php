@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers;
 
+use App\GroupEmailModel;
 use App\Logger;
 use App\GroupEmailGroupsModel;
 use App\GroupEmailComplianceModel;

@@ -48,7 +48,7 @@ class DashboardController extends ApiController
         $thisWeek
             = DB::select(DB::raw('select DATE(date_added) AS date_added,COUNT(email_id) AS count from `mw_group_email_log` where `date_added` between "'.$this_week1.'" and "'.$this_week2.'" GROUP BY DATE(date_added)'));
         $lastWeek
-            = DB::select(DB::raw('select DATE(date_added) AS date_added,COUNT(email_id) AS COUNT from `mw_group_email_log` where `date_added` between "'.$last_week1.'" and "'.$last_week2.'" GROUP BY DATE(date_added)'));
+            = DB::select(DB::raw('select DATE(date_added) AS date_added,COUNT(email_id) AS count from `mw_group_email_log` where `date_added` between "'.$last_week1.'" and "'.$last_week2.'" GROUP BY DATE(date_added)'));
 
         $last_week = [];
         foreach ($lastWeek AS $key => $value)
@@ -428,9 +428,9 @@ class DashboardController extends ApiController
             $Controls->emails_at_once = $request->input('emails_at_once');
             $Controls->change_server_at = $request->input('change_server_at');
             $Controls->compliance_limit = $request->input('compliance_limit');
-            $Controls->compliance_abuse_range = $request->input('compliance_limit');
-            $Controls->compliance_unsub_range = $request->input('compliance_limit');
-            $Controls->compliance_bounce_range = $request->input('compliance_limit');
+            $Controls->compliance_abuse_range = $request->input('compliance_abuse_range');
+            $Controls->compliance_unsub_range = $request->input('compliance_unsub_range');
+            $Controls->compliance_bounce_range = $request->input('compliance_bounce_range');
             $Controls->save();
         }
         $data = ['controls' => $Controls];

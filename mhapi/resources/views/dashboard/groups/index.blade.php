@@ -50,7 +50,12 @@
                                     <td>{!! $row['email'] !!}</td>
                                     <td>{!! $row['status'] !!}</td>
                                     <td>{!! $row['date_added'] !!}</td>
-                                    <td style="text-align: center"><a href="v1/groups/<?php echo $row['group_email_id'];?>/approve" class="btn btn-primary" style="vertical-align: middle">Approve</a></td>
+                                    <td style="text-align: center">
+                                        <a href="v1/groups/<?php echo $row['group_email_id'];?>/approve" class="btn btn-success" style="vertical-align: middle"><i class="fa fa-check"></i></a>
+                                        <a href="v1/groups/<?php echo $row['group_email_id'];?>/pause" class="btn btn-warning" style="vertical-align: middle"><i class="fa fa-pause"></i></a>
+                                        <a href="v1/groups/<?php echo $row['group_email_id'];?>/setassent" class="btn btn-danger" style="vertical-align: middle"><i class="fa fa-envelope-o"></i></a>
+                                        <a href="v1/groups/<?php echo $row['group_email_id'];?>/resume" class="btn btn-info" style="vertical-align: middle"><i class="fa fa-play"></i></a>
+                                    </td>
                                 </tr>
                             @endforeach
 
