@@ -17,7 +17,7 @@ class GroupsComplianceHandlerCommand extends CConsoleCommand
 
     public $verbose = 0;
 
-    public $automate = 0;
+    public $automate = 1;
 
     public function init()
     {
@@ -31,23 +31,19 @@ class GroupsComplianceHandlerCommand extends CConsoleCommand
 
         if ($this->automate)
         {
-            $sql
-                = '
-                  SELECT
-                    bounce_report,
-                    abuse_report,
-                    unsubscribe_report,
-                    score
-                    FROM
-                  mw_group_email_compliance_average
-                  WHERE id = 1';
+            $normal = Yii::app()->db->createCommand()
+                ->select('AVG (bounce_report) as compliance_bounce_range,
+                          AVG (abuse_report) as compliance_abuse_range,
+                          AVG (unsubscribe_report) as compliance_unsub_range,
+                          AVG (score) as score')
+                ->from('mw_group_email_compliance_score')
+                ->queryAll();
 
-            $normal = Yii::app()->db->createCommand($sql)->query();
+            $normal = new ArrayObject($normal[0]);
+
         }
         else
         {
-
-
             //check against normal ranges
             $criteria = new CDbCriteria();
             $criteria->addCondition('id = :id');
@@ -64,7 +60,7 @@ class GroupsComplianceHandlerCommand extends CConsoleCommand
 
         //Get Groups that are in-review
         $criteria = new CDbCriteria();
-        $criteria->addCondition('status = "in-review"');
+        $criteria->addCondition('status = "in-review" DATE_ADD(NOW(), INTERVAL 2 HOUR) > date_added ');
         $Groups = Group::model()->findAll($criteria);
 
         $compliance = [];
