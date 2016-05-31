@@ -20,10 +20,13 @@ class GroupEmailSenderBehavior extends CBehavior
 
     // reference flag for groups limit
     public $groups_limit = 0;
+
     public $groups_offset = 0;
 
     // whether this should be verbose and output to console
     public $verbose = 0;
+
+    public $error_level = 0; // 0 = off
 
     public function sendGroups()
     {
@@ -32,7 +35,11 @@ class GroupEmailSenderBehavior extends CBehavior
 
         if (!$group->getIsActive())
         {
-            Yii::log(Yii::t('groups', 'This customer is inactive!'), CLogger::LEVEL_ERROR);
+            if($this->error_level > 0)
+            {
+                Yii::log(Yii::t('groups', 'This customer is inactive!'), CLogger::LEVEL_ERROR);
+            }
+
             $group->saveStatus(Group::STATUS_PAUSED);
 
             if ($this->verbose)
@@ -54,8 +61,10 @@ class GroupEmailSenderBehavior extends CBehavior
             ->where('id=:id', array(':id' => 1))
             ->queryRow();
 
-        Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' Options'), CLogger::LEVEL_INFO);
-
+        if($this->error_level > 2)
+        {
+            Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' Options '.print_r($options, true)), CLogger::LEVEL_INFO);
+        }
 
         if ($this->verbose)
         {
@@ -81,8 +90,11 @@ class GroupEmailSenderBehavior extends CBehavior
             echo "[".date("Y-m-d H:i:s")."] Found ".$count['count']." email(s)...\n";
         }
 
-        Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' Count '.$count['count']), CLogger::LEVEL_INFO);
 
+        if($this->error_level > 0)
+        {
+            Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' Count '.$count['count']), CLogger::LEVEL_INFO);
+        }
 
         $emailsToBeSent = $count['count'];
 
@@ -92,8 +104,12 @@ class GroupEmailSenderBehavior extends CBehavior
             $emailsToBeSent = $emailsAtOnce;
         }
 
-        Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' Emails to be sent '.$emailsAtOnce), CLogger::LEVEL_INFO);
 
+        if($this->error_level > 0)
+        {
+            Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' Emails to be sent '.$emailsAtOnce),
+                CLogger::LEVEL_INFO);
+        }
         if ($this->verbose)
         {
             echo "[".date("Y-m-d H:i:s")."] There are ".$emailsToBeSent." emails to be sent...\n";
@@ -111,7 +127,12 @@ class GroupEmailSenderBehavior extends CBehavior
                 echo "[".date("Y-m-d H:i:s")."] This Group is in Compliance Review...\n";
             }
 
-            Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' is in compliance review'), CLogger::LEVEL_INFO);
+
+            if($this->error_level > 0)
+            {
+                Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' is in compliance review'),
+                    CLogger::LEVEL_INFO);
+            }
 
             $complianceReview = true;
 
@@ -123,8 +144,13 @@ class GroupEmailSenderBehavior extends CBehavior
                 echo "[".date("Y-m-d H:i:s")."] There are ".$emailsToBeSent." emails to be sent...\n";
             }
 
-            Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' Compliance Emails to be sent '.$emailsToBeSent), CLogger::LEVEL_INFO);
 
+            if($this->error_level > 0)
+            {
+                Yii::log(Yii::t('groups',
+                    'Group '.$group->group_email_id.' Compliance Emails to be sent '.$emailsToBeSent),
+                    CLogger::LEVEL_INFO);
+            }
 
             // Determine how many emails should be set to in-review status
             $in_review_count = $count['count']-$emailsToBeSent;
@@ -134,34 +160,53 @@ class GroupEmailSenderBehavior extends CBehavior
                 echo "[".date("Y-m-d H:i:s")."] Setting ".$in_review_count." emails to in-review...\n";
             }
 
-            Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' Emails set to in-review '.$in_review_count), CLogger::LEVEL_INFO);
 
+            if($this->error_level > 2)
+            {
+                Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' Emails set to in-review '.$in_review_count),
+                    CLogger::LEVEL_INFO);
+            }
             $this->setComplianceStatus($group, $in_review_count);
 
-            Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' "Compliance" Status set to in-review'), CLogger::LEVEL_INFO);
-
+            if($this->error_level > 2)
+            {
+                Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' "Compliance" Status set to in-review'),
+                    CLogger::LEVEL_INFO);
+            }
             $group->saveStatus(Group::STATUS_IN_COMPLIANCE);
 
-            Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' Compliance Status set to in-review'), CLogger::LEVEL_INFO);
-
+            if($this->error_level > 0)
+            {
+                Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' Compliance Status set to in-review'),
+                    CLogger::LEVEL_INFO);
+            }
 
         }
         elseif ($group->compliance->compliance_status== GROUP::STATUS_APPROVED)
         {
-            Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' Status approved'), CLogger::LEVEL_INFO);
+            if($this->error_level > 2)
+            {
+                Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' Status approved'), CLogger::LEVEL_INFO);
+            }
 
             $this->setGroupEmailStatusPendingSending($group);
 
-            Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' Status pending-sending'), CLogger::LEVEL_INFO);
-
+            if($this->error_level > 2)
+            {
+                Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' Status pending-sending'),
+                    CLogger::LEVEL_INFO);
+            }
             $group->saveStatus(Group::STATUS_PENDING_SENDING);
 
         }
 
         $emails = $this->findAllGroupEmail($group);
 
-        Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' gross email count '.$emails), CLogger::LEVEL_INFO);
-
+        if($this->error_level > 2)
+        {
+            Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' gross email count '.count($emails)),
+                CLogger::LEVEL_INFO);
+        }
         if ($this->verbose)
         {
             echo "[".date("Y-m-d H:i:s")."] Gross Emails Count ".count($emails)."...\n";
@@ -173,10 +218,12 @@ class GroupEmailSenderBehavior extends CBehavior
 
         if (empty($server))
         {
-            Yii::log(Yii::t('groups',
-                'Cannot find a valid server to send the Group email, aborting until a delivery server is available!'),
-                CLogger::LEVEL_ERROR);
-
+            if($this->error_level > 2)
+            {
+                Yii::log(Yii::t('groups',
+                    'Cannot find a valid server to send the Group email, aborting until a delivery server is available!'),
+                    CLogger::LEVEL_ERROR);
+            }
             if ($this->verbose)
             {
                 echo "\n[".date("Y-m-d H:i:s")."] Unable to find a valid delivery server, aborting until a delivery server is available!\n";
@@ -237,7 +284,12 @@ class GroupEmailSenderBehavior extends CBehavior
                 echo "[".date("Y-m-d H:i:s")."] Running email cleanup for ".count($emails)." emails...\n";
             }
 
-            Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' running clean up for '.count($emails).' emails'), CLogger::LEVEL_INFO);
+            if($this->error_level > 2)
+            {
+                Yii::log(Yii::t('groups',
+                    'Group '.$group->group_email_id.' running clean up for '.count($emails).' emails'),
+                    CLogger::LEVEL_INFO);
+            }
 
             $beforeForeachTime = microtime(true);
             $sendingAloneTime = 0;
@@ -254,13 +306,21 @@ class GroupEmailSenderBehavior extends CBehavior
 
             }
 
-            Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' Status sent to '.Group::STATUS_PROCESSING), CLogger::LEVEL_INFO);
+            if($this->error_level > 0)
+            {
+                Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' Status sent to '.Group::STATUS_PROCESSING),
+                    CLogger::LEVEL_INFO);
+            }
 
             if ($complianceReview)
             {
                 $group->saveStatus(Group::STATUS_IN_COMPLIANCE);
 
-                Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' Status '.Group::STATUS_IN_COMPLIANCE), CLogger::LEVEL_INFO);
+                if($this->error_level > 0)
+                {
+                    Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' Status '.Group::STATUS_IN_COMPLIANCE),
+                        CLogger::LEVEL_INFO);
+                }
 
                 if ($this->verbose)
                 {
@@ -287,8 +347,12 @@ class GroupEmailSenderBehavior extends CBehavior
                         echo "\n[".date("Y-m-d H:i:s")."] The email address has been found in the blacklist, sending is denied!\n";
                     }
 
-                    Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' email address found in blacklist '.$email), CLogger::LEVEL_WARNING);
-
+                    if($this->error_level > 0)
+                    {
+                        Yii::log(Yii::t('groups',
+                            'Group '.$group->group_email_id.' email address found in blacklist '.$email),
+                            CLogger::LEVEL_WARNING);
+                    }
                     continue;
                 }
 
@@ -411,8 +475,11 @@ class GroupEmailSenderBehavior extends CBehavior
 
                 }
 
-                Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' Sent email  '.$sent['email_id']), CLogger::LEVEL_INFO);
-
+                if($this->error_level > 0)
+                {
+                    Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' Sent email  '.$sent['email_id']),
+                        CLogger::LEVEL_INFO);
+                }
                 $index++;
             }
 
@@ -422,9 +489,11 @@ class GroupEmailSenderBehavior extends CBehavior
             {
                 $group->saveStatus(Group::STATUS_SENT);
 
-                Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' status set to sent'), CLogger::LEVEL_INFO);
-
-
+                if($this->error_level > 0)
+                {
+                    Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' status set to sent'),
+                        CLogger::LEVEL_INFO);
+                }
                 if ($this->verbose)
                 {
                     echo "[".date("Y-m-d H:i:s")."] Group status has been set to SENT.\n";
@@ -442,8 +511,11 @@ class GroupEmailSenderBehavior extends CBehavior
             $emailSent = $index + $group->emails_sent;
             $group->saveNumberSent($group, $emailSent);
 
-            Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' number of emails sent: '. $emailSent), CLogger::LEVEL_INFO);
-
+            if($this->error_level > 0)
+            {
+                Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' number of emails sent: '.$emailSent),
+                    CLogger::LEVEL_INFO);
+            }
 
         } catch (Exception $e)
         {
@@ -453,6 +525,7 @@ class GroupEmailSenderBehavior extends CBehavior
 
             // make sure sending is resumed next time.
             $email->status = GROUP::STATUS_PENDING_SENDING;
+            $group->saveStatus(Group::STATUS_PENDING_SENDING);
             if ($this->verbose)
             {
                 echo "[".date("Y-m-d H:i:s")."] Caught exception with message: ".$e->getMessage()."\n";

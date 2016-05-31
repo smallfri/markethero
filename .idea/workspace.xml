@@ -3,11 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="c9b7ec24-babb-4088-b4f3-f3a6cadded3c" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/DashboardController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/DashboardController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/common/config/main.php" afterPath="$PROJECT_DIR$/apps/common/config/main.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/common/models/Group.php" afterPath="$PROJECT_DIR$/apps/common/models/Group.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/console/commands/GroupsComplianceHandlerCommand.php" afterPath="$PROJECT_DIR$/apps/console/commands/GroupsComplianceHandlerCommand.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/console/commands/SendGroupsCommand.php" afterPath="$PROJECT_DIR$/apps/console/commands/SendGroupsCommand.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php" afterPath="$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsGroupController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsGroupController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/ManageGroupController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/ManageGroupController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/routes.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/routes.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/resources/views/dashboard/groups/index.blade.php" afterPath="$PROJECT_DIR$/mhapi/resources/views/dashboard/groups/index.blade.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/migrations/00100_create_transactional_email_groups.sql" afterPath="$PROJECT_DIR$/mhapi/migrations/00100_create_transactional_email_groups.sql" />
     </list>
     <ignored path="MarketHero.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -29,99 +31,43 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="DashboardController.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/DashboardController.php">
+      <file leaf-file-name="GroupsComplianceHandlerCommand.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/console/commands/GroupsComplianceHandlerCommand.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-71.11539">
-              <caret line="432" column="89" selection-start-line="432" selection-start-column="89" selection-end-line="432" selection-end-column="89" />
+            <state vertical-scroll-proportion="-16.961538">
+              <caret line="62" column="58" selection-start-line="62" selection-start-column="58" selection-end-line="62" selection-end-column="58" />
               <folding>
-                <marker date="1464713882000" expanded="true" signature="991:1172" placeholder="select DATE(..." />
-                <marker date="1464713882000" expanded="true" signature="1229:1410" placeholder="select DATE(..." />
-                <marker date="1464713882000" expanded="true" signature="3388:3574" placeholder="select DATE(..." />
-                <marker date="1464713882000" expanded="true" signature="3631:3817" placeholder="select DATE(..." />
-                <marker date="1464713882000" expanded="true" signature="5864:6055" placeholder="select DATE(..." />
-                <marker date="1464713882000" expanded="true" signature="6112:6303" placeholder="select DATE(..." />
+                <marker date="1464717777000" expanded="true" signature="9523:9834" placeholder="INSERT INTO mw_group_email_compliance_score..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="default.blade.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mhapi/resources/views/templates/default.blade.php">
+      <file leaf-file-name="00100_create_transactional_email_groups.sql" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mhapi/migrations/00100_create_transactional_email_groups.sql">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-28.307692">
-              <caret line="449" column="47" selection-start-line="449" selection-start-column="47" selection-end-line="449" selection-end-column="55" />
-              <folding>
-                <marker date="1464351870000" expanded="true" signature="19501:19627" placeholder="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="table.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/mhapi/public/assets/js/pages/table.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.13963039">
-              <caret line="8" column="24" selection-start-line="8" selection-start-column="24" selection-end-line="8" selection-end-column="24" />
+            <state vertical-scroll-proportion="-5.0540543">
+              <caret line="60" column="58" selection-start-line="60" selection-start-column="58" selection-end-line="60" selection-end-column="58" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GroupEmailsGroupController.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsGroupController.php">
+      <file leaf-file-name="SendGroupsCommand.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/console/commands/SendGroupsCommand.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-31.23077">
-              <caret line="105" column="5" selection-start-line="105" selection-start-column="5" selection-end-line="105" selection-end-column="5" />
-              <folding>
-                <element signature="e#119#143#0#PHP" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ManageGroupController.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/ManageGroupController.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-28.115385">
-              <caret line="99" column="93" selection-start-line="99" selection-start-column="93" selection-end-line="99" selection-end-column="93" />
-              <folding>
-                <element signature="e#119#149#0#PHP" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.blade.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mhapi/resources/views/dashboard/groups/index.blade.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-8.461538">
-              <caret line="55" column="189" selection-start-line="55" selection-start-column="189" selection-end-line="55" selection-end-column="189" />
-              <folding>
-                <element signature="e#2545#2575#0#HTML" expanded="true" />
-                <element signature="e#2735#2765#0#HTML" expanded="true" />
-                <element signature="e#2928#2958#0#HTML" expanded="true" />
-                <element signature="e#3121#3151#0#HTML" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="routes.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mhapi/app/Http/routes.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-18.961538">
-              <caret line="29" column="36" selection-start-line="29" selection-start-column="36" selection-end-line="29" selection-end-column="36" />
+            <state vertical-scroll-proportion="-24.846153">
+              <caret line="169" column="31" selection-start-line="169" selection-start-column="31" selection-end-line="169" selection-end-column="31" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GroupControlsModel.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mhapi/app/GroupControlsModel.php">
+      <file leaf-file-name="GroupEmailSenderBehavior.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-3.9230769">
-              <caret line="6" column="6" selection-start-line="6" selection-start-column="6" selection-end-line="6" selection-end-column="6" />
+            <state vertical-scroll-proportion="0.3903559">
+              <caret line="206" column="106" selection-start-line="206" selection-start-column="106" selection-end-line="206" selection-end-column="106" />
               <folding />
             </state>
           </provider>
@@ -149,7 +95,6 @@
         <option value="$PROJECT_DIR$/mhapi/tests/acceptance/CreateGroupEmailGroupCept.php" />
         <option value="$PROJECT_DIR$/autoload.php" />
         <option value="$PROJECT_DIR$/apps/common/index.php" />
-        <option value="$PROJECT_DIR$/apps/common/config/main.php" />
         <option value="$PROJECT_DIR$/apps/console/components/logger/Logger.php" />
         <option value="$PROJECT_DIR$/apps/console/components/logger/CommandLogger.php" />
         <option value="$PROJECT_DIR$/apps/console/commands/SendTransactionalEmailsCommand.php" />
@@ -169,23 +114,24 @@
         <option value="$PROJECT_DIR$/mhapi/app/SpamController.php" />
         <option value="$PROJECT_DIR$/mhapi/app/CampaignAbuseModel.php" />
         <option value="$PROJECT_DIR$/apps/common/models/GroupBounceLog.php" />
-        <option value="$PROJECT_DIR$/apps/console/commands/SendGroupsCommand.php" />
         <option value="$PROJECT_DIR$/apps/common/models/GroupAbuseReport.php" />
         <option value="$PROJECT_DIR$/mhapi/resources/views/dashboard/groups/controls.blade.php" />
         <option value="$PROJECT_DIR$/apps/common/models/GroupControl.php" />
         <option value="$PROJECT_DIR$/apps/common/models/GroupOptions.php" />
         <option value="$PROJECT_DIR$/apps/common/models/GroupComplianceScoreLog.php" />
-        <option value="$PROJECT_DIR$/mhapi/migrations/00100_create_transactional_email_groups.sql" />
-        <option value="$PROJECT_DIR$/apps/common/models/Group.php" />
-        <option value="$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php" />
         <option value="$PROJECT_DIR$/apps/console/config/main.php" />
         <option value="$PROJECT_DIR$/apps/console/commands/GroupsComplianceScoreCommand.php" />
-        <option value="$PROJECT_DIR$/apps/console/commands/GroupsComplianceHandlerCommand.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/DashboardController.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/routes.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsGroupController.php" />
         <option value="$PROJECT_DIR$/mhapi/resources/views/dashboard/groups/index.blade.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/ManageGroupController.php" />
+        <option value="$PROJECT_DIR$/apps/console/commands/GroupsComplianceHandlerCommand.php" />
+        <option value="$PROJECT_DIR$/mhapi/migrations/00100_create_transactional_email_groups.sql" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsGroupController.php" />
+        <option value="$PROJECT_DIR$/apps/common/models/Group.php" />
+        <option value="$PROJECT_DIR$/apps/common/config/main.php" />
+        <option value="$PROJECT_DIR$/apps/console/commands/SendGroupsCommand.php" />
+        <option value="$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php" />
       </list>
     </option>
   </component>
@@ -798,7 +744,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="db" />
+              <option name="myItemId" value="collections" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -820,15 +766,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="framework" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="db" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="schema" />
+              <option name="myItemId" value="config" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -926,7 +864,7 @@
     <editor active="true" />
     <layout>
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32971016" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.188" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.222" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26766917" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.45090908" sideWeight="0.50213677" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15589081" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -1035,47 +973,10 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/mhapi/resources/views/dashboard/group-emails/index.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/resources/views/dashboard/index.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-53.76923">
-          <caret line="198" column="94" selection-start-line="198" selection-start-column="94" selection-end-line="198" selection-end-column="94" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/resources/views/dashboard/customers/index.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.26771653">
-          <caret line="20" column="90" selection-start-line="20" selection-start-column="90" selection-end-line="20" selection-end-column="90" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/common/models/Customer.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.32405567">
-          <caret line="625" column="48" selection-start-line="625" selection-start-column="48" selection-end-line="625" selection-end-column="48" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/apps/common/components/db/ar/BaseActiveRecord.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.25347912">
           <caret line="15" column="10" selection-start-line="15" selection-start-column="10" selection-end-line="15" selection-end-column="10" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/GroupEmailGroupsModel.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-11.769231">
-          <caret line="18" column="39" selection-start-line="18" selection-start-column="39" selection-end-line="18" selection-end-column="39" />
           <folding />
         </state>
       </provider>
@@ -1232,34 +1133,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/console/commands/SendCampaignsCommand.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-18.307692">
-          <caret line="122" column="54" selection-start-line="119" selection-start-column="8" selection-end-line="122" selection-end-column="54" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/apps/common/models/GroupAbuseReport.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.082846">
           <caret line="5" column="57" selection-start-line="5" selection-start-column="57" selection-end-line="5" selection-end-column="57" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/console/commands/SendGroupsCommand.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.2450852">
-          <caret line="27" column="24" selection-start-line="27" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/console/components/behaviors/CampaignSenderBehavior.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33289647">
-          <caret line="727" column="23" selection-start-line="727" selection-start-column="23" selection-end-line="727" selection-end-column="23" />
           <folding />
         </state>
       </provider>
@@ -1284,46 +1161,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-6.4615383">
           <caret line="59" column="45" selection-start-line="59" selection-start-column="45" selection-end-line="59" selection-end-column="45" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/common/models/Group.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="21.576923">
-          <caret line="16" column="34" selection-start-line="16" selection-start-column="34" selection-end-line="16" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/common/framework/logging/CLogger.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-15.423077">
-          <caret line="36" column="20" selection-start-line="36" selection-start-column="10" selection-end-line="36" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/console/config/main.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-17.26923">
-          <caret line="80" column="4" selection-start-line="80" selection-start-column="4" selection-end-line="85" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/migrations/00100_create_transactional_email_groups.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.5104895">
-          <caret line="59" column="58" selection-start-line="59" selection-start-column="58" selection-end-line="59" selection-end-column="58" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.35905766">
-          <caret line="462" column="37" selection-start-line="462" selection-start-column="0" selection-end-line="463" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1355,16 +1192,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/console/commands/GroupsComplianceHandlerCommand.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5220472">
-          <caret line="39" column="29" selection-start-line="39" selection-start-column="29" selection-end-line="39" selection-end-column="29" />
-          <folding>
-            <marker date="1464611608000" expanded="true" signature="9519:9830" placeholder="INSERT INTO mw_group_email_compliance_score..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mhapi/resources/views/dashboard/groups/controls.blade.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.8607595">
@@ -1373,60 +1200,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/GroupControlsModel.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-3.9230769">
-          <caret line="6" column="6" selection-start-line="6" selection-start-column="6" selection-end-line="6" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsGroupController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-31.23077">
-          <caret line="105" column="5" selection-start-line="105" selection-start-column="5" selection-end-line="105" selection-end-column="5" />
-          <folding>
-            <element signature="e#119#143#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mhapi/app/GroupEmailComplianceModel.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.10759494">
           <caret line="6" column="6" selection-start-line="6" selection-start-column="6" selection-end-line="6" selection-end-column="6" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/routes.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-18.961538">
-          <caret line="29" column="36" selection-start-line="29" selection-start-column="36" selection-end-line="29" selection-end-column="36" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/resources/views/dashboard/groups/index.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-8.461538">
-          <caret line="55" column="189" selection-start-line="55" selection-start-column="189" selection-end-line="55" selection-end-column="189" />
-          <folding>
-            <element signature="e#2545#2575#0#HTML" expanded="true" />
-            <element signature="e#2735#2765#0#HTML" expanded="true" />
-            <element signature="e#2928#2958#0#HTML" expanded="true" />
-            <element signature="e#3121#3151#0#HTML" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/ManageGroupController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-28.115385">
-          <caret line="99" column="93" selection-start-line="99" selection-start-column="93" selection-end-line="99" selection-end-column="93" />
-          <folding>
-            <element signature="e#119#149#0#PHP" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1467,6 +1245,185 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.13963039">
           <caret line="8" column="24" selection-start-line="8" selection-start-column="24" selection-end-line="8" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/ManageGroupController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.77109706">
+          <caret line="99" column="93" selection-start-line="99" selection-start-column="93" selection-end-line="99" selection-end-column="93" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/resources/views/dashboard/groups/index.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6050605">
+          <caret line="55" column="189" selection-start-line="55" selection-start-column="189" selection-end-line="55" selection-end-column="189" />
+          <folding>
+            <element signature="e#2545#2575#0#HTML" expanded="true" />
+            <element signature="e#2735#2765#0#HTML" expanded="true" />
+            <element signature="e#2928#2958#0#HTML" expanded="true" />
+            <element signature="e#3121#3151#0#HTML" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/routes.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5200422">
+          <caret line="29" column="36" selection-start-line="29" selection-start-column="36" selection-end-line="29" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/GroupControlsModel.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.10759494">
+          <caret line="6" column="6" selection-start-line="6" selection-start-column="6" selection-end-line="6" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/console/config/main.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.4345992">
+          <caret line="80" column="4" selection-start-line="80" selection-start-column="4" selection-end-line="85" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/common/framework/logging/CLogger.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-15.692307">
+          <caret line="31" column="6" selection-start-line="31" selection-start-column="6" selection-end-line="31" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/console/commands/SendCampaignsCommand.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-45.76923">
+          <caret line="175" column="80" selection-start-line="175" selection-start-column="68" selection-end-line="175" selection-end-column="80" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/console/components/behaviors/CampaignSenderBehavior.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-6.230769">
+          <caret line="47" column="38" selection-start-line="47" selection-start-column="29" selection-end-line="47" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/common/framework/yiilite.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-12.461538">
+          <caret line="265" column="27" selection-start-line="265" selection-start-column="27" selection-end-line="265" selection-end-column="27" />
+          <folding>
+            <marker date="1453816882000" expanded="true" signature="263155:263232" placeholder="CREATE TABLE..${$this-&gt;quoteTableName($table)}..." />
+            <marker date="1453816882000" expanded="true" signature="263492:263503" placeholder="DROP TABLE $..." />
+            <marker date="1453816882000" expanded="true" signature="263704:263801" placeholder="ALTER TABLE ${$this-&gt;quoteTableName($table)}..." />
+            <marker date="1453816882000" expanded="true" signature="263897:263959" placeholder="ALTER TABLE ${$this-&gt;quoteTableName($table)}..." />
+            <marker date="1453816882000" expanded="true" signature="264063:264170" placeholder="ALTER TABLE ${$this-&gt;quoteTableName($table)}..." />
+            <marker date="1453816882000" expanded="true" signature="264273:264416" placeholder="ALTER TABLE ${$this-&gt;quoteTableName($table)}..." />
+            <marker date="1453816882000" expanded="true" signature="264929:265163" placeholder="ALTER TABLE ${$this-&gt;quoteTableName($table)}..." />
+            <marker date="1453816882000" expanded="true" signature="265349:265415" placeholder="ALTER TABLE ${$this-&gt;quoteTableName($table)}..." />
+            <marker date="1453816882000" expanded="true" signature="266316:266470" placeholder="ALTER TABLE ${$this-&gt;quoteTableName($table)}..." />
+            <marker date="1453816882000" expanded="true" signature="266535:266601" placeholder="ALTER TABLE ${$this-&gt;quoteTableName($table)}..." />
+            <marker date="1453816882000" expanded="true" signature="267460:267500" placeholder="SELECT MAX(`..${{$table-&gt;rawName}..." />
+            <marker date="1453816882000" expanded="true" signature="267658:267725" placeholder="UPDATE sqlit..." />
+            <marker date="1453816882000" expanded="true" signature="267992:268069" placeholder="SELECT DISTI..sqlite_master..." />
+            <marker date="1453816882000" expanded="true" signature="270131:270191" placeholder="ALTER TABLE ${$this-&gt;quoteTableName($table)}..." />
+            <marker date="1453816882000" expanded="true" signature="270283:270295" placeholder="DELETE FROM ..." />
+            <marker date="1453816882000" expanded="true" signature="288845:288990" placeholder="INSERT INTO ${$this-&gt;_connection-&gt;quoteTableName($table)}..." />
+            <marker date="1453816882000" expanded="true" signature="289814:289826" placeholder="DELETE FROM ..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/common/framework/collections/CMap.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.806962">
+          <caret line="52" column="20" selection-start-line="52" selection-start-column="20" selection-end-line="52" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/common/framework/logging/CLogRouter.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.4620253">
+          <caret line="77" column="22" selection-start-line="77" selection-start-column="22" selection-end-line="77" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/console/commands/GroupsComplianceHandlerCommand.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-16.961538">
+          <caret line="62" column="58" selection-start-line="62" selection-start-column="58" selection-end-line="62" selection-end-column="58" />
+          <folding>
+            <marker date="1464717777000" expanded="true" signature="9523:9834" placeholder="INSERT INTO mw_group_email_compliance_score..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/GroupEmailGroupsModel.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3227848">
+          <caret line="18" column="39" selection-start-line="18" selection-start-column="39" selection-end-line="18" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsGroupController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.1476793">
+          <caret line="69" column="25" selection-start-line="69" selection-start-column="25" selection-end-line="69" selection-end-column="25" />
+          <folding>
+            <element signature="e#119#143#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/migrations/00100_create_transactional_email_groups.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.0540543">
+          <caret line="60" column="58" selection-start-line="60" selection-start-column="58" selection-end-line="60" selection-end-column="58" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/common/config/main.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.40822786">
+          <caret line="109" column="54" selection-start-line="109" selection-start-column="54" selection-end-line="109" selection-end-column="54" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/common/models/Group.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.34177214">
+          <caret line="39" column="10" selection-start-line="39" selection-start-column="10" selection-end-line="39" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/console/commands/SendGroupsCommand.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-24.846153">
+          <caret line="169" column="31" selection-start-line="169" selection-start-column="31" selection-end-line="169" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/console/components/behaviors/GroupEmailSenderBehavior.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3903559">
+          <caret line="206" column="106" selection-start-line="206" selection-start-column="106" selection-end-line="206" selection-end-column="106" />
           <folding />
         </state>
       </provider>

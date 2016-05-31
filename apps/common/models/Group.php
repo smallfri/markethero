@@ -454,11 +454,11 @@ class Group extends ActiveRecord
     public function saveNumberSent($group, $index)
     {
 
-        Group::model()->updateByPk(
-            $group->group_email_id,
-            [
-                'emails_sent' => $index
-            ]);
+//        Group::model()->updateByPk(
+//            $group->group_email_id,
+//            [
+//                'emails_sent' => $index
+//            ]);
     }
 
 }

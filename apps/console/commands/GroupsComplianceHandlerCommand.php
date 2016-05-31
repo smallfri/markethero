@@ -60,7 +60,7 @@ class GroupsComplianceHandlerCommand extends CConsoleCommand
 
         //Get Groups that are in-review
         $criteria = new CDbCriteria();
-        $criteria->addCondition('status = "in-review" DATE_ADD(NOW(), INTERVAL 2 HOUR) > date_added ');
+        $criteria->addCondition('status = "in-review" AND DATE_ADD(NOW(), INTERVAL 2 HOUR) > date_added ');
         $Groups = Group::model()->findAll($criteria);
 
         $compliance = [];

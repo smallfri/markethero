@@ -107,7 +107,7 @@ return array(
             'routes' => array(
                 array(
                     'class'   => 'CFileLogRoute',
-                    'levels'  => 'error',
+                    'levels'  => 'error, info, warning',
                     'enabled' => true,
                 ),
                 array(

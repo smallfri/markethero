@@ -27,6 +27,8 @@ class SendGroupsCommand extends CConsoleCommand
     // whether this should be verbose and output to console
     public $verbose = 0;
 
+    public $error_level = 0;
+
     public function init()
     {
         parent::init();
@@ -165,7 +167,8 @@ class SendGroupsCommand extends CConsoleCommand
                 'groups_type'    => $this->groups_type,
                 'groups_limit'   => (int)$this->groups_limit,
                 'groups_offset'  => (int)$this->groups_offset,
-                'verbose'           => 1,
+                'verbose'        => $this->verbose,
+                'error_level'    => $this->error_level,
             ));
             
             if ($this->verbose) {
