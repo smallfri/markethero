@@ -20,14 +20,11 @@ class LogsController extends Controller
     function __construct()
     {
 
-
     }
 
     public function index()
     {
 
-
-        //        pr($_SERVER);
         $level = $data['level'] = Input::get('level', -1);
         $min_time = $data['time'] = Input::get('time', 0);
         $text = $data['text'] = Input::get('text', null);
@@ -35,7 +32,7 @@ class LogsController extends Controller
         $sql = TraceLog::where('level', '>=', $level)
             ->where('execution', '>=', $min_time)
             ->orderBy('created_at', 'DESC');
-        if($text!=null)
+        if ($text!=null)
         {
             $sql->where(function ($query) use ($text)
             {
@@ -57,8 +54,16 @@ class LogsController extends Controller
     public function viewLog($id)
     {
 
-            $data['log'] = TraceLog::find($id);
+        $data['log'] = TraceLog::find($id);
 
-            return view('logs.viewLog', $data);
+        return view('logs.viewLog', $data);
+    }
+
+    public function applicationLog()
+    {
+        $data['log']  = file_get_contents('/var/www/html/apps/common/runtime/application.log');
+
+        return view('logs.application', $data);
+
     }
 }

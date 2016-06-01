@@ -30,8 +30,8 @@ class GroupEmailsGroupController extends ApiController
 
         $data = json_decode(file_get_contents('php://input'), true);
 
-        Logger::addProgress('(Transaction Email Group) Create '.print_r($data, true),
-            '(Transaction Email Group) Create');
+        Logger::addProgress('(Group) Create '.print_r($data, true),
+            '(Group) Create');
 
         if (empty($data))
         {
@@ -55,8 +55,8 @@ class GroupEmailsGroupController extends ApiController
 
         if (!empty($missing_fields))
         {
-            Logger::addProgress('(Transaction Email Group) Missing Fields '.print_r($missing_fields, true),
-                '(Transaction Email Group) Missing Fields');
+            Logger::addProgress('(Group) Missing Fields '.print_r($missing_fields, true),
+                '(Group) Missing Fields');
 
             return $this->respondWithError($missing_fields);
         }
@@ -85,8 +85,13 @@ class GroupEmailsGroupController extends ApiController
             return $this->respondWithError('There was an error, the group was not created.');
         }
 
-        Logger::addProgress('(Transaction Email Group) Created '.print_r($GroupEmailGroups, true),
-            '(Transaction Email Group) Created');
+        Logger::addProgress('(Group) Created '.print_r($GroupEmailGroups, true),
+            '(Group) Created');
+
+        $headers = 'FROM: support@licneseengine.com';
+
+        mail('8436552621@vtext.com','New Group Created',$GroupEmailGroups->group_email_id,$headers);
+
 
         return $this->respond(['group' => $GroupEmailGroups->group_email_id]);
 
@@ -105,5 +110,8 @@ class GroupEmailsGroupController extends ApiController
         $GroupEmailCompliance->save();
 
     }
+
+    public function sendMail()
+    {}
 
 }

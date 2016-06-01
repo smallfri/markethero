@@ -86,9 +86,7 @@ class ReferralsController extends Controller
         $this->setData(array(
             'pageMetaTitle' => $this->data->pageMetaTitle.' | '.Yii::t('campaigns','Your Referral Settings'),
             'pageHeading' => Yii::t('campaigns','Your Referral Settings'),
-            'referral_url' => Yii::t('campaigns',$Referral->jvz_referral_url),
             'pageBreadcrumbs' => array(
-                Yii::t('Referrals','Referrals') => $this->createUrl('referrals/index'),
                 Yii::t('app','View all')
             )
         ));

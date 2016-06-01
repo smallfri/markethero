@@ -20,6 +20,12 @@ Route::resource('controls', 'DashboardController@controls');
 Route::resource('transactional-emails', 'DashboardController@transactional_emails');
 Route::resource('group-emails', 'DashboardController@group_emails');
 Route::resource('customers', 'DashboardController@customers');
+Route::resource('viewLog', 'LogsController@viewLog');
+Route::resource('trace-logs', 'LogsController@index');
+Route::resource('application-logs', 'LogsController@applicationLog');
+
+
+
 
 Route::resource('v1/unsubscribe', 'ListSubscribersController@unsubscribe');
 //Route::resource('v1/subscriber', 'ListSubscribersController@search');

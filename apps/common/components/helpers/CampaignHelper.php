@@ -690,7 +690,7 @@ class CampaignHelper
     {
 
         $referral_url = Yii::app()->db->createCommand()
-            ->select('jvz_referral_url')
+//            ->select('jvz_referral_url')
             ->from('mw_customer_referral_url')
             ->where('customer_id=:id',array(':id' => $customer_id))
             ->queryRow();
