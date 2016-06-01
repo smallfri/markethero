@@ -14,6 +14,8 @@ BEGIN
   drop table if exists mw_group_email_abuse_report;
   drop table if exists mw_group_email_log;
   drop table if exists mw_group_email_bounce_log;
+  drop table if exists mw_group_email_unsubscribe;
+  drop table if exists mw_group_email_compliance_score;
 END
 $$
 
@@ -108,8 +110,8 @@ BEGIN
     KEY `customer_id` (`customer_id`),
     KEY `group_email_id` (`group_email_id`),
     CONSTRAINT `mw_group_email_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `mw_customer` (`customer_id`),
-    CONSTRAINT `mw_group_email_ibfk_2` FOREIGN KEY (`group_email_id`) REFERENCES `mw_customer_group` (`group_id`)
-  ) ENGINE=InnoDB AUTO_INCREMENT=334 DEFAULT CHARSET=utf8;
+    CONSTRAINT `mw_group_email_ibfk_2` FOREIGN KEY (`group_email_id`) REFERENCES `mw_group_email_groups` (`group_email_id`)
+  ) ENGINE=InnoDB AUTO_INCREMENT=337 DEFAULT CHARSET=utf8;
 
   CREATE TABLE `mw_group_email_compliance` (
     `group_email_id` int(11) NOT NULL,

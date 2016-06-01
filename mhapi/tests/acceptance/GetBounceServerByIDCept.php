@@ -9,4 +9,6 @@ $I->sendGET('/v1/bounce-servers/11');
 
 $I->seeResponseIsJson();
 
-$I->seeResponseContainsJson(['status_code'=>'200']);
+$I->seeResponseContainsJson(['error' => 'Bounce Server not found',
+  'status_code' => 400,
+]);

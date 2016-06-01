@@ -42,7 +42,8 @@ class GroupEmailsController extends ApiController
             'subject',
             'body',
             'plain_text',
-            'send_at'
+            'send_at',
+            'group_id'
         ];
 
         $missing_fields = array();

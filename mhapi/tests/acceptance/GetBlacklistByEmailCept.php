@@ -9,4 +9,5 @@ $I->sendGET('/v1/blacklist/russell9@smallfri.com');
 
 $I->seeResponseIsJson();
 
-$I->seeResponseContainsJson(['status_code'=>'200']);
+$I->seeResponseContainsJson(['error' => 'No Blacklist found.',
+  'status_code' => 400]);

@@ -17,7 +17,7 @@ $data =  <<<END
   "subject": "This is a test",
   "to_email": "russell@smallfri.com",
   "to_name": "Russell",
-  "group_id" : 11
+  "group_id" : 36
 }
 END;
 

@@ -305,7 +305,7 @@ class DashboardController extends ApiController
          */
         $groups = GroupEmailGroupsModel::all()->count();
         $transactionals = TransactionalEmailModel::all()->count();
-        $group_emails_count = GroupEmailGroupsModel::all()->count();
+        $group_emails_count = GroupEmailModel::all()->count();
         $customer_count = Customer::all()->count();
 
         $data = [
