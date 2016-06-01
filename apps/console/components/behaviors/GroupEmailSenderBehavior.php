@@ -513,7 +513,7 @@ class GroupEmailSenderBehavior extends CBehavior
 
             if($this->error_level > 0)
             {
-                Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' number of emails sent: '.$emailSent),
+                Yii::log(Yii::t('groups', 'Group '.$group->group_email_id.' number of emails sent: '.$emailSent-1),
                     CLogger::LEVEL_INFO);
             }
 
