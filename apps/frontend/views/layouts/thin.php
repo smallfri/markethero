@@ -6,7 +6,7 @@
  * @package MailWizz EMA
  * @author Serban George Cristian <cristian.serban@mailwizz.com> 
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
@@ -28,7 +28,7 @@
         <?php $this->afterOpeningBodyTag;?>
         <header class="header">
             <a href="<?php echo $this->createUrl('site/index');?>" class="logo icon">
-                <?php echo ($text = Yii::app()->options->get('system.customization.frontend_logo_text')) && !empty($text);?>
+                <?php echo ($text = Yii::app()->options->get('system.customization.frontend_logo_text')) && !empty($text) ? CHtml::encode($text) : CHtml::encode(Yii::app()->options->get('system.common.site_name'));?>
             </a>
             <nav class="navbar navbar-static-top" role="navigation"></nav>
         </header>

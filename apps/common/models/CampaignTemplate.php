@@ -2,15 +2,15 @@
 
 /**
  * CampaignTemplate
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
+
 /**
  * This is the model class for table "campaign_template".
  *
@@ -35,7 +35,7 @@ class CampaignTemplate extends ActiveRecord
 {
     // enable importing from url
     public $from_url;
-    
+
     /**
      * @return string the associated database table name
      */
@@ -55,7 +55,7 @@ class CampaignTemplate extends ActiveRecord
             array('inline_css, only_plain_text, auto_plain_text, minify', 'in', 'range' => array_keys($this->getYesNoOptions())),
             array('plain_text, from_url', 'safe'),
         );
-        
+
         return CMap::mergeArray($rules, parent::rules());
     }
 
@@ -70,7 +70,7 @@ class CampaignTemplate extends ActiveRecord
             'urlActionListFields'   => array(self::HAS_MANY, 'CampaignTemplateUrlActionListField', 'template_id'),
             'urlActionSubscribers'  => array(self::HAS_MANY, 'CampaignTemplateUrlActionSubscriber', 'template_id'),
         );
-        
+
         return CMap::mergeArray($relations, parent::relations());
     }
 
@@ -89,7 +89,7 @@ class CampaignTemplate extends ActiveRecord
             'auto_plain_text'   => Yii::t('campaigns', 'Auto plain text'),
             'from_url'          => Yii::t('campaigns', 'From url'),
         );
-        
+
         return CMap::mergeArray($labels, parent::attributeLabels());
     }
 
@@ -103,17 +103,17 @@ class CampaignTemplate extends ActiveRecord
     {
         return parent::model($className);
     }
-    
+
     public function getInlineCssArray()
     {
         return $this->getYesNoOptions();
     }
-    
+
     public function getAutoPlainTextArray()
     {
         return $this->getYesNoOptions();
     }
-    
+
     public function attributePlaceholders()
     {
         $placeholders = array(
@@ -124,11 +124,11 @@ class CampaignTemplate extends ActiveRecord
             'only_plain_text'   => '',
             'auto_plain_text'   => '',
             'from_url'          => '',
-        );    
-        
+        );
+
         return CMap::mergeArray($placeholders, parent::attributePlaceholders());
     }
-    
+
     public function attributeHelpTexts()
     {
         $texts = array(
@@ -140,10 +140,10 @@ class CampaignTemplate extends ActiveRecord
             'auto_plain_text'   => Yii::t('campaigns', 'Whether the plain text version of the html template should be auto generated.'),
             'from_url'          => Yii::t('campaigns', 'Enter url to fetch as a template'),
         );
-        
+
         return CMap::mergeArray($texts, parent::attributeHelpTexts());
     }
-    
+
     // see also CampaignHelper class
     public function getAvailableTags()
     {
@@ -160,13 +160,14 @@ class CampaignTemplate extends ActiveRecord
             array('tag' => '[LIST_DESCRIPTION]', 'required' => false),
             array('tag' => '[LIST_FROM_NAME]', 'required' => false),
             array('tag' => '[LIST_FROM_EMAIL]', 'required' => false),
-            
+
             array('tag' => '[CURRENT_YEAR]', 'required' => false),
             array('tag' => '[CURRENT_MONTH]', 'required' => false),
             array('tag' => '[CURRENT_DAY]', 'required' => false),
             array('tag' => '[CURRENT_DATE]', 'required' => false),
 
             array('tag' => '[COMPANY_NAME]', 'required' => false),
+            array('tag' => '[COMPANY_WEBSITE]', 'required' => false),
             array('tag' => '[COMPANY_ADDRESS_1]', 'required' => false),
             array('tag' => '[COMPANY_ADDRESS_2]', 'required' => false),
             array('tag' => '[COMPANY_CITY]', 'required' => false),
@@ -174,7 +175,7 @@ class CampaignTemplate extends ActiveRecord
             array('tag' => '[COMPANY_ZIP]', 'required' => false),
             array('tag' => '[COMPANY_COUNTRY]', 'required' => false),
             array('tag' => '[COMPANY_PHONE]', 'required' => false),
-            
+
             array('tag' => '[CAMPAIGN_NAME]', 'required' => false),
             array('tag' => '[CAMPAIGN_SUBJECT]', 'required' => false),
             array('tag' => '[CAMPAIGN_TO_NAME]', 'required' => false),
@@ -183,7 +184,8 @@ class CampaignTemplate extends ActiveRecord
             array('tag' => '[CAMPAIGN_REPLY_TO]', 'required' => false),
             array('tag' => '[CAMPAIGN_UID]', 'required' => false),
             array('tag' => '[SUBSCRIBER_UID]', 'required' => false),
-            
+            array('tag' => '[SUBSCRIBER_IP]', 'required' => false),
+
             array('tag' => '[SUBSCRIBER_DATE_ADDED]', 'required' => false),
             array('tag' => '[SUBSCRIBER_DATE_ADDED_LOCALIZED]', 'required' => false),
             array('tag' => '[DATE]', 'required' => false),
@@ -200,9 +202,20 @@ class CampaignTemplate extends ActiveRecord
                 $tags[] = array('tag' => '['.$field->tag.']', 'required' => false);
             }
         }
-        
+
+        // since 1.3.5.9
+        if (!empty($this->campaign)) {
+            $customerCampaignTags = CustomerCampaignTag::model()->findAll(array(
+                'select' => 'tag',
+                'limit'  => 100,
+            ));
+            foreach ($customerCampaignTags as $cct) {
+                $tags[] = array('tag' => '[' . CustomerCampaignTag::getTagPrefix() . $cct->tag . ']', 'required' => false);
+            }
+        }
+
         $tags = (array)Yii::app()->hooks->applyFilters('campaign_template_available_tags_list', $tags);
-        
+
         $optionTags = (array)Yii::app()->options->get('system.campaign.template_tags.template_tags', array());
         foreach ($optionTags as $optionTagInfo) {
             if (!isset($optionTagInfo['tag'], $optionTagInfo['required'])) {
@@ -212,23 +225,23 @@ class CampaignTemplate extends ActiveRecord
                 if ($tag['tag'] == $optionTagInfo['tag']) {
                     $tags[$index]['required'] = (bool)$optionTagInfo['required'];
                     break;
-                }   
+                }
             }
         }
-        
+
         return $tags;
     }
-    
+
     public function getContentUrls()
     {
         return CampaignHelper::extractTemplateUrls($this->content);
     }
-    
+
     public function getIsOnlyPlainText()
     {
         return $this->only_plain_text == self::TEXT_YES;
     }
-    
+
     public function getExtraUtmTags()
     {
         return array(

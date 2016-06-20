@@ -2,11 +2,11 @@
 
 /**
  * This file is part of the MailWizz EMA application.
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
@@ -15,7 +15,7 @@
  * This hook gives a chance to prepend content or to replace the default view content with a custom content.
  * Please note that from inside the action callback you can access all the controller view
  * variables via {@CAttributeCollection $collection->controller->data}
- * In case the content is replaced, make sure to set {@CAttributeCollection $collection->renderContent} to false 
+ * In case the content is replaced, make sure to set {@CAttributeCollection $collection->renderContent} to false
  * in order to stop rendering the default content.
  * @since 1.3.3.1
  */
@@ -34,13 +34,13 @@ if ($viewCollection->renderContent) { ?>
     </div>
     <div class="clearfix"><!-- --></div>
     <hr />
-    <?php 
+    <?php
     }
     /**
      * This hook gives a chance to prepend content before the active form or to replace the default active form entirely.
-     * Please note that from inside the action callback you can access all the controller view variables 
+     * Please note that from inside the action callback you can access all the controller view variables
      * via {@CAttributeCollection $collection->controller->data}
-     * In case the form is replaced, make sure to set {@CAttributeCollection $collection->renderForm} to false 
+     * In case the form is replaced, make sure to set {@CAttributeCollection $collection->renderForm} to false
      * in order to stop rendering the default content.
      * @since 1.3.3.1
      */
@@ -48,10 +48,10 @@ if ($viewCollection->renderContent) { ?>
         'controller'    => $this,
         'renderForm'    => true,
     )));
-    
+
     // and render if allowed
     if ($collection->renderForm) {
-        $form = $this->beginWidget('CActiveForm'); 
+        $form = $this->beginWidget('CActiveForm');
         ?>
         <div class="box box-primary">
             <div class="box-header">
@@ -66,17 +66,17 @@ if ($viewCollection->renderContent) { ?>
                 <div class="clearfix"><!-- --></div>
             </div>
             <div class="box-body">
-                <?php 
+                <?php
                 /**
                  * This hook gives a chance to prepend content before the active form fields.
-                 * Please note that from inside the action callback you can access all the controller view variables 
+                 * Please note that from inside the action callback you can access all the controller view variables
                  * via {@CAttributeCollection $collection->controller->data}
-                 * 
+                 *
                  * @since 1.3.3.1
                  */
                 $hooks->doAction('before_active_form_fields', new CAttributeCollection(array(
                     'controller'    => $this,
-                    'form'          => $form    
+                    'form'          => $form
                 )));
                 ?>
                 <div class="clearfix"><!-- --></div>
@@ -118,10 +118,15 @@ if ($viewCollection->renderContent) { ?>
                                 <?php echo $form->error($list, 'welcome_email');?>
                             </div>
                             <div class="clearfix"><!-- --></div>
-                            <div class="form-group col-lg-12">
+                            <div class="form-group col-lg-6">
                                 <?php echo $form->labelEx($list, 'subscriber_404_redirect');?>
                                 <?php echo $form->textField($list, 'subscriber_404_redirect', $list->getHtmlOptions('subscriber_404_redirect')); ?>
                                 <?php echo $form->error($list, 'subscriber_404_redirect');?>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <?php echo $form->labelEx($list, 'subscriber_exists_redirect');?>
+                                <?php echo $form->textField($list, 'subscriber_exists_redirect', $list->getHtmlOptions('subscriber_exists_redirect')); ?>
+                                <?php echo $form->error($list, 'subscriber_exists_redirect');?>
                             </div>
                             <div class="clearfix"><!-- --></div>
                         </div>
@@ -234,7 +239,7 @@ if ($viewCollection->renderContent) { ?>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="clearfix"><!-- --></div>    
+                                    <div class="clearfix"><!-- --></div>
                                 </div>
                                 <div class="tab-pane" id="tab-subscriber-action-when-unsubscribe">
                                     <div class="callout callout-info" style="margin-bottom: 5px; margin-top: 5px;">
@@ -283,7 +288,7 @@ if ($viewCollection->renderContent) { ?>
                                 <?php echo $form->labelEx($listCompany, 'type_id');?>
                                 <?php echo $form->dropDownList($listCompany, 'type_id', CMap::mergeArray(array('' => Yii::t('app', 'Please select')), CompanyType::getListForDropDown()), $listCompany->getHtmlOptions('type_id')); ?>
                                 <?php echo $form->error($listCompany, 'type_id');?>
-                            </div>    
+                            </div>
                         </div>
                         <div class="clearfix"><!-- --></div>
                         <div class="col-lg-6 no-margin-left">
@@ -291,14 +296,14 @@ if ($viewCollection->renderContent) { ?>
                                 <?php echo $form->labelEx($listCompany, 'country_id');?>
                                 <?php echo $listCompany->getCountriesDropDown(); ?>
                                 <?php echo $form->error($listCompany, 'country_id');?>
-                            </div>    
+                            </div>
                         </div>
                         <div class="col-lg-6 no-margin-left">
                             <div class="form-group">
                                 <?php echo $form->labelEx($listCompany, 'zone_id');?>
                                 <?php echo $listCompany->getZonesDropDown(); ?>
                                 <?php echo $form->error($listCompany, 'zone_id');?>
-                            </div>    
+                            </div>
                         </div>
                         <div class="clearfix"><!-- --></div>
                         <div class="col-lg-6 no-margin-left">
@@ -306,43 +311,50 @@ if ($viewCollection->renderContent) { ?>
                                 <?php echo $form->labelEx($listCompany, 'address_1');?>
                                 <?php echo $form->textField($listCompany, 'address_1', $listCompany->getHtmlOptions('address_1')); ?>
                                 <?php echo $form->error($listCompany, 'address_1');?>
-                            </div>    
+                            </div>
                         </div>
                         <div class="col-lg-6 no-margin-left">
                             <div class="form-group">
                                 <?php echo $form->labelEx($listCompany, 'address_2');?>
                                 <?php echo $form->textField($listCompany, 'address_2', $listCompany->getHtmlOptions('address_2')); ?>
                                 <?php echo $form->error($listCompany, 'address_2');?>
-                            </div>    
+                            </div>
                         </div>
                         <div class="clearfix"><!-- --></div>
-                        <div class="col-lg-3 no-margin-left zone-name-wrap">
+                        <div class="col-lg-2 no-margin-left zone-name-wrap">
                             <div class="form-group">
                                 <?php echo $form->labelEx($listCompany, 'zone_name');?>
                                 <?php echo $form->textField($listCompany, 'zone_name', $listCompany->getHtmlOptions('zone_name')); ?>
                                 <?php echo $form->error($listCompany, 'zone_name');?>
-                            </div>    
+                            </div>
                         </div>
-                        <div class="col-lg-3 no-margin-left city-wrap">
+                        <div class="col-lg-2 no-margin-left city-wrap">
                             <div class="form-group">
                                 <?php echo $form->labelEx($listCompany, 'city');?>
                                 <?php echo $form->textField($listCompany, 'city', $listCompany->getHtmlOptions('city')); ?>
                                 <?php echo $form->error($listCompany, 'city');?>
-                            </div>    
+                            </div>
                         </div>
-                        <div class="col-lg-3 no-margin-left zip-wrap">
+                        <div class="col-lg-2 no-margin-left zip-wrap">
                             <div class="form-group">
                                 <?php echo $form->labelEx($listCompany, 'zip_code');?>
                                 <?php echo $form->textField($listCompany, 'zip_code', $listCompany->getHtmlOptions('zip_code')); ?>
                                 <?php echo $form->error($listCompany, 'zip_code');?>
-                            </div>    
+                            </div>
                         </div>
-                        <div class="col-lg-3 no-margin-left phone-wrap">
+                        <div class="col-lg-2 no-margin-left phone-wrap">
                             <div class="form-group">
                                 <?php echo $form->labelEx($listCompany, 'phone');?>
                                 <?php echo $form->textField($listCompany, 'phone', $listCompany->getHtmlOptions('phone')); ?>
                                 <?php echo $form->error($listCompany, 'phone');?>
-                            </div>    
+                            </div>
+                        </div>
+                        <div class="col-lg-4 no-margin-left">
+                            <div class="form-group">
+                                <?php echo $form->labelEx($listCompany, 'website');?>
+                                <?php echo $form->textField($listCompany, 'website', $listCompany->getHtmlOptions('website')); ?>
+                                <?php echo $form->error($listCompany, 'website');?>
+                            </div>
                         </div>
                         <div class="clearfix"><!-- --></div>
                         <div class="form-group">
@@ -354,19 +366,19 @@ if ($viewCollection->renderContent) { ?>
                     </div>
                 </div>
                 <div class="clearfix"><!-- --></div>
-                <?php 
+                <?php
                 /**
                  * This hook gives a chance to append content after the active form fields.
-                 * Please note that from inside the action callback you can access all the controller view variables 
+                 * Please note that from inside the action callback you can access all the controller view variables
                  * via {@CAttributeCollection $collection->controller->data}
                  * @since 1.3.3.1
                  */
                 $hooks->doAction('after_active_form_fields', new CAttributeCollection(array(
                     'controller'    => $this,
-                    'form'          => $form       
+                    'form'          => $form
                 )));
                 ?>
-                <div class="clearfix"><!-- --></div>    
+                <div class="clearfix"><!-- --></div>
             </div>
             <div class="box-footer">
                 <div class="pull-right">
@@ -374,13 +386,13 @@ if ($viewCollection->renderContent) { ?>
                 </div>
                 <div class="clearfix"><!-- --></div>
             </div>
-        </div>    
-        <?php 
-        $this->endWidget(); 
-    } 
+        </div>
+        <?php
+        $this->endWidget();
+    }
     /**
      * This hook gives a chance to append content after the active form fields.
-     * Please note that from inside the action callback you can access all the controller view variables 
+     * Please note that from inside the action callback you can access all the controller view variables
      * via {@CAttributeCollection $collection->controller->data}
      * @since 1.3.3.1
      */
@@ -416,7 +428,7 @@ if ($viewCollection->renderContent) { ?>
           </div>
         </div>
     </div>
-<?php 
+<?php
 }
 /**
  * This hook gives a chance to append content after the view file default content.

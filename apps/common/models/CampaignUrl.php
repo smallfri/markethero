@@ -2,15 +2,15 @@
 
 /**
  * CampaignUrl
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
+
 /**
  * This is the model class for table "campaign_url".
  *
@@ -28,7 +28,7 @@
 class CampaignUrl extends ActiveRecord
 {
     public $counter;
-    
+
     /**
      * @return string the associated database table name
      */
@@ -56,7 +56,7 @@ class CampaignUrl extends ActiveRecord
             'trackUrlsCount' => array(self::STAT, 'CampaignTrackUrl', 'url_id'),
             'campaign' => array(self::BELONGS_TO, 'Campaign', 'campaign_id'),
         );
-        
+
         return CMap::mergeArray($relations, parent::relations());
     }
 
@@ -72,7 +72,7 @@ class CampaignUrl extends ActiveRecord
             'destination'   => Yii::t('campaigns', 'Destination'),
             'clicked_times' => Yii::t('campaigns', 'Clicked times'),
         );
-        
+
         return CMap::mergeArray($labels, parent::attributeLabels());
     }
 
@@ -86,7 +86,7 @@ class CampaignUrl extends ActiveRecord
     {
         return parent::model($className);
     }
-    
+
     public function getDisplayGridDestination($textLength = 0)
     {
         $destination = str_replace('&amp;', '&', $this->destination);
@@ -94,7 +94,7 @@ class CampaignUrl extends ActiveRecord
         if ($textLength > 0) {
             $text = StringHelper::truncateLength($text, $textLength);
         }
-        if (filter_var($destination, FILTER_VALIDATE_URL)) {
+        if (FilterVarHelper::url($destination)) {
             return CHtml::link($text, $destination, array('target' => '_blank', 'title' => $destination));
         }
         return $text;

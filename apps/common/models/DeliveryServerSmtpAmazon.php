@@ -2,15 +2,15 @@
 
 /**
  * DeliveryServerSmtpAmazon
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
+
 class DeliveryServerSmtpAmazon extends DeliveryServerSmtp
 {
     protected $serverType = 'smtp-amazon';
@@ -23,7 +23,7 @@ class DeliveryServerSmtpAmazon extends DeliveryServerSmtp
         $rules = array(
             array('username, password, port, timeout', 'required'),
         );
-        
+
         return CMap::mergeArray($rules, parent::rules());
     }
 
@@ -38,9 +38,8 @@ class DeliveryServerSmtpAmazon extends DeliveryServerSmtp
         return parent::model($className);
     }
 
-    public function getDefaultParamsArray()
+    public function getParamsArray(array $params = array())
     {
-        $params = parent::getDefaultParamsArray();
         if ($object = $this->getDeliveryObject()) {
             if (is_object($object) && $object instanceof Campaign) {
                 $params['from']   = array($this->from_email => $object->from_name);
@@ -51,8 +50,9 @@ class DeliveryServerSmtpAmazon extends DeliveryServerSmtp
                 $params['sender'] = array($this->from_email => $object->default->from_name);
             }
         }
-        
-        return $params;
+        $params['skipDetectInfoFromDeliveryObject'] = true;
+        $params['transport'] = self::TRANSPORT_SMTP;
+        return parent::getParamsArray($params);
     }
 
     public function attributeHelpTexts()
@@ -65,17 +65,17 @@ class DeliveryServerSmtpAmazon extends DeliveryServerSmtp
             'protocol'    => Yii::t('servers', 'There is no need to select a protocol for Amazon SES, but if you need a secure connection, TLS is supported.'),
             'from_email'  => Yii::t('servers', 'Your Amazon SES email address approved for sending emails.'),
         );
-        
+
         return CMap::mergeArray(parent::attributeHelpTexts(), $texts);
     }
-    
+
     public function attributePlaceholders()
     {
         $placeholders = array(
             'hostname'  => Yii::t('servers', 'i.e: email-smtp.us-east-1.amazonaws.com'),
             'username'  => Yii::t('servers', 'i.e: AKIAIYYYYYYYYYYUBBFQ'),
         );
-        
+
         return CMap::mergeArray(parent::attributePlaceholders(), $placeholders);
     }
 }

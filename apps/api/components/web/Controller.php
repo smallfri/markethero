@@ -6,7 +6,7 @@
  * @package MailWizz EMA
  * @author Serban George Cristian <cristian.serban@mailwizz.com> 
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
@@ -31,22 +31,18 @@ class Controller extends BaseController
     
     public function filters()
     {
-        if(isset($_GET['z']))
-        {
-            return null;
-        }
         if (empty($this->cacheableActions) || !is_array($this->cacheableActions)) {
             $this->cacheableActions = array('index', 'view');
         }
         $cacheableActions = implode(', ', $this->cacheableActions);
-
+        
         return array(
             array(
                 'api.components.web.filters.RequestAccessFilter',
             ),
-
+            
             'accessControl',
-
+            
             array(
                 'system.web.filters.CHttpCacheFilter + ' . $cacheableActions,
                 'cacheControl'              => 'no-cache, must-revalidate',

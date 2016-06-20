@@ -2,47 +2,47 @@
 
 /**
  * ListDatabaseImport
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.3.4.5
  */
- 
+
 class ListDatabaseImport extends ListImportAbstract
 {
     const SERVER_TYPE_MYSQL = 'mysql';
-    
+
     const SERVER_TYPE_POSTGRESQL = 'pgsql';
-    
+
     const SERVER_TYPE_SQLSERVER = 'mssql';
-    
+
     const SERVER_TYPE_ORACLE = 'oci';
-    
+
     public $server_type = 'mysql';
-    
+
     public $hostname;
-    
+
     public $port = 3306;
-    
+
     public $username;
-    
+
     public $password;
-    
+
     public $database_name;
-    
+
     public $table_name;
-    
+
     public $email_column = 'email';
-    
+
     public $ignored_columns;
 
     protected $_dbConnection;
-    
+
     protected $_columns;
-    
+
     public function rules()
     {
         $rules = array(
@@ -54,7 +54,7 @@ class ListDatabaseImport extends ListImportAbstract
         );
         return CMap::mergeArray($rules, parent::rules());
     }
-    
+
     public function attributeLabels()
     {
         $labels = array(
@@ -70,7 +70,7 @@ class ListDatabaseImport extends ListImportAbstract
         );
         return CMap::mergeArray($labels, parent::attributeLabels());
     }
-    
+
     public function attributePlaceholders()
     {
         $placeholders = array(
@@ -85,7 +85,7 @@ class ListDatabaseImport extends ListImportAbstract
         );
         return CMap::mergeArray($placeholders, parent::attributePlaceholders());
     }
-    
+
     public function attributeHelpTexts()
     {
         $texts = array(
@@ -101,7 +101,7 @@ class ListDatabaseImport extends ListImportAbstract
         );
         return CMap::mergeArray($texts, parent::attributeHelpTexts());
     }
-    
+
     public function getServerTypes()
     {
         return array(
@@ -111,44 +111,44 @@ class ListDatabaseImport extends ListImportAbstract
             //self::SERVER_TYPE_ORACLE     => Yii::t('list_import', 'Oracle'),
         );
     }
-    
+
     public function validateAndConnect()
     {
         if (!$this->validate()) {
             return false;
         }
-        
+
         return $this->getDbConnection() !== null;
     }
-    
+
     public function getDbConnection()
     {
         if ($this->_dbConnection !== null) {
             return $this->_dbConnection;
         }
-        
+
         try {
-             
+
              $this->_dbConnection = new CDbConnection($this->getDbConnectionString(), $this->username, $this->password);
              $this->_dbConnection->active = true;
              $this->_dbConnection->autoConnect = true;
              $this->_dbConnection->emulatePrepare = true;
              $this->_dbConnection->charset = 'utf8';
              $this->_dbConnection->initSQLs = array(
-                'SET time_zone="+00:00"', 
+                'SET time_zone="+00:00"',
                 'SET NAMES utf8',
                 'SET SQL_MODE=""',
              );
-             
+
         } catch (Exception $e) {
-            
+
             $this->addError('hostname', $e->getMessage());
-            $this->_dbConnection = null;   
+            $this->_dbConnection = null;
         }
-        
+
         return $this->_dbConnection;
     }
-    
+
     public function getDbConnectionString()
     {
         $driversMap = array(
@@ -157,21 +157,21 @@ class ListDatabaseImport extends ListImportAbstract
             //self::SERVER_TYPE_SQLSERVER  => sprintf('mssql:host=%s;port=%d;dbname=%s', $this->hostname, $this->port, $this->database_name),
             //self::SERVER_TYPE_ORACLE     => sprintf('oci:dbname=//%s:%d/%s', $this->hostname, $this->port, $this->database_name),
         );
-        
+
         return isset($driversMap[$this->server_type]) ? $driversMap[$this->server_type] : $driversMap[self::SERVER_TYPE_MYSQL];
     }
-    
+
     public function getColumns()
     {
         if ($this->_columns !== null) {
             return $this->_columns;
         }
-        
+
         $this->_columns = array();
         $ignore  = explode(',', $this->ignored_columns);
         $ignore  = array_map('trim', $ignore);
         $ignore  = array_map('strtolower', $ignore);
-        
+
         if ($this->server_type == self::SERVER_TYPE_MYSQL) {
             $_columns = $this->getDbConnection()->createCommand(sprintf('SHOW COLUMNS FROM `%s`', $this->table_name))->queryAll();
             foreach ($_columns as $data) {
@@ -187,10 +187,10 @@ class ListDatabaseImport extends ListImportAbstract
                 $this->_columns[] = $data['Field'];
             }
         }
-        
+
         return $this->_columns;
     }
-    
+
     public function countResults()
     {
         $count = 0;
@@ -200,7 +200,7 @@ class ListDatabaseImport extends ListImportAbstract
         }
         return $count;
     }
-    
+
     public function getResults($offset, $limit)
     {
         $results = array();

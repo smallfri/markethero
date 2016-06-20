@@ -2,24 +2,24 @@
 
 /**
  * Price_plansController
- * 
+ *
  * Handles the actions for price plans related tasks
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.3.4.3
  */
- 
+
 class Price_plansController extends Controller
 {
     public function init()
     {
         parent::init();
     }
-    
+
     /**
      * Define the filters for various controller actions
      * Merge the filters with the ones from parent implementation
@@ -29,10 +29,10 @@ class Price_plansController extends Controller
         $filters = array(
             'postOnly + delete',
         );
-        
+
         return CMap::mergeArray($filters, parent::filters());
     }
-    
+
     /**
      * List all available price plans
      */
@@ -41,7 +41,7 @@ class Price_plansController extends Controller
         $request    = Yii::app()->request;
         $pricePlan  = new PricePlan('search');
         $pricePlan->unsetAttributes();
-        
+
         $pricePlan->attributes = (array)$request->getQuery($pricePlan->modelName, array());
 
         $this->setData(array(
@@ -52,10 +52,10 @@ class Price_plansController extends Controller
                 Yii::t('app', 'View all')
             )
         ));
-        
+
         $this->render('list', compact('pricePlan'));
     }
-    
+
     /**
      * Create a new price plan
      */
@@ -64,7 +64,7 @@ class Price_plansController extends Controller
         $pricePlan  = new PricePlan();
         $request    = Yii::app()->request;
         $notify     = Yii::app()->notify;
-        
+
         if ($request->isPostRequest && ($attributes = (array)$request->getPost($pricePlan->modelName, array()))) {
             $pricePlan->attributes = $attributes;
             if (isset(Yii::app()->params['POST'][$pricePlan->modelName]['description'])) {
@@ -75,32 +75,32 @@ class Price_plansController extends Controller
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller'=> $this,
                 'success'   => $notify->hasSuccess,
                 'pricePlan' => $pricePlan,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('price_plans/index'));
             }
         }
-        
+
         $pricePlan->fieldDecorator->onHtmlOptionsSetup = array($this, '_addEditorOptions');
-        
+
         $this->setData(array(
-            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('price_plans', 'Create new price plan'), 
+            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('price_plans', 'Create new price plan'),
             'pageHeading'       => Yii::t('price_plans', 'Create new price plan'),
             'pageBreadcrumbs'   => array(
                 Yii::t('price_plans', 'Price plans') => $this->createUrl('price_plans/index'),
                 Yii::t('app', 'Create new'),
             )
         ));
-        
+
         $this->render('form', compact('pricePlan'));
     }
-    
+
     /**
      * Update existing price plan
      */
@@ -125,20 +125,20 @@ class Price_plansController extends Controller
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller'=> $this,
                 'success'   => $notify->hasSuccess,
                 'pricePlan' => $pricePlan,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('price_plans/index'));
             }
         }
-        
+
         $pricePlan->fieldDecorator->onHtmlOptionsSetup = array($this, '_addEditorOptions');
-        
+
         $this->setData(array(
             'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('price_plans', 'Update price plan'),
             'pageHeading'       => Yii::t('price_plans', 'Update price plan'),
@@ -147,32 +147,44 @@ class Price_plansController extends Controller
                 Yii::t('app', 'Update'),
             )
         ));
-        
+
         $this->render('form', compact('pricePlan'));
     }
-    
+
     /**
      * Delete existing price plan
      */
     public function actionDelete($id)
     {
         $pricePlan = PricePlan::model()->findByPk((int)$id);
-        
+
         if (empty($pricePlan)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         $pricePlan->delete();
- 
+
         $request = Yii::app()->request;
         $notify  = Yii::app()->notify;
-        
+
+        $redirect = null;
         if (!$request->getQuery('ajax')) {
             $notify->addSuccess(Yii::t('app', 'The item has been successfully deleted!'));
-            $this->redirect($request->getPost('returnUrl', array('price_plans/index')));
+            $redirect = $request->getPost('returnUrl', array('price_plans/index'));
+        }
+
+        // since 1.3.5.9
+        Yii::app()->hooks->doAction('controller_action_delete_data', $collection = new CAttributeCollection(array(
+            'controller' => $this,
+            'model'      => $pricePlan,
+            'redirect'   => $redirect,
+        )));
+
+        if ($collection->redirect) {
+            $this->redirect($collection->redirect);
         }
     }
-    
+
     /**
      * Autocomplete for price plans
      */
@@ -182,25 +194,25 @@ class Price_plansController extends Controller
         if (!$request->isAjaxRequest) {
             $this->redirect(array('price_plans/index'));
         }
-        
+
         $criteria = new CDbCriteria();
         $criteria->select = 'plan_id, name';
         $criteria->compare('name', $term, true);
         $criteria->limit = 10;
-        
+
         $models = PricePlan::model()->findAll($criteria);
         $results = array();
-        
+
         foreach ($models as $model) {
             $results[] = array(
                 'plan_id' => $model->plan_id,
                 'value'   => $model->name,
             );
         }
-        
-        return $this->renderJson($results);                
+
+        return $this->renderJson($results);
     }
-    
+
     /**
      * Callback method to setup the editor
      */
@@ -209,7 +221,7 @@ class Price_plansController extends Controller
         if (!in_array($event->params['attribute'], array('description'))) {
             return;
         }
-        
+
         $options = array();
         if ($event->params['htmlOptions']->contains('wysiwyg_editor_options')) {
             $options = (array)$event->params['htmlOptions']->itemAt('wysiwyg_editor_options');

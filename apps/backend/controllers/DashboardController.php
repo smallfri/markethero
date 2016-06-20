@@ -2,17 +2,17 @@
 
 /**
  * DashboardController
- * 
+ *
  * Handles the actions for dashboard related tasks
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
+
 class DashboardController extends Controller
 {
     public function init()
@@ -26,7 +26,7 @@ class DashboardController extends Controller
         ));
         parent::init();
     }
-    
+
     /**
      * Define the filters for various controller actions
      * Merge the filters with the ones from parent implementation
@@ -37,7 +37,7 @@ class DashboardController extends Controller
             'postOnly + delete_log, delete_logs',
         ), parent::filters());
     }
-    
+
     /**
      * Display dashboard informations
      */
@@ -50,17 +50,17 @@ class DashboardController extends Controller
         }
 
         $this->setData(array(
-            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | ' . Yii::t('dashboard', 'Dashboard'), 
+            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | ' . Yii::t('dashboard', 'Dashboard'),
             'pageHeading'       => Yii::t('dashboard', 'Dashboard'),
             'pageBreadcrumbs'   => array(
                 Yii::t('dashboard', 'Dashboard'),
             ),
         ));
-        
+
         $checkVersionUpdate = Yii::app()->options->get('system.common.check_version_update', 'yes') == 'yes';
         $this->render('index', compact('checkVersionUpdate'));
     }
-    
+
     /**
      * Ajax only action to get one year subscribers growth
      */
@@ -77,7 +77,7 @@ class DashboardController extends Controller
         $deliveryServers    = DeliveryServer::model()->count();
         $campaigns          = Campaign::model()->count();
         $segments           = ListSegment::model()->count();
-        
+
         $customers          = Yii::app()->format->formatNumber($customers);
         $lists              = Yii::app()->format->formatNumber($lists);
         $subscribers        = Yii::app()->format->formatNumber($subscribers);
@@ -85,7 +85,7 @@ class DashboardController extends Controller
         $deliveryServers    = Yii::app()->format->formatNumber($deliveryServers);
         $campaigns          = Yii::app()->format->formatNumber($campaigns);
         $segments           = Yii::app()->format->formatNumber($segments);
-        
+
         return $this->renderJson(compact(
             'customers',
             'lists',
@@ -96,7 +96,7 @@ class DashboardController extends Controller
             'segments'
         ));
     }
-    
+
     /**
      * Ajax only action to get activity messages
      */
@@ -105,7 +105,7 @@ class DashboardController extends Controller
         if (!Yii::app()->request->isAjaxRequest) {
             $this->redirect(array('dashboard/index'));
         }
-        
+
         $criteria = new CDbCriteria();
         $criteria->select    = 'DISTINCT(DATE(t.date_added)) as date_added';
         $criteria->condition = 'DATE(t.date_added) >= DATE_SUB(NOW(), INTERVAL 7 DAY)';
@@ -113,7 +113,7 @@ class DashboardController extends Controller
         $criteria->order     = 't.date_added DESC';
         $criteria->limit     = 7;
         $models = CustomerActionLog::model()->findAll($criteria);
-        
+
         $items = array();
         foreach ($models as $model) {
             $_item = array(
@@ -147,21 +147,21 @@ class DashboardController extends Controller
             }
             $items[] = $_item;
         }
-        
+
         return $this->renderJson($items);
     }
-    
+
     /**
      * Ajax only action to get subscribers growth
      */
     public function actionSubscribers_growth()
     {
         set_time_limit(0);
-        
+
         if (!Yii::app()->request->isAjaxRequest) {
             $this->redirect(array('dashboard/index'));
         }
-        
+
         $cacheKey = md5(__FILE__ . __METHOD__);
         if ($items = Yii::app()->cache->get($cacheKey)) {
             return $this->renderJson(array(
@@ -170,16 +170,16 @@ class DashboardController extends Controller
                 'color' => '#3c8dbc'
             ));
         }
-        
+
         $criteria = new CDbCriteria();
         $criteria->select    = 'DISTINCT(DATE(t.date_added)) AS date_added';
         $criteria->condition = 'DATE(t.date_added) >= DATE_ADD(LAST_DAY(DATE_SUB(NOW(), INTERVAL 3 MONTH)), INTERVAL 1 DAY)';
         $criteria->group     = 'MONTH(t.date_added)';
         $criteria->order     = 't.date_added ASC';
         $criteria->limit     = 3;
-        
+
         $models = ListSubscriber::model()->findAll($criteria);
-        
+
         $items = array();
         foreach ($models as $model) {
             $criteria = new CDbCriteria();
@@ -193,27 +193,27 @@ class DashboardController extends Controller
             $count      = ListSubscriber::model()->count($criteria);
             $items[]    = array(Yii::t('app', $monthName) . ' ' . date('Y', strtotime($model->date_added)), $count);
         }
-        
+
         Yii::app()->cache->set($cacheKey, $items, 3600);
-        
+
         return $this->renderJson(array(
             'label' => Yii::t('app', '{n} months growth', 3),
             'data'  => $items,
             'color' => '#3c8dbc'
         ));
     }
-    
+
     /**
      * Ajax only action to get lists growth
      */
     public function actionLists_growth()
     {
         set_time_limit(0);
-        
+
         if (!Yii::app()->request->isAjaxRequest) {
             $this->redirect(array('dashboard/index'));
         }
-        
+
         $cacheKey = md5(__FILE__ . __METHOD__);
         if ($items = Yii::app()->cache->get($cacheKey)) {
             return $this->renderJson(array(
@@ -222,7 +222,7 @@ class DashboardController extends Controller
                 'color' => '#3c8dbc'
             ));
         }
-        
+
         $criteria = new CDbCriteria();
         $criteria->select    = 'DISTINCT(DATE(t.date_added)) AS date_added';
         $criteria->condition = 'DATE(t.date_added) >= DATE_ADD(LAST_DAY(DATE_SUB(NOW(), INTERVAL 3 MONTH)), INTERVAL 1 DAY)';
@@ -230,7 +230,7 @@ class DashboardController extends Controller
         $criteria->order     = 't.date_added ASC';
         $criteria->limit     = 3;
         $models = Lists::model()->findAll($criteria);
-        
+
         $items = array();
         foreach ($models as $model) {
             $criteria = new CDbCriteria();
@@ -243,27 +243,27 @@ class DashboardController extends Controller
             $count      = Lists::model()->count($criteria);
             $items[]    = array(Yii::t('app', $monthName) . ' ' . date('Y', strtotime($model->date_added)), $count);
         }
-        
+
         Yii::app()->cache->set($cacheKey, $items, 3600);
-        
+
         return $this->renderJson(array(
             'label' => Yii::t('app', '{n} months growth', 3),
             'data'  => $items,
             'color' => '#3c8dbc'
         ));
     }
-    
+
     /**
      * Ajax only action to get campaigns growth
      */
     public function actionCampaigns_growth()
     {
         set_time_limit(0);
-        
+
         if (!Yii::app()->request->isAjaxRequest) {
             $this->redirect(array('dashboard/index'));
         }
-        
+
         $cacheKey = md5(__FILE__ . __METHOD__);
         if ($items = Yii::app()->cache->get($cacheKey)) {
             return $this->renderJson(array(
@@ -272,7 +272,7 @@ class DashboardController extends Controller
                 'color' => '#3c8dbc'
             ));
         }
-        
+
         $criteria = new CDbCriteria();
         $criteria->select    = 'DISTINCT(DATE(t.date_added)) AS date_added';
         $criteria->condition = 'DATE(t.date_added) >= DATE_ADD(LAST_DAY(DATE_SUB(NOW(), INTERVAL 3 MONTH)), INTERVAL 1 DAY)';
@@ -281,7 +281,7 @@ class DashboardController extends Controller
         $criteria->limit     = 3;
 
         $models = Campaign::model()->findAll($criteria);
-        
+
         $items = array();
         foreach ($models as $model) {
             $criteria = new CDbCriteria();
@@ -294,34 +294,34 @@ class DashboardController extends Controller
             $count      = Campaign::model()->count($criteria);
             $items[]    = array(Yii::t('app', $monthName) . ' ' . date('Y', strtotime($model->date_added)), $count);
         }
-        
+
         Yii::app()->cache->set($cacheKey, $items, 3600);
-        
+
         return $this->renderJson(array(
             'label' => Yii::t('app', '{n} months growth', 3),
             'data'  => $items,
             'color' => '#3c8dbc'
         ));
     }
-    
+
     /**
      * Ajax only action to get delivery/bounce growth
      */
     public function actionDelivery_bounce_growth()
     {
         set_time_limit(0);
-        
+
         if (!Yii::app()->request->isAjaxRequest) {
             $this->redirect(array('dashboard/index'));
         }
-        
+
         $cacheKey = md5(__FILE__ . __METHOD__);
         if ($lines = Yii::app()->cache->get($cacheKey)) {
             return $this->renderJson($lines);
         }
-        
+
         $lines = array();
-        
+
         // Delivery
         $cdlModel = !CampaignDeliveryLog::getArchiveEnabled() ? CampaignDeliveryLog::model() : CampaignDeliveryLogArchive::model();
         $criteria = new CDbCriteria();
@@ -331,7 +331,7 @@ class DashboardController extends Controller
         $criteria->order     = 't.date_added ASC';
         $criteria->limit     = 3;
         $models = $cdlModel->findAll($criteria);
-        
+
         $items = array();
         foreach ($models as $model) {
             $criteria = new CDbCriteria();
@@ -344,13 +344,13 @@ class DashboardController extends Controller
             $count      = $cdlModel->count($criteria);
             $items[]    = array(Yii::t('app', $monthName) . ' ' . date('Y', strtotime($model->date_added)), $count);
         }
-        
+
         $lines[] = array(
             'label' => Yii::t('app', 'Delivery, {n} months growth', 3),
             'data'  => $items,
             'color' => '#3c8dbc'
         );
-        
+
         // Bounces
         $criteria = new CDbCriteria();
         $criteria->select    = 'DISTINCT(DATE(t.date_added)) AS date_added';
@@ -372,29 +372,29 @@ class DashboardController extends Controller
             $count      = CampaignBounceLog::model()->count($criteria);
             $items[]    = array(Yii::t('app', $monthName) . ' ' . date('Y', strtotime($model->date_added)), $count);
         }
-        
+
         $lines[] = array(
             'label' => Yii::t('app', 'Bounce, {n} months growth', 3),
             'data'  => $items,
             'color' => '#ff0000'
         );
-        
+
         Yii::app()->cache->set($cacheKey, $lines, 3600);
-        
+
         return $this->renderJson($lines);
     }
-    
+
     /**
      * Ajax only action to get unsubscribes growth
      */
     public function actionUnsubscribe_growth()
     {
         set_time_limit(0);
-        
+
         if (!Yii::app()->request->isAjaxRequest) {
             $this->redirect(array('dashboard/index'));
         }
-        
+
         $cacheKey = md5(__FILE__ . __METHOD__);
         if ($items = Yii::app()->cache->get($cacheKey)) {
             return $this->renderJson(array(
@@ -403,7 +403,7 @@ class DashboardController extends Controller
                 'color' => '#3c8dbc'
             ));
         }
-        
+
         $criteria = new CDbCriteria();
         $criteria->select    = 'DISTINCT(DATE(t.date_added)) AS date_added';
         $criteria->condition = 'DATE(t.date_added) >= DATE_ADD(LAST_DAY(DATE_SUB(NOW(), INTERVAL 3 MONTH)), INTERVAL 1 DAY)';
@@ -411,7 +411,7 @@ class DashboardController extends Controller
         $criteria->order     = 't.date_added ASC';
         $criteria->limit     = 3;
         $models = CampaignTrackUnsubscribe::model()->findAll($criteria);
-        
+
         $items = array();
         foreach ($models as $model) {
             $criteria = new CDbCriteria();
@@ -424,16 +424,16 @@ class DashboardController extends Controller
             $count      = CampaignTrackUnsubscribe::model()->count($criteria);
             $items[]    = array(Yii::t('app', $monthName) . ' ' . date('Y', strtotime($model->date_added)), $count);
         }
-        
+
         Yii::app()->cache->set($cacheKey, $items, 3600);
-        
+
         return $this->renderJson(array(
             'label' => Yii::t('app', '{n} months growth', 3),
             'data'  => $items,
             'color' => '#3c8dbc'
         ));
     }
-    
+
     /**
      * Delete a single action log
      */
@@ -442,46 +442,46 @@ class DashboardController extends Controller
         $model = CustomerActionLog::model()->findByAttributes(array(
             'log_id' => $id,
         ));
-        
+
         if ($model === null) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         $model->delete();
-                    
+
         $request = Yii::app()->request;
         $notify = Yii::app()->notify;
-        
+
         if (!$request->isAjaxRequest) {
             $notify->addSuccess(Yii::t('app', 'Your item has been successfully deleted!'));
             $this->redirect($request->getPost('returnUrl', array('dashboard/index')));
         }
     }
-    
+
     /**
      * Delete all action logs
      */
     public function actionDelete_logs()
     {
         CustomerActionLog::model()->deleteAll();
-            
+
         $request = Yii::app()->request;
         $notify = Yii::app()->notify;
-        
+
         if (!$request->isAjaxRequest) {
             $notify->addSuccess(Yii::t('app', 'Your items have been successfully deleted!'));
             $this->redirect($request->getPost('returnUrl', array('dashboard/index')));
         }
     }
-    
+
     public function actionCheck_update()
     {
         ignore_user_abort(true);
-        
+
         if (!Yii::app()->request->isAjaxRequest) {
             $this->redirect(array('dashboard/index'));
         }
-        
+
         $options = Yii::app()->options;
         if ($options->get('system.common.enable_version_update_check', 'yes') == 'no') {
             Yii::app()->end();
@@ -494,24 +494,24 @@ class DashboardController extends Controller
         if ($lastCheck + $interval > $now) {
             Yii::app()->end();
         }
-        
+
         $options->set('system.common.version_update.last_check', $now);
-        
+
         $response = AppInitHelper::simpleCurlGet('http://www.mailwizz.com/api/site/version');
         if (empty($response) || $response['status'] == 'error') {
             Yii::app()->end();
         }
-        
+
         $json = CJSON::decode($response['message']);
         if (empty($json['current_version'])) {
             Yii::app()->end();
         }
-        
+
         $dbVersion = $options->get('system.common.version', '1.0');
         if (version_compare($json['current_version'], $dbVersion, '>')) {
             $options->set('system.common.version_update.current_version', $json['current_version']);
         }
-        
+
         Yii::app()->end();
     }
 

@@ -2,17 +2,17 @@
 
 /**
  * CurrenciesController
- * 
+ *
  * Handles the actions for currencies related tasks
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.3.4.5
  */
- 
+
 class CurrenciesController extends Controller
 {
     /**
@@ -24,10 +24,10 @@ class CurrenciesController extends Controller
         $filters = array(
             'postOnly + delete, reset_sending_quota',
         );
-        
+
         return CMap::mergeArray($filters, parent::filters());
     }
-    
+
     /**
      * List all available currencies
      */
@@ -36,7 +36,7 @@ class CurrenciesController extends Controller
         $request   = Yii::app()->request;
         $currency  = new Currency('search');
         $currency->unsetAttributes();
-        
+
         $currency->attributes = (array)$request->getQuery($currency->modelName, array());
 
         $this->setData(array(
@@ -47,10 +47,10 @@ class CurrenciesController extends Controller
                 Yii::t('app', 'View all')
             )
         ));
-        
+
         $this->render('list', compact('currency'));
     }
-    
+
     /**
      * Create a new currency
      */
@@ -59,7 +59,7 @@ class CurrenciesController extends Controller
         $currency = new Currency();
         $request  = Yii::app()->request;
         $notify   = Yii::app()->notify;
-        
+
         if ($request->isPostRequest && ($attributes = (array)$request->getPost($currency->modelName, array()))) {
             $currency->attributes = $attributes;
             if (!$currency->save()) {
@@ -67,30 +67,30 @@ class CurrenciesController extends Controller
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller'=> $this,
                 'success'   => $notify->hasSuccess,
                 'currency'  => $currency,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('currencies/index'));
             }
         }
-        
+
         $this->setData(array(
-            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('currencies', 'Create new currency'), 
+            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('currencies', 'Create new currency'),
             'pageHeading'       => Yii::t('currencies', 'Create new currency'),
             'pageBreadcrumbs'   => array(
                 Yii::t('currencies', 'Currencies') => $this->createUrl('currencies/index'),
                 Yii::t('app', 'Create new'),
             )
         ));
-        
+
         $this->render('form', compact('currency'));
     }
-    
+
     /**
      * Update existing currency
      */
@@ -101,7 +101,7 @@ class CurrenciesController extends Controller
         if (empty($currency)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         $request = Yii::app()->request;
         $notify  = Yii::app()->notify;
 
@@ -112,18 +112,18 @@ class CurrenciesController extends Controller
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller'=> $this,
                 'success'   => $notify->hasSuccess,
                 'currency'  => $currency,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('currencies/index'));
             }
         }
-        
+
         $this->setData(array(
             'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('currencies', 'Update currency'),
             'pageHeading'       => Yii::t('currencies', 'Update currency'),
@@ -132,32 +132,44 @@ class CurrenciesController extends Controller
                 Yii::t('app', 'Update'),
             )
         ));
-        
+
         $this->render('form', compact('currency'));
     }
-    
+
     /**
      * Delete existing currency
      */
     public function actionDelete($id)
     {
         $currency = Currency::model()->findByPk((int)$id);
-        
+
         if (empty($currency)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         if ($currency->isRemovable) {
             $currency->delete();
         }
- 
-        $request  = Yii::app()->request;
-        $notify   = Yii::app()->notify;
-        
+
+        $request = Yii::app()->request;
+        $notify  = Yii::app()->notify;
+
+        $redirect = null;
         if (!$request->getQuery('ajax')) {
             $notify->addSuccess(Yii::t('app', 'The item has been successfully deleted!'));
-            $this->redirect($request->getPost('returnUrl', array('currencies/index')));
+            $redirect = $request->getPost('returnUrl', array('currencies/index'));
+        }
+
+        // since 1.3.5.9
+        Yii::app()->hooks->doAction('controller_action_delete_data', $collection = new CAttributeCollection(array(
+            'controller' => $this,
+            'model'      => $currency,
+            'redirect'   => $redirect,
+        )));
+
+        if ($collection->redirect) {
+            $this->redirect($collection->redirect);
         }
     }
-    
+
 }

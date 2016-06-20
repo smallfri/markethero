@@ -2,15 +2,15 @@
 
 /**
  * Customer
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
+
 /**
  * This is the model class for table "customer".
  *
@@ -36,6 +36,8 @@
  * The followings are the available model relations:
  * @property BounceServer[] $bounceServers
  * @property Campaign[] $campaigns
+ * @property CustomerCampaignTag[] $campaignTags
+ * @property CustomerMessage[] $messages
  * @property CampaignGroup[] $campaignGroups
  * @property CustomerGroup $group
  * @property CustomerApiKey[] $apiKeys
@@ -58,39 +60,39 @@
 class Customer extends ActiveRecord
 {
     const TEXT_NO = 'no';
-    
+
     const TEXT_YES = 'yes';
-    
+
     const STATUS_PENDING_CONFIRM = 'pending-confirm';
-    
+
     const STATUS_PENDING_ACTIVE = 'pending-active';
-    
+
     protected $_lastQuotaMark;
 
     // see getIsOverQuota()
     protected $_lastQuotaCheckTime = 0;
-    
+
     // see getIsOverQuota()
     protected $_lastQuotaCheckTimeDiff = 30;
-    
+
     // see getIsOverQuota()
     protected $_lastQuotaCheckMaxDiffCounter = 500;
-    
+
     // see getIsOverQuota()
     protected $_lastQuotaCheckTimeOverQuota = false;
-    
+
     public $fake_password;
 
     public $confirm_password;
-    
+
     public $confirm_email;
-    
+
     public $tc_agree;
-    
+
     public $sending_quota_usage;
-    
+
     public $company_name;
-    
+
     public $new_avatar;
 
     /**
@@ -110,7 +112,7 @@ class Customer extends ActiveRecord
         if (CommonHelper::functionExists('finfo_open')) {
             $avatarMimes = Yii::app()->extensionMimes->get(array('png', 'jpg', 'gif'))->toArray();
         }
-        
+
         $rules = array(
             // when new customer is created by a user.
             array('first_name, last_name, email, confirm_email, fake_password, confirm_password, timezone, status', 'required', 'on' => 'insert'),
@@ -127,7 +129,7 @@ class Customer extends ActiveRecord
             array('language_id', 'exist', 'className' => 'Language'),
             array('first_name, last_name', 'length', 'min' => 2, 'max' => 100),
             array('email, confirm_email', 'length', 'min' => 4, 'max' => 100),
-            array('email, confirm_email', 'email'),
+            array('email, confirm_email', 'email', 'validateIDN' => true),
             array('timezone', 'in', 'range' => array_keys(DateTimeHelper::getTimeZones())),
             array('fake_password, confirm_password', 'length', 'min' => 6, 'max' => 100),
             array('confirm_password', 'compare', 'compareAttribute' => 'fake_password'),
@@ -136,14 +138,14 @@ class Customer extends ActiveRecord
 
             // avatar
             array('new_avatar', 'file', 'types' => array('png', 'jpg', 'gif'), 'mimeTypes' => $avatarMimes, 'allowEmpty' => true),
-            
+
             // unsafe
             array('group_id, status', 'unsafe', 'on' => 'update-profile, register'),
-            
+
             // mark them as safe for search
             array('first_name, last_name, email, group_id, status, company_name', 'safe', 'on' => 'search'),
         );
-        
+
         return CMap::mergeArray($rules, parent::rules());
     }
 
@@ -156,6 +158,8 @@ class Customer extends ActiveRecord
             'bounceServers'         => array(self::HAS_MANY, 'BounceServer', 'customer_id'),
             'campaigns'             => array(self::HAS_MANY, 'Campaign', 'customer_id'),
             'campaignGroups'        => array(self::HAS_MANY, 'CampaignGroup', 'customer_id'),
+            'campaignTags'          => array(self::HAS_MANY, 'CustomerCampaignTags', 'customer_id'),
+            'messages'              => array(self::HAS_MANY, 'CustomerMessage', 'customer_id'),
             'group'                 => array(self::BELONGS_TO, 'CustomerGroup', 'group_id'),
             'apiKeys'               => array(self::HAS_MANY, 'CustomerApiKey', 'customer_id'),
             'company'               => array(self::HAS_ONE, 'CustomerCompany', 'customer_id'),
@@ -174,7 +178,7 @@ class Customer extends ActiveRecord
             'sendingDomains'        => array(self::HAS_MANY, 'SendingDomain', 'customer_id'),
             'transactionalEmails'   => array(self::HAS_MANY, 'TransactionalEmail', 'customer_id'),
         );
-        
+
         return CMap::mergeArray($relations, parent::relations());
     }
 
@@ -195,7 +199,6 @@ class Customer extends ActiveRecord
             'avatar'        => Yii::t('customers', 'Avatar'),
             'new_avatar'    => Yii::t('customers', 'New avatar'),
             'removable'     => Yii::t('customers', 'Removable'),
-            'compliance_levels_id'     => Yii::t('customers', 'Compliance Level ID'),
 
             'confirm_email'         => Yii::t('customers', 'Confirm email'),
             'fake_password'         => Yii::t('customers', 'Password'),
@@ -204,10 +207,10 @@ class Customer extends ActiveRecord
             'sending_quota_usage'   => Yii::t('customers', 'Sending quota usage'),
             'company_name'          => Yii::t('customers', 'Company'),
         );
-        
+
         return CMap::mergeArray($labels, parent::attributeLabels());
     }
-    
+
     /**
     * Retrieves a list of models based on the current search/filter conditions.
     * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
@@ -221,7 +224,7 @@ class Customer extends ActiveRecord
         $criteria->compare('t.email', $this->email, true);
         $criteria->compare('t.group_id', $this->group_id);
         $criteria->compare('t.status', $this->status);
-        
+
         if ($this->company_name) {
             $criteria->with['company'] = array(
                 'together' => true,
@@ -229,9 +232,9 @@ class Customer extends ActiveRecord
             );
             $criteria->compare('company.name', $this->company_name, true);
         }
-        
+
         $criteria->order = 't.customer_id DESC';
-        
+
         return new CActiveDataProvider(get_class($this), array(
             'criteria'      => $criteria,
             'pagination'    => array(
@@ -256,61 +259,61 @@ class Customer extends ActiveRecord
     {
         return parent::model($className);
     }
-    
+
     protected function afterValidate()
     {
         parent::afterValidate();
         $this->handleUploadedAvatar();
     }
-    
+
     protected function beforeSave()
     {
         if (!parent::beforeSave()) {
             return false;
         }
-        
+
         if ($this->isNewRecord) {
             $this->customer_uid = $this->generateUid();
         }
-        
+
         if (!empty($this->fake_password)) {
             $this->password = Yii::app()->passwordHasher->hash($this->fake_password);
         }
-        
+
         if ($this->removable === self::TEXT_NO) {
             $this->status = self::STATUS_ACTIVE;
         }
-        
+
         if (empty($this->confirmation_key)) {
             $this->confirmation_key = sha1($this->customer_uid . StringHelper::uniqid());
         }
-        
+
         if (empty($this->timezone)) {
             $this->timezone = 'UTC';
         }
-        
+
         return true;
     }
-    
+
     protected function afterFind()
     {
         parent::afterFind();
     }
-    
+
     protected function afterSave()
     {
         parent::afterSave();
     }
-    
+
     protected function beforeDelete()
     {
         if (!parent::beforeDelete()) {
             return false;
         }
-        
+
         return $this->removable === self::TEXT_YES;
     }
-    
+
     protected function afterDelete()
     {
         if (!empty($this->customer_uid)) {
@@ -319,12 +322,12 @@ class Customer extends ActiveRecord
             $customerFiles = $storagePath.'/'.$this->customer_uid;
             if (file_exists($customerFiles) && is_dir($customerFiles)) {
                 FileSystemHelper::deleteDirectoryContents($customerFiles, true, 1);
-            }    
+            }
         }
 
         parent::afterDelete();
     }
-    
+
     public function getFullName()
     {
         if ($this->first_name && $this->last_name) {
@@ -332,7 +335,7 @@ class Customer extends ActiveRecord
         }
         return $this->email;
     }
-    
+
     public function getStatusesArray()
     {
         return array(
@@ -342,28 +345,28 @@ class Customer extends ActiveRecord
             self::STATUS_PENDING_ACTIVE  => Yii::t('app', 'Pending active'),
         );
     }
-    
+
     public function getTimeZonesArray()
     {
         return DateTimeHelper::getTimeZones();
     }
-    
+
     public function findByUid($customer_uid)
     {
         return $this->findByAttributes(array(
             'customer_uid' => $customer_uid,
-        ));    
+        ));
     }
-    
+
     public function generateUid()
     {
         $unique = StringHelper::uniqid();
         $exists = $this->findByUid($unique);
-        
+
         if (!empty($exists)) {
             return $this->generateUid();
         }
-        
+
         return $unique;
     }
 
@@ -371,7 +374,7 @@ class Customer extends ActiveRecord
     {
         return $this->customer_uid;
     }
-    
+
     public function getAvailableDeliveryServers()
     {
         static $deliveryServers;
@@ -387,14 +390,14 @@ class Customer extends ActiveRecord
         $criteria->addInCondition('use_for', array(DeliveryServer::USE_FOR_ALL, DeliveryServer::USE_FOR_CAMPAIGNS));
         //
         $deliveryServers = DeliveryServer::model()->findAll($criteria);
-        
+
         if (empty($deliveryServers) && !empty($this->group_id)) {
             $groupServerIds = array();
             $groupServers = DeliveryServerToCustomerGroup::model()->findAllByAttributes(array('group_id' => $this->group_id));
             foreach ($groupServers as $group) {
                 $groupServerIds[] = (int)$group->server_id;
             }
-            
+
             if (!empty($groupServerIds)) {
                 $criteria = new CDbCriteria();
                 $criteria->select = 'server_id, hostname, name';
@@ -404,10 +407,10 @@ class Customer extends ActiveRecord
                 // since 1.3.5
                 $criteria->addInCondition('use_for', array(DeliveryServer::USE_FOR_ALL, DeliveryServer::USE_FOR_CAMPAIGNS));
                 //
-                $deliveryServers = DeliveryServer::model()->findAll($criteria);    
+                $deliveryServers = DeliveryServer::model()->findAll($criteria);
             }
         }
-        
+
         if (empty($deliveryServers) && $this->getGroupOption('servers.can_send_from_system_servers', 'yes') == 'yes') {
             $criteria = new CDbCriteria();
             $criteria->select = 'server_id, hostname, name';
@@ -418,22 +421,22 @@ class Customer extends ActiveRecord
             //
             $deliveryServers = DeliveryServer::model()->findAll($criteria);
         }
-        
+
         return $deliveryServers;
     }
-    
+
     /** to be removed **/
     public function countHourlyUsage()
-    {       
+    {
         return 0;
     }
-    
+
     /** to be removed **/
     public function getCanHaveHourlyQuota()
     {
         return false;
     }
-    
+
     public function getSendingQuotaUsageDisplay()
     {
         $formatter = Yii::app()->format;
@@ -442,27 +445,27 @@ class Customer extends ActiveRecord
         $allowed   = !$_allowed ? 0 : ($_allowed == -1 ? '&infin;' : $formatter->formatNumber($_allowed));
         $count     = $formatter->formatNumber($_count);
         $percent   = ($_allowed < 1 ? 0 : ($_count > $_allowed ? 100 : round(($_count / $_allowed) * 100, 2)));
-        
+
         return sprintf('%s (%s/%s)', $percent . '%', $count, $allowed);
     }
-    
+
     public function resetSendingQuota()
     {
         CustomerQuotaMark::model()->deleteAllByAttributes(array('customer_id' => (int)$this->customer_id));
         return $this;
     }
-    
+
     public function getIsOverQuota()
     {
         if ($this->isNewRecord) {
             return false;
         }
-        
+
         // since 1.3.5.5
         if (MW_PERF_LVL && MW_PERF_LVL & MW_PERF_LVL_DISABLE_CUSTOMER_QUOTA_CHECK) {
             return false;
         }
-        
+
         $timeNow = time();
         if ($this->_lastQuotaCheckTime > 0 && ($this->_lastQuotaCheckTime + $this->_lastQuotaCheckTimeDiff) > $timeNow) {
             return $this->_lastQuotaCheckTimeOverQuota;
@@ -476,12 +479,12 @@ class Customer extends ActiveRecord
             $this->_lastQuotaCheckTime += $timeNow;
             return $this->_lastQuotaCheckTimeOverQuota = true;
         }
-        
+
         if ($quota == -1 && $timeValue == -1) {
             $this->_lastQuotaCheckTime += $timeNow;
             return $this->_lastQuotaCheckTimeOverQuota = false;
         }
-        
+
         $timestamp = 0;
         if ($timeValue > 0) {
             $timeUnit  = $this->getGroupOption('sending.quota_time_unit', 'month');
@@ -490,15 +493,20 @@ class Customer extends ActiveRecord
 
             if ($timeNow >= $timestamp) {
                 $this->_takeQuotaAction();
+                // SINCE 1.3.5.9
+                if ($this->getGroupOption('sending.action_quota_reached') == 'reset') {
+                    return $this->_lastQuotaCheckTimeOverQuota = false;
+                }
+                //
                 return $this->_lastQuotaCheckTimeOverQuota = true; // keep an eye on it
-            }    
+            }
         }
-        
+
         if ($quota == -1) {
             $this->_lastQuotaCheckTime += $timeNow;
             return $this->_lastQuotaCheckTimeOverQuota = false;
         }
-        
+
         $currentUsage = $this->countUsageFromQuotaMark();
 
         if ($currentUsage >= $quota) {
@@ -510,36 +518,36 @@ class Customer extends ActiveRecord
             $this->_takeQuotaAction();
             return $this->_lastQuotaCheckTimeOverQuota = false; // keep an eye on it
         }
-        
+
         if (($quota - $currentUsage) > $this->_lastQuotaCheckMaxDiffCounter) {
             $this->_lastQuotaCheckTime += $timeNow;
             return $this->_lastQuotaCheckTimeOverQuota = false;
         }
-        
+
         return $this->_lastQuotaCheckTimeOverQuota = false;
     }
-    
+
     public function countUsageFromQuotaMark(CustomerQuotaMark $quotaMark = null)
     {
         if ($quotaMark === null || empty($quotaMark->date_added)) {
             $quotaMark = $this->getLastQuotaMark();
         }
-        
+
         $criteria = new CDbCriteria();
         $criteria->compare('customer_id', (int)$this->customer_id);
         $criteria->compare('customer_countable', self::TEXT_YES);
         $criteria->addCondition('`date_added` >= :startDateTime');
-        $criteria->params[':startDateTime'] = $quotaMark->date_added;  
-        
+        $criteria->params[':startDateTime'] = $quotaMark->date_added;
+
         return DeliveryServerUsageLog::model()->count($criteria);
     }
-    
+
     public function getLastQuotaMark()
     {
         if ($this->_lastQuotaMark !== null) {
             return $this->_lastQuotaMark;
         }
-        
+
         $criteria = new CDbCriteria();
         $criteria->compare('customer_id', (int)$this->customer_id);
         $criteria->order = 'mark_id DESC';
@@ -550,31 +558,19 @@ class Customer extends ActiveRecord
         }
         return $this->_lastQuotaMark = $quotaMark;
     }
-    
+
     public function createQuotaMark($deleteOlder = true)
     {
         if ($deleteOlder) {
             $this->resetSendingQuota();
         }
-        
+
         $quotaMark = new CustomerQuotaMark();
         $quotaMark->customer_id = $this->customer_id;
         $quotaMark->save(false);
         return $this->_lastQuotaMark = $quotaMark;
     }
 
-    public function getComplianceLevel()
-    {
-
-        $Customer = Yii::app()->db->createCommand()
-            ->select('compliance_levels_id')
-            ->from('mw_customer')
-            ->where('customer_id=:id', array(':id' => (int)$this->customer_id))
-            ->queryRow();
-        return $Customer['compliance_levels_id'];
-
-    }
-    
     public function getHasGroup()
     {
         if (!$this->hasAttribute('group_id') || !$this->group_id) {
@@ -582,36 +578,36 @@ class Customer extends ActiveRecord
         }
         return !empty($this->group) ? $this->group : false;
     }
-    
+
     public function getGroupOption($option, $defaultValue = null)
     {
         static $loaded = array();
-        
+
         if (!isset($loaded[$this->customer_id])) {
             $loaded[$this->customer_id] = array();
         }
-        
+
         if (strpos($option, 'system.customer_') !== 0) {
             $option = 'system.customer_' . $option;
         }
-        
+
         if (array_key_exists($option, $loaded[$this->customer_id])) {
             return $loaded[$this->customer_id][$option];
         }
-        
+
         if (!($group = $this->getHasGroup())) {
             return $loaded[$this->customer_id][$option] = Yii::app()->options->get($option, $defaultValue);
         }
-        
+
         return $loaded[$this->customer_id][$option] = $group->getOptionValue($option, $defaultValue);
     }
-    
+
     public function getGravatarUrl($size = 50)
     {
         $gravatar = sprintf('//www.gravatar.com/avatar/%s?s=%d', md5(strtolower(trim($this->email))), (int)$size);
         return Yii::app()->hooks->applyFilters('customer_get_gravatar_url', $gravatar, $this, $size);
     }
-    
+
     public function getAvatarUrl($width = 50, $height = 50, $forceSize = false)
     {
         if (empty($this->avatar)) {
@@ -619,13 +615,13 @@ class Customer extends ActiveRecord
         }
         return ImageHelper::resize($this->avatar, $width, $height, $forceSize);
     }
-    
+
     // since 1.3.5
     public function getIsActive()
     {
         return $this->status == self::STATUS_ACTIVE;
     }
-    
+
     public function getAllListsIds()
     {
         static $ids = array();
@@ -633,7 +629,7 @@ class Customer extends ActiveRecord
             return $ids[$this->customer_id];
         }
         $ids[$this->customer_id] = array();
-        
+
         $criteria = new CDbCriteria();
         $criteria->select    = 'list_id';
         $criteria->condition = 'customer_id = :cid AND `status` != :st';
@@ -644,17 +640,17 @@ class Customer extends ActiveRecord
         }
         return $ids[$this->customer_id];
     }
-    
+
     protected function handleUploadedAvatar()
     {
         if ($this->hasErrors()) {
             return;
         }
-        
+
         if (!($avatar = CUploadedFile::getInstance($this, 'new_avatar'))) {
             return;
         }
-        
+
         $storagePath = Yii::getPathOfAlias('root.frontend.assets.files.avatars');
         if (!file_exists($storagePath) || !is_dir($storagePath)) {
             if (!@mkdir($storagePath, 0777, true)) {
@@ -664,39 +660,39 @@ class Customer extends ActiveRecord
                 return;
             }
         }
-        
+
         $newAvatarName = uniqid(rand(0, time())) . '-' . $avatar->getName();
         if (!$avatar->saveAs($storagePath . '/' . $newAvatarName)) {
             $this->addError('new_avatar', Yii::t('customers', 'Cannot move the avatar into the correct storage folder!'));
             return;
         }
-        
+
         $this->avatar = '/frontend/assets/files/avatars/' . $newAvatarName;
     }
-    
+
     protected function _takeQuotaAction()
     {
         $quotaAction = $this->getGroupOption('sending.action_quota_reached', '');
         if (empty($quotaAction)) {
             return true;
         }
-        
+
         $this->createQuotaMark();
-        
+
         if ($quotaAction != 'move-in-group') {
             return true;
         }
-        
+
         $moveInGroupId = (int)$this->getGroupOption('sending.move_to_group_id', '');
         if (empty($moveInGroupId)) {
             return true;
         }
-        
+
         $group = CustomerGroup::model()->findByPk($moveInGroupId);
         if (empty($group)) {
             return true;
         }
-        
+
         $this->group_id = $group->group_id;
         $this->addRelatedRecord('group', $group, false);
         $this->save(false);

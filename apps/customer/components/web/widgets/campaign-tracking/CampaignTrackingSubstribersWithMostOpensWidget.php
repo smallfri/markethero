@@ -6,7 +6,7 @@
  * @package MailWizz EMA
  * @author Serban George Cristian <cristian.serban@mailwizz.com> 
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
@@ -15,7 +15,7 @@ class CampaignTrackingSubstribersWithMostOpensWidget extends CWidget
 {
     public $campaign;
     
-    public $showDetailLinks = false;
+    public $showDetailLinks = true;
     
     public function run() 
     {

@@ -6,7 +6,7 @@
  * @package MailWizz EMA
  * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
@@ -23,26 +23,6 @@
       <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="//oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
-<?php
-Yii::import('common.vendors.MobileDetect.*');
-$md = new Mobile_Detect();
-if (!$md->isMobile()) {
-?>
-<!-- Beginning of Asynch Tutorialize Snippet -->
-<script type="text/javascript">
-(function() {
-  var tu = document.createElement('script'); tu.type = 'text/javascript'; tu.async = true;
-  tu.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'dpi1c6z6qg9qf.cloudfront.net/client/v3/tutorialize.js.gz'
-  var sc = document.getElementsByTagName('script')[0]; sc.parentNode.insertBefore(tu, sc);
-})();
-var _t = _t || [];
-_t.push = function(){if(typeof window.tutorialize !== 'undefined'){window.tutorialize.process(arguments[0]);}
-return Array.prototype.push.apply(this, arguments);};
-_t.push({publisher_id: '55f50e18c132a62e8f02a72d'});
-</script>
-<!-- End of Tutorialize Snippet -->
-<?php } ?>
-
 </head>
 <body class="<?php echo $this->bodyClasses;?>">
     <?php $this->afterOpeningBodyTag;?>
@@ -59,6 +39,26 @@ _t.push({publisher_id: '55f50e18c132a62e8f02a72d'});
                 </a>
                 <div class="navbar-right">
                     <ul class="nav navbar-nav">
+
+                        <li class="dropdown messages-menu">
+                            <a href="javascript:;" class="header-messages dropdown-toggle" data-url="<?php echo Yii::app()->createUrl('messages/header');?>" data-toggle="dropdown" title="<?php echo Yii::t('customers', 'Messages');?>">
+                                <i class="fa fa-envelope"></i>
+                                <span class="label label-success"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="header"> <!----> </li>
+                                <li>
+                                    <ul class="menu">
+                                        <li></li>
+                                    </ul>
+                                </li>
+                                <li class="footer">
+                                    <a href="<?php echo Yii::app()->createUrl('messages/index');?>"><?php echo Yii::t('messages', 'See all messages');?></a>
+                                </li>
+                            </ul>
+                        </li>
+
+
                         <li class="dropdown tasks-menu">
                             <a href="javascript;;" class="header-account-stats dropdown-toggle" data-url="<?php echo Yii::app()->createUrl('account/usage');?>" data-toggle="dropdown" title="<?php echo Yii::t('customers', 'Account usage');?>">
                                 <i class="fa fa-tasks"></i>
@@ -154,5 +154,5 @@ _t.push({publisher_id: '55f50e18c132a62e8f02a72d'});
             <?php $hooks->doAction('layout_footer_html', $this);?>
             <div class="clearfix"><!-- --></div>
         </footer>
- </body>
+    </body>
 </html>

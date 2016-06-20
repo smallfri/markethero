@@ -2,11 +2,11 @@
 
 /**
  * This file is part of the MailWizz EMA application.
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
@@ -15,7 +15,7 @@
  * This hook gives a chance to prepend content or to replace the default view content with a custom content.
  * Please note that from inside the action callback you can access all the controller view
  * variables via {@CAttributeCollection $collection->controller->data}
- * In case the content is replaced, make sure to set {@CAttributeCollection $collection->renderContent} to false 
+ * In case the content is replaced, make sure to set {@CAttributeCollection $collection->renderContent} to false
  * in order to stop rendering the default content.
  * @since 1.3.3.1
  */
@@ -64,18 +64,20 @@ if ($viewCollection->renderContent) {
 <option value="<?php echo $option->value;?>"<?php echo $option->value == $field->default_value ? ' selected="selected"' : '';?>><?php echo CHtml::encode($option->value);?></option>
 <?php }} ?>
 </select>
+<?php } elseif ($field->type->identifier == 'textarea') {?>
+<?php echo CHtml::encode('<');?>textarea class="form-control" name="<?php echo CHtml::encode($field->tag);?>" placeholder="<?php echo CHtml::encode($field->help_text);?>"<?php if ($field->required == ListField::TEXT_YES) {?> required <?php }?>><?php echo CHtml::encode($field->default_value);?><?php echo CHtml::encode('<');?>/textarea<?php echo CHtml::encode('>');?>
 <?php } else { ?>
 <input type="text" class="form-control" name="<?php echo CHtml::encode($field->tag);?>" placeholder="<?php echo CHtml::encode($field->help_text);?>" value="<?php echo CHtml::encode($field->default_value);?>"<?php if ($field->required == ListField::TEXT_YES) {?> required <?php }?>/>
 <?php }?>
 </div>
 <?php } ?>
-    
+
     <div class="clearfix"><!-- --></div>
     <div class="actions">
     <button type="submit" class="btn btn-primary btn-submit"><?php echo Yii::t('list_forms', 'Subscribe');?></button>
     </div>
     <div class="clearfix"><!-- --></div>
-            
+
 </form>
                     </textarea>
                     <hr />
@@ -105,13 +107,13 @@ if ($viewCollection->renderContent) {
         <label>Email <span class="required">*</span></label>
         <input type="text" class="form-control" name="EMAIL" placeholder="<?php echo Yii::t('list_forms', 'Please type your email address');?>" value="" required />
     </div>
-    
+
     <div class="clearfix"><!-- --></div>
     <div class="actions pull-right">
         <button type="submit" class="btn btn-primary btn-submit"><?php echo Yii::t('list_forms', 'Unsubscribe');?></button>
     </div>
     <div class="clearfix"><!-- --></div>
-    
+
 </form>
                     </textarea>
                     <hr />
@@ -125,7 +127,7 @@ if ($viewCollection->renderContent) {
     </div>
     <hr />
     <div class="callout callout-info">
-        <?php 
+        <?php
         $text = 'Please note, you will have to style the forms below to match the place where you embed them.<br />
         You can create better forms by using the <a href="{sdkHref}" target="_blank">PHP-SDK</a> and connect to the provided api.';
         echo Yii::t('list_forms', StringHelper::normalizeTranslationString($text), array(
@@ -133,7 +135,7 @@ if ($viewCollection->renderContent) {
         ));
         ?>
     </div>
-<?php 
+<?php
 }
 /**
  * This hook gives a chance to append content after the view file default content.

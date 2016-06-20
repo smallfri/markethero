@@ -2,15 +2,15 @@
 
 /**
  * DeliveryServerDomainPolicy
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.3.4.5
  */
- 
+
 /**
  * This is the model class for table "{{delivery_server_domain_policy}}".
  *
@@ -28,9 +28,9 @@
 class DeliveryServerDomainPolicy extends ActiveRecord
 {
     const POLICY_ALLOW = 'allow';
-    
+
     const POLICY_DENY = 'deny';
-    
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -79,19 +79,19 @@ class DeliveryServerDomainPolicy extends ActiveRecord
 		);
         return CMap::mergeArray($labels, parent::attributeLabels());
 	}
-    
+
     public function attributeHelpTexts()
     {
         $texts = array();
         return CMap::mergeArray($texts, parent::attributeHelpTexts());
     }
-    
+
     public function attributePlaceholders()
     {
         $placeholders = array(
 			'domain'     => Yii::t('servers', 'i.e: yahoo.com'),
         );
-        
+
         return CMap::mergeArray($placeholders, parent::attributePlaceholders());
     }
 
@@ -105,17 +105,17 @@ class DeliveryServerDomainPolicy extends ActiveRecord
 	{
 		return parent::model($className);
 	}
-    
+
     public function getIsAllow()
     {
         return $this->policy == self::POLICY_ALLOW;
     }
-    
+
     public function getIsDeny()
     {
         return $this->policy == self::POLICY_DENY;
     }
-    
+
     public function getPoliciesList()
     {
         return array(
@@ -123,13 +123,13 @@ class DeliveryServerDomainPolicy extends ActiveRecord
             self::POLICY_DENY  => ucfirst(Yii::t('servers', self::POLICY_DENY)),
         );
     }
-    
+
     // policy type is allow, deny!
     public static function canSendToDomainOf($server_id, $emailAddress)
     {
         static $serverPolicies = array();
         static $allowedDomains = array();
-        
+
         if (!isset($serverPolicies[$server_id])) {
             $serverPolicies[$server_id] = self::model()->findAll(array(
                 'select'    => 'domain, policy',
@@ -154,18 +154,18 @@ class DeliveryServerDomainPolicy extends ActiveRecord
                 unset($allowPolicies, $denyPolicies);
             }
         }
-        
+
         // if no policy, then allow all
         if (empty($serverPolicies[$server_id])) {
             return true;
         }
-        
+
         if (!isset($allowedDomains[$server_id])) {
             $allowedDomains[$server_id] = array();
         }
-        
+
         $domain = $emailAddress;
-        if (filter_var($emailAddress, FILTER_VALIDATE_EMAIL)) {
+        if (FilterVarHelper::email($emailAddress)) {
             $domain = explode('@', $emailAddress);
             $domain = end($domain);
         }
@@ -173,19 +173,19 @@ class DeliveryServerDomainPolicy extends ActiveRecord
         if (isset($allowedDomains[$server_id][$domain])) {
             return $allowedDomains[$server_id][$domain];
         }
-        
+
         foreach ($serverPolicies[$server_id]['allow'] as $model) {
             if ($model->domain == '*' || stripos($domain, $model->domain) === 0) {
                 return $allowedDomains[$server_id][$domain] = true;
             }
         }
-        
+
         foreach ($serverPolicies[$server_id]['deny'] as $model) {
             if ($model->domain == '*' || stripos($domain, $model->domain) === 0) {
                 return $allowedDomains[$server_id][$domain] = false;
             }
         }
-        
+
         return $allowedDomains[$server_id][$domain] = true;
     }
 }

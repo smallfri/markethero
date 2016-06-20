@@ -2,16 +2,16 @@
 
 /**
  * IOFilter
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
-class IOFilter extends CApplicationComponent 
+
+class IOFilter extends CApplicationComponent
 {
     /**
      * @var object CHtmlPurifier
@@ -22,7 +22,7 @@ class IOFilter extends CApplicationComponent
      * @var object CI_Security
      */
     private $_CISecurity;
-    
+
     /**
      * @var string $htmlPurifierClass
      * The name of the custom htmlpurifier class to load.
@@ -32,7 +32,7 @@ class IOFilter extends CApplicationComponent
 
     /**
      * IOFilter::encode()
-     * 
+     *
      * @param mixed $content
      * @return mixed
      */
@@ -45,10 +45,10 @@ class IOFilter extends CApplicationComponent
         }
         return $content;
     }
-    
+
     /**
      * IOFilter::decode()
-     * 
+     *
      * @param mixed $content
      * @return mixed
      */
@@ -61,10 +61,10 @@ class IOFilter extends CApplicationComponent
         }
         return $content;
     }
-    
+
     /**
      * IOFilter::stripClean()
-     * 
+     *
      * @param mixed $content
      * @return mixed
      */
@@ -72,10 +72,10 @@ class IOFilter extends CApplicationComponent
     {
         return $this->stripTags($this->xssClean($content));
     }
-    
+
     /**
      * IOFilter::stripTags()
-     * 
+     *
      * @param mixed $content
      * @return mixed
      */
@@ -86,14 +86,14 @@ class IOFilter extends CApplicationComponent
         } else {
             $content = rawurldecode($content);
             $content = CHtml::decode($content);
-            $content = filter_var($content, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);    
+            $content = FilterVarHelper::filter($content, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);    
         }
         return $content;
     }
-    
+
     /**
      * IOFilter::xssClean()
-     * 
+     *
      * @param mixed $content
      * @return mixed
      */
@@ -104,7 +104,7 @@ class IOFilter extends CApplicationComponent
 
     /**
      * IOFilter::purify()
-     * 
+     *
      * @param mixed $content
      * @return mixed
      */
@@ -115,7 +115,7 @@ class IOFilter extends CApplicationComponent
 
     /**
      * IOFilter::getPurifier()
-     * 
+     *
      * @return MHtmlPurifier
      */
     public function getPurifier()
@@ -126,10 +126,10 @@ class IOFilter extends CApplicationComponent
         }
         return $this->_purifier;
     }
-    
+
     /**
      * IOFilter::getCISecurity()
-     * 
+     *
      * @return CI_Security
      */
     public function getCISecurity()
@@ -143,7 +143,7 @@ class IOFilter extends CApplicationComponent
 
     /**
      * IOFilter::cleanGlobals()
-     * 
+     *
      * @return
      */
     public function cleanGlobals()
@@ -157,13 +157,13 @@ class IOFilter extends CApplicationComponent
         Yii::app()->params['COOKIE']    = new CMap($_COOKIE);
         Yii::app()->params['REQUEST']   = new CMap($_REQUEST);
         Yii::app()->params['SERVER']    = new CMap($_SERVER);
-        
+
         $_POST      = $this->stripClean($_POST);
         $_GET       = $this->stripClean($_GET);
         $_COOKIE    = $this->stripClean($_COOKIE);
         $_REQUEST   = $this->stripClean($_REQUEST);
         $_SERVER    = $this->stripClean($_SERVER);
-        
+
         Yii::app()->request->globalsCleaned = true;
     }
 }

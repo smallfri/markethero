@@ -2,17 +2,17 @@
 
 /**
  * ListsController
- * 
+ *
  * Handles the actions for lists related tasks
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
+
 class ListsController extends Controller
 {
     public $layout = 'thin';
@@ -203,7 +203,10 @@ class ListsController extends Controller
             } catch (Exception $e) {
 
                 $transaction->rollBack();
-                Yii::app()->notify->addError($e->getMessage());
+
+                if (($message = $e->getMessage())) {
+                    Yii::app()->notify->addError($message);
+                }
 
                 // bind default save error event handler
                 $this->callbacks->onSubscriberSaveError = array($this->callbacks, '_collectAndShowErrorMessages');
@@ -215,6 +218,13 @@ class ListsController extends Controller
                     'list'          => $list,
                     'action'        => 'subscribe',
                 )));
+
+                // since 1.3.5.9
+                $duplicate = isset(Yii::app()->params['validationSubscriberAlreadyExists']) && Yii::app()->params['validationSubscriberAlreadyExists'] === true;
+                if ($duplicate && $list->getSubscriberExistsRedirect()) {
+                    Yii::app()->notify->clearAll();
+                    $this->redirect($list->getSubscriberExistsRedirect());
+                }
             }
 
             // since 1.3.5.6
@@ -380,7 +390,7 @@ class ListsController extends Controller
                 );
 
                 foreach ($recipients as $recipient) {
-                    if (!filter_var($recipient, FILTER_VALIDATE_EMAIL)) {
+                    if (!FilterVarHelper::email($recipient)) {
                         continue;
                     }
                     $params['to'] = array($recipient => $customer->getFullName());
@@ -413,6 +423,14 @@ class ListsController extends Controller
                     '[COMPANY_FULL_ADDRESS]'=> !empty($list->company) ? nl2br($list->company->getFormattedAddress()) : null,
                     '[CURRENT_YEAR]'        => date('Y'),
                 );
+
+                // since 1.3.5.9
+                $subscriberCustomFields = $subscriber->getAllCustomFieldsWithValues();
+                foreach ($subscriberCustomFields as $field => $value) {
+                    $searchReplace['[' . $field . ']'] = $value;
+                }
+                //
+
                 $_content = str_replace(array_keys($searchReplace), array_values($searchReplace), $_content);
 
                 $params = array(
@@ -623,6 +641,18 @@ class ListsController extends Controller
         // list fields transform and handling
         $content = preg_replace('/\[LIST_FIELDS\]/', $fieldsHtml, $content, 1, $count);
 
+        // since 1.3.5.9
+        $searchReplace = array();
+        $subscriberCustomFields = $subscriber->getAllCustomFieldsWithValues();
+
+        foreach ($subscriberCustomFields as $field => $value) {
+            $searchReplace['[' . $field . ']'] = $value;
+        }
+        if (!empty($searchReplace)) {
+            $content = str_replace(array_keys($searchReplace), array_values($searchReplace), $content);
+        }
+        //
+
         // since 1.3.5.8
         $content = Yii::app()->hooks->applyFilters('frontend_list_update_profile_after_transform_list_fields', $content);
 
@@ -800,6 +830,17 @@ class ListsController extends Controller
 
         $content = str_replace('[SUBSCRIBE_URL]', $subscribeUrl, $content);
 
+        // since 1.3.5.9
+        $searchReplace = array();
+        $subscriberCustomFields = $subscriber->getAllCustomFieldsWithValues();
+        foreach ($subscriberCustomFields as $field => $value) {
+            $searchReplace['[' . $field . ']'] = $value;
+        }
+        if (!empty($searchReplace)) {
+            $content = str_replace(array_keys($searchReplace), array_values($searchReplace), $content);
+        }
+        //
+
         if ($saved) {
             // raise event.
             $this->callbacks->onSubscriberSaveSuccess(new CEvent($this->callbacks, array(
@@ -832,7 +873,7 @@ class ListsController extends Controller
             );
 
             foreach ($recipients as $recipient) {
-                if (!filter_var($recipient, FILTER_VALIDATE_EMAIL)) {
+                if (!FilterVarHelper::email($recipient)) {
                     continue;
                 }
                 $params['to'] = array($recipient => $customer->getFullName());
@@ -940,5 +981,5 @@ class ListsController extends Controller
 
         return $this;
     }
-    
+
 }

@@ -2,11 +2,11 @@
 
 /**
  * This file is part of the MailWizz EMA application.
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
@@ -15,7 +15,7 @@
  * This hook gives a chance to prepend content or to replace the default view content with a custom content.
  * Please note that from inside the action callback you can access all the controller view
  * variables via {@CAttributeCollection $collection->controller->data}
- * In case the content is replaced, make sure to set {@CAttributeCollection $collection->renderContent} to false 
+ * In case the content is replaced, make sure to set {@CAttributeCollection $collection->renderContent} to false
  * in order to stop rendering the default content.
  * @since 1.3.3.1
  */
@@ -42,13 +42,12 @@ if ($viewCollection->renderContent) { ?>
         </div>
         <div class="box-body">
             <div class="table-responsive">
-            <script type="text/javascript"> _t.push({start:'Campaigns Overview'}); </script> 
-            <?php 
+            <?php
             /**
              * This hook gives a chance to prepend content or to replace the default grid view content with a custom content.
              * Please note that from inside the action callback you can access all the controller view
              * variables via {@CAttributeCollection $collection->controller->data}
-             * In case the content is replaced, make sure to set {@CAttributeCollection $collection->renderGrid} to false 
+             * In case the content is replaced, make sure to set {@CAttributeCollection $collection->renderGrid} to false
              * in order to stop rendering the default content.
              * @since 1.3.3.1
              */
@@ -56,7 +55,7 @@ if ($viewCollection->renderContent) { ?>
                 'controller'    => $this,
                 'renderGrid'    => true,
             )));
-            
+
             // and render if allowed
             if ($collection->renderGrid) {
                 // since 1.3.5.6
@@ -64,7 +63,7 @@ if ($viewCollection->renderContent) { ?>
                     'model'      => $campaign,
                     'formAction' => $this->createUrl('campaigns/bulk_action'),
                 ));
-                    
+
                 $this->widget('zii.widgets.grid.CGridView', $hooks->applyFilters('grid_view_properties', array(
                     'ajaxUrl'           => $this->createUrl($this->route),
                     'id'                => $campaign->modelName.'-grid',
@@ -87,7 +86,7 @@ if ($viewCollection->renderContent) { ?>
                         array(
                             'class'               => 'CCheckBoxColumn',
                             'name'                => 'campaign_uid',
-                            'selectableRows'      => 100,  
+                            'selectableRows'      => 100,
                             'checkBoxHtmlOptions' => array('name' => 'bulk_item[]'),
                         ),
                         array(
@@ -140,61 +139,61 @@ if ($viewCollection->renderContent) { ?>
                             'footer'    => $campaign->paginationOptions->getGridFooterPagination(),
                             'buttons'   => array(
                                 'overview'=> array(
-                                    'label'     => ' &nbsp; <span class="glyphicon glyphicon-info-sign"></span> &nbsp;', 
+                                    'label'     => ' &nbsp; <span class="glyphicon glyphicon-info-sign"></span> &nbsp;',
                                     'url'       => 'Yii::app()->createUrl("campaigns/overview", array("campaign_uid" => $data->campaign_uid))',
                                     'imageUrl'  => null,
                                     'options'   => array('title' => Yii::t('campaigns', 'Overview'), 'class' => ''),
                                     'visible'   => '(!$data->editable || $data->isPaused) && !$data->pendingDelete',
                                 ),
                                 'pause'=> array(
-                                    'label'     => ' &nbsp; <span class="glyphicon glyphicon-pause"></span> &nbsp;', 
+                                    'label'     => ' &nbsp; <span class="glyphicon glyphicon-pause"></span> &nbsp;',
                                     'url'       => 'Yii::app()->createUrl("campaigns/pause_unpause", array("campaign_uid" => $data->campaign_uid))',
                                     'imageUrl'  => null,
                                     'options'   => array('title' => Yii::t('campaigns', 'Pause sending'), 'class' => 'pause-sending', 'data-message' => Yii::t('campaigns', 'Are you sure you want to pause this campaign ?')),
                                     'visible'   => '$data->canBePaused',
                                 ),
                                 'unpause'=> array(
-                                    'label'     => ' &nbsp; <span class="glyphicon glyphicon-play-circle"></span> &nbsp;', 
+                                    'label'     => ' &nbsp; <span class="glyphicon glyphicon-play-circle"></span> &nbsp;',
                                     'url'       => 'Yii::app()->createUrl("campaigns/pause_unpause", array("campaign_uid" => $data->campaign_uid))',
                                     'imageUrl'  => null,
                                     'options'   => array('title' => Yii::t('campaigns', 'Unpause sending'), 'class' => 'unpause-sending', 'data-message' => Yii::t('campaigns', 'Are you sure you want to unpause sending emails for this campaign ?')),
                                     'visible'   => '$data->isPaused',
                                 ),
                                 'reset'=> array(
-                                    'label'     => ' &nbsp; <span class="glyphicon glyphicon-refresh"></span> &nbsp;', 
+                                    'label'     => ' &nbsp; <span class="glyphicon glyphicon-refresh"></span> &nbsp;',
                                     'url'       => 'Yii::app()->createUrl("campaigns/resume_sending", array("campaign_uid" => $data->campaign_uid))',
                                     'imageUrl'  => null,
                                     'options'   => array('title' => Yii::t('campaigns', 'Resume sending'), 'class' => 'resume-campaign-sending', 'data-message' => Yii::t('campaigns', 'Resume sending, use this option if you are 100% sure your campaign is stuck and does not send emails anymore!')),
                                     'visible'   => '$data->canBeResumed',
                                 ),
                                 'copy'=> array(
-                                    'label'     => ' &nbsp; <span class="glyphicon glyphicon-subtitles"></span> &nbsp;', 
+                                    'label'     => ' &nbsp; <span class="glyphicon glyphicon-subtitles"></span> &nbsp;',
                                     'url'       => 'Yii::app()->createUrl("campaigns/copy", array("campaign_uid" => $data->campaign_uid))',
                                     'imageUrl'  => null,
                                     'visible'   => '!$data->pendingDelete',
                                     'options'   => array('title' => Yii::t('app', 'Copy'), 'class' => 'copy-campaign'),
                                 ),
                                 'update'=> array(
-                                    'label'     => ' &nbsp; <span class="glyphicon glyphicon-pencil"></span> &nbsp;', 
+                                    'label'     => ' &nbsp; <span class="glyphicon glyphicon-pencil"></span> &nbsp;',
                                     'url'       => 'Yii::app()->createUrl("campaigns/update", array("campaign_uid" => $data->campaign_uid))',
                                     'imageUrl'  => null,
                                     'visible'   => '$data->editable',
                                     'options'   => array('title' => Yii::t('app', 'Update'), 'class' => ''),
                                 ),
                                 'marksent'=> array(
-                                    'label'     => ' &nbsp; <span class="glyphicon glyphicon-ok"></span> &nbsp;', 
+                                    'label'     => ' &nbsp; <span class="glyphicon glyphicon-ok"></span> &nbsp;',
                                     'url'       => 'Yii::app()->createUrl("campaigns/marksent", array("campaign_uid" => $data->campaign_uid))',
                                     'imageUrl'  => null,
                                     'options'   => array('title' => Yii::t('campaigns', 'Mark as sent'), 'class' => 'mark-campaign-as-sent', 'data-message' => Yii::t('campaigns', 'Are you sure you want to mark this campaign as sent ?')),
                                     'visible'   => '$data->canBeMarkedAsSent',
                                 ),
                                 'delete' => array(
-                                    'label'     => ' &nbsp; <span class="glyphicon glyphicon-remove-circle"></span> &nbsp; ', 
+                                    'label'     => ' &nbsp; <span class="glyphicon glyphicon-remove-circle"></span> &nbsp; ',
                                     'url'       => 'Yii::app()->createUrl("campaigns/delete", array("campaign_uid" => $data->campaign_uid))',
                                     'imageUrl'  => null,
                                     'visible'   => '$data->removable',
                                     'options'   => array('title' => Yii::t('app', 'Delete'), 'class' => 'delete'),
-                                ),    
+                                ),
                             ),
                             'htmlOptions' => array(
                                 'style' => 'width: 180px;'
@@ -202,7 +201,7 @@ if ($viewCollection->renderContent) { ?>
                             'template'=>'{overview} {pause} {unpause} {reset} {copy} {update} {marksent} {delete}'
                         ),
                     ), $this),
-                ), $this));  
+                ), $this));
             }
             /**
              * This hook gives a chance to append content after the grid view content.
@@ -216,10 +215,10 @@ if ($viewCollection->renderContent) { ?>
             )));
             ?>
             <div class="clearfix"><!-- --></div>
-            </div>    
+            </div>
         </div>
     </div>
-<?php 
+<?php
 }
 /**
  * This hook gives a chance to append content after the view file default content.

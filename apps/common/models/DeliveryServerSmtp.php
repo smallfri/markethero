@@ -6,10 +6,11 @@
  * @package MailWizz EMA
  * @author Serban George Cristian <cristian.serban@mailwizz.com> 
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
+ 
 class DeliveryServerSmtp extends DeliveryServer
 {
     protected $serverType = 'smtp';
@@ -39,15 +40,14 @@ class DeliveryServerSmtp extends DeliveryServer
     
     public function sendEmail(array $params = array())
     {
+        $params = (array)Yii::app()->hooks->applyFilters('delivery_server_before_send_email', $this->getParamsArray($params), $this);
 
-//        $params = (array)Yii::app()->hooks->applyFilters('delivery_server_before_send_email', $this->getParamsArray($params), $this);
-
-        if ($sent = $this->getMailer()->send($this->getParamsArray($params))) {
-            $sent = array('email_id' => $params['email_id']);
+        if ($sent = $this->getMailer()->send($params)) {
+            $sent = array('message_id' => $this->getMailer()->getEmailMessageId());
             $this->logUsage();
         }
         
-//        Yii::app()->hooks->doAction('delivery_server_after_send_email', $params, $this, $sent);
+        Yii::app()->hooks->doAction('delivery_server_after_send_email', $params, $this, $sent);
         
         return $sent;
     }

@@ -2,15 +2,15 @@
 
 /**
  * LeftSideNavigationWidget
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
+
 class LeftSideNavigationWidget extends CWidget
 {
     public function run()
@@ -22,14 +22,14 @@ class LeftSideNavigationWidget extends CWidget
         $priority   = 0;
         $request    = Yii::app()->request;
         $user       = Yii::app()->user->getModel();
-        
+
         Yii::import('zii.widgets.CMenu');
-        
+
         $supportForumUrl = Yii::app()->options->get('system.common.support_forum_url');
         if ($supportForumUrl === null) {
             $supportForumUrl = MW_SUPPORT_FORUM_URL;
         }
-        
+
         $menuItems = array(
             'support_forum' => array(
                 'name'        => Yii::t('app', 'Support forum'),
@@ -88,6 +88,7 @@ class LeftSideNavigationWidget extends CWidget
                     array('url' => array('customer_groups/index'), 'label' => Yii::t('app', 'Groups'), 'active' => strpos($route, 'customer_groups') === 0),
                     array('url' => array('campaigns/index'), 'label' => Yii::t('app', 'Campaigns'), 'active' => strpos($route, 'campaigns') === 0),
                     array('url' => array('customers_mass_emails/index'), 'label' => Yii::t('app', 'Mass emails'), 'active' => strpos($route, 'customers_mass_emails') === 0),
+                    array('url' => array('customer_messages/index'), 'label' => Yii::t('app', 'Messages'), 'active' => strpos($route, 'customer_messages') === 0),
                 ),
             ),
             'servers'       => array(
@@ -140,7 +141,7 @@ class LeftSideNavigationWidget extends CWidget
                     array('url' => array('languages/index'), 'label' => Yii::t('app', 'Languages'), 'active' => strpos($route, 'languages') === 0),
                 ),
             ),
-            
+
             'locations' => array(
                 'name'      => Yii::t('app', 'Locations'),
                 'icon'      => 'glyphicon-globe',
@@ -166,6 +167,7 @@ class LeftSideNavigationWidget extends CWidget
                     array('url' => array('settings/email_blacklist'), 'label' => Yii::t('app', 'Email blacklist'), 'active' => strpos($route, 'settings/email_blacklist') === 0),
                     array('url' => array('settings/campaign_attachments'), 'label' => Yii::t('app', 'Campaigns'), 'active' => strpos($route, 'settings/campaign_') === 0),
                     array('url' => array('settings/customer_common'), 'label' => Yii::t('app', 'Customers'), 'active' => strpos($route, 'settings/customer_') === 0),
+                    array('url' => array('settings/api_ip_access'), 'label' => Yii::t('app', 'Api'), 'active' => strpos($route, 'settings/api_ip_access') === 0),
                     array('url' => array('settings/monetization'), 'label' => Yii::t('app', 'Monetization'), 'active' => strpos($route, 'settings/monetization') === 0),
                     array('url' => array('settings/customization'), 'label' => Yii::t('app', 'Customization'), 'active' => strpos($route, 'settings/customization') === 0),
                     array('url' => array('settings/cdn'), 'label' => Yii::t('app', 'CDN'), 'active' => strpos($route, 'settings/cdn') === 0),
@@ -197,9 +199,9 @@ class LeftSideNavigationWidget extends CWidget
         if ($supportForumUrl == '') {
             unset($menuItems['support_forum']);
         }
-        
+
         $menuItems = (array)Yii::app()->hooks->applyFilters('backend_left_navigation_menu_items', $menuItems);
-        
+
         // since 1.3.5
         foreach ($menuItems as $key => $data) {
             if (!empty($data['route']) && !$user->hasRouteAccess($data['route'])) {
@@ -221,11 +223,11 @@ class LeftSideNavigationWidget extends CWidget
         $menu = new CMenu();
         $menu->htmlOptions          = array('class' => 'sidebar-menu');
         $menu->submenuHtmlOptions   = array('class' => 'treeview-menu');
-        
+
         foreach ($menuItems as $key => $data) {
             $_route  = !empty($data['route']) ? $data['route'] : 'javascript:;';
             $active  = false;
-            
+
             if (!empty($data['active']) && is_string($data['active']) && strpos($route, $data['active']) === 0) {
                 $active = true;
             } elseif (!empty($data['active']) && is_array($data['active'])) {
@@ -236,14 +238,14 @@ class LeftSideNavigationWidget extends CWidget
                     }
                 }
             }
-            
+
             $item = array(
-                'url'         => $_route, 
-                'label'       => '<i class="glyphicon '.$data['icon'].'"></i> <span>'.$data['name'].'</span>' . (!empty($data['items']) ? '<i class="fa fa-angle-left pull-right"></i>' : ''), 
+                'url'         => $_route,
+                'label'       => '<i class="glyphicon '.$data['icon'].'"></i> <span>'.$data['name'].'</span>' . (!empty($data['items']) ? '<i class="fa fa-angle-left pull-right"></i>' : ''),
                 'active'      => $active,
                 'linkOptions' => !empty($data['linkOptions']) && is_array($data['linkOptions']) ? $data['linkOptions'] : array(),
             );
-            
+
             if (!empty($data['items'])) {
                 foreach ($data['items'] as $index => $i) {
                     if (isset($i['label'])) {
@@ -253,7 +255,7 @@ class LeftSideNavigationWidget extends CWidget
                 $item['items']       = $data['items'];
                 $item['itemOptions'] = array('class' => 'treeview');
             }
-            
+
             $menu->items[] = $item;
         }
 

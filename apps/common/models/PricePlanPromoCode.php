@@ -2,11 +2,11 @@
 
 /**
  * PricePlanPromoCode
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.3.4.4
  */
@@ -34,13 +34,13 @@
 class PricePlanPromoCode extends ActiveRecord
 {
     const TYPE_PERCENTAGE = 'percentage';
-    
+
     const TYPE_FIXED_AMOUNT = 'fixed amount';
 
     public $pickerDateStartComparisonSign;
-    
+
     public $pickerDateEndComparisonSign;
-    
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -65,7 +65,7 @@ class PricePlanPromoCode extends ActiveRecord
             array('total_usage, customer_usage', 'length', 'min' => 1),
             array('total_usage, customer_usage', 'numerical', 'integerOnly' => true, 'min' => 0, 'max' => 9999),
             array('date_start, date_end', 'date', 'format' => 'yyyy-MM-dd'),
-            
+
             array('pickerDateStartComparisonSign, pickerDateEndComparisonSign', 'in', 'range' => array_keys($this->getComparisonSignsList())),
 			array('code, type, discount, total_amount, total_usage, customer_usage, date_start, date_end, status', 'safe', 'on'=>'search'),
 		);
@@ -101,7 +101,7 @@ class PricePlanPromoCode extends ActiveRecord
 		);
         return CMap::mergeArray($labels, parent::attributeLabels());
 	}
-    
+
     /**
      * @return array help text for attributes
      */
@@ -118,10 +118,10 @@ class PricePlanPromoCode extends ActiveRecord
 			'date_start'     => Yii::t('promo_codes', 'The start date for this promotional code'),
 			'date_end'       => Yii::t('promo_codes', 'The end date for this promotional code'),
 		);
-        
+
         return CMap::mergeArray($texts, parent::attributeHelpTexts());
     }
-    
+
     /**
      * @return array attribute placeholders
      */
@@ -138,10 +138,10 @@ class PricePlanPromoCode extends ActiveRecord
 			'date_start'     => Yii::t('promo_codes', Yii::t('promo_codes', 'i.e: {date}', array('{date}' => date('Y-m-d')))),
 			'date_end'       => Yii::t('promo_codes', Yii::t('promo_codes', 'i.e: {date}', array('{date}' => date('Y-m-d', strtotime('+30 days'))))),
 		);
-        
+
         return CMap::mergeArray($placeholders, parent::attributePlaceholders());
     }
-    
+
     /**
 	 * Retrieves a list of models based on the current search/filter conditions.
 	 *
@@ -157,7 +157,7 @@ class PricePlanPromoCode extends ActiveRecord
 	public function search()
 	{
 		$criteria=new CDbCriteria;
-        
+
         $comparisonSigns   = $this->getComparisonSignsList();
         $originalDateStart = $this->date_start;
         $originalDateEnd   = $this->date_end;
@@ -167,7 +167,7 @@ class PricePlanPromoCode extends ActiveRecord
         if (!empty($this->pickerDateEndComparisonSign) && in_array($this->pickerDateEndComparisonSign, array_keys($comparisonSigns))) {
             $this->date_end = $comparisonSigns[$this->pickerDateEndComparisonSign] . $this->date_end;
         }
-        
+
 		$criteria->compare('code', $this->code, true);
 		$criteria->compare('type', $this->type);
 		$criteria->compare('discount', $this->discount);
@@ -177,10 +177,10 @@ class PricePlanPromoCode extends ActiveRecord
 		$criteria->compare('date_start', $this->date_start);
 		$criteria->compare('date_end', $this->date_end);
 		$criteria->compare('status', $this->status);
-		
+
         $this->date_start = $originalDateStart;
         $this->date_end   = $originalDateEnd;
-        
+
 		return new CActiveDataProvider(get_class($this), array(
             'criteria'      => $criteria,
             'pagination'    => array(
@@ -205,7 +205,7 @@ class PricePlanPromoCode extends ActiveRecord
 	{
 		return parent::model($className);
 	}
-    
+
     public function getTypesList()
     {
         return array(
@@ -213,7 +213,7 @@ class PricePlanPromoCode extends ActiveRecord
             self::TYPE_PERCENTAGE   => ucfirst(Yii::t('promo_codes', self::TYPE_PERCENTAGE)),
         );
     }
-    
+
     public function getTypeName($type = null)
     {
         if ($type === null) {
@@ -222,12 +222,12 @@ class PricePlanPromoCode extends ActiveRecord
         $types = $this->getTypesList();
         return isset($types[$type]) ? $types[$type] : null;
     }
-    
+
     public function getCurrency()
     {
         return Currency::model()->findDefault();
     }
-    
+
     public function getFormattedDiscount()
     {
         if ($this->type == self::TYPE_FIXED_AMOUNT) {
@@ -235,17 +235,17 @@ class PricePlanPromoCode extends ActiveRecord
         }
         return Yii::app()->numberFormatter->formatDecimal($this->discount) . '%';
     }
-    
+
     public function getFormattedTotalAmount()
     {
         return Yii::app()->numberFormatter->formatCurrency($this->total_amount, $this->getCurrency()->code);
     }
-    
+
     public function getDateStart()
     {
         return $this->dateTimeFormatter->formatLocalizedDate($this->date_start);
     }
-    
+
     public function getDateEnd()
     {
         return $this->dateTimeFormatter->formatLocalizedDate($this->date_end);
@@ -255,7 +255,7 @@ class PricePlanPromoCode extends ActiveRecord
     {
         return 'yy-mm-dd';
     }
-    
+
     public function getDatePickerLanguage()
     {
         $language = Yii::app()->getLanguage();
@@ -263,6 +263,9 @@ class PricePlanPromoCode extends ActiveRecord
             return $language;
         }
         $language = explode('_', $language);
-        return $language[0] . '-' . strtoupper($language[1]);
+
+        // commented since 1.3.5.9
+        // return $language[0] . '-' . strtoupper($language[1]);
+        return $language[0];
     }
 }

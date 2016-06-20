@@ -2,15 +2,15 @@
 
 /**
  * ListSubscriber
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
+
 /**
  * This is the model class for table "list_subscriber".
  *
@@ -40,33 +40,33 @@
 class ListSubscriber extends ActiveRecord
 {
     const STATUS_CONFIRMED = 'confirmed';
-    
+
     const STATUS_UNCONFIRMED = 'unconfirmed';
-    
+
     const STATUS_UNSUBSCRIBED = 'unsubscribed';
-    
+
     const STATUS_BLACKLISTED = 'blacklisted';
-    
+
     const SOURCE_WEB = 'web';
-    
+
     const SOURCE_API = 'api';
-    
+
     const SOURCE_IMPORT = 'import';
-    
+
     const BULK_SUBSCRIBE = 'subscribe';
-    
+
     const BULK_UNSUBSCRIBE = 'unsubscribe';
-    
+
     const BULK_DELETE = 'delete';
-    
+
     const BULK_BLACKLIST = 'blacklist';
-    
+
     // when select count(x) as counter
     public $counter = 0;
-    
+
     // for search in multilists
     public $listIds = array();
-    
+
     /**
      * @return string the associated database table name
      */
@@ -121,10 +121,10 @@ class ListSubscriber extends ActiveRecord
             'source'        => Yii::t('list_subscribers', 'Source'),
             'ip_address'    => Yii::t('list_subscribers', 'Ip Address'),
         );
-        
+
         return CMap::mergeArray($labels, parent::attributeLabels());
     }
-    
+
     /**
      * Retrieves a list of models based on the current search/filter conditions.
      *
@@ -140,20 +140,20 @@ class ListSubscriber extends ActiveRecord
     public function search()
     {
         $criteria = new CDbCriteria;
-        
+
         if (!empty($this->list_id)) {
             $criteria->compare('t.list_id', (int)$this->list_id);
         } elseif (!empty($this->listIds)) {
             $criteria->addInCondition('t.list_id', array_map('intval', $this->listIds));
         }
-        
+
         $criteria->compare('t.email', $this->email, true);
         $criteria->compare('t.source', $this->source);
         $criteria->compare('t.ip_address', $this->ip_address, true);
         $criteria->compare('t.status', $this->status);
 
         $criteria->order = 't.subscriber_id DESC';
-        
+
         return new CActiveDataProvider(get_class($this), array(
             'criteria'      => $criteria,
             'pagination'    => array(
@@ -167,7 +167,7 @@ class ListSubscriber extends ActiveRecord
             ),
         ));
     }
-    
+
     /**
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
@@ -178,60 +178,60 @@ class ListSubscriber extends ActiveRecord
     {
         return parent::model($className);
     }
-    
+
     protected function beforeSave()
     {
         if (empty($this->subscriber_uid)) {
             $this->subscriber_uid = $this->generateUid();
         }
-        
+
         return parent::beforeSave();
     }
-    
+
     public function findByUid($subscriber_uid)
     {
         return $this->findByAttributes(array(
             'subscriber_uid' => $subscriber_uid,
-        ));    
+        ));
     }
-    
+
     public function generateUid()
     {
         $unique = StringHelper::uniqid();
         $exists = $this->findByUid($unique);
-        
+
         if (!empty($exists)) {
             return $this->generateUid();
         }
-        
+
         return $unique;
     }
-    
+
     public function getIsBlacklisted()
     {
         // since 1.3.5.5
         if (MW_PERF_LVL && MW_PERF_LVL & MW_PERF_LVL_DISABLE_SUBSCRIBER_BLACKLIST_CHECK) {
             return false;
         }
-        
+
         // check since 1.3.4.7
         if ($this->status == self::STATUS_BLACKLISTED) {
             return true;
         }
-        
+
         $blacklisted = EmailBlacklist::isBlacklisted($this->email, $this);
-        
+
         // since 1.3.4.7
         if ($blacklisted && $this->status != self::STATUS_BLACKLISTED) {
             $criteria = new CDbCriteria();
             $criteria->compare('subscriber_id', (int)$this->subscriber_id);
-            ListSubscriber::model()->updateAll(array('status' => self::STATUS_BLACKLISTED), $criteria);
+            ListSubscriber::model()->updateAll(array('status' => self::STATUS_BLACKLISTED, 'last_updated' => new CDbExpression('NOW()')), $criteria);
             $this->status = self::STATUS_BLACKLISTED;
         }
-        
+
         return $blacklisted;
     }
-    
+
     public function addToBlacklist($reason = null)
     {
         if ($added = EmailBlacklist::addToBlacklist($this, $reason)) {
@@ -239,27 +239,27 @@ class ListSubscriber extends ActiveRecord
         }
         return $added;
     }
-    
+
     public function removeFromBlacklistByEmail()
     {
         return EmailBlacklist::removeByEmail($this->email);
     }
-    
+
     public function getCanBeConfirmed()
     {
         return !in_array($this->status, array(self::STATUS_CONFIRMED, self::STATUS_BLACKLISTED));
     }
-    
+
     public function getCanBeUnsubscribed()
     {
         return !in_array($this->status, array(self::STATUS_BLACKLISTED));
     }
-    
+
     public function getCanBeDeleted()
     {
         return $this->getRemovable();
     }
-    
+
     public function getRemovable()
     {
         $removable = true;
@@ -268,12 +268,12 @@ class ListSubscriber extends ActiveRecord
         }
         return $removable;
     }
-    
+
     public function getUid()
     {
         return $this->subscriber_uid;
     }
-    
+
     public function getStatusesList()
     {
         return array(
@@ -282,14 +282,14 @@ class ListSubscriber extends ActiveRecord
             self::STATUS_UNSUBSCRIBED   => Yii::t('list_subscribers', ucfirst(self::STATUS_UNSUBSCRIBED)),
         );
     }
-    
+
     public function getFilterStatusesList()
     {
         return array_merge($this->getStatusesList(), array(
             self::STATUS_BLACKLISTED => Yii::t('list_subscribers', ucfirst(self::STATUS_BLACKLISTED)),
         ));
     }
-    
+
     public function getBulkActionsList()
     {
         $list = array(
@@ -297,14 +297,14 @@ class ListSubscriber extends ActiveRecord
             self::BULK_UNSUBSCRIBE  => Yii::t('list_subscribers', ucfirst(self::BULK_UNSUBSCRIBE)),
             self::BULK_DELETE       => Yii::t('list_subscribers', ucfirst(self::BULK_DELETE)),
         );
-        
+
         if (!$this->getCanBeDeleted()) {
             unset($list[self::BULK_DELETE]);
         }
-        
+
         return $list;
     }
-    
+
     public function getSourcesList()
     {
         return array(
@@ -313,38 +313,38 @@ class ListSubscriber extends ActiveRecord
             self::SOURCE_WEB    => Yii::t('list_subscribers', ucfirst(self::SOURCE_WEB)),
         );
     }
-    
+
     public function copyToList($listId, $doTransaction = true)
     {
-        
+
         $listId = (int)$listId;
         if (empty($listId) || $listId == $this->list_id) {
             return false;
         }
-        
+
         static $targetLists      = array();
         static $cacheFieldModels = array();
-        
+
         if (isset($targetLists[$listId]) || array_key_exists($listId, $targetLists)) {
             $targetList = $targetLists[$listId];
         } else {
             $targetList = $targetLists[$listId] = Lists::model()->findByPk($listId);
         }
-        
+
         if (empty($targetList)) {
             return false;
         }
-        
+
         $subscriber = self::model()->findByAttributes(array(
-            'list_id' => $targetList->list_id, 
+            'list_id' => $targetList->list_id,
             'email'   => $this->email
         ));
-        
+
         // already there
         if (!empty($subscriber)) {
             return $subscriber;
         }
-        
+
         $subscriber = clone $this;
         $subscriber->isNewRecord    = true;
         $subscriber->subscriber_id  = null;
@@ -353,30 +353,30 @@ class ListSubscriber extends ActiveRecord
         $subscriber->last_updated   = new CDbExpression('NOW()');
         $subscriber->subscriber_uid = $this->generateUid();
         $subscriber->addRelatedRecord('list', $targetList, false);
-        
+
         if ($doTransaction) {
             $transaction = Yii::app()->getDb()->beginTransaction();
         }
 
         try {
-            
+
             if (!$subscriber->save()) {
                 throw new Exception(CHtml::errorSummary($subscriber));
             }
-            
-            
+
+
             $cacheListsKey = $this->list_id . '|' . $targetList->list_id;
             if (!isset($cacheFieldModels[$cacheListsKey])) {
                 // the custom fields for source list
                 $sourceFields = ListField::model()->findAllByAttributes(array(
                     'list_id' => $this->list_id,
                 ));
-                
+
                 // the custom fields for target list
                 $targetFields = ListField::model()->findAllByAttributes(array(
                     'list_id' => $targetList->list_id,
                 ));
-                
+
                 // get only the same fields
                 $_fieldModels = array();
                 foreach ($sourceFields as $srcIndex => $sourceField) {
@@ -392,11 +392,11 @@ class ListSubscriber extends ActiveRecord
                 unset($sourceFields, $targetFields, $_fieldModels);
             }
             $fieldModels = $cacheFieldModels[$cacheListsKey];
-            
+
             if (empty($fieldModels)) {
                 throw new Exception('No field models found, something went wrong!');
             }
-            
+
             foreach ($fieldModels as $index => $models) {
                 list($source, $target) = $models;
                 $sourceValues = ListFieldValue::model()->findAllByAttributes(array(
@@ -430,10 +430,10 @@ class ListSubscriber extends ActiveRecord
             }
             $subscriber = false;
         }
-        
+
         return $subscriber;
     }
-    
+
     // since 1.3.5 - this should be expanded in future
     public function takeListSubscriberAction($actionName)
     {
@@ -444,26 +444,26 @@ class ListSubscriber extends ActiveRecord
         if ($actionName == ListSubscriberAction::ACTION_SUBSCRIBE && $this->status != self::STATUS_CONFIRMED) {
             return $this;
         }
-        
+
         if ($actionName == ListSubscriberAction::ACTION_UNSUBSCRIBE && $this->status == self::STATUS_CONFIRMED) {
             return $this;
         }
-        
+
         $allowedActions = array_keys(ListSubscriberAction::model()->getActions());
         if (!in_array($actionName, $allowedActions)) {
             return $this;
         }
-        
+
         $criteria = new CDbCriteria();
         $criteria->select = 'target_list_id';
         $criteria->compare('source_list_id', (int)$this->list_id);
         $criteria->compare('source_action', $actionName);
-        
+
         $_lists = ListSubscriberAction::model()->findAll($criteria);
         if (empty($_lists)) {
             return $this;
         }
-        
+
         $lists = array();
         foreach ($_lists as $list) {
             $lists[] = $list->target_list_id;
@@ -475,28 +475,61 @@ class ListSubscriber extends ActiveRecord
         $criteria->addInCondition('status', array(self::STATUS_CONFIRMED));
 
         self::model()->updateAll(array('status' => self::STATUS_UNSUBSCRIBED), $criteria);
-        
+
         return $this;
     }
 
-    public static function getSubscribersZapier($listID)
-        {
-
-            $criteria = new CDbCriteria();
-            $criteria->select = '*';
-            $criteria->compare('list_id',$listID);
-            $criteria->addInCondition('status', array(self::STATUS_CONFIRMED));
-
-            $models = self::model()->findAll($criteria);
-            static $subs = array();
-            static $subscribers = array();
-            foreach($models as $model)
-            {
-
-                $subs['email'] = $model->email;
-                $subs['fname'] = $model->fname;
-                $list[] = $lists;
-            }
-            return $list;
+    public function getAllCustomFieldsWithValues()
+    {
+        static $fields = array();
+        if (empty($this->subscriber_id)) {
+            return array();
         }
+        if (isset($fields[$this->subscriber_id])) {
+            return $fields[$this->subscriber_id];
+        }
+        $fields[$this->subscriber_id] = array();
+
+        $criteria = new CDbCriteria();
+        $criteria->select = 'field_id, tag';
+        $criteria->compare('list_id', $this->list_id);
+        $_fields = ListField::model()->findAll($criteria);
+
+        foreach ($_fields as $field) {
+            $value = null;
+            $criteria = new CDbCriteria();
+            $criteria->select = 'value';
+            $criteria->compare('field_id', (int)$field->field_id);
+            $criteria->compare('subscriber_id', (int)$this->subscriber_id);
+            $valueModels = ListFieldValue::model()->findAll($criteria);
+
+            if (!empty($valueModels)) {
+                $value = array();
+                foreach($valueModels as $valueModel) {
+                    $value[] = $valueModel->value;
+                }
+                $value = implode(', ', $value);
+            }
+            $fields[$this->subscriber_id][$field->tag] = CHtml::encode($value);
+        }
+
+        return $fields[$this->subscriber_id];
+    }
+
+    public function getCustomFieldValue($field)
+    {
+        $field  = strtoupper(str_replace(array('[', ']'), '', $field));
+        $fields = $this->getAllCustomFieldsWithValues();
+        $value  = isset($fields[$field]) || array_key_exists($fields, $tags) ? $fields[$field] : null;
+        unset($fields);
+        return $value;
+    }
+
+    public function hasOpenedCampaign(Campaign $campaign)
+    {
+        $criteria = new CDbCriteria();
+        $criteria->compare('campaign_id', (int)$campaign->campaign_id);
+        $criteria->compare('subscriber_id', (int)$this->subscriber_id);
+        return CampaignTrackOpen::model()->count($criteria) > 0;
+    }
 }

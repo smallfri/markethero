@@ -4561,8 +4561,6 @@ class CHttpSession extends CApplicationComponent implements IteratorAggregate,Ar
 	{
 		if(session_id()!=='')
 			@session_write_close();
-		Logger::logEntries();
-
 	}
 	public function destroy()
 	{

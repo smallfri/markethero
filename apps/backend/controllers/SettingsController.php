@@ -2,17 +2,17 @@
 
 /**
  * SettingsController
- * 
+ *
  * Handles the settings for the application
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
+
 class SettingsController extends Controller
 {
     public function init()
@@ -20,7 +20,7 @@ class SettingsController extends Controller
         $this->getData('pageScripts')->add(array('src' => AssetsUrl::js('settings.js')));
         parent::init();
     }
-    
+
     /**
      * Handle the common settings page
      */
@@ -37,30 +37,30 @@ class SettingsController extends Controller
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller'    => $this,
                 'success'       => $notify->hasSuccess,
                 'commonModel'   => $commonModel,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('settings/index'));
             }
         }
-        
+
         $this->setData(array(
-            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'), 
+            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'),
             'pageHeading'       => Yii::t('settings', 'Settings'),
             'pageBreadcrumbs'   => array(
                 Yii::t('settings', 'Settings') => $this->createUrl('settings/index'),
                 Yii::t('settings', 'Common settings')
             )
         ));
-        
+
         $this->render('index', compact('commonModel'));
     }
-    
+
     /**
      * Handle the settings for system urls
      */
@@ -75,40 +75,40 @@ class SettingsController extends Controller
             foreach ($apps as $appName) {
                 $options->set('system.urls.'.$appName.'_absolute_url', '');
             }
-            
+
             $scheme = 'http';
             if ($request->getPost('scheme', 'http') == 'https') {
                 $scheme = 'https';
             }
             $options->set('system.urls.scheme', $scheme);
-            
+
             $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
 
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller' => $this,
                 'success'    => $notify->hasSuccess,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('settings/system_urls'));
             }
         }
-        
+
         $this->setData(array(
-            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'), 
+            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'),
             'pageHeading'       => Yii::t('settings', 'Settings'),
             'pageBreadcrumbs'   => array(
                 Yii::t('settings', 'Settings') => $this->createUrl('settings/index'),
                 Yii::t('settings', 'System urls')
             )
         ));
-        
+
         // the scheme
         $scheme = Yii::app()->options->get('system.urls.scheme', 'http');
-        
+
         $this->render('system-urls', compact('apps', 'options', 'scheme'));
     }
-    
+
     /**
      * Handle the settings for importer/exporter
      */
@@ -119,41 +119,41 @@ class SettingsController extends Controller
 
         $importModel = new OptionImporter();
         $exportModel = new OptionExporter();
-        
+
         if ($request->isPostRequest) {
             $importModel->attributes = (array)$request->getPost($importModel->modelName, array());
             $exportModel->attributes = (array)$request->getPost($exportModel->modelName, array());
-            
+
             if (!$importModel->save() || !$exportModel->save()) {
                 $notify->addError(Yii::t('app', 'Your form contains a few errors, please fix them and try again!'));
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller'   => $this,
                 'success'      => $notify->hasSuccess,
                 'importModel'  => $importModel,
                 'exportModel'  => $exportModel
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('settings/import_export'));
             }
         }
 
         $this->setData(array(
-            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'), 
+            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'),
             'pageHeading'       => Yii::t('settings', 'Settings'),
             'pageBreadcrumbs'   => array(
                 Yii::t('settings', 'Settings') => $this->createUrl('settings/index'),
                 Yii::t('settings', 'Import/Export settings')
             )
         ));
-        
+
         $this->render('import-export', compact('importModel', 'exportModel'));
     }
-    
+
     /**
      * Handle the settings for console commands
      */
@@ -166,21 +166,21 @@ class SettingsController extends Controller
         $cronSubscribersModel   = new OptionCronProcessSubscribers();
         $cronBouncesModel       = new OptionCronProcessBounceServers();
         $cronFeedbackModel      = new OptionCronProcessFeedbackLoopServers();
-        
+
         if ($request->isPostRequest) {
-            
+
             $cronDeliveryModel->attributes      = (array)$request->getPost($cronDeliveryModel->modelName, array());
             $cronLogsModel->attributes          = (array)$request->getPost($cronLogsModel->modelName, array());
             $cronSubscribersModel->attributes   = (array)$request->getPost($cronSubscribersModel->modelName, array());
             $cronBouncesModel->attributes       = (array)$request->getPost($cronBouncesModel->modelName, array());
             $cronFeedbackModel->attributes      = (array)$request->getPost($cronFeedbackModel->modelName, array());
-            
+
             if (!$cronDeliveryModel->save() || !$cronLogsModel->save() || !$cronSubscribersModel->save() || !$cronBouncesModel->save() || !$cronFeedbackModel->save()) {
                 $notify->addError(Yii::t('app', 'Your form contains a few errors, please fix them and try again!'));
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller'            => $this,
                 'success'               => $notify->hasSuccess,
@@ -190,24 +190,24 @@ class SettingsController extends Controller
                 'cronBouncesModel'      => $cronBouncesModel,
                 'cronFeedbackModel'     => $cronFeedbackModel
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('settings/cron'));
             }
         }
 
         $this->setData(array(
-            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'), 
+            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'),
             'pageHeading'       => Yii::t('settings', 'Settings'),
             'pageBreadcrumbs'   => array(
                 Yii::t('settings', 'Settings') => $this->createUrl('settings/index'),
                 Yii::t('settings', 'Cron jobs settings')
             )
         ));
-        
+
         $this->render('cron', compact('cronDeliveryModel', 'cronLogsModel', 'cronSubscribersModel', 'cronBouncesModel', 'cronFeedbackModel'));
     }
-    
+
     /**
      * Handle the settings for email templates
      */
@@ -217,52 +217,52 @@ class SettingsController extends Controller
         if (!in_array($type, $types)) {
             $type = $types[0];
         }
-        
+
         $request = Yii::app()->request;
         $notify = Yii::app()->notify;
-        
+
         $model = new OptionEmailTemplate($type);
         $model->fieldDecorator->onHtmlOptionsSetup = array($this, '_setupEditorOptions');
-        
+
         if ($request->isPostRequest) {
             $model->attributes = (array)$request->getPost($model->modelName, array());
-            
+
             if (isset(Yii::app()->params['POST'][$model->modelName][$type])) {
                 $rawContent = Yii::app()->params['POST'][$model->modelName][$type];
                 $parser = new EmailTemplateParser();
                 $parser->inlineCss = false;
                 $model->$type = $parser->setContent($rawContent)->getContent();
             }
-            
+
             if (!$model->save()) {
                 $notify->addError(Yii::t('app', 'Your form contains a few errors, please fix them and try again!'));
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller' => $this,
                 'success'    => $notify->hasSuccess,
                 'model'      => $model,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('settings/email_templates'));
             }
         }
 
         $this->setData(array(
-            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'), 
+            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'),
             'pageHeading'       => Yii::t('settings', 'Settings'),
             'pageBreadcrumbs'   => array(
                 Yii::t('settings', 'Settings') => $this->createUrl('settings/index'),
                 Yii::t('settings', 'Email templates')
             )
         ));
-        
+
         $this->render('email-templates', compact('model', 'types', 'type'));
     }
-    
+
     /**
      * Handle the settings for email blacklist checks
      */
@@ -273,7 +273,7 @@ class SettingsController extends Controller
         $blacklistModel = new OptionEmailBlacklist();
 
         if ($request->isPostRequest) {
-            
+
             $blacklistModel->unsetAttributes();
             $blacklistModel->attributes = (array)$request->getPost($blacklistModel->modelName, array());
 
@@ -282,67 +282,111 @@ class SettingsController extends Controller
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller'        => $this,
                 'success'           => $notify->hasSuccess,
                 'blacklistModel'    => $blacklistModel,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('settings/email_blacklist'));
             }
         }
 
         $this->setData(array(
-            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'), 
+            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'),
             'pageHeading'       => Yii::t('settings', 'Settings'),
             'pageBreadcrumbs'   => array(
                 Yii::t('settings', 'Settings') => $this->createUrl('settings/index'),
                 Yii::t('settings', 'Email blacklist settings')
             )
         ));
-        
+
         $this->render('email-blacklist', compact('blacklistModel'));
     }
-    
+
+    /**
+     * Handle the settings for email blacklist checks
+     */
+    public function actionApi_ip_access()
+    {
+        $request = Yii::app()->request;
+        $notify  = Yii::app()->notify;
+        $model   = new OptionApiIpAccess();
+
+        if ($request->isPostRequest) {
+
+            $model->unsetAttributes();
+            $model->attributes = (array)$request->getPost($model->modelName, array());
+
+            if (!$model->save()) {
+                $notify->addError(Yii::t('app', 'Your form contains a few errors, please fix them and try again!'));
+            } else {
+                $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
+            }
+
+            Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
+                'controller' => $this,
+                'success'    => $notify->hasSuccess,
+                'model'      => $model,
+            )));
+
+            if ($collection->success) {
+                $this->redirect(array('settings/api_ip_access'));
+            }
+        }
+
+        $this->setData(array(
+            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'),
+            'pageHeading'       => Yii::t('settings', 'Settings'),
+            'pageBreadcrumbs'   => array(
+                Yii::t('settings', 'Settings') => $this->createUrl('settings/index'),
+                Yii::t('settings', 'Api settings'),
+                Yii::t('settings', 'IP access'),
+            )
+        ));
+
+        $this->render('api-ip-access', compact('model'));
+    }
+
     /**
      * Handle the common settings for customers options
      */
     public function actionCustomer_common()
     {
         $request = Yii::app()->request;
-        $notify = Yii::app()->notify;
-        $model = new OptionCustomerCommon();
+        $notify  = Yii::app()->notify;
+        $model   = new OptionCustomerCommon();
 
         if ($request->isPostRequest) {
-            
+
             $model->unsetAttributes();
             $model->attributes = (array)$request->getPost($model->modelName, array());
-            
+
             if (isset(Yii::app()->params['POST'][$model->modelName]['notification_message'])) {
                 $model->notification_message = Yii::app()->ioFilter->purify(Yii::app()->params['POST'][$model->modelName]['notification_message']);
             }
-            
+
             if (!$model->save()) {
                 $notify->addError(Yii::t('app', 'Your form contains a few errors, please fix them and try again!'));
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller' => $this,
                 'success'    => $notify->hasSuccess,
                 'model'      => $model,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('settings/customer_common'));
             }
         }
 
         $this->setData(array(
-            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'), 
+            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'),
             'pageHeading'       => Yii::t('settings', 'Settings'),
             'pageBreadcrumbs'   => array(
                 Yii::t('settings', 'Settings')  => $this->createUrl('settings/index'),
@@ -350,12 +394,12 @@ class SettingsController extends Controller
                 Yii::t('settings', 'Common')
             )
         ));
-        
+
         $model->fieldDecorator->onHtmlOptionsSetup = array($this, '_setupEditorOptions');
-        
+
         $this->render('customer-common', compact('model'));
     }
-    
+
     /**
      * Handle the settings for customer server options
      */
@@ -366,29 +410,29 @@ class SettingsController extends Controller
         $model = new OptionCustomerServers();
 
         if ($request->isPostRequest) {
-            
+
             $model->unsetAttributes();
             $model->attributes = (array)$request->getPost($model->modelName, array());
-            
+
             if (!$model->save()) {
                 $notify->addError(Yii::t('app', 'Your form contains a few errors, please fix them and try again!'));
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller' => $this,
                 'success'    => $notify->hasSuccess,
                 'model'      => $model,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('settings/customer_servers'));
             }
         }
 
         $this->setData(array(
-            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'), 
+            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'),
             'pageHeading'       => Yii::t('settings', 'Settings'),
             'pageBreadcrumbs'   => array(
                 Yii::t('settings', 'Settings')  => $this->createUrl('settings/index'),
@@ -396,10 +440,10 @@ class SettingsController extends Controller
                 Yii::t('settings', 'Servers')
             )
         ));
-        
+
         $this->render('customer-servers', compact('model'));
     }
-    
+
     /**
      * Handle the settings for customer domains options
      */
@@ -409,31 +453,31 @@ class SettingsController extends Controller
         $notify  = Yii::app()->notify;
         $tracking = new OptionCustomerTrackingDomains();
         $sending  = new OptionCustomerSendingDomains();
-        
+
         if ($request->isPostRequest) {
-            
+
             $tracking->attributes = (array)$request->getPost($tracking->modelName, array());
             $sending->attributes  = (array)$request->getPost($sending->modelName, array());
-            
+
             if (!$tracking->save() || !$sending->save()) {
                 $notify->addError(Yii::t('app', 'Your form contains a few errors, please fix them and try again!'));
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller' => $this,
                 'success'    => $notify->hasSuccess,
                 'models'     => compact('tracking', 'sending'),
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('settings/customer_domains'));
             }
         }
 
         $this->setData(array(
-            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'), 
+            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'),
             'pageHeading'       => Yii::t('settings', 'Settings'),
             'pageBreadcrumbs'   => array(
                 Yii::t('settings', 'Settings')  => $this->createUrl('settings/index'),
@@ -441,10 +485,10 @@ class SettingsController extends Controller
                 Yii::t('settings', 'Domains')
             )
         ));
-        
+
         $this->render('customer-domains', compact('tracking', 'sending'));
     }
-    
+
     /**
      * Handle the settings for customer lists options
      */
@@ -455,29 +499,29 @@ class SettingsController extends Controller
         $model = new OptionCustomerLists();
 
         if ($request->isPostRequest) {
-            
+
             $model->unsetAttributes();
             $model->attributes = (array)$request->getPost($model->modelName, array());
-            
+
             if (!$model->save()) {
                 $notify->addError(Yii::t('app', 'Your form contains a few errors, please fix them and try again!'));
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller' => $this,
                 'success'    => $notify->hasSuccess,
                 'model'      => $model,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('settings/customer_lists'));
             }
         }
 
         $this->setData(array(
-            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'), 
+            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'),
             'pageHeading'       => Yii::t('settings', 'Settings'),
             'pageBreadcrumbs'   => array(
                 Yii::t('settings', 'Settings')  => $this->createUrl('settings/index'),
@@ -485,10 +529,10 @@ class SettingsController extends Controller
                 Yii::t('settings', 'Lists')
             )
         ));
-        
+
         $this->render('customer-lists', compact('model'));
     }
-    
+
     /**
      * Handle the settings for customer registration options
      */
@@ -496,38 +540,38 @@ class SettingsController extends Controller
     {
         $request = Yii::app()->request;
         $notify  = Yii::app()->notify;
-        
+
         $model = new OptionCustomerRegistration();
         $model->fieldDecorator->onHtmlOptionsSetup = array($this, '_setupEditorOptions');
-        
+
         if ($request->isPostRequest) {
-            
+
             $model->unsetAttributes();
             $model->attributes = (array)$request->getPost($model->modelName, array());
-            
+
             if (isset(Yii::app()->params['POST'][$model->modelName]['welcome_email_content'])) {
                 $model->welcome_email_content = Yii::app()->ioFilter->purify(Yii::app()->params['POST'][$model->modelName]['welcome_email_content']);
             }
-            
+
             if (!$model->save()) {
                 $notify->addError(Yii::t('app', 'Your form contains a few errors, please fix them and try again!'));
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller' => $this,
                 'success'    => $notify->hasSuccess,
                 'model'      => $model,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('settings/customer_registration'));
             }
         }
 
         $this->setData(array(
-            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'), 
+            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'),
             'pageHeading'       => Yii::t('settings', 'Settings'),
             'pageBreadcrumbs'   => array(
                 Yii::t('settings', 'Settings')  => $this->createUrl('settings/index'),
@@ -535,10 +579,10 @@ class SettingsController extends Controller
                 Yii::t('settings', 'Registration')
             )
         ));
-        
+
         $this->render('customer-registration', compact('model'));
     }
-    
+
     /**
      * Handle the settings for customer sending options
      */
@@ -549,29 +593,29 @@ class SettingsController extends Controller
         $model = new OptionCustomerSending();
 
         if ($request->isPostRequest) {
-            
+
             $model->unsetAttributes();
             $model->attributes = (array)$request->getPost($model->modelName, array());
-            
+
             if (!$model->save()) {
                 $notify->addError(Yii::t('app', 'Your form contains a few errors, please fix them and try again!'));
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller' => $this,
                 'success'    => $notify->hasSuccess,
                 'model'      => $model,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('settings/customer_sending'));
             }
         }
 
         $this->setData(array(
-            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'), 
+            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'),
             'pageHeading'       => Yii::t('settings', 'Settings'),
             'pageBreadcrumbs'   => array(
                 Yii::t('settings', 'Settings')  => $this->createUrl('settings/index'),
@@ -579,10 +623,10 @@ class SettingsController extends Controller
                 Yii::t('settings', 'Sending')
             )
         ));
-        
+
         $this->render('customer-sending', compact('model'));
     }
-    
+
     /**
      * Handle the settings for customer quota counters options
      */
@@ -593,29 +637,29 @@ class SettingsController extends Controller
         $model = new OptionCustomerQuotaCounters();
 
         if ($request->isPostRequest) {
-            
+
             $model->unsetAttributes();
             $model->attributes = (array)$request->getPost($model->modelName, array());
-            
+
             if (!$model->save()) {
                 $notify->addError(Yii::t('app', 'Your form contains a few errors, please fix them and try again!'));
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller' => $this,
                 'success'    => $notify->hasSuccess,
                 'model'      => $model,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('settings/customer_quota_counters'));
             }
         }
 
         $this->setData(array(
-            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'), 
+            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'),
             'pageHeading'       => Yii::t('settings', 'Settings'),
             'pageBreadcrumbs'   => array(
                 Yii::t('settings', 'Settings')  => $this->createUrl('settings/index'),
@@ -623,10 +667,10 @@ class SettingsController extends Controller
                 Yii::t('settings', 'Quota counters')
             )
         ));
-        
+
         $this->render('customer-quota-counters', compact('model'));
     }
-    
+
     /**
      * Handle the settings for customer campaigns options
      */
@@ -637,33 +681,33 @@ class SettingsController extends Controller
         $model = new OptionCustomerCampaigns();
 
         if ($request->isPostRequest) {
-            
+
             $model->unsetAttributes();
             $model->attributes = (array)$request->getPost($model->modelName, array());
-            
+
             if (isset(Yii::app()->params['POST'][$model->modelName]['email_footer'])) {
                 $model->email_footer = Yii::app()->ioFilter->purify(Yii::app()->params['POST'][$model->modelName]['email_footer']);
             }
-            
+
             if (!$model->save()) {
                 $notify->addError(Yii::t('app', 'Your form contains a few errors, please fix them and try again!'));
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller' => $this,
                 'success'    => $notify->hasSuccess,
                 'model'      => $model,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('settings/customer_campaigns'));
             }
         }
 
         $this->setData(array(
-            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'), 
+            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'),
             'pageHeading'       => Yii::t('settings', 'Settings'),
             'pageBreadcrumbs'   => array(
                 Yii::t('settings', 'Settings')  => $this->createUrl('settings/index'),
@@ -671,12 +715,12 @@ class SettingsController extends Controller
                 Yii::t('settings', 'Campaigns')
             )
         ));
-        
+
         $model->fieldDecorator->onHtmlOptionsSetup = array($this, '_addCustomerCampaignEmailFooterEditor');
-        
+
         $this->render('customer-campaigns', compact('model'));
     }
-    
+
     /**
      * Handle the settings for customer cdn options
      */
@@ -687,7 +731,7 @@ class SettingsController extends Controller
         $model = new OptionCustomerCdn();
 
         if ($request->isPostRequest) {
-            
+
             $model->unsetAttributes();
             $model->attributes = (array)$request->getPost($model->modelName, array());
 
@@ -696,20 +740,20 @@ class SettingsController extends Controller
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller' => $this,
                 'success'    => $notify->hasSuccess,
                 'model'      => $model,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('settings/customer_cdn'));
             }
         }
 
         $this->setData(array(
-            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'), 
+            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'),
             'pageHeading'       => Yii::t('settings', 'Settings'),
             'pageBreadcrumbs'   => array(
                 Yii::t('settings', 'Settings')  => $this->createUrl('settings/index'),
@@ -720,7 +764,7 @@ class SettingsController extends Controller
 
         $this->render('customer-cdn', compact('model'));
     }
-    
+
     /**
      * Handle the settings for campaign attachments
      */
@@ -731,7 +775,7 @@ class SettingsController extends Controller
         $model = new OptionCampaignAttachment();
 
         if ($request->isPostRequest) {
-            
+
             $model->unsetAttributes();
             $model->attributes = (array)$request->getPost($model->modelName, array());
 
@@ -740,20 +784,20 @@ class SettingsController extends Controller
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller' => $this,
                 'success'    => $notify->hasSuccess,
                 'model'      => $model,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('settings/campaign_attachments'));
             }
         }
 
         $this->setData(array(
-            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'), 
+            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'),
             'pageHeading'       => Yii::t('settings', 'Settings'),
             'pageBreadcrumbs'   => array(
                 Yii::t('settings', 'Settings')  => $this->createUrl('settings/index'),
@@ -761,10 +805,10 @@ class SettingsController extends Controller
                 Yii::t('settings', 'Attachments')
             )
         ));
-        
+
         $this->render('campaign-attachments', compact('model'));
     }
-    
+
     /**
      * Handle the settings for campaign available tags
      */
@@ -775,22 +819,22 @@ class SettingsController extends Controller
         $model = new OptionCampaignTemplateTag();
 
         if ($request->isPostRequest) {
-            
+
             $model->unsetAttributes();
             $model->attributes = (array)$request->getPost($model->modelName, array());
-            
+
             if (!$model->save()) {
                 $notify->addError(Yii::t('app', 'Your form contains a few errors, please fix them and try again!'));
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller' => $this,
                 'success'    => $notify->hasSuccess,
                 'model'      => $model,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('settings/campaign_template_tags'));
             }
@@ -805,7 +849,7 @@ class SettingsController extends Controller
                 Yii::t('settings', 'Template tags')
             )
         ));
-        
+
         $this->render('campaign-template-tags', compact('model'));
     }
 
@@ -852,7 +896,95 @@ class SettingsController extends Controller
 
         $this->render('campaign-exclude-ips-from-tracking', compact('model'));
     }
-    
+
+    /**
+     * Handle the settings for campaigns to blacklist various words from subject and/or content
+     */
+    public function actionCampaign_blacklist_words()
+    {
+        $request = Yii::app()->request;
+        $notify  = Yii::app()->notify;
+        $model   = new OptionCampaignBlacklistWords();
+
+        if ($request->isPostRequest) {
+
+            $model->unsetAttributes();
+            $model->attributes = (array)$request->getPost($model->modelName, array());
+
+            if (!$model->save()) {
+                $notify->addError(Yii::t('app', 'Your form contains a few errors, please fix them and try again!'));
+            } else {
+                $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
+            }
+
+            Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
+                'controller' => $this,
+                'success'    => $notify->hasSuccess,
+                'model'      => $model,
+            )));
+
+            if ($collection->success) {
+                $this->redirect(array('settings/campaign_blacklist_words'));
+            }
+        }
+
+        $this->setData(array(
+            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'),
+            'pageHeading'       => Yii::t('settings', 'Settings'),
+            'pageBreadcrumbs'   => array(
+                Yii::t('settings', 'Settings')  => $this->createUrl('settings/index'),
+                Yii::t('settings', 'Campaigns') => $this->createUrl('settings/campaign_attachments'),
+                Yii::t('settings', 'Blacklist words')
+            )
+        ));
+
+        $this->render('campaign-blacklist-words', compact('model'));
+    }
+
+    /**
+     * Handle the settings for misc campaign options
+     */
+    public function actionCampaign_misc()
+    {
+        $request = Yii::app()->request;
+        $notify  = Yii::app()->notify;
+        $model   = new OptionCampaignMisc();
+
+        if ($request->isPostRequest) {
+
+            $model->unsetAttributes();
+            $model->attributes = (array)$request->getPost($model->modelName, array());
+
+            if (!$model->save()) {
+                $notify->addError(Yii::t('app', 'Your form contains a few errors, please fix them and try again!'));
+            } else {
+                $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
+            }
+
+            Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
+                'controller' => $this,
+                'success'    => $notify->hasSuccess,
+                'model'      => $model,
+            )));
+
+            if ($collection->success) {
+                $this->redirect(array('settings/campaign_misc'));
+            }
+        }
+
+        $this->setData(array(
+            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'),
+            'pageHeading'       => Yii::t('settings', 'Settings'),
+            'pageBreadcrumbs'   => array(
+                Yii::t('settings', 'Settings')  => $this->createUrl('settings/index'),
+                Yii::t('settings', 'Campaigns') => $this->createUrl('settings/campaign_attachments'),
+                Yii::t('settings', 'Miscellaneous')
+            )
+        ));
+
+        $this->render('campaign-misc', compact('model'));
+    }
+
     /**
      * Handle the settings for campaign options
      */
@@ -863,39 +995,39 @@ class SettingsController extends Controller
         $model = new OptionCampaignOptions();
 
         if ($request->isPostRequest) {
-            
+
             $model->unsetAttributes();
             $model->attributes = (array)$request->getPost($model->modelName, array());
-            
+
             if (!$model->save()) {
                 $notify->addError(Yii::t('app', 'Your form contains a few errors, please fix them and try again!'));
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller' => $this,
                 'success'    => $notify->hasSuccess,
                 'model'      => $model,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('settings/campaign_options'));
             }
         }
 
         $this->setData(array(
-            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'), 
+            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'),
             'pageHeading'       => Yii::t('settings', 'Settings'),
             'pageBreadcrumbs'   => array(
                 Yii::t('settings', 'Settings') => $this->createUrl('settings/index'),
                 Yii::t('settings', 'Campaign options')
             )
         ));
-        
+
         $this->render('campaign-options', compact('model'));
     }
-    
+
     /**
      * Handle the settings for monetization options
      */
@@ -906,39 +1038,39 @@ class SettingsController extends Controller
         $model   = new OptionMonetizationMonetization();
 
         if ($request->isPostRequest) {
-            
+
             $model->unsetAttributes();
             $model->attributes = (array)$request->getPost($model->modelName, array());
-            
+
             if (!$model->save()) {
                 $notify->addError(Yii::t('app', 'Your form contains a few errors, please fix them and try again!'));
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller' => $this,
                 'success'    => $notify->hasSuccess,
                 'model'      => $model,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('settings/monetization'));
             }
         }
 
         $this->setData(array(
-            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'), 
+            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'),
             'pageHeading'       => Yii::t('settings', 'Settings'),
             'pageBreadcrumbs'   => array(
                 Yii::t('settings', 'Settings')  => $this->createUrl('settings/index'),
                 Yii::t('settings', 'Monetization') => $this->createUrl('settings/monetization'),
             )
         ));
-        
+
         $this->render('monetization', compact('model'));
     }
-    
+
     /**
      * Handle the settings for monetization orders
      */
@@ -949,29 +1081,29 @@ class SettingsController extends Controller
         $model   = new OptionMonetizationOrders();
 
         if ($request->isPostRequest) {
-            
+
             $model->unsetAttributes();
             $model->attributes = (array)$request->getPost($model->modelName, array());
-            
+
             if (!$model->save()) {
                 $notify->addError(Yii::t('app', 'Your form contains a few errors, please fix them and try again!'));
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller' => $this,
                 'success'    => $notify->hasSuccess,
                 'model'      => $model,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('settings/monetization_orders'));
             }
         }
 
         $this->setData(array(
-            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'), 
+            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'),
             'pageHeading'       => Yii::t('settings', 'Settings'),
             'pageBreadcrumbs'   => array(
                 Yii::t('settings', 'Settings')  => $this->createUrl('settings/index'),
@@ -979,10 +1111,10 @@ class SettingsController extends Controller
                 Yii::t('settings', 'Orders')
             )
         ));
-        
+
         $this->render('monetization-orders', compact('model'));
     }
-    
+
     /**
      * Handle the settings for monetization invoices
      */
@@ -993,29 +1125,29 @@ class SettingsController extends Controller
         $model   = new OptionMonetizationInvoices();
 
         if ($request->isPostRequest) {
-            
+
             $model->unsetAttributes();
             $model->attributes = (array)$request->getPost($model->modelName, array());
-            
+
             if (!$model->save()) {
                 $notify->addError(Yii::t('app', 'Your form contains a few errors, please fix them and try again!'));
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller' => $this,
                 'success'    => $notify->hasSuccess,
                 'model'      => $model,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('settings/monetization_invoices'));
             }
         }
 
         $this->setData(array(
-            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'), 
+            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'),
             'pageHeading'       => Yii::t('settings', 'Settings'),
             'pageBreadcrumbs'   => array(
                 Yii::t('settings', 'Settings')  => $this->createUrl('settings/index'),
@@ -1023,10 +1155,10 @@ class SettingsController extends Controller
                 Yii::t('settings', 'Invoices')
             )
         ));
-        
+
         $this->render('monetization-invoices', compact('model'));
     }
-    
+
     /**
      * Handle the settings for redis queue
      */
@@ -1037,34 +1169,34 @@ class SettingsController extends Controller
         $model   = new OptionRedisQueue();
 
         if ($request->isPostRequest) {
-            
+
             $model->unsetAttributes();
             $model->attributes = (array)$request->getPost($model->modelName, array());
-            
+
             if (!$model->save()) {
                 $notify->addError(Yii::t('app', 'Your form contains a few errors, please fix them and try again!'));
             } else {
                 try {
-                    Yii::app()->queue->size(DeliveryServer::DEFAULT_QUEUE_NAME);    
+                    Yii::app()->queue->size(DeliveryServer::DEFAULT_QUEUE_NAME);
                     $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
                 } catch (Exception $e) {
                     $notify->addError(Yii::t('settings', 'Unable to connect to redis server with the provided details!'));
                 }
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller' => $this,
                 'success'    => $notify->hasSuccess,
                 'model'      => $model,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('settings/redis_queue'));
             }
         }
 
         $this->setData(array(
-            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'), 
+            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'),
             'pageHeading'       => Yii::t('settings', 'Settings'),
             'pageBreadcrumbs'   => array(
                 Yii::t('settings', 'Settings')  => $this->createUrl('settings/index'),
@@ -1072,10 +1204,10 @@ class SettingsController extends Controller
                 Yii::t('settings', 'Redis')
             )
         ));
-        
+
         $this->render('redis-queue', compact('model'));
     }
-    
+
     /**
      * Handle the settings for license options
      */
@@ -1087,14 +1219,14 @@ class SettingsController extends Controller
         $model   = new OptionLicense();
 
         if ($request->isPostRequest) {
-            
+
             $model->unsetAttributes();
             $model->attributes = (array)$request->getPost($model->modelName, array());
-            
+
             $url     = 'http://www.mailwizz.com/api/license/verify';
             $request = AppInitHelper::simpleCurlPost($url, array('key' => $model->purchase_code));
             $error   = '';
-            
+
             if ($request['status'] == 'error') {
                 $error = $request['message'];
             } else {
@@ -1104,9 +1236,9 @@ class SettingsController extends Controller
                 } elseif ($response['status'] != 'success') {
                     $error = $response['message'];
                     $options->set('system.license.error_message', $error);
-                }    
+                }
             }
-            
+
             if (empty($error)) {
                 if (!$model->save()) {
                     $notify->addError(Yii::t('app', 'Your form contains a few errors, please fix them and try again!'));
@@ -1116,34 +1248,34 @@ class SettingsController extends Controller
                     $options->set('system.license.error_message', '');
                     $options->set("system.common.site_status", "online");
                     $options->set("system.common.api_status", "online");
-                }     
+                }
             } else {
                 $notify->addError($error);
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller' => $this,
                 'success'    => $notify->hasSuccess,
                 'model'      => $model,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('settings/license'));
             }
         }
 
         $this->setData(array(
-            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'), 
+            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'),
             'pageHeading'       => Yii::t('settings', 'Settings'),
             'pageBreadcrumbs'   => array(
                 Yii::t('settings', 'Settings')  => $this->createUrl('settings/index'),
                 Yii::t('settings', 'License')
             )
         ));
-        
+
         $this->render('license', compact('model'));
     }
-    
+
     /**
      * Handle the settings for CDN options
      */
@@ -1154,39 +1286,39 @@ class SettingsController extends Controller
         $model   = new OptionCdn();
 
         if ($request->isPostRequest) {
-            
+
             $model->unsetAttributes();
             $model->attributes = (array)$request->getPost($model->modelName, array());
-            
+
             if (!$model->save()) {
                 $notify->addError(Yii::t('app', 'Your form contains a few errors, please fix them and try again!'));
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller' => $this,
                 'success'    => $notify->hasSuccess,
                 'model'      => $model,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('settings/cdn'));
             }
         }
 
         $this->setData(array(
-            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'), 
+            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'),
             'pageHeading'       => Yii::t('settings', 'Settings'),
             'pageBreadcrumbs'   => array(
                 Yii::t('settings', 'Settings')  => $this->createUrl('settings/index'),
                 Yii::t('settings', 'CDN')
             )
         ));
-        
+
         $this->render('cdn', compact('model'));
     }
-    
+
     /**
      * Handle the settings for customization options
      */
@@ -1197,36 +1329,36 @@ class SettingsController extends Controller
         $model   = new OptionCustomization();
 
         if ($request->isPostRequest) {
-            
+
             $model->unsetAttributes();
             $model->attributes = (array)$request->getPost($model->modelName, array());
-            
+
             if (!$model->save()) {
                 $notify->addError(Yii::t('app', 'Your form contains a few errors, please fix them and try again!'));
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller' => $this,
                 'success'    => $notify->hasSuccess,
                 'model'      => $model,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('settings/customization'));
             }
         }
 
         $this->setData(array(
-            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'), 
+            'pageMetaTitle'     => $this->getData('pageMetaTitle') . ' | ' . Yii::t('settings', 'Settings'),
             'pageHeading'       => Yii::t('settings', 'Settings'),
             'pageBreadcrumbs'   => array(
                 Yii::t('settings', 'Settings')  => $this->createUrl('settings/index'),
                 Yii::t('settings', 'Customization')
             )
         ));
-        
+
         $this->render('customization', compact('model'));
     }
 
@@ -1240,7 +1372,7 @@ class SettingsController extends Controller
         }
         $this->renderPartial('_htaccess_modal');
     }
-    
+
     /**
      * Tries to write the contents of the htaccess file
      */
@@ -1249,26 +1381,26 @@ class SettingsController extends Controller
         if (!Yii::app()->request->isAjaxRequest) {
             $this->redirect(array('settings/index'));
         }
-        
+
         if (!AppInitHelper::isModRewriteEnabled()) {
             return $this->renderJson(array('result' => 'error', 'message' => Yii::t('settings', 'Mod rewrite is not enabled on this host. Please enable it in order to use clean urls!')));
         }
-        
+
         if (!is_file($file = Yii::getPathOfAlias('root') . '/.htaccess')) {
             if (!@touch($file)) {
                 return $this->renderJson(array('result' => 'error', 'message' => Yii::t('settings', 'Unable to create the file: {file}. Please create the file manually and paste the htaccess contents into it.', array('{file}' => $file))));
             }
         }
-        
+
         if (!@file_put_contents($file, $this->getHtaccessContent())) {
             return $this->renderJson(array('result' => 'error', 'message' => Yii::t('settings', 'Unable to write htaccess contents into the file: {file}. Please create the file manually and paste the htaccess contents into it.', array('{file}' => $file))));
         }
-        
+
         return $this->renderJson(array('result' => 'success', 'message' => Yii::t('settings', 'The htaccess file has been successfully created. Do not forget to save the changes!')));
     }
-    
+
     /**
-     * Will generate the contents of the htaccess file which later 
+     * Will generate the contents of the htaccess file which later
      * should be written in the document root of the application
      */
     protected function getHtaccessContent()
@@ -1277,14 +1409,14 @@ class SettingsController extends Controller
         $webApps    = $apps->getWebApps();
         $baseUrl    = '/' . trim($apps->getAppUrl('frontend', null, false, true), '/') . '/';
         $baseUrl    = str_replace('//', '/', $baseUrl);
-        
+
         if (($index = array_search('frontend', $webApps)) !== false) {
             unset($webApps[$index]);
         }
-        
+
         return $this->renderPartial('_htaccess', compact('webApps', 'baseUrl'), true);
     }
-    
+
     /**
      * Callback method to set the editor options for email settings
      */
@@ -1293,31 +1425,31 @@ class SettingsController extends Controller
         if (!in_array($event->params['attribute'], array('common', 'notification_message', 'welcome_email_content'))) {
             return;
         }
-        
+
         $options = array();
         if ($event->params['htmlOptions']->contains('wysiwyg_editor_options')) {
             $options = (array)$event->params['htmlOptions']->itemAt('wysiwyg_editor_options');
         }
-        
+
         $options['id']     = CHtml::activeId($event->sender->owner, $event->params['attribute']);
         $options['height'] = 500;
-        
+
         if ($event->params['attribute'] == 'common') {
             $options['fullPage'] = true;
             $options['allowedContent'] = true;
-        } 
-        
+        }
+
         if ($event->params['attribute'] == 'notification_message') {
             $options['height'] = 100;
         }
-        
+
         if ($event->params['attribute'] == 'welcome_email_content') {
             $options['height'] = 300;
         }
 
         $event->params['htmlOptions']->add('wysiwyg_editor_options', $options);
     }
-    
+
     /**
      * Callback method to set the editor options for email footer in campaigns
      */
@@ -1326,7 +1458,7 @@ class SettingsController extends Controller
         if (!in_array($event->params['attribute'], array('email_footer'))) {
             return;
         }
-        
+
         $options = array();
         if ($event->params['htmlOptions']->contains('wysiwyg_editor_options')) {
             $options = (array)$event->params['htmlOptions']->itemAt('wysiwyg_editor_options');

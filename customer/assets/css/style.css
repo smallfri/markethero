@@ -9,7 +9,7 @@
 	z-index:9999;
 	max-width:500px;
 	color: #ffffff;
-	background-color: #63656a;
+	background-color: #367fa9;
 	padding: 5px;
 	border: 0;
     padding-bottom: 4px;
@@ -111,7 +111,7 @@
 
 .panel-delivery-servers-pool .form-group .item, 
 .panel-campaign-attachments .form-group .item {
-    border-left: 5px solid #63656a;
+    border-left: 5px solid #367fa9;
     background: #eeeeee;
     padding: 3px;
     font-size: 13px;

@@ -2,38 +2,38 @@
 
 /**
  * DeliveryServerTcpStream
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.3.4.7
- * 
+ *
  * THIS IS BETA AND IS SUBJECT TO CHANGE!
  */
- 
+
 class DeliveryServerTcpStream extends DeliveryServer
 {
     // hold the persistent socket connection
     private static $socket;
-    
+
     protected $serverType = 'tcp-stream';
-    
+
     protected $socketLastError;
-    
+
     public $buffer_size = 8192;
-    
+
     public $packet_separator = '|`s`|';
-    
+
     public $end_of_packets = '|`e`|';
-    
+
     public $socket_type_async = 'async';
-    
+
     public $socket_type_sync = 'sync';
-    
+
     public $socket_default_type = 'async';
-    
+
     /**
      * @return array validation rules for model attributes.
      */
@@ -42,7 +42,7 @@ class DeliveryServerTcpStream extends DeliveryServer
         $rules = array();
         return CMap::mergeArray($rules, parent::rules());
     }
-    
+
     /**
      * @return array customized attribute labels (name=>label)
      */
@@ -51,7 +51,7 @@ class DeliveryServerTcpStream extends DeliveryServer
         $labels = array();
         return CMap::mergeArray(parent::attributeLabels(), $labels);
     }
-    
+
     /**
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
@@ -62,19 +62,19 @@ class DeliveryServerTcpStream extends DeliveryServer
     {
         return parent::model($className);
     }
-    
+
     public function sendEmail(array $params = array())
     {
         $params    = (array)Yii::app()->hooks->applyFilters('delivery_server_before_send_email', $this->getParamsArray($params), $this);
         $message   = $this->getMailer()->getEmailMessage($params);
         $messageID = $this->getMailer()->getEmailMessageId();
-        
+
         $payload = array(
             'ID'   => $messageID,
             'Body' => $message,
             'Type' => $this->socket_default_type,
         );
-        
+
         if (($sent = $this->socketSend($payload)) !== false) {
             $sent = array('message_id' => $messageID);
             $this->logUsage();
@@ -84,19 +84,16 @@ class DeliveryServerTcpStream extends DeliveryServer
         }
 
         Yii::app()->hooks->doAction('delivery_server_after_send_email', $params, $this, $sent);
-        
+
         return $sent;
     }
 
-    public function getDefaultParamsArray()
+    public function getParamsArray(array $params = array())
     {
-        $params = array(
-            'transport' => self::TRANSPORT_TCP_STREAM,
-        );
-        
-        return CMap::mergeArray(parent::getDefaultParamsArray(), $params);
+        $params['transport'] = self::TRANSPORT_TCP_STREAM;
+        return parent::getParamsArray($params);
     }
-    
+
     public function requirementsFailed()
     {
         $requiredFunctions = array('pfsockopen', 'fclose', 'fwrite', 'fread', 'feof');
@@ -114,13 +111,13 @@ class DeliveryServerTcpStream extends DeliveryServer
         }
         return parent::requirementsFailed();
     }
-    
+
     protected function afterFind()
     {
         parent::afterFind();
         $this->setDefaultAttributes();
     }
-    
+
     protected function afterConstruct()
     {
         parent::afterConstruct();
@@ -128,21 +125,21 @@ class DeliveryServerTcpStream extends DeliveryServer
         $this->port     = 52014;
         $this->timeout  = 5;
     }
-    
+
     protected function beforeValidate()
     {
         return parent::beforeValidate();
     }
-    
+
     protected function afterValidate()
     {
         parent::afterValidate();
     }
-    
+
     protected function setDefaultAttributes()
     {
         $defaults = array(
-            'hostname'  => '127.0.0.1', 
+            'hostname'  => '127.0.0.1',
             'port'      => 52014,
             'timeout'   => 5,
         );
@@ -152,7 +149,7 @@ class DeliveryServerTcpStream extends DeliveryServer
             }
         }
     }
-    
+
     protected function socketConnect()
     {
         $this->socketDisconnect();
@@ -164,7 +161,7 @@ class DeliveryServerTcpStream extends DeliveryServer
         Yii::app()->attachEventHandler('onEndRequest', array($this, 'runOnEndRequest'));
         return true;
     }
-    
+
     protected function socketDisconnect()
     {
         $this->socketLastError = null;
@@ -175,18 +172,18 @@ class DeliveryServerTcpStream extends DeliveryServer
         Yii::app()->detachEventHandler('onEndRequest', array($this, 'runOnEndRequest'));
         return $this;
     }
-    
+
     protected function socketIsConnected()
     {
         return self::$socket !== null && is_resource(self::$socket);
     }
-    
+
     public function socketSend($message)
     {
         if (!$this->socketIsConnected() && !$this->socketConnect()) {
             return false;
         }
-        
+
         if (is_array($message)) {
             $payload = CJSON::encode($message);
             $fullPayload = $payload . $this->packet_separator;
@@ -195,7 +192,7 @@ class DeliveryServerTcpStream extends DeliveryServer
         } else {
             return false;
         }
-        
+
         static $strlen, $substr;
         if ($strlen === null) {
             $strlen = CommonHelper::functionExists('mb_strlen') ? 'mb_strlen' : 'strlen';
@@ -203,13 +200,13 @@ class DeliveryServerTcpStream extends DeliveryServer
         if ($substr === null) {
             $substr = CommonHelper::functionExists('mb_substr') ? 'mb_substr' : 'substr';
         }
-        
+
         $sentBytes = 0;
         while (!empty($fullPayload)) {
             $sentBytes = fwrite(self::$socket, $fullPayload, $this->buffer_size);
             $fullPayload = $substr($fullPayload, $sentBytes);
         }
-        
+
         $response = '';
         while(!feof(self::$socket)) {
             $response .= fread(self::$socket, $this->buffer_size);
@@ -220,7 +217,7 @@ class DeliveryServerTcpStream extends DeliveryServer
         $response = str_replace($this->packet_separator, '', $response);
         return $response;
     }
-    
+
     // run on end of request and close the socket connection.
     public function runOnEndRequest(CEvent $event)
     {

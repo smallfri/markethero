@@ -2,17 +2,17 @@
 
 /**
  * Campaign_groupsController
- * 
+ *
  * Handles the actions for campaign groups related tasks
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.3.4.3
  */
- 
+
 class Campaign_groupsController extends Controller
 {
     /**
@@ -24,10 +24,10 @@ class Campaign_groupsController extends Controller
         $filters = array(
             'postOnly + delete',
         );
-        
+
         return CMap::mergeArray($filters, parent::filters());
     }
-    
+
     /**
      * List available campaign groups
      */
@@ -35,11 +35,11 @@ class Campaign_groupsController extends Controller
     {
         $request = Yii::app()->request;
         $group   = new CampaignGroup('search');
-    
+
         $group->unsetAttributes();
         $group->attributes  = (array)$request->getQuery($group->modelName, array());
         $group->customer_id = (int)Yii::app()->customer->getId();
-        
+
         $this->setData(array(
             'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('campaigns', 'View groups'),
             'pageHeading'       => Yii::t('campaigns', 'View groups'),
@@ -52,7 +52,7 @@ class Campaign_groupsController extends Controller
 
         $this->render('list', compact('group'));
     }
-    
+
     /**
      * Create a new campaign group
      */
@@ -72,20 +72,20 @@ class Campaign_groupsController extends Controller
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller'=> $this,
                 'success'   => $notify->hasSuccess,
                 'group'     => $group,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('campaign_groups/update', 'group_uid' => $group->group_uid));
             }
         }
 
         $this->setData(array(
-            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('campaigns', 'Create new group'), 
+            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('campaigns', 'Create new group'),
             'pageHeading'       => Yii::t('campaigns', 'Create new campaign group'),
             'pageBreadcrumbs'   => array(
                 Yii::t('campaigns', 'Campaigns') => $this->createUrl('campaigns/index'),
@@ -93,10 +93,10 @@ class Campaign_groupsController extends Controller
                 Yii::t('app', 'Create new'),
             )
         ));
-        
+
         $this->render('form', compact('group'));
     }
-    
+
     /**
      * Update existing campaign group
      */
@@ -106,7 +106,7 @@ class Campaign_groupsController extends Controller
             'group_uid'    => $group_uid,
             'customer_id'  => (int)Yii::app()->customer->getId(),
         ));
-        
+
         if (empty($group)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
@@ -122,16 +122,16 @@ class Campaign_groupsController extends Controller
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller'=> $this,
                 'success'   => $notify->hasSuccess,
                 'group'     => $group,
             )));
         }
-        
+
         $this->setData(array(
-            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('campaigns', 'Update group'), 
+            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('campaigns', 'Update group'),
             'pageHeading'       => Yii::t('campaigns', 'Update campaign group'),
             'pageBreadcrumbs'   => array(
                 Yii::t('campaigns', 'Campaigns') => $this->createUrl('campaigns/index'),
@@ -139,10 +139,10 @@ class Campaign_groupsController extends Controller
                 Yii::t('app', 'Update'),
             )
         ));
-        
+
         $this->render('form', compact('group'));
     }
-    
+
     /**
      * Delete existing campaign group
      */
@@ -152,19 +152,31 @@ class Campaign_groupsController extends Controller
             'group_uid'   => $group_uid,
             'customer_id' => (int)Yii::app()->customer->getId(),
         ));
-        
+
         if (empty($group)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         $group->delete();
 
         $request = Yii::app()->request;
         $notify  = Yii::app()->notify;
-        
+
+        $redirect = null;
         if (!$request->getQuery('ajax')) {
             $notify->addSuccess(Yii::t('app', 'The item has been successfully deleted!'));
-            $this->redirect($request->getPost('returnUrl', array('campaign_groups/index')));
+            $redirect = $request->getPost('returnUrl', array('campaign_groups/index'));
+        }
+
+        // since 1.3.5.9
+        Yii::app()->hooks->doAction('controller_action_delete_data', $collection = new CAttributeCollection(array(
+            'controller' => $this,
+            'model'      => $group,
+            'redirect'   => $redirect,
+        )));
+
+        if ($collection->redirect) {
+            $this->redirect($collection->redirect);
         }
     }
 }

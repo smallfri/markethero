@@ -2,13 +2,13 @@
 
 /**
  * CustomersController
- * 
+ *
  * Handles the CRUD actions for customers.
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.3.4.7
  */
@@ -23,21 +23,21 @@ class CustomersController extends Controller
             array('allow'),
         );
     }
-    
+
     /**
      * Handles the creation of a new customer if registration is enabled.
      */
     public function actionCreate()
     {
         $request = Yii::app()->request;
-        
+
         if (!$request->isPostRequest) {
             return $this->renderJson(array(
                 'status'    => 'error',
                 'error'     => Yii::t('api', 'Only POST requests allowed for this endpoint.')
             ), 400);
         }
-        
+
         $options = Yii::app()->options;
         if ($options->get('system.customer_registration.enabled', 'no') != 'yes') {
             return $this->renderJson(array(
@@ -45,23 +45,20 @@ class CustomersController extends Controller
                 'error'     => Yii::t('api', 'Customer creation is disabled.')
             ), 400);
         }
-        
+
         $customer     = new Customer('register');
         $company      = new CustomerCompany('register');
         $customerPost = (array)$request->getPost('customer', array());
         $companyPost  = (array)$request->getPost('company', array());
 
-//        print_r($customer);
-        
         if (isset($customerPost['password'])) {
             $customerPost['fake_password'] = $customerPost['password'];
             unset($customerPost['password']);
         }
-        
+
         $customer->attributes = $customerPost;
         $customer->tc_agree   = true;
-        $customer->status     = Customer::STATUS_ACTIVE;
-        $customer->group_id = 1;
+        $customer->status     = Customer::STATUS_PENDING_CONFIRM;
         $companyRequired      = $options->get('system.customer_registration.company_required', 'no') == 'yes';
 
         if (!$customer->save()) {
@@ -72,7 +69,7 @@ class CustomersController extends Controller
                 ),
             ), 422);
         }
-        
+
         if ($companyRequired) {
             $country = null;
             if (!empty($companyPost['country'])) {
@@ -112,10 +109,10 @@ class CustomersController extends Controller
                 }
                 unset($companyPost['zone']);
             }
-            
+
             $company->attributes  = $companyPost;
             $company->customer_id = $customer->customer_id;
-            
+
             if (!$company->save()) {
                 $customer->delete();
                 return $this->renderJson(array(
@@ -127,16 +124,15 @@ class CustomersController extends Controller
             }
         }
 
-//        $this->_sendRegistrationConfirmationEmail($customer, $company);
-//        $this->_sendNewCustomerNotifications($customer, $company);
-
+        $this->_sendRegistrationConfirmationEmail($customer, $company);
+        $this->_sendNewCustomerNotifications($customer, $company);
 
         return $this->renderJson(array(
-            'status' => 'success',
-            'customer_uid' => $customer->customer_uid,
+            'status'        => 'success',
+            'customer_uid'  => $customer->customer_uid,
         ), 201);
     }
-    
+
     /**
      * Callback after success registration to send the confirmation email
      */
@@ -144,15 +140,15 @@ class CustomersController extends Controller
     {
         $options  = Yii::app()->options;
         $notify   = Yii::app()->notify;
-        
+
         if ($options->get('system.customer_registration.company_required', 'no') == 'yes' && $company->isNewRecord) {
             return;
         }
-  
+
         $emailTemplate  = $options->get('system.email_templates.common');
         $emailBody      = $this->renderPartial('customer.views.guest._email-registration-key', compact('customer'), true);
         $emailTemplate  = str_replace('[CONTENT]', $emailBody, $emailTemplate);
-        
+
         $email = new TransactionalEmail();
         $email->to_name     = $customer->getFullName();
         $email->to_email    = $customer->email;
@@ -161,7 +157,7 @@ class CustomersController extends Controller
         $email->body        = $emailTemplate;
         $email->save();
     }
-    
+
     /**
      * Callback after success registration to send the notification emails to admin users
      */
@@ -170,20 +166,20 @@ class CustomersController extends Controller
         $options    = Yii::app()->options;
         $notify     = Yii::app()->notify;
         $recipients = $options->get('system.customer_registration.new_customer_registration_notification_to');
-        
+
         if (empty($recipients)) {
             return;
         }
-        
+
         $recipients = explode(',', $recipients);
         $recipients = array_map('trim', $recipients);
-        
+
         $emailTemplate  = $options->get('system.email_templates.common');
         $emailBody      = $this->renderPartial('customer.views.guest._email-new-customer-notification', compact('customer', 'options'), true);
         $emailTemplate  = str_replace('[CONTENT]', $emailBody, $emailTemplate);
-        
+
         foreach ($recipients as $recipient) {
-            if (!filter_var($recipient, FILTER_VALIDATE_EMAIL)) {
+            if (!FilterVarHelper::email($recipient)) {
                 continue;
             }
             $email = new TransactionalEmail();
@@ -193,6 +189,6 @@ class CustomersController extends Controller
             $email->subject     = Yii::t('customers', 'New customer registration!');
             $email->body        = $emailTemplate;
             $email->save();
-        }  
+        }
     }
 }

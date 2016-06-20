@@ -4,7 +4,7 @@
 
 /* skin-blue navbar */
 .skin-blue .navbar {
-  background-color: #c6c7c8;
+  background-color: #3c8dbc;
 }
 .skin-blue .navbar .nav a {
   color: rgba(255, 255, 255, 0.8);
@@ -151,10 +151,10 @@
 
 /**Additions**/
 .box .box-header {
-    border-bottom: 1px solid #c6c7c8;
+    border-bottom: 1px solid #3c8dbc;
 }
 footer {
     padding: 2px 5px 2px 5px;
-    background: #c6c7c8;
+    background: #3c8dbc;
     color:#ffffff;
 }

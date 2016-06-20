@@ -2,15 +2,15 @@
 
 /**
  * CampaignDeliveryLog
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
+
 /**
  * This is the model class for table "campaign_delivery_log".
  *
@@ -33,23 +33,23 @@
 class CampaignDeliveryLog extends ActiveRecord
 {
     const STATUS_SUCCESS = 'success';
-    
+
     const STATUS_ERROR = 'error';
-    
+
     const STATUS_FATAL_ERROR = 'fatal-error';
-    
+
     const STATUS_TEMPORARY_ERROR = 'temporary-error';
 
     const STATUS_BLACKLISTED = 'blacklisted';
 
-    const STATUS_COMPLIANCE_REVIEW = 'in-compliance';
-    
+    const STATUS_GIVEUP = 'giveup';
+
     public $customer_id;
-    
+
     public $list_id;
-    
+
     public $segment_id;
-    
+
     /**
      * @return string the associated database table name
      */
@@ -80,7 +80,7 @@ class CampaignDeliveryLog extends ActiveRecord
             'subscriber' => array(self::BELONGS_TO, 'ListSubscriber', 'subscriber_id'),
             'campaign' => array(self::BELONGS_TO, 'Campaign', 'campaign_id'),
         );
-        
+
         return CMap::mergeArray($relations, parent::relations());
     }
 
@@ -95,27 +95,27 @@ class CampaignDeliveryLog extends ActiveRecord
             'subscriber_id' => Yii::t('campaigns', 'Subscriber'),
             'message'       => Yii::t('campaigns', 'Message'),
             'processed'     => Yii::t('campaigns', 'Processed'),
-            
+
             // search
             'customer_id'   => Yii::t('campaigns', 'Customer'),
             'list_id'       => Yii::t('campaigns', 'List'),
             'segment_id'    => Yii::t('campaigns', 'Segment'),
         );
-        
+
         return CMap::mergeArray($labels, parent::attributeLabels());
     }
-    
+
     protected function beforeSave()
     {
         if ($this->status == self::STATUS_TEMPORARY_ERROR) {
             $this->retries++;
             if ($this->retries >= $this->max_retries) {
-                $this->status = self::STATUS_ERROR;
+                $this->status = self::STATUS_GIVEUP;
             }
         }
         return parent::beforeSave();
     }
-    
+
     /**
      * Retrieves a list of models based on the current search/filter conditions.
      *
@@ -131,9 +131,19 @@ class CampaignDeliveryLog extends ActiveRecord
     public function customerSearch()
     {
         $criteria=new CDbCriteria;
-        $criteria->compare('campaign_id', (int)$this->campaign_id);
+
+        // for BC
+        $campaignId = (int)$this->campaign_id;
+        if ($campaignId >= 0) {
+            $criteria->compare('campaign_id', $campaignId);
+        }
+
+        if (!empty($this->subscriber_id)) {
+            $criteria->compare('subscriber_id', (int)$this->subscriber_id);
+        }
+
         $criteria->compare('status', $this->status);
-        
+
         return new CActiveDataProvider(get_class($this), array(
             'criteria'      => $criteria,
             'pagination'    => array(
@@ -147,7 +157,7 @@ class CampaignDeliveryLog extends ActiveRecord
             ),
         ));
     }
-    
+
     /**
      * Retrieves a list of models based on the current search/filter conditions.
      *
@@ -188,7 +198,7 @@ class CampaignDeliveryLog extends ActiveRecord
                 'together'  => true,
             ),
         );
-        
+
         if ($this->customer_id && is_numeric($this->customer_id)) {
             $criteria->with['campaign']['with']['customer'] = array_merge($criteria->with['campaign']['with']['customer'], array(
                 'condition' => 'customer.customer_id = :customerId',
@@ -200,7 +210,7 @@ class CampaignDeliveryLog extends ActiveRecord
                 'params'    => array(':customerName' => '%'. $this->customer_id .'%'),
             ));
         }
-        
+
         if ($this->campaign_id && is_numeric($this->campaign_id)) {
             $criteria->with['campaign'] = array_merge($criteria->with['campaign'], array(
                 'condition' => 'campaign.campaign_id = :campaignId',
@@ -212,7 +222,7 @@ class CampaignDeliveryLog extends ActiveRecord
                 'params'    => array(':campaignName' => '%'. $this->campaign_id .'%'),
             ));
         }
-        
+
         if ($this->list_id && is_numeric($this->list_id)) {
             $criteria->with['campaign']['with']['list'] = array_merge($criteria->with['campaign']['with']['list'], array(
                 'condition' => 'list.list_id = :listId',
@@ -224,7 +234,7 @@ class CampaignDeliveryLog extends ActiveRecord
                 'params'    => array(':listName' => '%'. $this->list_id .'%'),
             ));
         }
-        
+
         if ($this->segment_id && is_numeric($this->segment_id)) {
             $criteria->with['campaign']['with']['segment'] = array(
                 'condition' => 'segment.segment_id = :segmentId',
@@ -236,7 +246,7 @@ class CampaignDeliveryLog extends ActiveRecord
                 'params'    => array(':segmentId' => '%'. $this->segment_id .'%'),
             );
         }
-        
+
         if ($this->subscriber_id && is_numeric($this->subscriber_id)) {
             $criteria->with['subscriber'] = array_merge($criteria->with['subscriber'], array(
                 'condition' => 'subscriber.subscriber_id = :subscriberId',
@@ -248,13 +258,13 @@ class CampaignDeliveryLog extends ActiveRecord
                 'params'    => array(':subscriberId' => '%'. $this->subscriber_id .'%'),
             ));
         }
-        
+
         $criteria->compare('t.message', $this->message, true);
         $criteria->compare('t.processed', $this->processed);
         $criteria->compare('t.status', $this->status);
-        
+
         $criteria->order = 't.log_id DESC';
-        
+
         return new CActiveDataProvider(get_class($this), array(
             'criteria'      => $criteria,
             'pagination'    => array(
@@ -268,7 +278,7 @@ class CampaignDeliveryLog extends ActiveRecord
             ),
         ));
     }
-    
+
     /**
      * Retrieves a list of models based on the current search/filter conditions.
      *
@@ -285,7 +295,7 @@ class CampaignDeliveryLog extends ActiveRecord
     {
         $criteria=new CDbCriteria;
         $criteria->order  = 't.log_id DESC';
-        
+
         return new CActiveDataProvider(get_class($this), array(
             'criteria'      => $criteria,
             'pagination'    => array(
@@ -310,7 +320,7 @@ class CampaignDeliveryLog extends ActiveRecord
     {
         return parent::model($className);
     }
-    
+
     public function getStatusesArray()
     {
         return array(
@@ -321,7 +331,7 @@ class CampaignDeliveryLog extends ActiveRecord
             self::STATUS_BLACKLISTED    => Yii::t('campaigns', self::STATUS_BLACKLISTED),
         );
     }
-    
+
     public static function getArchiveEnabled()
     {
         if (($log_id = Yii::app()->cache->get(md5(__FILE__ . __METHOD__))) === false) {
@@ -332,5 +342,5 @@ class CampaignDeliveryLog extends ActiveRecord
         }
         return !empty($log_id);
     }
-    
+
 }

@@ -2,11 +2,11 @@
 
 /**
  * This file is part of the MailWizz EMA application.
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
@@ -15,7 +15,7 @@
  * This hook gives a chance to prepend content or to replace the default view content with a custom content.
  * Please note that from inside the action callback you can access all the controller view
  * variables via {@CAttributeCollection $collection->controller->data}
- * In case the content is replaced, make sure to set {@CAttributeCollection $collection->renderContent} to false 
+ * In case the content is replaced, make sure to set {@CAttributeCollection $collection->renderContent} to false
  * in order to stop rendering the default content.
  * @since 1.3.3.1
  */
@@ -42,12 +42,12 @@ if ($viewCollection->renderContent) { ?>
         </div>
         <div class="box-body">
             <div class="table-responsive">
-            <?php 
+            <?php
             /**
              * This hook gives a chance to prepend content or to replace the default grid view content with a custom content.
              * Please note that from inside the action callback you can access all the controller view
              * variables via {@CAttributeCollection $collection->controller->data}
-             * In case the content is replaced, make sure to set {@CAttributeCollection $collection->renderGrid} to false 
+             * In case the content is replaced, make sure to set {@CAttributeCollection $collection->renderGrid} to false
              * in order to stop rendering the default content.
              * @since 1.3.3.1
              */
@@ -55,7 +55,7 @@ if ($viewCollection->renderContent) { ?>
                 'controller'    => $this,
                 'renderGrid'    => true,
             )));
-            
+
             // and render if allowed
             if ($collection->renderGrid) {
                 $this->widget('zii.widgets.grid.CGridView', $hooks->applyFilters('grid_view_properties', array(
@@ -123,33 +123,33 @@ if ($viewCollection->renderContent) { ?>
                             'footer'    => $list->paginationOptions->getGridFooterPagination(),
                             'buttons'   => array(
                                 'overview' => array(
-                                    'label'     => ' &nbsp; <span class="glyphicon glyphicon-info-sign"></span> &nbsp;', 
+                                    'label'     => ' &nbsp; <span class="glyphicon glyphicon-info-sign"></span> &nbsp;',
                                     'url'       => 'Yii::app()->createUrl("lists/overview", array("list_uid" => $data->list_uid))',
                                     'imageUrl'  => null,
                                     'options'   => array('title' => Yii::t('lists', 'Overview'), 'class' => ''),
                                     'visible'   => '!$data->pendingDelete',
                                 ),
                                 'copy'=> array(
-                                    'label'     => ' &nbsp; <span class="glyphicon glyphicon-subtitles"></span> &nbsp;', 
+                                    'label'     => ' &nbsp; <span class="glyphicon glyphicon-subtitles"></span> &nbsp;',
                                     'url'       => 'Yii::app()->createUrl("lists/copy", array("list_uid" => $data->list_uid))',
                                     'imageUrl'  => null,
                                     'options'   => array('title' => Yii::t('app', 'Copy'), 'class' => 'copy-list'),
                                     'visible'   => '!$data->pendingDelete',
                                 ),
                                 'update' => array(
-                                    'label'     => ' &nbsp; <span class="glyphicon glyphicon-pencil"></span> &nbsp;', 
+                                    'label'     => ' &nbsp; <span class="glyphicon glyphicon-pencil"></span> &nbsp;',
                                     'url'       => 'Yii::app()->createUrl("lists/update", array("list_uid" => $data->list_uid))',
                                     'imageUrl'  => null,
                                     'options'   => array('title' => Yii::t('app', 'Update'), 'class' => ''),
                                     'visible'   => '$data->editable',
                                 ),
                                 'confirm_delete' => array(
-                                    'label'     => ' &nbsp; <span class="glyphicon glyphicon-remove-circle"></span> &nbsp; ', 
+                                    'label'     => ' &nbsp; <span class="glyphicon glyphicon-remove-circle"></span> &nbsp; ',
                                     'url'       => 'Yii::app()->createUrl("lists/delete", array("list_uid" => $data->list_uid))',
                                     'imageUrl'  => null,
                                     'options'   => array('title' => Yii::t('app', 'Delete'), 'class' => ''),
-                                    'visible'   => '$data->removable',
-                                ),    
+                                    'visible'   => '$data->isRemovable',
+                                ),
                             ),
                             'htmlOptions' => array(
                                 'style' => 'width:130px;',
@@ -157,7 +157,7 @@ if ($viewCollection->renderContent) { ?>
                             'template'=>'{overview} {copy} {update} {confirm_delete}'
                         ),
                     ), $this),
-                ), $this));  
+                ), $this));
             }
             /**
              * This hook gives a chance to append content after the grid view content.
@@ -171,10 +171,10 @@ if ($viewCollection->renderContent) { ?>
             )));
             ?>
             <div class="clearfix"><!-- --></div>
-            </div>    
+            </div>
         </div>
     </div>
-<?php 
+<?php
 }
 /**
  * This hook gives a chance to append content after the view file default content.

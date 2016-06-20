@@ -2,17 +2,17 @@
 
 /**
  * Promo_codesController
- * 
+ *
  * Handles the actions for promo codes related tasks
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.3.4.3
  */
- 
+
 class Promo_codesController extends Controller
 {
     // init method
@@ -21,7 +21,7 @@ class Promo_codesController extends Controller
         $this->onBeforeAction = array($this, '_registerJuiBs');
         parent::init();
     }
-    
+
     /**
      * Define the filters for various controller actions
      * Merge the filters with the ones from parent implementation
@@ -31,10 +31,10 @@ class Promo_codesController extends Controller
         $filters = array(
             'postOnly + delete',
         );
-        
+
         return CMap::mergeArray($filters, parent::filters());
     }
-    
+
     /**
      * List all available promo codes
      */
@@ -44,9 +44,9 @@ class Promo_codesController extends Controller
         $ioFilter   = Yii::app()->ioFilter;
         $promoCode  = new PricePlanPromoCode('search');
         $promoCode->unsetAttributes();
-        
+
         $promoCode->attributes = $ioFilter->xssClean((array)$request->getOriginalQuery($promoCode->modelName, array()));
-        
+
         $this->setData(array(
             'pageMetaTitle'   => $this->data->pageMetaTitle . ' | '. Yii::t('promo_codes', 'View job promo codes'),
             'pageHeading'     => Yii::t('promo_codes', 'Promo codes'),
@@ -56,10 +56,10 @@ class Promo_codesController extends Controller
                 Yii::t('app', 'View all')
             )
         ));
-        
+
         $this->render('list', compact('promoCode'));
     }
-    
+
     /**
      * Create a new promo code
      */
@@ -76,20 +76,20 @@ class Promo_codesController extends Controller
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controllers_save_data', $collection = new CAttributeCollection(array(
                 'controller'=> $this,
                 'success'   => $notify->hasSuccess,
                 'promoCode' => $promoCode,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('promo_codes/index'));
             }
         }
-        
+
         $this->setData(array(
-            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('promo_codes', 'Create new promo code'), 
+            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('promo_codes', 'Create new promo code'),
             'pageHeading'       => Yii::t('promo_codes', 'Create new promo code'),
             'pageBreadcrumbs'   => array(
                 Yii::t('promo_codes', 'Jobs') => $this->createUrl('jobs/index'),
@@ -97,10 +97,10 @@ class Promo_codesController extends Controller
                 Yii::t('app', 'Create new'),
             )
         ));
-        
+
         $this->render('form', compact('promoCode'));
     }
-    
+
     /**
      * Update existing promo code
      */
@@ -122,18 +122,18 @@ class Promo_codesController extends Controller
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controllers_save_data', $collection = new CAttributeCollection(array(
                 'controller'=> $this,
                 'success'   => $notify->hasSuccess,
                 'promoCode' => $promoCode,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('promo_codes/index'));
             }
         }
-        
+
         $this->setData(array(
             'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('promo_codes', 'Update promo code'),
             'pageHeading'       => Yii::t('promo_codes', 'Update promo code'),
@@ -143,32 +143,44 @@ class Promo_codesController extends Controller
                 Yii::t('app', 'Update'),
             )
         ));
-        
+
         $this->render('form', compact('promoCode'));
     }
-    
+
     /**
      * Delete existing promo code
      */
     public function actionDelete($id)
     {
         $promoCode = PricePlanPromoCode::model()->findByPk((int)$id);
-        
+
         if (empty($promoCode)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         $promoCode->delete();
- 
+
         $request = Yii::app()->request;
         $notify  = Yii::app()->notify;
-        
+
+        $redirect = null;
         if (!$request->getQuery('ajax')) {
             $notify->addSuccess(Yii::t('app', 'The item has been successfully deleted!'));
-            $this->redirect($request->getPost('returnUrl', array('promo_codes/index')));
+            $redirect = $request->getPost('returnUrl', array('promo_codes/index'));
+        }
+
+        // since 1.3.5.9
+        Yii::app()->hooks->doAction('controller_action_delete_data', $collection = new CAttributeCollection(array(
+            'controller' => $this,
+            'model'      => $promoCode,
+            'redirect'   => $redirect,
+        )));
+
+        if ($collection->redirect) {
+            $this->redirect($collection->redirect);
         }
     }
-    
+
     /**
      * Autocomplete for promo codes
      */
@@ -178,25 +190,25 @@ class Promo_codesController extends Controller
         if (!$request->isAjaxRequest) {
             $this->redirect(array('customers/index'));
         }
-        
+
         $criteria = new CDbCriteria();
         $criteria->select = 'promo_code_id, code';
         $criteria->compare('code', $term, true);
         $criteria->limit = 10;
-        
+
         $models = PricePlanPromoCode::model()->findAll($criteria);
         $results = array();
-        
+
         foreach ($models as $model) {
             $results[] = array(
                 'promo_code_id' => $model->promo_code_id,
                 'value'         => $model->code,
             );
         }
-        
-        return $this->renderJson($results);                
+
+        return $this->renderJson($results);
     }
-    
+
     /**
      * Callback to register Jquery ui bootstrap only for certain actions
      */

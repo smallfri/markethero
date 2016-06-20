@@ -2,15 +2,15 @@
 
 /**
  * ListSegment
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
+
 /**
  * This is the model class for table "list_segment".
  *
@@ -31,11 +31,11 @@
 class ListSegment extends ActiveRecord
 {
     const OPERATOR_MATCH_ANY = 'any';
-    
+
     const OPERATOR_MATCH_ALL = 'all';
-    
+
     private $_fieldConditions;
-    
+
     /**
      * @return string the associated database table name
      */
@@ -51,11 +51,11 @@ class ListSegment extends ActiveRecord
     {
         $rules = array(
             array('name, operator_match', 'required'),
-            
+
             array('name', 'length', 'max'=>255),
             array('operator_match', 'in', 'range'=>array_keys($this->getOperatorMatchArray())),
         );
-        
+
         return CMap::mergeArray($rules, parent::rules());
     }
 
@@ -69,7 +69,7 @@ class ListSegment extends ActiveRecord
             'list'             => array(self::BELONGS_TO, 'Lists', 'list_id'),
             'segmentConditions'=> array(self::HAS_MANY, 'ListSegmentCondition', 'segment_id'),
         );
-        
+
         return CMap::mergeArray($relations, parent::relations());
     }
 
@@ -85,10 +85,10 @@ class ListSegment extends ActiveRecord
             'operator_match'    => Yii::t('list_segments', 'Operator match'),
             'subscribers_count' => Yii::t('list_segments', 'Subscribers count'),
         );
-        
+
         return CMap::mergeArray($labels, parent::attributeLabels());
     }
-    
+
     /**
      * Retrieves a list of models based on the current search/filter conditions.
      *
@@ -105,7 +105,7 @@ class ListSegment extends ActiveRecord
     {
         $criteria = new CDbCriteria;
         $criteria->compare('list_id', (int)$this->list_id);
-        
+
         return new CActiveDataProvider(get_class($this), array(
             'criteria'      => $criteria,
             'pagination'    => array(
@@ -119,7 +119,7 @@ class ListSegment extends ActiveRecord
             ),
         ));
     }
-    
+
     /**
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
@@ -130,7 +130,7 @@ class ListSegment extends ActiveRecord
     {
         return parent::model($className);
     }
-    
+
     public function findAllByListId($listId)
     {
         $criteria = new CDbCriteria();
@@ -138,7 +138,7 @@ class ListSegment extends ActiveRecord
         $criteria->order = 'name ASC';
         return $this->findAll($criteria);
     }
-    
+
     public function getOperatorMatchArray()
     {
         return array(
@@ -146,71 +146,71 @@ class ListSegment extends ActiveRecord
             self::OPERATOR_MATCH_ALL => Yii::t('list_segments', self::OPERATOR_MATCH_ALL),
         );
     }
-    
+
     public function getFieldsDropDownArray()
     {
         static $_options = array();
         if (isset($_options[$this->list_id])) {
             return $_options[$this->list_id];
         }
-        
+
         if (empty($this->list_id)) {
             return array();
         }
-        
+
         $criteria = new CDbCriteria();
         $criteria->select = 'field_id, label';
         $criteria->compare('list_id', $this->list_id);
         $criteria->order = 'sort_order ASC';
         $fields = ListField::model()->findAll($criteria);
-        
+
         $options = array();
-        
+
         foreach ($fields as $field) {
             $options[$field->field_id] = $field->label;
         }
-        
+
         return $_options[$this->list_id] = $options;
     }
-    
+
     public function countSubscribers($extraCriteria = null)
     {
         $criteria = $this->_createCountFindSubscribersCriteria();
         $this->_appendCountFindSubscribersCriteria($criteria);
-        
+
         // this is here so that we can hook when sending the campaign.
         if (!empty($extraCriteria) && $extraCriteria instanceof CDbCriteria) {
             $criteria->mergeWith($extraCriteria);
         }
-        
+
         // since 1.3.4.9
         $criteria->select = 'COUNT(DISTINCT t.subscriber_id) as counter';
         $criteria->group  = '';
-        
+
         return ListSubscriber::model()->count($criteria);
     }
-    
+
     public function findSubscribers($offset = 0, $limit = 10, $extraCriteria = null)
     {
         $criteria = $this->_createCountFindSubscribersCriteria();
         $this->_appendCountFindSubscribersCriteria($criteria);
-        
+
         // this is here so that we can hook when sending the campaign.
         if (!empty($extraCriteria) && $extraCriteria instanceof CDbCriteria) {
             $criteria->mergeWith($extraCriteria);
         }
-        
+
         $criteria->offset = (int)$offset;
         $criteria->limit  = (int)$limit;
         return ListSubscriber::model()->findAll($criteria);
     }
-    
+
     protected function _createCountFindSubscribersCriteria()
     {
         $segmentConditions = ListSegmentCondition::model()->findAllByAttributes(array(
             'segment_id' => (int)$this->segment_id,
         ));
-        
+
         $criteria = new CDbCriteria();
         $criteria->select = 't.subscriber_id, t.subscriber_uid, t.email';
         $criteria->compare('t.list_id', $this->list_id);
@@ -223,7 +223,7 @@ class ListSegment extends ActiveRecord
             if (!isset($fieldConditions[$segmentCondition->field_id])) {
                 $fieldConditions[$segmentCondition->field_id] = array();
             }
-            $fieldConditions[$segmentCondition->field_id][] = $segmentCondition;    
+            $fieldConditions[$segmentCondition->field_id][] = $segmentCondition;
         }
         
         $subscriber = ListSubscriber::model();
@@ -235,11 +235,11 @@ class ListSegment extends ActiveRecord
             $md->addRelation('fieldValues'.$field_id, array(ListSubscriber::HAS_MANY, 'ListFieldValue', 'subscriber_id'));
         }
         $this->_fieldConditions = $fieldConditions;
-        
+
         unset($segmentConditions, $fieldConditions);
         return $criteria;
     }
-    
+
     protected function _appendCountFindSubscribersCriteria(CDbCriteria $criteria)
     {
         $fieldConditions = $this->_fieldConditions;
@@ -254,17 +254,17 @@ class ListSegment extends ActiveRecord
                     'together'  => true,
                     'joinType'  => 'LEFT JOIN',
             );
-            
+
             $conditionString = '(`fieldValues'.$field_id.'`.`field_id` = :field_id'.$field_id.' AND (%s) )';
             $injectCondition = array();
 
             $params[':field_id'.$field_id] = $field_id;
-            
+
             // note: since 1.3.4.7, added the is_numeric() and is_float() checks and values casting if needed
             foreach ($conditions as $idx => $condition) {
                 $index = $field_id + $idx;
                 $value = $condition->getParsedValue();
-                
+
                 if ($condition->operator->slug === ListSegmentOperator::IS) {
                     if (is_numeric($value)) {
                         if (is_float($value)) {
@@ -280,7 +280,7 @@ class ListSegment extends ActiveRecord
                     }
                     continue;
                 }
-                
+
                 if ($condition->operator->slug === ListSegmentOperator::IS_NOT) {
                     if (is_numeric($value)) {
                         if (is_float($value)) {
@@ -296,43 +296,43 @@ class ListSegment extends ActiveRecord
                     }
                     continue;
                 }
-                
+
                 if ($condition->operator->slug === ListSegmentOperator::CONTAINS) {
                     $injectCondition[] =  '`fieldValues'.$field_id.'`.`value` LIKE :value'.$index;
                     $params[':value'.$index] = '%'.$value.'%';
                     continue;
                 }
-                
+
                 if ($condition->operator->slug === ListSegmentOperator::NOT_CONTAINS) {
                     $injectCondition[] =  '`fieldValues'.$field_id.'`.`value` NOT LIKE :value'.$index;
                     $params[':value'.$index] = '%'.$value.'%';
                     continue;
                 }
-                
+
                 if ($condition->operator->slug === ListSegmentOperator::STARTS_WITH) {
                     $injectCondition[] =  '`fieldValues'.$field_id.'`.`value` LIKE :value'.$index;
                     $params[':value'.$index] = $value.'%';
                     continue;
                 }
-                
+
                 if ($condition->operator->slug === ListSegmentOperator::NOT_STARTS_WITH) {
                     $injectCondition[] =  '`fieldValues'.$field_id.'`.`value` NOT LIKE :value'.$index;
                     $params[':value'.$index] = $value.'%';
                     continue;
                 }
-                
+
                 if ($condition->operator->slug === ListSegmentOperator::ENDS_WITH) {
                     $injectCondition[] =  '`fieldValues'.$field_id.'`.`value` LIKE :value'.$index;
                     $params[':value'.$index] = '%'.$value;
                     continue;
                 }
-                
+
                 if ($condition->operator->slug === ListSegmentOperator::NOT_ENDS_WITH) {
                     $injectCondition[] =  '`fieldValues'.$field_id.'`.`value` NOT LIKE :value'.$index;
                     $params[':value'.$index] = '%'.$value;
                     continue;
                 }
-                
+
                 if ($condition->operator->slug === ListSegmentOperator::GREATER) {
                     if (is_numeric($value)) {
                         if (is_float($value)) {
@@ -348,7 +348,7 @@ class ListSegment extends ActiveRecord
                     }
                     continue;
                 }
-                
+
                 if ($condition->operator->slug === ListSegmentOperator::LESS) {
                     if (is_numeric($value)) {
                         if (is_float($value)) {
@@ -365,7 +365,7 @@ class ListSegment extends ActiveRecord
                     continue;
                 }
             }
-            
+
             if (!empty($injectCondition)) {
                 if ($this->operator_match === ListSegment::OPERATOR_MATCH_ANY) {
                     $injectCondition = implode(' OR ', $injectCondition);
@@ -383,7 +383,7 @@ class ListSegment extends ActiveRecord
             } else {
                 $appendCondition = ' AND ' . implode(' AND ', $appendCriteriaCondition);
             }
-            
+
             $criteria->with = $with;
             $criteria->condition .= $appendCondition;
         } else {
@@ -391,32 +391,32 @@ class ListSegment extends ActiveRecord
             $criteria->compare('t.subscriber_id', -1);
         }
     }
-    
+
     protected function beforeSave()
     {
         if ($this->isNewRecord || empty($this->segment_uid)) {
             $this->segment_uid = $this->generateUid();
         }
-        
+
         return parent::beforeSave();
     }
-    
+
     public function findByUid($segment_uid)
     {
         return $this->findByAttributes(array(
             'segment_uid' => $segment_uid,
-        ));    
+        ));
     }
-    
+
     public function generateUid()
     {
         $unique = StringHelper::uniqid();
         $exists = $this->findByUid($unique);
-        
+
         if (!empty($exists)) {
             return $this->generateUid();
         }
-        
+
         return $unique;
     }
 
@@ -424,17 +424,17 @@ class ListSegment extends ActiveRecord
     {
         return $this->segment_uid;
     }
-    
+
     public function copy()
     {
         $copied = false;
-        
+
         if ($this->isNewRecord) {
             return $copied;
         }
-        
+
         $transaction = Yii::app()->db->beginTransaction();
-        
+
         try {
             $segment = clone $this;
             $segment->isNewRecord  = true;
@@ -442,7 +442,7 @@ class ListSegment extends ActiveRecord
             $segment->segment_uid  = $this->generateUid();
             $segment->date_added   = new CDbExpression('NOW()');
             $segment->last_updated = new CDbExpression('NOW()');
-    
+
             if (preg_match('/\#(\d+)$/', $segment->name, $matches)) {
                 $counter = (int)$matches[1];
                 $counter++;
@@ -450,11 +450,11 @@ class ListSegment extends ActiveRecord
             } else {
                 $segment->name .= ' #1';
             }
-    
+
             if (!$segment->save(false)) {
                 throw new CException($segment->shortErrors->getAllAsString());
-            }   
-            
+            }
+
             $conditions = !empty($this->segmentConditions) ? $this->segmentConditions : array();
             foreach ($conditions as $condition) {
                 $condition = clone $condition;
@@ -465,13 +465,13 @@ class ListSegment extends ActiveRecord
                 $condition->last_updated = new CDbExpression('NOW()');
                 $condition->save(false);
             }
-             
+
             $transaction->commit();
             $copied = $segment;
         } catch (Exception $e) {
-            $transaction->rollBack(); 
+            $transaction->rollBack();
         }
-        
+
         return $copied;
     }
 }

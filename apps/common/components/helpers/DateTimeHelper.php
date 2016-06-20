@@ -2,52 +2,52 @@
 
 /**
  * DateTimeHelper
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
-class DateTimeHelper 
+
+class DateTimeHelper
 {
     /**
      * DateTimeHelper::getTimeZones()
-     * 
+     *
      * @return array
      */
     public static function getTimeZones()
     {
         return self::getSystemInternalTimeZones();
     }
-    
+
     /**
      * DateTimeHelper::getSystemInternalTimeZones()
-     * 
+     *
      * @link http://davidhancock.co/2013/05/generating-a-list-of-timezones-with-php/
      * @return array
      */
     public static function getSystemInternalTimeZones()
     {
         static $timezoneList = array();
-        
+
         if (!empty($timezoneList)) {
             return $timezoneList;
         }
-        
+
         $timezoneIdentifiers = DateTimeZone::listIdentifiers();
         if (empty($timezoneIdentifiers)) {
             return self::getStaticTimeZones();
         }
-        
+
         $utcTime = new DateTime('now', new DateTimeZone('UTC'));
         $tempTimezones = array();
-        
+
         foreach ($timezoneIdentifiers as $timezoneIdentifier) {
             $currentTimezone = new DateTimeZone($timezoneIdentifier);
-    
+
             $tempTimezones[] = array(
                 'offset' => (int)$currentTimezone->getOffset($utcTime),
                 'identifier' => $timezoneIdentifier
@@ -56,38 +56,43 @@ class DateTimeHelper
 
         // Sort the array by offset,identifier ascending
         usort($tempTimezones, array('DateTimeHelper', '_sortTempIdentifiers'));
-    
+
         $timezoneList = array();
         foreach ($tempTimezones as $tz) {
             $sign = $tz['offset'] > 0 ? '+' : '-';
             $offset = gmdate('H:i', abs($tz['offset']));
             $timezoneList[$tz['identifier']] = '(GMT' . $sign . $offset . ') ' . $tz['identifier'];
         }
-    
+
+        // since 1.3.5.9
+        if (class_exists('Yii', false)) {
+            $timezoneList = Yii::app()->hooks->applyFilters('timezones_list', $timezoneList);
+        }
+
         return $timezoneList;
     }
-    
+
     /**
      * DateTimeHelper::_sortTempIdentifiers()
-     * 
+     *
      * @param array $a
      * @param array $b
      * @return int
      */
-    public static function _sortTempIdentifiers($a, $b) 
+    public static function _sortTempIdentifiers($a, $b)
     {
         return ($a['offset'] == $b['offset']) ? strcmp($a['identifier'], $b['identifier']) : $a['offset'] - $b['offset'];
     }
-        
+
     /**
      * DateTimeHelper::getStaticTimeZones()
-     * 
+     *
      * @link http://www.ultramegatech.com/2009/04/working-with-time-zones-in-php/
      * @return array
      */
     public static function getStaticTimeZones()
     {
-        return array(
+        $timezoneList = array(
             'Kwajalein' => '(GMT-12:00) International Date Line West',
             'Pacific/Midway' => '(GMT-11:00) Midway Island',
             'Pacific/Samoa' => '(GMT-11:00) Samoa',
@@ -215,14 +220,21 @@ class DateTimeHelper
             'Pacific/Auckland' => '(GMT+12:00) Auckland',
             'Pacific/Tongatapu' => '(GMT+13:00) Nukualofa'
         );
+
+        // since 1.3.5.9
+        if (class_exists('Yii', false)) {
+            $timezoneList = Yii::app()->hooks->applyFilters('timezones_list', $timezoneList);
+        }
+        
+        return $timezoneList;
     }
-    
+
     /**
      * DateTimeHelper::timespan()
-     * 
+     *
      * Based on CodeIgniter's date helper timespan function
      * http://ellislab.com/codeigniter/user-guide/helpers/date_helper.html
-     * 
+     *
      * @param integer $seconds
      * @param integer $time
      * @return string

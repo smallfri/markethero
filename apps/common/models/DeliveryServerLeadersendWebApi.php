@@ -2,16 +2,16 @@
 
 /**
  * DeliveryServerLeadersendWebApi
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.3.4.9
- * 
+ *
  */
- 
+
 class DeliveryServerLeadersendWebApi extends DeliveryServer
 {
     protected $serverType = 'leadersend-web-api';
@@ -27,7 +27,7 @@ class DeliveryServerLeadersendWebApi extends DeliveryServer
         );
         return CMap::mergeArray($rules, parent::rules());
     }
-    
+
     /**
      * @return array customized attribute labels (name=>label)
      */
@@ -39,27 +39,27 @@ class DeliveryServerLeadersendWebApi extends DeliveryServer
         );
         return CMap::mergeArray(parent::attributeLabels(), $labels);
     }
-    
+
     public function attributeHelpTexts()
     {
         $texts = array(
             'hostname'  => Yii::t('servers', 'Leadersend verified domain name.'),
             'password'  => Yii::t('servers', 'Leadersend api key.'),
         );
-        
+
         return CMap::mergeArray(parent::attributeHelpTexts(), $texts);
     }
-    
+
     public function attributePlaceholders()
     {
         $placeholders = array(
             'hostname'  => Yii::t('servers', 'Domain name'),
             'password'  => Yii::t('servers', 'Api key'),
         );
-        
+
         return CMap::mergeArray(parent::attributePlaceholders(), $placeholders);
     }
-    
+
     /**
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
@@ -70,7 +70,7 @@ class DeliveryServerLeadersendWebApi extends DeliveryServer
     {
         return parent::model($className);
     }
-    
+
     public function sendEmail(array $params = array())
     {
         $params = (array)Yii::app()->hooks->applyFilters('delivery_server_before_send_email', $this->getParamsArray($params), $this);
@@ -78,36 +78,30 @@ class DeliveryServerLeadersendWebApi extends DeliveryServer
         if (!isset($params['from'], $params['to'], $params['subject'], $params['body'])) {
             return false;
         }
-        
+
         list($fromEmail, $fromName) = $this->getMailer()->findEmailAndName($params['from']);
         list($toEmail, $toName)     = $this->getMailer()->findEmailAndName($params['to']);
-        
+
         if (!empty($params['fromName'])) {
             $fromName = $params['fromName'];
         }
-        
+
         $sent = false;
-        try { 
+        try {
+            //
+            $headers = array();
             if (!empty($params['headers'])) {
-                $replyToEmail = $this->from_email;
-                if (!empty($params['replyTo'])) {
-                    list($replyToEmail, $replyToName) = $this->getMailer()->findEmailAndName($params['replyTo']); 
-                }
-                $headerSearchReplace = array(
-                    '[LIST_UNSUBSCRIBE_EMAIL]' => $replyToEmail,
-                );  
-                foreach ($params['headers'] as $key => $value) {
-                    $params['headers'][$key] = str_replace(array_keys($headerSearchReplace), array_values($headerSearchReplace), $value);
-                }  
+                $headers = $this->parseHeadersIntoKeyValue($params['headers']);
             }
-            
+            //
+
             $message = array(
                 'from'   => array('name' => $fromName, 'email' => $this->from_email),
                 'to'     => array('name' => $toName, 'email' => $toEmail),
                 'html'   => $params['body'],
                 'text'   => !empty($params['plainText']) ? $params['plainText'] : CampaignHelper::htmlToText($params['body']),
                 'subject'=> $params['subject'],
-                'headers'=> !empty($params['headers']) ? $params['headers'] : array(),
+                'headers'=> $headers,
                 'auto_html'  => false,
                 'auto_plain' => false,
                 'tracking' => array(
@@ -119,7 +113,7 @@ class DeliveryServerLeadersendWebApi extends DeliveryServer
                 'attachments'    => array(),
                 'images'         => array(),
             );
-            
+
             $onlyPlainText = !empty($params['onlyPlainText']) && $params['onlyPlainText'] === true;
             if (!$onlyPlainText && !empty($params['attachments']) && is_array($params['attachments'])) {
                 $attachments = array_unique($params['attachments']);
@@ -133,7 +127,7 @@ class DeliveryServerLeadersendWebApi extends DeliveryServer
                     }
                 }
             }
-            
+
             if (!$onlyPlainText && !empty($params['embedImages']) && is_array($params['embedImages'])) {
                 $cids = array();
                 foreach ($params['embedImages'] as $imageData) {
@@ -153,9 +147,9 @@ class DeliveryServerLeadersendWebApi extends DeliveryServer
                 }
                 unset($cids);
             }
-            
+
             $response = $this->getClient()->messagesSend($message);
-            
+
             if (!empty($response) && !empty($response[0])) {
                 if ($response[0]['status'] == 'sent') {
                     $sent = array('message_id' => $response[0]['id']);
@@ -170,29 +164,26 @@ class DeliveryServerLeadersendWebApi extends DeliveryServer
             } else {
                 throw new Exception(Yii::t('servers', 'Unable to make the delivery!'));
             }
-            
+
         } catch (Exception $e) {
             $this->getMailer()->addLog($e->getMessage());
         }
-        
+
         if ($sent) {
             $this->logUsage();
         }
 
         Yii::app()->hooks->doAction('delivery_server_after_send_email', $params, $this, $sent);
-        
+
         return $sent;
     }
 
-    public function getDefaultParamsArray()
+    public function getParamsArray(array $params = array())
     {
-        $params = array(
-            'transport' => self::TRANSPORT_LEADERSEND_WEB_API,
-        );
-        
-        return CMap::mergeArray(parent::getDefaultParamsArray(), $params);
+        $params['transport'] = self::TRANSPORT_LEADERSEND_WEB_API;
+        return parent::getParamsArray($params);
     }
-    
+
     public function getClient()
     {
         static $clients = array();

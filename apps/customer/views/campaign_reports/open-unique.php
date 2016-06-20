@@ -2,11 +2,11 @@
 
 /**
  * This file is part of the MailWizz EMA application.
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
@@ -15,7 +15,7 @@
  * This hook gives a chance to prepend content or to replace the default view content with a custom content.
  * Please note that from inside the action callback you can access all the controller view
  * variables via {@CAttributeCollection $collection->controller->data}
- * In case the content is replaced, make sure to set {@CAttributeCollection $collection->renderContent} to false 
+ * In case the content is replaced, make sure to set {@CAttributeCollection $collection->renderContent} to false
  * in order to stop rendering the default content.
  * @since 1.3.3.1
  */
@@ -46,18 +46,20 @@ if ($viewCollection->renderContent) { ?>
             <div class="pull-right">
                 <?php echo CHtml::link(Yii::t('campaign_reports', 'Campaign overview'), array('campaigns/overview', 'campaign_uid' => $campaign->campaign_uid), array('class' => 'btn btn-primary btn-xs', 'title' => Yii::t('campaign_reports', 'Back to campaign overview')));?>
                 <?php echo CHtml::link(Yii::t('campaign_reports', 'All opens'), array('campaign_reports/open', 'campaign_uid' => $campaign->campaign_uid), array('class' => 'btn btn-primary btn-xs', 'title' => Yii::t('campaign_reports', 'View all opens')));?>
+                <?php if (!empty($canExportStats)) { ?>
                 <?php echo CHtml::link(Yii::t('campaign_reports', 'Export reports'), array('campaign_reports_export/open_unique', 'campaign_uid' => $campaign->campaign_uid), array('class' => 'btn btn-primary btn-xs', 'title' => Yii::t('campaign_reports', 'Export reports')));?>
+                <?php } ?>
             </div>
             <div class="clearfix"><!-- --></div>
         </div>
         <div class="box-body">
             <div class="table-responsive">
-            <?php 
+            <?php
             /**
              * This hook gives a chance to prepend content or to replace the default grid view content with a custom content.
              * Please note that from inside the action callback you can access all the controller view
              * variables via {@CAttributeCollection $collection->controller->data}
-             * In case the content is replaced, make sure to set {@CAttributeCollection $collection->renderGrid} to false 
+             * In case the content is replaced, make sure to set {@CAttributeCollection $collection->renderGrid} to false
              * in order to stop rendering the default content.
              * @since 1.3.3.1
              */
@@ -65,7 +67,7 @@ if ($viewCollection->renderContent) { ?>
                 'controller'    => $this,
                 'renderGrid'    => true,
             )));
-            
+
             // and render if allowed
             if ($collection->renderGrid) {
                 $this->widget('zii.widgets.grid.CGridView', $hooks->applyFilters('grid_view_properties', array(
@@ -117,11 +119,11 @@ if ($viewCollection->renderContent) { ?>
                             'footer'    => $model->paginationOptions->getGridFooterPagination(),
                             'buttons'   => array(
                                 'bysubscriber'=> array(
-                                    'label'     => ' &nbsp; <span class="glyphicon glyphicon-info-sign"></span> &nbsp;', 
+                                    'label'     => ' &nbsp; <span class="glyphicon glyphicon-info-sign"></span> &nbsp;',
                                     'url'       => 'Yii::app()->createUrl("campaign_reports/open_by_subscriber", array("campaign_uid" => $data->campaign->campaign_uid, "subscriber_uid" => $data->subscriber->subscriber_uid))',
                                     'imageUrl'  => null,
                                     'options'   => array('title' => Yii::t('campaign_reports', 'View all opens by this subscriber'), 'class' => ''),
-                                ),   
+                                ),
                             ),
                             'htmlOptions' => array(
                                 'style' => 'width:70px;',
@@ -129,7 +131,7 @@ if ($viewCollection->renderContent) { ?>
                             'template'=>'{bysubscriber}'
                         ),
                     ), $this),
-                ), $this));  
+                ), $this));
             }
             /**
              * This hook gives a chance to append content after the grid view content.
@@ -143,10 +145,10 @@ if ($viewCollection->renderContent) { ?>
             )));
             ?>
             <div class="clearfix"><!-- --></div>
-            </div>    
+            </div>
         </div>
     </div>
-<?php 
+<?php
 }
 /**
  * This hook gives a chance to append content after the view file default content.

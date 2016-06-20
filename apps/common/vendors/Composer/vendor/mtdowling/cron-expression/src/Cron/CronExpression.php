@@ -73,6 +73,25 @@ class CronExpression
     }
 
     /**
+     * Validate a CronExpression.
+     *
+     * @param string $expression The CRON expression to validate.
+     *
+     * @return bool True if a valid CRON expression was passed. False if not.
+     * @see Cron\CronExpression::factory
+     */
+    public static function isValidExpression($expression)
+    {
+        try {
+            self::factory($expression);
+        } catch (\InvalidArgumentException $e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Parse a CRON expression
      *
      * @param string       $expression   CRON expression (e.g. '8 * * * *')
@@ -121,7 +140,7 @@ class CronExpression
     {
         if (!$this->fieldFactory->getField($position)->validate($value)) {
             throw new \InvalidArgumentException(
-                'Invalid CRON field value ' . $value . ' as position ' . $position
+                'Invalid CRON field value ' . $value . ' at position ' . $position
             );
         }
 
@@ -183,7 +202,11 @@ class CronExpression
     {
         $matches = array();
         for ($i = 0; $i < max(0, $total); $i++) {
-            $matches[] = $this->getRunDate($currentTime, $i, $invert, $allowCurrentDate);
+            try {
+                $matches[] = $this->getRunDate($currentTime, $i, $invert, $allowCurrentDate);
+            } catch (\RuntimeException $e) {
+                break;
+            }
         }
 
         return $matches;

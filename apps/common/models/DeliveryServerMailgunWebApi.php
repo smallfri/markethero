@@ -2,26 +2,26 @@
 
 /**
  * DeliveryServerMailgunWebApi
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.3.4.9
- * 
+ *
  */
- 
+
 class DeliveryServerMailgunWebApi extends DeliveryServer
 {
     protected $serverType = 'mailgun-web-api';
-    
+
     protected $_initStatus;
-    
+
     protected $_preCheckError;
-    
+
     public $webhooks = array();
-    
+
     /**
      * @return array validation rules for model attributes.
      */
@@ -33,7 +33,7 @@ class DeliveryServerMailgunWebApi extends DeliveryServer
         );
         return CMap::mergeArray($rules, parent::rules());
     }
-    
+
     /**
      * @return array customized attribute labels (name=>label)
      */
@@ -45,27 +45,27 @@ class DeliveryServerMailgunWebApi extends DeliveryServer
         );
         return CMap::mergeArray(parent::attributeLabels(), $labels);
     }
-    
+
     public function attributeHelpTexts()
     {
         $texts = array(
             'hostname'  => Yii::t('servers', 'Mailgun verified domain name.'),
             'password'  => Yii::t('servers', 'Mailgun api key.'),
         );
-        
+
         return CMap::mergeArray(parent::attributeHelpTexts(), $texts);
     }
-    
+
     public function attributePlaceholders()
     {
         $placeholders = array(
             'hostname'  => Yii::t('servers', 'Domain name'),
             'password'  => Yii::t('servers', 'Api key'),
         );
-        
+
         return CMap::mergeArray(parent::attributePlaceholders(), $placeholders);
     }
-    
+
     /**
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
@@ -76,7 +76,7 @@ class DeliveryServerMailgunWebApi extends DeliveryServer
     {
         return parent::model($className);
     }
-    
+
     public function sendEmail(array $params = array())
     {
         $params = (array)Yii::app()->hooks->applyFilters('delivery_server_before_send_email', $this->getParamsArray($params), $this);
@@ -84,8 +84,8 @@ class DeliveryServerMailgunWebApi extends DeliveryServer
         if (!isset($params['from'], $params['to'], $params['subject'], $params['body'])) {
             return false;
         }
-        
-        list($toEmail, $toName)     = $this->getMailer()->findEmailAndName($params['to']); 
+
+        list($toEmail, $toName)     = $this->getMailer()->findEmailAndName($params['to']);
         list($fromEmail, $fromName) = $this->getMailer()->findEmailAndName($params['from']);
 
         if (!empty($params['fromName'])) {
@@ -94,12 +94,16 @@ class DeliveryServerMailgunWebApi extends DeliveryServer
 
         $replyToEmail = $replyToName = null;
         if (!empty($params['replyTo'])) {
-            list($replyToEmail, $replyToName) = $this->getMailer()->findEmailAndName($params['replyTo']); 
+            list($replyToEmail, $replyToName) = $this->getMailer()->findEmailAndName($params['replyTo']);
         }
-        
+
         $headerPrefix = Yii::app()->params['email.custom.header.prefix'];
-        $headers      = !empty($params['headers']) && is_array($params['headers']) ? $params['headers'] : array();
         $metaData     = array();
+
+        $headers = array();
+        if (!empty($params['headers'])) {
+            $headers = $this->parseHeadersIntoKeyValue($params['headers']);
+        }
         
         if (isset($headers[$headerPrefix . 'Campaign-Uid'])) {
             $metaData['campaign_uid'] = $headers[$headerPrefix . 'Campaign-Uid'];
@@ -107,14 +111,14 @@ class DeliveryServerMailgunWebApi extends DeliveryServer
         if (isset($headers[$headerPrefix . 'Subscriber-Uid'])) {
             $metaData['subscriber_uid'] = $headers[$headerPrefix . 'Subscriber-Uid'];
         }
-        
+
         $sent = false;
-        
+
         try {
             if (!$this->preCheckWebHook()) {
                 throw new Exception($this->_preCheckError);
             }
-            
+
             $fullMessage = null;
             $message     = array(
                 'from'       => sprintf('%s <%s>', $fromName, $fromEmail),
@@ -123,36 +127,32 @@ class DeliveryServerMailgunWebApi extends DeliveryServer
                 'o:tag'      => array('bulk-mail'),
                 'v:metadata' => CJSON::encode($metaData),
             );
-                 
+
             if (empty($params['attachments']) && empty($params['embedImages'])) {
                 $headers['Reply-To']    = !empty($replyToEmail) ? $replyToEmail : $fromEmail;
                 $headers['X-Sender']    = $fromEmail;
                 $headers['X-Receiver']  = $toEmail;
                 $headers[$headerPrefix . 'Mailer'] = 'Mailgun Web API';
-                
+
                 if (!isset($headers['Return-Path']) && !empty($params['returnPath'])) {
                     list($returnPathEmail) = $this->getMailer()->findEmailAndName($params['returnPath']);
                     $headers['Return-Path'] = $returnPathEmail;
                 }
-                
+
                 $message = array_merge($message, array(
                     'subject'    => $params['subject'],
                     'html'       => $params['body'],
                     'text'       => !empty($params['plainText']) ? $params['plainText'] : CampaignHelper::htmlToText($params['body']),
                 ));
-                
-                $headerSearchReplace = array(
-                    '[LIST_UNSUBSCRIBE_EMAIL]' => $headers['Reply-To'],
-                ); 
+
                 foreach ($headers as $headerName => $headerValue) {
-                    $headerValue = str_replace(array_keys($headerSearchReplace), array_values($headerSearchReplace), $headerValue);
                     $message['h:' . $headerName] = $headerValue;
-                }  
-                
+                }
+
                 if (!empty($params['onlyPlainText']) && $params['onlyPlainText'] === true) {
                     unset($message['html']);
-                }  
-                
+                }
+
                 $result = $this->getClient()->sendMessage($this->hostname, $message);
             } else {
                 $result = $this->getClient()->sendMessage($this->hostname, $message, $this->getMailer()->getEmailMessage($params));
@@ -167,7 +167,7 @@ class DeliveryServerMailgunWebApi extends DeliveryServer
         } catch (Exception $e) {
             $this->getMailer()->addLog($e->getMessage());
         }
-        
+
         if ($sent) {
             $this->logUsage();
         }
@@ -177,15 +177,12 @@ class DeliveryServerMailgunWebApi extends DeliveryServer
         return $sent;
     }
 
-    public function getDefaultParamsArray()
+    public function getParamsArray(array $params = array())
     {
-        $params = array(
-            'transport' => self::TRANSPORT_MAILGUN_WEB_API,
-        );
-        
-        return CMap::mergeArray(parent::getDefaultParamsArray(), $params);
+        $params['transport'] = self::TRANSPORT_MAILGUN_WEB_API;
+        return parent::getParamsArray($params);
     }
-    
+
     public function requirementsFailed()
     {
         if (!MW_COMPOSER_SUPPORT || !version_compare(PHP_VERSION, '5.3.2', '>=')) {
@@ -196,7 +193,7 @@ class DeliveryServerMailgunWebApi extends DeliveryServer
         }
         return false;
     }
-    
+
     public function getClient()
     {
         static $clients = array();
@@ -204,29 +201,30 @@ class DeliveryServerMailgunWebApi extends DeliveryServer
         if (!empty($clients[$id])) {
             return $clients[$id];
         }
-        return $clients[$id] = new \Mailgun\Mailgun($this->password);
+        $className = '\Mailgun\Mailgun';
+        return $clients[$id] = new $className($this->password);
     }
-    
+
     protected function afterConstruct()
     {
         parent::afterConstruct();
         $this->_initStatus = $this->status;
         $this->webhooks    = (array)$this->getModelMetaData()->itemAt('webhooks');
     }
-    
+
     protected function afterFind()
     {
         $this->_initStatus = $this->status;
         $this->webhooks    = (array)$this->getModelMetaData()->itemAt('webhooks');
         parent::afterFind();
     }
-    
+
     protected function beforeSave()
     {
         $this->getModelMetaData()->add('webhooks', (array)$this->webhooks);
         return parent::beforeSave();
     }
-    
+
     protected function afterDelete()
     {
         if (!empty($this->webhooks)) {
@@ -234,33 +232,33 @@ class DeliveryServerMailgunWebApi extends DeliveryServer
                 try {
                     $this->getClient()->delete(sprintf('domains/%s/webhooks/%s', $this->hostname, $name));
                 } catch (Exception $e) {
-                    
+
                 }
             }
         }
         parent::afterDelete();
     }
-    
+
     protected function preCheckWebHook()
     {
         if (MW_IS_CLI || $this->isNewRecord || $this->_initStatus !== self::STATUS_INACTIVE) {
             return true;
         }
-        
+
         $options = Yii::app()->options;
         $url     = $options->get('system.urls.frontend_absolute_url') . sprintf('dswh/%d', $this->server_id);
 
         if (!is_array($this->webhooks)) {
             $this->webhooks = array();
         }
-        
+
         foreach (array('bounce', 'drop', 'spam') as $webhook) {
             try {
                 $this->getClient()->delete(sprintf('domains/%s/webhooks/%s', $this->hostname, $webhook));
             } catch (Exception $e) {
-                
+
             }
-            
+
             try {
                 $result = $this->getClient()->post(sprintf('domains/%s/webhooks', $this->hostname), array(
                     'id'  => $webhook,
@@ -269,7 +267,7 @@ class DeliveryServerMailgunWebApi extends DeliveryServer
             } catch (Exception $e) {
                 $this->_preCheckError = $e->getMessage();
             }
-            
+
             if (!empty($result) && !empty($result->http_response_body) && !empty($result->http_response_body->webhook)) {
                 $this->webhooks[$webhook] = $result->http_response_body->webhook->url;
                 $this->_preCheckError = null;
@@ -281,7 +279,7 @@ class DeliveryServerMailgunWebApi extends DeliveryServer
         if ($this->_preCheckError) {
             return false;
         }
-        
+
         return $this->save(false);
     }
 }

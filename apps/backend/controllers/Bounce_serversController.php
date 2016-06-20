@@ -2,17 +2,17 @@
 
 /**
  * Bounce_serversController
- * 
+ *
  * Handles the actions for bounce servers related tasks
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
+
 class Bounce_serversController extends Controller
 {
     public function init()
@@ -21,7 +21,7 @@ class Bounce_serversController extends Controller
         $this->onBeforeAction = array($this, '_registerJuiBs');
         parent::init();
     }
-    
+
     /**
      * Define the filters for various controller actions
      * Merge the filters with the ones from parent implementation
@@ -31,10 +31,10 @@ class Bounce_serversController extends Controller
         $filters = array(
             'postOnly + delete, copy, enable, disable',
         );
-        
+
         return CMap::mergeArray($filters, parent::filters());
     }
-    
+
     /**
      * List available bounce servers
      */
@@ -43,9 +43,9 @@ class Bounce_serversController extends Controller
         $request    = Yii::app()->request;
         $server     = new BounceServer('search');
         $server->unsetAttributes();
-        
+
         $server->attributes = (array)$request->getQuery($server->modelName, array());
-        
+
         $this->setData(array(
             'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('servers', 'View servers'),
             'pageHeading'       => Yii::t('servers', 'View servers'),
@@ -57,7 +57,7 @@ class Bounce_serversController extends Controller
 
         $this->render('list', compact('server'));
     }
-    
+
     /**
      * Create a new bounce server
      */
@@ -78,30 +78,30 @@ class Bounce_serversController extends Controller
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
                 $notify->addSuccess(Yii::t('servers', 'Please do not forget to associate this server with a delivery server!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller'=> $this,
                 'success'   => $notify->hasSuccess,
                 'server'    => $server,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('bounce_servers/update', 'id' => $server->server_id));
             }
         }
 
         $this->setData(array(
-            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('servers', 'Create new server'), 
+            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('servers', 'Create new server'),
             'pageHeading'       => Yii::t('servers', 'Create new bounce server'),
             'pageBreadcrumbs'   => array(
                 Yii::t('servers', 'Bounce servers') => $this->createUrl('bounce_servers/index'),
                 Yii::t('app', 'Create new'),
             )
         ));
-        
+
         $this->render('form', compact('server'));
     }
-    
+
     /**
      * Update existing bounce server
      */
@@ -111,11 +111,11 @@ class Bounce_serversController extends Controller
         if (empty($server)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         if (!$server->getCanBeUpdated()) {
             $this->redirect(array('bounce_servers/index'));
         }
-        
+
         $request = Yii::app()->request;
         $notify  = Yii::app()->notify;
 
@@ -142,30 +142,30 @@ class Bounce_serversController extends Controller
                     $notify->addSuccess($message);
                 }
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller'=> $this,
                 'success'   => $notify->hasSuccess,
                 'server'    => $server,
             )));
-            
+
             if ($collection->success) {
-            
+
             }
         }
-        
+
         $this->setData(array(
-            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('servers', 'Update server'), 
+            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('servers', 'Update server'),
             'pageHeading'       => Yii::t('servers', 'Update bounce server'),
             'pageBreadcrumbs'   => array(
                 Yii::t('servers', 'Bounce servers') => $this->createUrl('bounce_servers/index'),
                 Yii::t('app', 'Update'),
             )
         ));
-        
+
         $this->render('form', compact('server'));
     }
-    
+
     /**
      * Delete existing bounce server
      */
@@ -175,20 +175,32 @@ class Bounce_serversController extends Controller
         if (empty($server)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         if ($server->getCanBeDeleted()) {
             $server->delete();
         }
-        
+
         $request = Yii::app()->request;
         $notify  = Yii::app()->notify;
-        
+
+        $redirect = null;
         if (!$request->getQuery('ajax')) {
             $notify->addSuccess(Yii::t('app', 'The item has been successfully deleted!'));
-            $this->redirect($request->getPost('returnUrl', array('bounce_servers/index')));
+            $redirect = $request->getPost('returnUrl', array('bounce_servers/index'));
+        }
+
+        // since 1.3.5.9
+        Yii::app()->hooks->doAction('controller_action_delete_data', $collection = new CAttributeCollection(array(
+            'controller' => $this,
+            'model'      => $server,
+            'redirect'   => $redirect,
+        )));
+
+        if ($collection->redirect) {
+            $this->redirect($collection->redirect);
         }
     }
-    
+
     /**
      * Run a bulk action against the bounce servers
      */
@@ -196,7 +208,7 @@ class Bounce_serversController extends Controller
     {
         $request = Yii::app()->request;
         $notify  = Yii::app()->notify;
-        
+
         $action = $request->getPost('bulk_action');
         $items  = array_unique(array_map('intval', (array)$request->getPost('bulk_item', array())));
 
@@ -207,11 +219,11 @@ class Bounce_serversController extends Controller
                 if (empty($server)) {
                     continue;
                 }
-                
+
                 if (!$server->getCanBeDeleted()) {
                     continue;
                 }
-                
+
                 $server->delete();
                 $affected++;
             }
@@ -219,11 +231,11 @@ class Bounce_serversController extends Controller
                 $notify->addSuccess(Yii::t('app', 'The action has been successfully completed!'));
             }
         }
-        
+
         $defaultReturn = $request->getServer('HTTP_REFERER', array('bounce_servers/index'));
         $this->redirect($request->getPost('returnUrl', $defaultReturn));
     }
-    
+
     /**
      * Create a copy of an existing bounce server
      */
@@ -233,7 +245,7 @@ class Bounce_serversController extends Controller
         if (empty($server)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         $request = Yii::app()->request;
         $notify  = Yii::app()->notify;
 
@@ -247,7 +259,7 @@ class Bounce_serversController extends Controller
             $this->redirect($request->getPost('returnUrl', array('bounce_servers/index')));
         }
     }
-    
+
     /**
      * Enable a server that has been previously disabled
      */
@@ -257,7 +269,7 @@ class Bounce_serversController extends Controller
         if (empty($server)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         $request = Yii::app()->request;
         $notify  = Yii::app()->notify;
 
@@ -272,7 +284,7 @@ class Bounce_serversController extends Controller
             $this->redirect($request->getPost('returnUrl', array('bounce_servers/index')));
         }
     }
-    
+
     /**
      * Disable a server that has been previously verified
      */
@@ -282,7 +294,7 @@ class Bounce_serversController extends Controller
         if (empty($server)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         $request = Yii::app()->request;
         $notify  = Yii::app()->notify;
 
@@ -297,7 +309,7 @@ class Bounce_serversController extends Controller
             $this->redirect($request->getPost('returnUrl', array('bounce_servers/index')));
         }
     }
-    
+
     /**
      * Callback to register Jquery ui bootstrap only for certain actions
      */

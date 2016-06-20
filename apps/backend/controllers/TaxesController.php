@@ -2,25 +2,25 @@
 
 /**
  * TaxesController
- * 
+ *
  * Handles the actions for taxes related tasks
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.3.4.5
  */
- 
+
 class TaxesController extends Controller
 {
     public function init()
     {
         $this->getData('pageScripts')->add(array('src' => AssetsUrl::js('taxes.js')));
-        parent::init();    
+        parent::init();
     }
-    
+
     /**
      * Define the filters for various controller actions
      * Merge the filters with the ones from parent implementation
@@ -30,10 +30,10 @@ class TaxesController extends Controller
         $filters = array(
             'postOnly + delete, reset_sending_quota',
         );
-        
+
         return CMap::mergeArray($filters, parent::filters());
     }
-    
+
     /**
      * List all available taxes
      */
@@ -42,7 +42,7 @@ class TaxesController extends Controller
         $request = Yii::app()->request;
         $tax     = new Tax('search');
         $tax->unsetAttributes();
-        
+
         $tax->attributes = (array)$request->getQuery($tax->modelName, array());
 
         $this->setData(array(
@@ -53,10 +53,10 @@ class TaxesController extends Controller
                 Yii::t('app', 'View all')
             )
         ));
-        
+
         $this->render('list', compact('tax'));
     }
-    
+
     /**
      * Create a new tax
      */
@@ -65,7 +65,7 @@ class TaxesController extends Controller
         $tax      = new Tax();
         $request  = Yii::app()->request;
         $notify   = Yii::app()->notify;
-        
+
         if ($request->isPostRequest && ($attributes = (array)$request->getPost($tax->modelName, array()))) {
             $tax->attributes = $attributes;
             if (!$tax->save()) {
@@ -73,30 +73,30 @@ class TaxesController extends Controller
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller'=> $this,
                 'success'   => $notify->hasSuccess,
                 'tax'  => $tax,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('taxes/index'));
             }
         }
-        
+
         $this->setData(array(
-            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('taxes', 'Create new tax'), 
+            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('taxes', 'Create new tax'),
             'pageHeading'       => Yii::t('taxes', 'Create new tax'),
             'pageBreadcrumbs'   => array(
                 Yii::t('taxes', 'Taxes') => $this->createUrl('taxes/index'),
                 Yii::t('app', 'Create new'),
             )
         ));
-        
+
         $this->render('form', compact('tax'));
     }
-    
+
     /**
      * Update existing tax
      */
@@ -107,7 +107,7 @@ class TaxesController extends Controller
         if (empty($tax)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         $request = Yii::app()->request;
         $notify  = Yii::app()->notify;
 
@@ -118,18 +118,18 @@ class TaxesController extends Controller
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller'=> $this,
                 'success'   => $notify->hasSuccess,
                 'tax'  => $tax,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('taxes/index'));
             }
         }
-        
+
         $this->setData(array(
             'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('taxes', 'Update tax'),
             'pageHeading'       => Yii::t('taxes', 'Update tax'),
@@ -138,32 +138,44 @@ class TaxesController extends Controller
                 Yii::t('app', 'Update'),
             )
         ));
-        
+
         $this->render('form', compact('tax'));
     }
-    
+
     /**
      * Delete existing tax
      */
     public function actionDelete($id)
     {
         $tax = Tax::model()->findByPk((int)$id);
-        
+
         if (empty($tax)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         $tax->delete();
- 
-        $request  = Yii::app()->request;
-        $notify   = Yii::app()->notify;
-        
+
+        $request = Yii::app()->request;
+        $notify  = Yii::app()->notify;
+
+        $redirect = null;
         if (!$request->getQuery('ajax')) {
             $notify->addSuccess(Yii::t('app', 'The item has been successfully deleted!'));
-            $this->redirect($request->getPost('returnUrl', array('taxes/index')));
+            $redirect = $request->getPost('returnUrl', array('taxes/index'));
+        }
+
+        // since 1.3.5.9
+        Yii::app()->hooks->doAction('controller_action_delete_data', $collection = new CAttributeCollection(array(
+            'controller' => $this,
+            'model'      => $tax,
+            'redirect'   => $redirect,
+        )));
+
+        if ($collection->redirect) {
+            $this->redirect($collection->redirect);
         }
     }
-    
+
     /**
      * Display country zones
      */
@@ -173,15 +185,15 @@ class TaxesController extends Controller
         $criteria->select = 'zone_id, name';
         $criteria->compare('country_id', (int) Yii::app()->request->getQuery('country_id'));
         $models = Zone::model()->findAll($criteria);
-        
+
         $zones = array();
         foreach ($models as $model) {
             $zones[] = array(
-                'zone_id'    => $model->zone_id, 
+                'zone_id'    => $model->zone_id,
                 'name'        => $model->name
             );
         }
         return $this->renderJson(array('zones' => $zones));
     }
-    
+
 }

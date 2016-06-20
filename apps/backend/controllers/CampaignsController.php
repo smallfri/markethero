@@ -2,17 +2,17 @@
 
 /**
  * CampaignsController
- * 
+ *
  * Handles the actions for campaigns related tasks
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
+
 class CampaignsController extends Controller
 {
     // init
@@ -21,7 +21,7 @@ class CampaignsController extends Controller
         parent::init();
         $this->getData('pageScripts')->add(array('src' => AssetsUrl::js('campaigns.js')));
     }
-    
+
     /**
      * Define the filters for various controller actions
      * Merge the filters with the ones from parent implementation
@@ -32,29 +32,29 @@ class CampaignsController extends Controller
             'postOnly + delete, pause_unpause, resume_sending',
         ), parent::filters());
     }
-    
+
     /**
      * List available campaigns
      */
     public function actionIndex()
-    {                    
+    {
         $request = Yii::app()->request;
         $campaign = new Campaign('search');
         $campaign->unsetAttributes();
         $campaign->attributes = (array)$request->getQuery($campaign->modelName, array());
 
         $this->setData(array(
-            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('campaigns', 'Campaigns'), 
+            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('campaigns', 'Campaigns'),
             'pageHeading'       => Yii::t('campaigns', 'Campaigns'),
             'pageBreadcrumbs'   => array(
                 Yii::t('campaigns', 'Campaigns') => $this->createUrl('campaigns/index'),
                 Yii::t('app', 'View all')
             )
         ));
-        
+
         $this->render('index', compact('campaign'));
     }
-    
+
     /**
      * Show the overview for a campaign
      */
@@ -70,13 +70,26 @@ class CampaignsController extends Controller
         $campaign->attachBehavior('stats', array(
             'class' => 'customer.components.behaviors.CampaignStatsProcessorBehavior',
         ));
-        
+
         if ($recurring = $campaign->isRecurring) {
             Yii::import('common.vendors.JQCron.*');
             $cron = new JQCron($recurring);
             $this->setData('recurringInfo', $cron->getText(LanguageHelper::getAppLanguageCode()));
         }
-        
+
+        // since 1.3.5.9
+        if ($campaign->isBlocked && !empty($campaign->option->blocked_reason)) {
+            $message = array();
+            $message[] = Yii::t('campaigns', 'This campaign is blocked because following reasons:');
+            $reasons = explode("|", $campaign->option->blocked_reason);
+            foreach ($reasons as $reason) {
+                $message[] = Yii::t('campaigns', $reason);
+            }
+            $message[] = CHtml::link(Yii::t('campaigns', 'Click here to unblock it!'), $this->createUrl('campaigns/block_unblock', array('campaign_uid' => $campaign_uid)));
+            Yii::app()->notify->addInfo($message);
+        }
+        //
+
         $options        = Yii::app()->options;
         $webVersionUrl  = $options->get('system.urls.frontend_absolute_url');
         $webVersionUrl .= 'campaigns/' . $campaign->campaign_uid;
@@ -90,94 +103,124 @@ class CampaignsController extends Controller
                 Yii::t('campaigns', 'Overview')
             )
         ));
-        
+
         // since 1.3.4.6
         $this->getData('pageStyles')->add(array('src' => AssetsUrl::js('circliful/css/jquery.circliful.css')));
         $this->getData('pageScripts')->add(array('src' => AssetsUrl::js('circliful/js/jquery.circliful.min.js')));
-        
+
         $this->render('overview', compact('campaign', 'webVersionUrl'));
     }
-    
+
     /**
      * Delete campaign, will remove all campaign related data
      */
     public function actionDelete($campaign_uid)
     {
         $campaign = $this->loadCampaignModel($campaign_uid);
-        
+
         if ($campaign->removable) {
-            $campaign->delete();   
+            $campaign->delete();
         }
-        
+
         $request = Yii::app()->request;
         $notify = Yii::app()->notify;
-        
+
+        $redirect = null;
         if (!$request->getQuery('ajax')) {
             $notify->addSuccess(Yii::t('campaigns', 'Your campaign was successfully deleted!'));
+            $redirect = $request->getPost('returnUrl', array('campaigns/index'));
+        }
+
+        // since 1.3.5.9
+        Yii::app()->hooks->doAction('controller_action_delete_data', $collection = new CAttributeCollection(array(
+            'controller' => $this,
+            'model'      => $campaign,
+            'redirect'   => $redirect,
+        )));
+
+        if ($collection->redirect) {
+            $this->redirect($collection->redirect);
+        }
+    }
+
+    /**
+     * Allows to block/unblock a campaign
+     */
+    public function actionBlock_unblock($campaign_uid)
+    {
+        $campaign = $this->loadCampaignModel($campaign_uid);
+
+        $campaign->blockUnblock();
+
+        $request = Yii::app()->request;
+        $notify  = Yii::app()->notify;
+
+        if (!$request->getQuery('ajax')) {
+            $notify->addSuccess(Yii::t('campaigns', 'Your campaign was successfully changed!'));
             $this->redirect($request->getPost('returnUrl', array('campaigns/index')));
         }
     }
-    
+
     /**
      * Allows to pause/unpause the sending of a campaign
      */
     public function actionPause_unpause($campaign_uid)
     {
         $campaign = $this->loadCampaignModel($campaign_uid);
-        
+
         $campaign->pauseUnpause();
-        
+
         $request = Yii::app()->request;
         $notify = Yii::app()->notify;
-        
+
         if (!$request->getQuery('ajax')) {
             $notify->addSuccess(Yii::t('campaigns', 'Your campaign was successfully changed!'));
             $this->redirect($request->getPost('returnUrl', array('campaigns/index')));
         }
     }
-    
+
     /**
      * Allows to resume sending of a stuck campaign
      */
     public function actionResume_sending($campaign_uid)
     {
         $campaign = $this->loadCampaignModel($campaign_uid);
-        
+
         if ($campaign->isProcessing) {
             $campaign->status = Campaign::STATUS_SENDING;
             $campaign->save(false);
         }
-        
+
         $request = Yii::app()->request;
         $notify = Yii::app()->notify;
-        
+
         if (!$request->isAjaxRequest) {
             $notify->addSuccess(Yii::t('campaigns', 'Your campaign was successfully changed!'));
             $this->redirect($request->getPost('returnUrl', array('campaigns/index')));
         }
     }
-    
+
     /**
      * Allows to mark a campaign as sent
      */
     public function actionMarksent($campaign_uid)
     {
         $campaign = $this->loadCampaignModel($campaign_uid);
-        
+
         if ($campaign->getCanBeMarkedAsSent()) {
             $campaign->status = Campaign::STATUS_SENT;
             $campaign->save(false);
         }
-        
+
         $request = Yii::app()->request;
         $notify = Yii::app()->notify;
-        
+
         if (!$request->isAjaxRequest) {
             $notify->addSuccess(Yii::t('campaigns', 'Your campaign was successfully changed!'));
             $this->redirect($request->getPost('returnUrl', array('campaigns/index')));
         }
     }
-    
+
     /**
      * Run a bulk action against the campaigns
      */
@@ -185,7 +228,7 @@ class CampaignsController extends Controller
     {
         $request = Yii::app()->request;
         $notify  = Yii::app()->notify;
-        
+
         $action = $request->getPost('bulk_action');
         $items  = array_unique((array)$request->getPost('bulk_item', array()));
 
@@ -196,13 +239,13 @@ class CampaignsController extends Controller
                     continue;
                 }
                 if (!$campaign->removable) {
-                    continue; 
+                    continue;
                 }
-                $campaign->delete(); 
+                $campaign->delete();
                 $affected++;
                 if ($logAction = $campaign->customer->asa('logAction')) {
-                    $logAction->campaignDeleted($campaign);    
-                }   
+                    $logAction->campaignDeleted($campaign);
+                }
             }
             if ($affected) {
                 $notify->addSuccess(Yii::t('app', 'The action has been successfully completed!'));
@@ -225,8 +268,8 @@ class CampaignsController extends Controller
                 }
                 if (!$campaign->copy()) {
                     continue;
-                } 
-                $affected++; 
+                }
+                $affected++;
             }
             if ($affected) {
                 $notify->addSuccess(Yii::t('app', 'The action has been successfully completed!'));
@@ -238,7 +281,7 @@ class CampaignsController extends Controller
                     continue;
                 }
                 $campaign->pauseUnpause();
-                $affected++; 
+                $affected++;
             }
             if ($affected) {
                 $notify->addSuccess(Yii::t('app', 'The action has been successfully completed!'));
@@ -253,13 +296,13 @@ class CampaignsController extends Controller
                     continue;
                 }
                 $campaign->saveStatus(Campaign::STATUS_SENT);
-                $affected++; 
+                $affected++;
             }
             if ($affected) {
                 $notify->addSuccess(Yii::t('app', 'The action has been successfully completed!'));
             }
         }
-        
+
         $defaultReturn = $request->getServer('HTTP_REFERER', array('campaigns/index'));
         $this->redirect($request->getPost('returnUrl', $defaultReturn));
     }
@@ -272,17 +315,17 @@ class CampaignsController extends Controller
         $criteria = new CDbCriteria();
         $criteria->compare('campaign_uid', $campaign_uid);
         $criteria->addNotInCondition('status', array(Campaign::STATUS_PENDING_DELETE));
-        
+
         $model = Campaign::model()->find($criteria);
-        
+
         if($model === null) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         if ($model->pendingDelete) {
             $this->redirect(array('campaigns/index'));
         }
-        
+
         return $model;
     }
 }

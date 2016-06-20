@@ -6,7 +6,7 @@
  * @package MailWizz EMA
  * @author Serban George Cristian <cristian.serban@mailwizz.com> 
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
@@ -26,11 +26,9 @@ $hooks->doAction('before_view_file_content', $viewCollection = new CAttributeCol
 
 // and render if allowed
 if ($viewCollection->renderContent) { ?>
-<!-- Start tutorial named "Dashboard Walkthrough" -->
-<script>_t.push({start: "Dashboard Walkthrough"});</script>
     <div class="box box-primary" id="glance-box" data-source="<?php echo $this->createUrl('dashboard/glance');?>">
         <div class="box-header" id="chatter-header">
-            <h3 class="box-title"><i class="ion ion-information-circled"></i> <?php echo Yii::t('dashboard', 'Account Overview');?></h3>
+            <h3 class="box-title"><i class="ion ion-information-circled"></i> <?php echo Yii::t('dashboard', 'At a glance');?></h3>
             <div class="box-tools pull-right"></div>
         </div>
         <div class="box-body">
@@ -123,7 +121,20 @@ if ($viewCollection->renderContent) { ?>
                     </a>
                 </div>
             </div>
-            
+            <div class="col-lg-2 col-xs-6">
+                <div class="small-box bg-orange">
+                    <div class="inner">
+                        <h3 data-bind="text: glance.apiKeysCount"></h3>
+                        <p><?php echo Yii::t('dashboard', 'API keys');?></p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-key"></i>
+                    </div>
+                    <a href="<?php echo $this->createUrl('api_keys/index');?>" class="small-box-footer">
+                        <?php echo Yii::t('dashboard', 'More info');?> <i class="fa fa-arrow-circle-right"></i>
+                    </a>
+                </div>
+            </div>
             <div class="clearfix"><!-- --></div>    
         </div>
         <div class="overlay" data-bind="visible: glance.loading"></div>
@@ -142,10 +153,10 @@ if ($viewCollection->renderContent) { ?>
                 <div class="clearfix"><!-- --></div>
                 <div class="col-lg-12" id="chatter">
                     <ul class="timeline" data-bind="foreach: { data: chatter.days, as: 'day' }">
-                        <li class="time-label"><span data-bind="css: $root.chatter.TimeClass, text: day.date"></span></li>
+                        <li class="time-label"><span data-bind="css: $root.chatter.randomTimeClass, text: day.date"></span></li>
                         <!-- ko foreach: { data: items, as: 'item' } -->
                         <li>
-                            <i data-bind="css: $root.chatter.IconBg"></i>
+                            <i data-bind="css: $root.chatter.randomIconBg"></i>
                             <div class="timeline-item">
                                 <span class="time"><i class="fa fa-clock-o"></i> <span data-bind="text: time"></span></span>
                                 <h3 class="timeline-header"><a data-bind="text: customerName, attr: {href: customerUrl}"></a></h3>

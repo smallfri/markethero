@@ -4,7 +4,7 @@
  * @package MailWizz EMA
  * @author Serban George Cristian <cristian.serban@mailwizz.com> 
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
@@ -334,11 +334,11 @@ jQuery(document).ready(function($){
                 }
                 var line_data1 = {
                     data: sin,
-                    color: "#c6c7c8"
+                    color: "#3c8dbc"
                 };
                 var line_data2 = {
                     data: cos,
-                    color: "#c6c7c8"
+                    color: "#00c0ef"
                 };
                 
             function _initPlot() {
@@ -360,7 +360,7 @@ jQuery(document).ready(function($){
                     },
                     lines: {
                         fill: false,
-                        color: ["#c6c7c8", "#ff0000"]
+                        color: ["#3c8dbc", "#ff0000"]
                     },
                     yaxis: {
                         show: true,

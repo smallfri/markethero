@@ -6,7 +6,7 @@
  * @package MailWizz EMA
  * @author Serban George Cristian <cristian.serban@mailwizz.com> 
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.3.3.1
  */
@@ -47,7 +47,7 @@ if ($viewCollection->renderContent) { ?>
             <div class="clearfix"><!-- --></div>
         </div>
         <div class="box-body"> 
-            <div class="table-responsive"><script type="text/javascript"> _t.push({start:'Delivery Servers'}); </script>
+            <div class="table-responsive">
             <?php 
             /**
              * This hook gives a chance to prepend content or to replace the default grid view content with a custom content.

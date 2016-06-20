@@ -2,20 +2,20 @@
 
 /**
  * PageTypeTagsBehavior
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
+
 class PageTypeTagsBehavior extends CActiveRecordBehavior
 {
     /**
      * PageTypeTagsBehavior::attach()
-     * 
+     *
      * @param mixed $owner
      * @return
      */
@@ -26,10 +26,10 @@ class PageTypeTagsBehavior extends CActiveRecordBehavior
         }
         parent::attach($owner);
     }
-    
+
     /**
      * PageTypeTagsBehavior::beforeSave()
-     * 
+     *
      * @param mixed $event
      * @return
      */
@@ -37,16 +37,16 @@ class PageTypeTagsBehavior extends CActiveRecordBehavior
     {
         $tags = $this->getAvailableTags();
         $content = CHtml::decode($this->owner->content);
-        
+
         if (empty($content)) {
             return;
         }
-        
+
         foreach ($tags as $tag) {
             if (!isset($tag['tag']) || !isset($tag['required']) || !$tag['required']) {
                 continue;
             }
-    
+
             if (!isset($tag['pattern']) && strpos($content, $tag['tag']) === false) {
                 $this->owner->addError('content', Yii::t('list_pages', 'The following tag is required but was not found in your content: {tag}', array(
                     '{tag}' => $tag['tag'],
@@ -62,14 +62,14 @@ class PageTypeTagsBehavior extends CActiveRecordBehavior
             }
         }
     }
-    
+
     /**
      * PageTypeTagsBehavior::getAvailableTags()
-     * 
+     *
      * @param mixed $slug
      * @return array
      */
-    public function getAvailableTags($slug = null)
+    public function getAvailableTags($slug = null, $list_id = null)
     {
         if ($slug === null) {
             if ($this->owner instanceof ListPageType) {
@@ -78,7 +78,7 @@ class PageTypeTagsBehavior extends CActiveRecordBehavior
                 $slug = $this->owner->type->slug;
             }
         }
-        
+
         $availableTags = array(
             'subscribe-form' => array(
                 array('tag' => '[LIST_NAME]', 'required' => false),
@@ -127,7 +127,24 @@ class PageTypeTagsBehavior extends CActiveRecordBehavior
                 array('tag' => '[COMPANY_FULL_ADDRESS]', 'required' => false),
             ),
         );
-        
+
+        // since 1.3.5.9
+        $canLoadCustomFields = array_keys($availableTags);
+        $toUnset = array('subscribe-form', 'unsubscribe-form', 'subscribe-pending');
+        $canLoadCustomFields = array_diff($canLoadCustomFields, $toUnset);
+        if (!empty($list_id) && in_array($slug, $canLoadCustomFields)) {
+            $criteria = new CDbCriteria();
+            $criteria->select = 'tag';
+            $criteria->compare('list_id', (int)$list_id);
+            $fields = ListField::model()->findAll($criteria);
+            foreach ($availableTags as $_slug => $tags) {
+                foreach ($fields as $field) {
+                    $availableTags[$_slug][] = array('tag' => '['.$field->tag.']', 'required' => false);
+                }
+            }
+        }
+        //
+
         return isset($availableTags[$slug]) ? $availableTags[$slug] : array();
     }
 }

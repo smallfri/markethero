@@ -2,20 +2,20 @@
 
 /**
  * Bootstrap file
- * 
+ *
  * This file needs to be included by the init script of each application.
  * Please do not alter this file in any way, otherwise bad things can happen.
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
 
 // set the developer ip addresses, separated by a comma
-defined('MW_DEVELOPERS_IPS') or define('MW_DEVELOPERS_IPS', '5.14.58.34x');
+defined('MW_DEVELOPERS_IPS') or define('MW_DEVELOPERS_IPS', '');
 
 // decide if we're in read only mode, note that MW_DEVELOPERS_IPS still have full access
 defined('MW_IS_APP_READ_ONLY') or define('MW_IS_APP_READ_ONLY', false);
@@ -29,22 +29,22 @@ if (defined('MW_FORCE_DEBUG_MODE') && MW_FORCE_DEBUG_MODE) {
     ini_set('display_errors', 1);
     define('MW_CACHE_TTL', 300);
     define('YII_DEBUG', true);
-    define('YII_TRACE_LEVEL', 3);  
+    define('YII_TRACE_LEVEL', 3);
 } else {
     error_reporting(0);
     ini_set('display_errors', 0);
-    define('MW_CACHE_TTL', 60 * 60 * 24 * 365);    
+    define('MW_CACHE_TTL', 60 * 60 * 24 * 365);
 }
 
 // a few base mw constants
 define('MW_NAME', 'MailWizz EMA');
-define('MW_VERSION', '1.3.5.8'); // never remove or alter this constant, never!
+define('MW_VERSION', '1.3.5.9'); // never remove or alter this constant, never!
 define('MW_PATH', realpath(dirname(__FILE__).'/..'));
 define('MW_ROOT_PATH', MW_PATH);
 define('MW_APPS_PATH', MW_PATH.'/apps');
 
 // mark if the app in debug mode.
-define('MW_DEBUG', defined('YII_DEBUG')); 
+define('MW_DEBUG', defined('YII_DEBUG'));
 
 // easier access to see if cli
 define('MW_IS_CLI', php_sapi_name() == 'cli' || (!isset($_SERVER['SERVER_SOFTWARE']) && !empty($_SERVER['argv'])));
@@ -72,10 +72,10 @@ if (is_file($performanceLevelsFile = MW_APPS_PATH . '/common/config/performance-
 }
 unset($performanceLevelsFile);
 defined('MW_PERF_LVL') or define('MW_PERF_LVL', 0);
-                
+
 // support forum.
 defined('MW_SUPPORT_FORUM_URL') or define('MW_SUPPORT_FORUM_URL', 'https://forum.mailwizz.com/');
-     
+
 // again, for some fcgi installs
 if (empty($_SERVER['SCRIPT_FILENAME'])) {
     $_SERVER['SCRIPT_FILENAME'] = __FILE__;
@@ -100,13 +100,14 @@ if (!MW_IS_CLI && defined('MW_UPLOAD_MAX_FILESIZE')) {
 }
 
 setlocale(LC_ALL, 'en_US.UTF-8');
-mb_internal_encoding('UTF-8');
-mb_http_output('UTF-8');
-mb_http_input('UTF-8');
-// seems mb_regex_encoding is missing in some cases even if the mb extension is installed
-if (function_exists('mb_regex_encoding')) {
-    mb_regex_encoding('UTF-8');
+// seems some mb_* functions are missing in some cases even if the mb extension is installed
+$encodingFuncs = array('mb_internal_encoding', 'mb_http_output', 'mb_http_input', 'mb_regex_encoding');
+foreach ($encodingFuncs as $func) {
+    if (function_exists($func)) {
+        $func('UTF-8');
+    }
 }
+unset($encodingFuncs, $func);
 
 // define the path to the YII framework
 $yii = MW_APPS_PATH.'/common/framework/yii.php';
@@ -120,10 +121,10 @@ if (!is_file($yii)) {
 }
 
 // require the framework
-require_once($yii); 
+require_once($yii);
 
 // set the main paths of alias
-Yii::setPathOfAlias('root', realpath(dirname(__FILE__).'/..'));  
+Yii::setPathOfAlias('root', realpath(dirname(__FILE__).'/..'));
 Yii::setPathOfAlias('common', Yii::getPathOfAlias('root.apps.common'));
 
 // check to see if the app type exists.
@@ -137,6 +138,7 @@ if (MW_APP_NAME === 'common') {
 
 // require a few helpers to help things out.
 require_once(Yii::getPathOfAlias('common.components.helpers.FileSystemHelper').'.php');
+require_once(Yii::getPathOfAlias('common.components.helpers.FilterVarHelper').'.php');
 require_once(Yii::getPathOfAlias('common.components.helpers.AppInitHelper').'.php');
 
 // list of available apps.
@@ -155,7 +157,7 @@ foreach ($availableApps as $appName) {
 }
 
 if (!MW_IS_CLI) {
-    AppInitHelper::fixRemoteAddress();    
+    AppInitHelper::fixRemoteAddress();
     AppInitHelper::noMagicQuotes();
 }
 
@@ -170,7 +172,7 @@ $appConfig = require_once(Yii::getPathOfAlias(MW_APP_NAME . '.config.main') . '.
 if (is_file($customConfigFile = Yii::getPathOfAlias(MW_APP_NAME . '.config.main-custom') . '.php')) {
     $appConfig = CMap::mergeArray($appConfig, require_once($customConfigFile));
 }
- 
+
 // merge the app config with the base config
 $appConfig = CMap::mergeArray($commonConfig, $appConfig);
 

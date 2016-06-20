@@ -2,15 +2,15 @@
 
 /**
  * EmailBlacklist
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
+
 /**
  * This is the model class for table "email_blacklist".
  *
@@ -25,7 +25,10 @@
 class EmailBlacklist extends ActiveRecord
 {
     public $file;
-    
+
+    // store email => bool (whether is blacklisted or not)
+    protected static $emailsStore = array();
+
     /**
      * @return string the associated database table name
      */
@@ -44,16 +47,16 @@ class EmailBlacklist extends ActiveRecord
         if ($options->get('system.importer.check_mime_type', 'yes') == 'yes' && CommonHelper::functionExists('finfo_open')) {
             $mimes = Yii::app()->extensionMimes->get('csv')->toArray();
         }
-        
+
         $rules = array(
             array('email', 'required', 'on' => 'insert, update'),
             array('email', 'length', 'max' => 150),
-            array('email', 'email'),
+            array('email', 'email', 'validateIDN' => true),
             array('email', 'unique'),
-            
+
             array('reason', 'safe'),
             array('email', 'safe', 'on' => 'search'),
-            
+
             array('email, reason', 'unsafe', 'on' => 'import'),
             array('file', 'required', 'on' => 'import'),
             array('file', 'file', 'types' => array('csv'), 'mimeTypes' => $mimes, 'maxSize' => 512000000, 'allowEmpty' => true),
@@ -82,7 +85,7 @@ class EmailBlacklist extends ActiveRecord
             'email'         => Yii::t('email_blacklist', 'Email'),
             'reason'        => Yii::t('email_blacklist', 'Reason'),
         );
-        
+
         return CMap::mergeArray($labels, parent::attributeLabels());
     }
 
@@ -103,7 +106,7 @@ class EmailBlacklist extends ActiveRecord
         $criteria = new CDbCriteria;
         $criteria->compare('email', $this->email, true);
         $criteria->compare('reason', $this->reason, true);
-        
+
         return new CActiveDataProvider(get_class($this), array(
             'criteria'      => $criteria,
             'pagination'    => array(
@@ -139,7 +142,7 @@ class EmailBlacklist extends ActiveRecord
 
         return parent::beforeSave();
     }
-    
+
     protected function afterSave()
     {
         // since 1.3.5
@@ -148,18 +151,18 @@ class EmailBlacklist extends ActiveRecord
                 $criteria = new CDbCriteria();
                 $criteria->addCondition('email = :e');
                 $criteria->params[':e'] = $this->email;
-                ListSubscriber::model()->updateAll(array('status' => ListSubscriber::STATUS_BLACKLISTED), $criteria);   
+                ListSubscriber::model()->updateAll(array('status' => ListSubscriber::STATUS_BLACKLISTED), $criteria);
             } catch (Exception $e) {
-                
+
             }
         }
         parent::afterSave();
     }
-    
+
     public function delete()
     {
         // when taken out of blacklist remove all the log records
-        // NOTE: when a subscriber is deleted the column subscriber_id gets nulled so that we keep 
+        // NOTE: when a subscriber is deleted the column subscriber_id gets nulled so that we keep
         // the blacklist email for future additions.
         if (!empty($this->subscriber_id)) {
             try {
@@ -168,31 +171,85 @@ class EmailBlacklist extends ActiveRecord
                 CampaignDeliveryLogArchive::model()->deleteAllByAttributes($attributes);
                 CampaignBounceLog::model()->deleteAllByAttributes($attributes);
             } catch (Exception $e) {
-                
+
             }
         }
-        
+
+        // since 1.3.5.9 - mark back as confirmed
+        if (strpos($this->email, '*') === false) {
+            try {
+                $criteria = new CDbCriteria();
+                $criteria->addCondition('`email` = :e AND `status` = :s');
+                $criteria->params[':e'] = $this->email;
+                $criteria->params[':s'] = ListSubscriber::STATUS_BLACKLISTED;
+                ListSubscriber::model()->updateAll(array('status' => ListSubscriber::STATUS_CONFIRMED), $criteria);
+            } catch (Exception $e) {
+
+            }
+        }
+
+        // delete from store
+        self::deleteFromStore($this->email);
+
         return parent::delete();
     }
-    
-    
+
+
     public static function addToBlacklist($subscriber, $reason = null)
     {
         $email = $subscriber_id = null;
-        
+
         if (is_object($subscriber) && $subscriber instanceof ListSubscriber && !empty($subscriber->subscriber_id)) {
             $subscriber_id = $subscriber->subscriber_id;
             $email         = $subscriber->email;
-        } elseif (is_string($subscriber) && filter_var($subscriber, FILTER_VALIDATE_EMAIL)) {
+        } elseif (is_string($subscriber) && FilterVarHelper::email($subscriber)) {
             $email = $subscriber;
         } else {
             return false;
         }
-        
+
+        if ($data = self::getFromStore($email)) {
+            return $data['blacklisted'];
+        }
+
         $exists = self::model()->findByAttributes(array('email' => $email));
         if (!empty($exists)) {
+            self::addToStore($email, array(
+                'blacklisted' => true,
+                'reason'      => $exists->reason,
+            ));
             return true;
         }
+
+        // since 1.3.5.9
+        $customer = null;
+        try {
+            if (Yii::app()->hasComponent('customer') && Yii::app()->customer->getId() > 0) {
+                $customer = Yii::app()->customer->getModel();
+            }
+            if (empty($customer) && !empty($subscriber) && !empty($subscriber->list)) {
+                $customer = $subscriber->list->customer;
+            }
+        } catch (Exception $e) {
+            $customer = null;
+        }
+        //
+
+        // since 1.3.5.9
+        Yii::app()->hooks->doAction('email_blacklist_before_add_email_to_blacklist', $collection = new CAttributeCollection(array(
+            'email'    => $email,
+            'customer' => $customer,
+            'continue' => true,
+        )));
+        if (!$collection->continue) {
+            Yii::app()->hooks->doAction('email_blacklist_after_add_email_to_blacklist', new CAttributeCollection(array(
+                'email'    => $email,
+                'saved'    => false,
+                'customer' => $customer,
+            )));
+            return false;
+        }
+        //
 
         $saved = false;
         try {
@@ -203,15 +260,43 @@ class EmailBlacklist extends ActiveRecord
             $saved = $model->save();
         } catch (Exception $e) {}
 
+        if ($saved) {
+            self::addToStore($email, array(
+                'blacklisted' => true,
+                'reason'      => $reason
+            ));
+        }
+
+        // since 1.3.5.9
+        Yii::app()->hooks->doAction('email_blacklist_after_add_email_to_blacklist', new CAttributeCollection(array(
+            'email'    => $email,
+            'saved'    => $saved,
+            'customer' => $customer,
+        )));
+
         return $saved;
     }
-    
-    public static function isBlacklisted($email, $subscriber = null)
+
+    /**
+     * EmailBlacklist::isBlacklisted
+     *
+     * @param string $email
+     * @param ListSubscriber $subscriber
+     * @param Customer $customer
+     * @return bool
+     *
+     * @since 1.3.5.9 added $customer
+     **/
+    public static function isBlacklisted($email, ListSubscriber $subscriber = null, Customer $customer = null)
     {
         if (Yii::app()->options->get('system.email_blacklist.local_check', 'yes') == 'no') {
             return false;
         }
-        
+
+        if ($data = self::getFromStore($email)) {
+            return $data['blacklisted'] && isset($data['reason']) ? $data['reason'] : $data['blacklisted'];
+        }
+
         // since 1.3.5.4
         static $regularExpressions;
         if ($regularExpressions === null) {
@@ -227,48 +312,105 @@ class EmailBlacklist extends ActiveRecord
         if (!empty($regularExpressions) && is_array($regularExpressions)) {
             foreach ($regularExpressions as $regex) {
                 if (preg_match($regex, $email)) {
-                    return true;
+                    $message = Yii::t('email_blacklist', 'Matched regex: {regex}', array('{regex}' => CHtml::encode($regex)));
+                    self::addToStore($email, array(
+                        'blacklisted' => true,
+                        'reason'      => $message
+                    ));
+                    return $message;
                 }
             }
         }
         // end 1.3.5.4 additions
-        
+
         $emailParts = explode('@', $email);
-        
         if (count($emailParts) != 2) {
             return false;
         }
-        
         list($name, $domain) = $emailParts;
-        
+
         /**
          * AR was switched to Query Builder in this use case for performance reasons!
          */
         $command = Yii::app()->getDb()->createCommand();
-        $command->select('email_id')->from('{{email_blacklist}}')->where('email = :email', array(':email' => $email));
+        $command->select('email_id, reason')->from('{{email_blacklist}}')->where('email = :email', array(':email' => $email));
         if ($name != '*') {
             $command->orWhere('email = :em', array(':em' => '*@'.$domain));
         }
         $blacklisted = $command->queryRow();
 
         if (!empty($blacklisted)) {
-            return true;
+            self::addToStore($email, array(
+                'blacklisted' => true,
+                'reason'      => $blacklisted['reason']
+            ));
+            return $blacklisted['reason'];
         }
-        
+
         $hooks = Yii::app()->hooks;
-        
-        // return false or the reason for why blacklisted
-        $blacklisted = $hooks->applyFilters('email_blacklist_is_email_blacklisted', false, $email, $subscriber);
-        
-        if ($blacklisted !== false) {
-            self::addToBlacklist($email, null, (string)$blacklisted);
+
+        // since 1.3.5.9
+        try {
+            if (empty($customer) && Yii::app()->hasComponent('customer') && Yii::app()->customer->getId() > 0) {
+                $customer = Yii::app()->customer->getModel();
+            }
+            if (empty($customer) && !empty($subscriber) && !empty($subscriber->list)) {
+                $customer = $subscriber->list->customer;
+            }
+        } catch (Exception $e) {
+            $customer = null;
         }
-        
+        //
+
+        // return false or the reason for why blacklisted
+        $blacklisted = $hooks->applyFilters('email_blacklist_is_email_blacklisted', false, $email, $subscriber, $customer);
+
+        if ($blacklisted !== false) {
+            self::addToBlacklist($email, (string)$blacklisted);
+        }
+
+        self::addToStore($email, array(
+            'blacklisted' => (bool)$blacklisted,
+            'reason'      => (string)$blacklisted
+        ));
+
         return $blacklisted;
     }
-    
+
+    public function findByEmail($email)
+    {
+        return $this->findByAttributes(array('email' => $email));
+    }
+
     public static function removeByEmail($email)
     {
-        return self::model()->deleteAllByAttributes(array('email' => $email));
+        if (!($model = self::model()->findByEmail($email))) {
+            return false;
+        }
+        self::deleteFromStore($email);
+        return $model->delete();
+    }
+
+    public static function addToStore($email, array $storeData = array())
+    {
+        if (!isset($storeData['blacklisted'])) {
+            return false;
+        }
+        self::$emailsStore[$email] = $storeData;
+        return true;
+    }
+
+    public static function getFromStore($email)
+    {
+        return isset(self::$emailsStore[$email]) ? self::$emailsStore[$email] : false;
+    }
+
+    public static function deleteFromStore($email)
+    {
+        if (isset(self::$emailsStore[$email])) {
+            unset(self::$emailsStore[$email]);
+            return true;
+        }
+        return false;
     }
 }

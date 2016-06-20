@@ -2,11 +2,11 @@
 
 /**
  * TrackingDomain
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.3.4.6
  */
@@ -27,6 +27,9 @@
  */
 class TrackingDomain extends ActiveRecord
 {
+	// whether we should skip dns validation.
+	public $skipValidation = 0;
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -45,13 +48,15 @@ class TrackingDomain extends ActiveRecord
 			array('name', 'length', 'max'=> 255),
             array('name', '_validateDomainCname'),
             array('customer_id', 'exist', 'className' => 'Customer'),
-            
+
             array('customer_id', 'unsafe', 'on' => 'customer-insert, customer-update'),
-            
+
 			// The following rule is used by search().
 			array('customer_id, name', 'safe', 'on'=>'search'),
+
+			array('skipValidation', 'safe'),
 		);
-        
+
         return CMap::mergeArray($rules, parent::rules());
 	}
 
@@ -64,7 +69,7 @@ class TrackingDomain extends ActiveRecord
 			'deliveryServers' => array(self::HAS_MANY, 'DeliveryServer', 'tracking_domain_id'),
 			'customer'        => array(self::BELONGS_TO, 'Customer', 'customer_id'),
 		);
-        
+
         return CMap::mergeArray($relations, parent::relations());
 	}
 
@@ -77,11 +82,12 @@ class TrackingDomain extends ActiveRecord
 			'domain_id'      => Yii::t('tracking_domains', 'Domain'),
 			'customer_id'    => Yii::t('tracking_domains', 'Customer'),
 			'name'           => Yii::t('tracking_domains', 'Name'),
+			'skipValidation' => Yii::t('tracking_domains', 'Skip validation'),
 		);
-        
+
         return CMap::mergeArray($labels, parent::attributeLabels());
 	}
-    
+
     /**
 	 * @return array customized attribute placeholders (name=>placeholder)
 	 */
@@ -90,9 +96,21 @@ class TrackingDomain extends ActiveRecord
 		$placeholders = array(
 			'name' => Yii::t('tracking_domains', 'tracking.your-domain.com'),
 		);
-        
+
         return CMap::mergeArray($placeholders, parent::attributePlaceholders());
 	}
+
+	/**
+     * @return array help text for attributes
+     */
+    public function attributeHelpTexts()
+    {
+        $texts = array(
+			'skipValidation' => Yii::t('tracking_domains', 'Please DO NOT SKIP validation unless you are 100% sure you know what you are doing.'),
+		);
+
+        return CMap::mergeArray($texts, parent::attributeHelpTexts());
+    }
 
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.
@@ -109,7 +127,7 @@ class TrackingDomain extends ActiveRecord
 	public function search()
 	{
 		$criteria=new CDbCriteria;
-        
+
         if (!empty($this->customer_id)) {
             if (is_numeric($this->customer_id)) {
                 $criteria->compare('t.customer_id', $this->customer_id);
@@ -152,10 +170,10 @@ class TrackingDomain extends ActiveRecord
 	{
 		return parent::model($className);
 	}
-    
+
     public function _validateDomainCname($attribute, $params)
     {
-        if ($this->hasErrors()) {
+        if ($this->hasErrors() || $this->skipValidation) {
             return;
         }
         $currentDomainName = parse_url(Yii::app()->options->get('system.urls.frontend_absolute_url'), PHP_URL_HOST);
@@ -172,8 +190,10 @@ class TrackingDomain extends ActiveRecord
                 '{function}' => 'dns_get_record',
             )));
         }
-        $dnsRecords = (array)dns_get_record($domainName, DNS_ANY);
+        $dnsRecords = (array)dns_get_record($domainName, DNS_ALL);
         $found = false;
+
+		// cname first.
         foreach ($dnsRecords as $record) {
             if (!isset($record['host'], $record['type'], $record['target'])) {
                 continue;
@@ -183,6 +203,24 @@ class TrackingDomain extends ActiveRecord
                 break;
             }
         }
+
+		// subdomain second
+		if (!$found) {
+			foreach ($dnsRecords as $record) {
+	            if (!isset($record['host'], $record['type'], $record['ip'])) {
+	                continue;
+	            }
+				if ($record['type'] != 'A') {
+					continue;
+				}
+				$ipDomain = gethostbyname($domainName);
+	            if ($record['host'] == $domainName && $record['ip'] == $ipDomain) {
+	                $found = true;
+	                break;
+	            }
+	        }
+		}
+
         if (!$found) {
             return $this->addError($attribute, Yii::t('tracking_domains', 'Cannot find a valid CNAME record for {domainName}! Remember, the CNAME of {domainName} must point to {currentDomain}!', array(
                 '{domainName}'    => $domainName,

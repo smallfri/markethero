@@ -1,1 +1,8 @@
-All good now :)
+Since 1.3.5.9:
+* Remove unused flags from SendCampaignsCommand
+* Remove queue support from entire app.
+* Remove the SendCampaignsBehavior which was attached to SendCampaignsCommand.
+* Remove the send-parallel-campaigns command
+
+
+https://forum.mailwizz.com/threads/report-export-for-clicked-url.407/

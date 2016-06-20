@@ -8,7 +8,7 @@
  * @package MailWizz EMA
  * @author Serban George Cristian <cristian.serban@mailwizz.com> 
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
@@ -30,7 +30,7 @@ return array(
         'api.components.utils.*',
         'api.components.web.*',
         'api.components.web.auth.*',
-        'api.models.*',
+        'api.models.*',  
     ),
     
     'components' => array(
@@ -84,8 +84,6 @@ return array(
                 array('transactional_emails/delete', 'pattern' => 'transactional-emails/<email_uid:([a-z0-9]+)>', 'verb' => 'DELETE'),
                 
                 array('customers/create', 'pattern' => 'customers', 'verb' => 'POST'),
-                array('zapier/index', 'pattern' => 'customers', 'verb' => 'POST'),
-                array('zapier/lists', 'pattern' => 'customers', 'verb' => 'GET'),
             ),
         ),
         
@@ -96,10 +94,6 @@ return array(
         
         'apiSystemInit' => array(
             'class' => 'api.components.init.ApiSystemInit',
-        ),
-        'curl' => array(
-            'class' => 'common.extensions.curl.Curl',
-            'options' => array(/* additional curl options */),
         ),
     ),
     

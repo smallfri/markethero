@@ -12,11 +12,13 @@
     margin:0px;
     padding:0px;
 }
+
 .jqcron-wrapper {
     border: 1px solid #c2c2c2;
     padding: 6px 5px 6px 5px;
     margin-top:3px;
 }
+
 .jqcron-wrapper .jqCron {
     padding-left: 10px;
     visibility:hidden;
@@ -117,6 +119,3 @@
 .jqCron-container.disable .jqCron-selector-title {
 	background: #eee !important;
 }
-
-
-

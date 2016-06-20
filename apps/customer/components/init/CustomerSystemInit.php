@@ -2,27 +2,27 @@
 
 /**
  * CustomerSystemInit
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
-class CustomerSystemInit extends CApplicationComponent 
+
+class CustomerSystemInit extends CApplicationComponent
 {
     protected $_hasRanOnBeginRequest = false;
     protected $_hasRanOnEndRequest = false;
-    
+
     public function init()
     {
         parent::init();
         Yii::app()->attachEventHandler('onBeginRequest', array($this, '_runOnBeginRequest'));
         Yii::app()->attachEventHandler('onEndRequest', array($this, '_runOnEndRequest'));
     }
-    
+
     public function _runOnBeginRequest(CEvent $event)
     {
         if ($this->_hasRanOnBeginRequest) {
@@ -31,7 +31,7 @@ class CustomerSystemInit extends CApplicationComponent
 
         // a safety hook for logged in vs not logged in users.
         Yii::app()->hooks->addAction('customer_controller_init', array($this, '_checkControllerAccess'));
-        
+
         // display a global notification message to logged in customers
         Yii::app()->hooks->addAction('customer_controller_init', array($this, '_displayNotificationMessage'));
 
@@ -39,11 +39,11 @@ class CustomerSystemInit extends CApplicationComponent
         if (!MW_IS_CLI && (!Yii::app()->hasComponent('themeManager') || !Yii::app()->getTheme())) {
             $this->registerAssets();
         }
-        
+
         // and mark the event as completed.
         $this->_hasRanOnBeginRequest = true;
     }
-    
+
     public function _runOnEndRequest(CEvent $event)
     {
         if ($this->_hasRanOnEndRequest) {
@@ -55,15 +55,15 @@ class CustomerSystemInit extends CApplicationComponent
     }
 
     // callback for customer_controller_init and customer_before_controller_action action.
-    public function _checkControllerAccess() 
+    public function _checkControllerAccess()
     {
         static $_unprotectedControllersHookDone = false;
         static $_hookCalled = false;
-        
+
         if ($_hookCalled) {
             return;
         }
-        
+
         $controller = Yii::app()->getController();
         $_hookCalled = true;
         $unprotectedControllers = (array)Yii::app()->params->itemAt('unprotectedControllers');
@@ -79,25 +79,25 @@ class CustomerSystemInit extends CApplicationComponent
             // and redirect to the login url.
             $controller->redirect(Yii::app()->customer->loginUrl);
         }
-        
+
         if (Yii::app()->options->get('system.customer.action_logging_enabled', true)) {
             if (Yii::app()->customer->getModel()) {
                 // and attach the actionLog behavior to log various actions for this customer.
                 Yii::app()->customer->getModel()->attachBehavior('logAction', array(
                     'class' => 'customer.components.behaviors.CustomerActionLogBehavior',
-                ));            
+                ));
             }
         }
-        
+
         // since 1.3.4.9, check sending quota here with a probability of 50%
         // experimental for now, might get removed in future.
         if (rand(0, 100) >= 50 && Yii::app()->customer->getId() && !Yii::app()->request->isPostRequest && !Yii::app()->request->isAjaxRequest) {
             Yii::app()->customer->getModel()->getIsOverQuota();
         }
     }
-    
+
     // callback for customer_controller_init.
-    public function _displayNotificationMessage() 
+    public function _displayNotificationMessage()
     {
         if (!Yii::app()->customer->getId() || !($customer = Yii::app()->customer->getModel())) {
             return;
@@ -106,7 +106,7 @@ class CustomerSystemInit extends CApplicationComponent
         if (in_array(Yii::app()->getController()->id, (array)Yii::app()->params->itemAt('unprotectedControllers'))) {
             return;
         }
-        
+
         $notification = $customer->getGroupOption('common.notification_message', '');
         if (strlen(strip_tags($notification)) > 0) {
             Yii::app()->notify->addInfo($notification);
@@ -118,7 +118,7 @@ class CustomerSystemInit extends CApplicationComponent
         Yii::app()->hooks->addFilter('register_scripts', array($this, '_registerScripts'));
         Yii::app()->hooks->addFilter('register_styles', array($this, '_registerStyles'));
     }
-    
+
     public function _registerScripts(CList $scripts)
     {
         $apps = Yii::app()->apps;
@@ -128,36 +128,35 @@ class CustomerSystemInit extends CApplicationComponent
             array('src' => $apps->getBaseUrl('assets/js/notify.js'), 'priority' => -1000),
             array('src' => $apps->getBaseUrl('assets/js/adminlte.js'), 'priority' => -1000),
             array('src' => AssetsUrl::js('app.js'), 'priority' => -1000),
-        ));  
-        
+        ));
+
         // since 1.3.4.8
         if (is_file(AssetsPath::js('app-custom.js'))) {
             $scripts->mergeWith(array(
                 array('src' => AssetsUrl::js('app-custom.js'), 'priority' => -1000),
             ));
         }
-        
+
         return $scripts;
     }
-    
+
     public function _registerStyles(CList $styles)
     {
         $apps = Yii::app()->apps;
         $styles->mergeWith(array(
             array('src' => $apps->getBaseUrl('assets/css/bootstrap.min.css'), 'priority' => -1000),
-            array('src' => 'https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css', 'priority' => -1000),
+            array('src' => $apps->getBaseUrl('assets/css/font-awesome.min.css'), 'priority' => -1000),
             array('src' => $apps->getBaseUrl('assets/css/ionicons.min.css'), 'priority' => -1000),
             array('src' => $apps->getBaseUrl('assets/css/adminlte.css'), 'priority' => -1000),
             array('src' => $apps->getBaseUrl('assets/css/common.css'), 'priority' => -1000),
-            array('src' => $apps->getBaseUrl('assets/css/skin-toolkit-inverse.css'), 'priority' => -1000),
             array('src' => AssetsUrl::css('style.css'), 'priority' => -1000),
         ));
 
         // since 1.3.5.4 - skin
         $skinName = null;
         if (($_skinName = Yii::app()->options->get('system.customization.customer_skin'))) {
-            if (is_file(Yii::getPathOfAlias('root.backend.assets.css') . '/' . $_skinName . '.css')) {
-                $styles->add(array('src' => $apps->getBaseUrl('backend/assets/css/' . $_skinName . '.css'), 'priority' => -1000));
+            if (is_file(Yii::getPathOfAlias('root.customer.assets.css') . '/' . $_skinName . '.css')) {
+                $styles->add(array('src' => $apps->getBaseUrl('customer/assets/css/' . $_skinName . '.css'), 'priority' => -1000));
                 $skinName = $_skinName;
             } elseif (is_file(Yii::getPathOfAlias('root.assets.css') . '/' . $_skinName . '.css')) {
                 $styles->add(array('src' => $apps->getBaseUrl('assets/css/' . $_skinName . '.css'), 'priority' => -1000));
@@ -179,7 +178,7 @@ class CustomerSystemInit extends CApplicationComponent
                 array('src' => AssetsUrl::css('style-custom.css'), 'priority' => -1000),
             ));
         }
-        
+
         return $styles;
     }
 }

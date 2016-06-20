@@ -2,11 +2,11 @@
 
 /**
  * FileMutex
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.3.4.3
  */
@@ -16,23 +16,23 @@
  * @copyright Copyright (c) 2008 Yii Software LLC
  * @license http://www.yiiframework.com/license/
  */
- 
-  
-class FileMutex extends BaseMutex 
+
+
+class FileMutex extends BaseMutex
 {
     /**
      * @var string the directory to store mutex files. You may use path alias here.
      * Defaults to the "mutex" subdirectory under the application runtime path.
      */
     public $mutexPath = 'common.runtime.mutex';
-    
+
     /**
      * @var integer the permission to be set for newly created mutex files.
      * This value will be used by PHP chmod() function. No umask will be applied.
      * If not set, the permission will be determined by the current environment.
      */
     public $fileMode;
-    
+
     /**
      * @var integer the permission to be set for newly created directories.
      * This value will be used by PHP chmod() function. No umask will be applied.
@@ -40,12 +40,12 @@ class FileMutex extends BaseMutex
      * but read-only for other users.
      */
     public $dirMode = 0775;
-    
+
     /**
      * @var $_files stores all opened lock files. Keys are lock names and values are file handles.
      */
     private $_files = array();
-    
+
     /**
      * Initializes mutex component implementation dedicated for UNIX, GNU/Linux, Mac OS X, and other UNIX-like
      * operating systems.
@@ -59,7 +59,7 @@ class FileMutex extends BaseMutex
         }
         parent::init();
     }
-    
+
     /**
      * Acquires lock by given name.
      * @param string $name of the lock to be acquired.
@@ -80,18 +80,16 @@ class FileMutex extends BaseMutex
         while (!flock($file, LOCK_EX | LOCK_NB)) {
             $waitTime++;
             if ($waitTime > $timeout) {
-                if (is_resource($file)) {
-                    fclose($file);
-                }
+                fclose($file);
                 return false;
             }
             sleep(1);
         }
         $this->_files[$name] = $file;
-    
+
         return true;
     }
-    
+
     /**
      * Releases lock by given name.
      * @param string $name of the lock to be released.
@@ -102,15 +100,12 @@ class FileMutex extends BaseMutex
         if (!isset($this->_files[$name]) || !flock($this->_files[$name], LOCK_UN)) {
             return false;
         } else {
-            if (is_resource($this->_files[$name])) {
-                fclose($this->_files[$name]);
-            }
+            fclose($this->_files[$name]);
             unset($this->_files[$name]);
-            @unlink($this->mutexPath . '/' . md5($name) . '.lock');
             return true;
         }
     }
-    
+
     /**
      * Helper method to create the directory if missing
      */

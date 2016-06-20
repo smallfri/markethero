@@ -12,10 +12,10 @@
  * @since		Version 1.0
  * @filesource
  */
- 
+
  /**
  * Changes made to this file by Serban Cristian <cristian.serban@onetwist.com> :
- * 
+ *
  * changed first line constant check from BASEPATH into MW_PATH
  * added a false check in the condition so that config_item never gets called in constructor.
  * added remove_invisible_characters protected method, copied from CI's core file system/core/Common.php
@@ -521,20 +521,20 @@ class CI_Security {
 		//$str = html_entity_decode($str, ENT_COMPAT, $charset);
 		//$str = preg_replace('~&#x(0*[0-9a-f]{2,5})~ei', 'chr(hexdec("\\1"))', $str);
 		//return preg_replace('~&#([0-9]{2,4})~e', 'chr(\\1)', $str);
-        
+
         $str = html_entity_decode($str, ENT_COMPAT, $charset);
-		
+
         $str = preg_replace_callback('~&#x(0*[0-9a-f]{2,5})~i', array($this, '__cb1_entity_decode'), $str);
-        
+
 		return preg_replace_callback('~&#([0-9]{2,4})~', array($this, '__cb2_entity_decode'), $str);
 	}
-    
-    public function __cb1_entity_decode($matches) 
+
+    public function __cb1_entity_decode($matches)
     {
         return chr(hexdec($matches[1]));
     }
-    
-    public function __cb2_entity_decode($matches) 
+
+    public function __cb2_entity_decode($matches)
     {
         return chr($matches[1]);
     }
@@ -664,7 +664,10 @@ class CI_Security {
 			// replace illegal attribute strings that are inside an html tag
 			if (count($attribs) > 0)
 			{
-				$str = preg_replace('/(<?)(\/?[^><]+?)([^A-Za-z<>\-])(.*?)('.implode('|', $attribs).')(.*?)([\s><]?)([><]*)/i', '$1$2 $4$6$7$8', $str, -1, $count);
+                $batches = array_chunk($attribs, 300);
+                foreach ($batches as $attribs) {
+                    $str = preg_replace('/(<?)(\/?[^><]+?)([^A-Za-z<>\-])(.*?)('.implode('|', $attribs).')(.*?)([\s><]?)([><]*)/i', '$1$2 $4$6$7$8', $str, -1, $count);
+                }
 			}
 
 		} while ($count);
@@ -894,7 +897,7 @@ class CI_Security {
 
 		return $this->_csrf_hash;
 	}
-    
+
     /**
 	 * Remove Invisible Characters
 	 *
@@ -908,16 +911,16 @@ class CI_Security {
 	protected function remove_invisible_characters($str, $url_encoded = TRUE)
 	{
 		$non_displayables = array();
-		
+
 		// every control character except newline (dec 10)
 		// carriage return (dec 13), and horizontal tab (dec 09)
-		
+
 		if ($url_encoded)
 		{
 			$non_displayables[] = '/%0[0-8bcef]/';	// url encoded 00-08, 11, 12, 14, 15
 			$non_displayables[] = '/%1[0-9a-f]/';	// url encoded 16-31
 		}
-		
+
 		$non_displayables[] = '/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]+/S';	// 00-08, 11, 12, 14-31, 127
 
 		do

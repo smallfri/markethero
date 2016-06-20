@@ -2,22 +2,22 @@
 
 /**
  * EmailTemplateUploadBehavior
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
+
 class EmailTemplateUploadBehavior extends CActiveRecordBehavior
 {
     private $_cdnSubdomain = null;
-    
+
     /**
      * EmailTemplateUploadBehavior::handleUpload()
-     * 
+     *
      * @return bool
      */
     public function handleUpload()
@@ -26,23 +26,23 @@ class EmailTemplateUploadBehavior extends CActiveRecordBehavior
         if ($this->owner->hasErrors() || empty($this->owner->archive)) {
             return false;
         }
-        
+
         // we need the zip archive class, cannot work without.
         if (!class_exists('ZipArchive', false)) {
             $this->owner->addError('archive', Yii::t('app', 'ZipArchive class required in order to unzip the file.'));
             return false;
         }
-        
+
         $zip = new ZipArchive();
         if ($zip->open($this->owner->archive->tempName, ZIPARCHIVE::CREATE) !== true) {
             $this->owner->addError('archive', Yii::t('app', 'Cannot open the archive file.'));
             return false;
         }
-        
+
         if (empty($this->owner->template_uid)) {
             $this->owner->template_uid = $this->owner->generateUid();
         }
-        
+
         $storageDirName = $this->owner->template_uid;
         $tmpUploadPath = FileSystemHelper::getTmpDirectory() . '/' . $storageDirName;
         if (!file_exists($tmpUploadPath) && !@mkdir($tmpUploadPath, 0777, true)) {
@@ -52,7 +52,7 @@ class EmailTemplateUploadBehavior extends CActiveRecordBehavior
 
         $zip->extractTo($tmpUploadPath);
         $zip->close();
-        
+
         // try to find the entry file, index.html
         $archiveName = str_replace(array('../', './', '..\\', '.\\', '..'), '', basename($this->owner->archive->name, '.zip'));
         $entryFilePath = null;
@@ -71,7 +71,7 @@ class EmailTemplateUploadBehavior extends CActiveRecordBehavior
                     if (substr($file, -strlen($entry)) === $entry) {
                         $entryFilePath = $file;
                         break;
-                    }    
+                    }
                 }
                 if ($entryFilePath) {
                     break;
@@ -92,27 +92,27 @@ class EmailTemplateUploadBehavior extends CActiveRecordBehavior
                 }
             }
         }
-        
+
         // the entry file was not found, too bad...
         if ($entryFilePath === null) {
             $this->owner->addError('archive', Yii::t('app', 'Cannot find template entry file, usually called index.html'));
             return false;
         }
-        
+
         $entryFilePathDir = dirname($entryFilePath);
         $htmlContent = trim(@file_get_contents($entryFilePath));
-        
+
         if (empty($htmlContent)) {
             $this->owner->addError('archive', Yii::t('app', 'The template entry file seems to be empty.'));
             return false;
         }
-        
+
         $storagePath = Yii::getPathOfAlias('root.frontend.assets.gallery');
         if (!file_exists($storagePath) && !@mkdir($storagePath, 0777, true)) {
             $this->owner->addError('archive', Yii::t('app', 'Cannot create temporary directory "{dirPath}". Make sure the parent directory is writable by the webserver!', array('{dirPath}' => $storagePath)));
             return false;
         }
-        
+
         $storagePath .= '/' . $storageDirName;
         if (!file_exists($storagePath) && !@mkdir($storagePath, 0777, true)) {
             $this->owner->addError('archive', Yii::t('app', 'Cannot create temporary directory "{dirPath}". Make sure the parent directory is writable by the webserver!', array('{dirPath}' => $storagePath)));
@@ -123,27 +123,27 @@ class EmailTemplateUploadBehavior extends CActiveRecordBehavior
         $parser->inlineCss = $this->owner->inline_css === 'yes';
         $parser->minify    = $this->owner->minify === 'yes';
         $htmlContent = $parser->setContent($htmlContent)->getContent();
-        
+
         if (empty($htmlContent)) {
             $this->owner->addError('archive', Yii::t('app', 'The template entry file seems to be empty after the initial parsing, this suggests your template is malformed.'));
             return false;
         }
 
         libxml_use_internal_errors(true);
-        
+
         require_once(Yii::getPathOfAlias('common.vendors.QueryPath.src.QueryPath') . '/QueryPath.php');
         $query = qp($htmlContent, 'body', array(
             'ignore_parser_warnings'    => true,
             'convert_to_encoding'       => Yii::app()->charset,
             'convert_from_encoding'     => Yii::app()->charset,
             'use_parser'                => 'html',
-        ));    
-        
+        ));
+
         // to do: what action should we take here?
         if (count(libxml_get_errors()) > 0) {
-            
+
         }
-        
+
         $images = $images = $query->top()->find('img');
         if ($images->length == 0) {
             $images = array();
@@ -163,42 +163,42 @@ class EmailTemplateUploadBehavior extends CActiveRecordBehavior
             if (!($src = urldecode($image->attr('src')))) {
                 continue;
             }
-            
+
             $src = str_replace(array('../', './', '..\\', '.\\', '..'), '', $src);
             $src = trim($src);
-            if (preg_match('/^https?/i', $src) || strpos($src, '//') === 0 || filter_var($src, FILTER_VALIDATE_URL)) {
+            if (preg_match('/^https?/i', $src) || strpos($src, '//') === 0 || FilterVarHelper::url($src)) {
                 continue;
             }
-            
+
             if (!is_file($entryFilePathDir . '/' . $src)) {
                 $image->attr('src', null);
                 continue;
             }
-            
+
             $imageInfo = @getimagesize($entryFilePathDir . '/' . $src);
             if (empty($imageInfo[0]) || empty($imageInfo[1])) {
                 $image->attr('src', null);
                 continue;
             }
-            
+
             if(!@copy($entryFilePathDir . '/' . $src, $storagePath . '/' . basename($src))) {
                 $image->attr('src', null);
                 continue;
             }
-            
+
             if (empty($screenshot)) {
                 $foundImages[] = array(
                     'name'   => basename($src),
                     'width'  => $imageInfo[0],
                     'height' => $imageInfo[1],
-                );    
+                );
             }
-            
+
             $relSrc = 'frontend/assets/gallery/'.$storageDirName.'/'.basename($src);
             $newSrc = Yii::app()->apps->getAppUrl('frontend', $relSrc, true, true);
             if ($this->getCdnSubdomain()) {
                 $newSrc = sprintf('//%s/%s', $this->getCdnSubdomain(), $relSrc);
-            }  
+            }
             $image->attr('src', $newSrc);
         }
 
@@ -209,48 +209,48 @@ class EmailTemplateUploadBehavior extends CActiveRecordBehavior
                     $largestImage = $imageData;
                 }
             }
-            
+
             if (!empty($largestImage['name']) && $largestImage['width'] >= 160 && $largestImage['height'] >= 160) {
                 $screenshot = '/frontend/assets/gallery/'.$storageDirName.'/'.$largestImage['name'];
-            }    
+            }
         }
-        
+
         if (!empty($screenshot)) {
             $this->owner->screenshot        = $screenshot;
             $this->owner->create_screenshot = 'no';
         }
-        
+
         if (empty($this->owner->name)) {
             $this->owner->name = basename(Yii::app()->ioFilter->getCISecurity()->sanitize_filename($this->owner->archive->name), '.zip');
         }
         $this->owner->content = $query->top()->html();
-        
-        // because bg images escape the above code block and looping each element is out of the question        
+
+        // because bg images escape the above code block and looping each element is out of the question
         // (042 and 047 are octal quotes)
         preg_match_all('/url\((\042|\047)?([a-z0-9_\-\s\.\/]+)(\042|\047)?\)/six', $this->owner->content, $matches);
         if (!empty($matches[2])) {
             foreach ($matches[2] as $src) {
                 $originalSrc = $src;
-                
+
                 $src = urldecode($src);
                 $src = str_replace(array('../', './', '..\\', '.\\', '..'), '', $src);
                 $src = trim($src);
-                
-                if (preg_match('/^https?/i', $src) || strpos($src, '//') === 0 || filter_var($src, FILTER_VALIDATE_URL)) {
+
+                if (preg_match('/^https?/i', $src) || strpos($src, '//') === 0 || FilterVarHelper::url($src)) {
                     continue;
                 }
-                
+
                 if (!is_file($entryFilePathDir . '/' . $src)) {
                     $this->owner->content = str_replace($originalSrc, '', $this->owner->content);
                     continue;
                 }
-                
+
                 $imageInfo = @getimagesize($entryFilePathDir . '/' . $src);
                 if (empty($imageInfo[0]) || empty($imageInfo[1])) {
                     $this->owner->content = str_replace($originalSrc, '', $this->owner->content);
                     continue;
                 }
-                
+
                 if(!@copy($entryFilePathDir . '/' . $src, $storagePath . '/' . basename($src))) {
                     $this->owner->content = str_replace($originalSrc, '', $this->owner->content);
                     continue;
@@ -268,24 +268,24 @@ class EmailTemplateUploadBehavior extends CActiveRecordBehavior
         libxml_use_internal_errors(false);
 
         FileSystemHelper::deleteDirectoryContents($tmpUploadPath, true, 1);
-        
+
         $this->owner->content = StringHelper::decodeSurroundingTags($this->owner->content);
 
         // give a chance for last moment changes
         Yii::app()->hooks->doAction('email_template_upload_behavior_handle_upload_before_save_content', array(
             'template'        => $this->owner,
             'originalContent' => $this->owner->content,
-            'storagePath'     => $storagePath, 
-            'storageDirName'  => $storageDirName, 
+            'storagePath'     => $storagePath,
+            'storageDirName'  => $storageDirName,
             'cdnSubdomain'    => $this->getCdnSubdomain(),
         ));
-        
+
         return $this->owner->save(false);
     }
-    
+
     /**
      * EmailTemplateUploadBehavior::afterDelete()
-     * 
+     *
      * @param mixed $event
      * @return
      */
@@ -293,15 +293,15 @@ class EmailTemplateUploadBehavior extends CActiveRecordBehavior
     {
         $storagePath = Yii::getPathOfAlias('root.frontend.assets.gallery');
         $templatePath = $storagePath.'/'.$this->owner->template_uid;
-        
+
         if (file_exists($templatePath) && is_dir($templatePath)) {
             FileSystemHelper::deleteDirectoryContents($templatePath, true, 1);
         }
     }
-    
+
     /**
      * EmailTemplateUploadBehavior::getCdnSubdomain()
-     * 
+     *
      * @return mixed
      */
     protected function getCdnSubdomain()
@@ -310,23 +310,23 @@ class EmailTemplateUploadBehavior extends CActiveRecordBehavior
             return $this->_cdnSubdomain;
         }
         $this->_cdnSubdomain = false;
-        
+
         if (Yii::app()->hasComponent('customer') && Yii::app()->customer->getId() && ($customer = Yii::app()->customer->getModel())) {
             if ($customer->getGroupOption('cdn.enabled', 'no') == 'yes' && $customer->getGroupOption('cdn.use_for_email_assets', 'no') == 'yes') {
                 $this->_cdnSubdomain = $customer->getGroupOption('cdn.subdomain');
             }
         }
-        
+
         $options = Yii::app()->options;
-        
+
         if (!$this->_cdnSubdomain && $options->isTrue('system.customer_cdn.enabled') && $options->isTrue('system.customer_cdn.use_for_email_assets') && strlen($options->get('system.customer_cdn.subdomain'))) {
             $this->_cdnSubdomain = $options->get('system.customer_cdn.subdomain');
         }
-        
+
         if (!$this->_cdnSubdomain && $options->isTrue('system.cdn.enabled') && $options->isTrue('system.cdn.use_for_email_assets') && strlen($options->get('system.cdn.subdomain'))) {
             $this->_cdnSubdomain = $options->get('system.cdn.subdomain');
         }
-        
+
         return $this->_cdnSubdomain;
     }
 }

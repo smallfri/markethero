@@ -2,15 +2,15 @@
 
 /**
  * This file is part of the MailWizz EMA application.
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.3.3
  */
- 
+
 ?>
 
 <div class="clearfix"><!-- --></div>
@@ -33,17 +33,17 @@
             <?php echo Yii::t('servers', 'Following dynamic tags will be parsed depending on context:');?> <em><strong>[CAMPAIGN_UID], [SUBSCRIBER_UID], [SUBSCRIBER_EMAIL]</strong></em>
         </div>
         <div id="headers-list">
-            <?php $i = 0; foreach ($server->additional_headers as $name => $value) { ?>
+            <?php $i = 0; foreach ($server->additional_headers as $header) { ?>
                 <div class="form-group col-lg-6">
                     <div class="col-lg-5">
                         <label class="required"><?php echo Yii::t('servers', 'Header name');?> <span class="required">*</span></label>
                         <div class="clearfix"><!-- --></div>
-                        <?php echo CHtml::textField($server->modelName . '[additional_headers]['.$i.'][name]', $name, $server->getHtmlOptions('additional_headers', array('placeholder' => Yii::t('servers', 'X-Header-Name'))));?>
+                        <?php echo CHtml::textField($server->modelName . '[additional_headers]['.$i.'][name]', $header['name'], $server->getHtmlOptions('additional_headers', array('placeholder' => Yii::t('servers', 'X-Header-Name'))));?>
                     </div>
                     <div class="col-lg-5">
                         <label class="required"><?php echo Yii::t('servers', 'Header value');?> <span class="required">*</span></label>
                         <div class="clearfix"><!-- --></div>
-                        <?php echo CHtml::textField($server->modelName . '[additional_headers]['.$i.'][value]', $value, $server->getHtmlOptions('additional_headers', array('placeholder' => Yii::t('servers', 'Header value'))));?>
+                        <?php echo CHtml::textField($server->modelName . '[additional_headers]['.$i.'][value]', $header['value'], $server->getHtmlOptions('additional_headers', array('placeholder' => Yii::t('servers', 'Header value'))));?>
                     </div>
                     <div class="col-lg-2">
                         <label>&nbsp;</label>
@@ -52,8 +52,8 @@
                     </div>
                 </div>
             <?php ++$i; } ?>
-        </div> 
-        <div class="clearfix"><!-- --></div>           
+        </div>
+        <div class="clearfix"><!-- --></div>
     </div>
 </div>
 

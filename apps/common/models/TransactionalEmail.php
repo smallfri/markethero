@@ -6,7 +6,7 @@
  * @package MailWizz EMA
  * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.3.4.5
  */
@@ -60,9 +60,9 @@ class TransactionalEmail extends ActiveRecord
 	public function rules()
 	{
 		$rules = array(
-			array('to_email, to_name, from_name, subject, body, send_at, status', 'required'),
+			array('to_email, to_name, from_name, subject, body, send_at', 'required'),
 			array('to_email, to_name, from_email, from_name, reply_to_email, reply_to_name', 'length', 'max' => 150),
-            array('to_email, from_email, reply_to_email', 'email'),
+            array('to_email, from_email, reply_to_email', 'email', 'validateIDN' => true),
 			array('subject', 'length', 'max' => 255),
             array('send_at', 'date', 'format' => 'yyyy-mm-dd hh:mm:ss'),
 
@@ -105,7 +105,6 @@ class TransactionalEmail extends ActiveRecord
 			'retries'        => Yii::t('transactional_emails', 'Retries'),
 			'max_retries'    => Yii::t('transactional_emails', 'Max retries'),
 			'send_at'        => Yii::t('transactional_emails', 'Send at'),
-			'status'         => Yii::t('transactional_emails', 'Status'),
 		);
         return CMap::mergeArray($labels, parent::attributeLabels());
 	}
@@ -142,7 +141,7 @@ class TransactionalEmail extends ActiveRecord
         if (empty($this->email_uid)) {
             $this->email_uid = $this->generateUid();
         }
-        if (EmailBlacklist::isBlacklisted($this->to_email)) {
+        if (EmailBlacklist::isBlacklisted($this->to_email, null, (!empty($this->customer_id) && !empty($this->customer) ? $this->customer : null))) {
             $this->addError('to_email', Yii::t('transactional_emails', 'This email address is blacklisted!'));
             return false;
         }
@@ -183,7 +182,7 @@ class TransactionalEmail extends ActiveRecord
             return false;
         }
 
-        if (EmailBlacklist::isBlacklisted($this->to_email)) {
+        if (EmailBlacklist::isBlacklisted($this->to_email, null, (!empty($this->customer_id) && !empty($this->customer) ? $this->customer : null))) {
             $this->delete();
             return false;
         }
@@ -197,11 +196,9 @@ class TransactionalEmail extends ActiveRecord
             $server = $servers[$cid];
         }
 
-//        if (!empty($this->customer_id) && $this->customer->getIsOverQuota()) {
-//            print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
-//
-//            return false;
-//        }
+        if (!empty($this->customer_id) && $this->customer->getIsOverQuota()) {
+            return false;
+        }
 
         $emailParams = array(
             'fromName'      => $this->from_name,

@@ -2,28 +2,28 @@
 
 /**
  * OptionLicense
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.3.4.9
  */
- 
+
 class OptionLicense extends OptionBase
 {
     // settings category
     protected $_categoryName = 'system.license';
-    
+
     public $first_name;
-    
+
     public $last_name;
-    
+
     public $email;
-    
+
     public $market_place;
-    
+
     public $purchase_code;
 
     public function rules()
@@ -31,12 +31,12 @@ class OptionLicense extends OptionBase
         $rules = array(
             array('first_name, last_name, email, market_place, purchase_code', 'required'),
             array('first_name, last_name, email, market_place, purchase_code', 'length', 'max' => 255),
-            array('email', 'email'),
+            array('email', 'email', 'validateIDN' => true),
         );
-        
-        return CMap::mergeArray($rules, parent::rules());    
+
+        return CMap::mergeArray($rules, parent::rules());
     }
-    
+
     public function attributeLabels()
     {
         $labels = array(
@@ -46,10 +46,10 @@ class OptionLicense extends OptionBase
             'market_place'  => Yii::t('settings', 'Market place'),
             'purchase_code' => Yii::t('settings', 'Purchase code'),
         );
-        
-        return CMap::mergeArray($labels, parent::attributeLabels());    
+
+        return CMap::mergeArray($labels, parent::attributeLabels());
     }
-    
+
     public function attributeHelpTexts()
     {
         $texts = array();

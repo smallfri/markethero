@@ -2,15 +2,15 @@
 
 /**
  * CampaignForwardFriend
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.3.4.7
  */
- 
+
 /**
  * This is the model class for table "{{campaign_forward_friend}}".
  *
@@ -51,14 +51,14 @@ class CampaignForwardFriend extends ActiveRecord
 	   $rules = array(
 			array('to_email, to_name, from_email, from_name, subject', 'required'),
 			array('to_email, to_name, from_email, from_name', 'length', 'max' => 150),
-            array('to_email, from_email', 'email'),
+            array('to_email, from_email', 'email', 'validateIDN' => true),
 			array('subject', 'length', 'max' => 255),
             array('message', 'length', 'max' => 10000),
-            
+
 			// The following rule is used by search().
 			array('campaign_id, subscriber_id, to_email, to_name, from_email, from_name, subject, ip_address', 'safe', 'on'=>'search'),
 		);
-        
+
         return CMap::mergeArray($rules, parent::rules());
 	}
 
@@ -71,7 +71,7 @@ class CampaignForwardFriend extends ActiveRecord
 			'campaign'   => array(self::BELONGS_TO, 'Campaign', 'campaign_id'),
 			'subscriber' => array(self::BELONGS_TO, 'ListSubscriber', 'subscriber_id'),
 		);
-        
+
         return CMap::mergeArray($relations, parent::relations());
 	}
 
@@ -93,7 +93,7 @@ class CampaignForwardFriend extends ActiveRecord
 			'ip_address'     => Yii::t('campaigns', 'Ip address'),
 			'user_agent'     => Yii::t('campaigns', 'User agent'),
 		);
-        
+
         return CMap::mergeArray($labels, parent::attributeLabels());
 	}
 
@@ -112,7 +112,7 @@ class CampaignForwardFriend extends ActiveRecord
 	public function search()
 	{
 		$criteria=new CDbCriteria;
-        
+
         if (!empty($this->campaign_id)) {
             if (is_numeric($this->campaign_id)) {
                 $criteria->compare('t.campaign_id', $this->campaign_id);
@@ -125,7 +125,7 @@ class CampaignForwardFriend extends ActiveRecord
                 );
             }
         }
-        
+
         if (!empty($this->subscriber_id)) {
             if (is_numeric($this->subscriber_id)) {
                 $criteria->compare('t.subscriber_id', $this->subscriber_id);

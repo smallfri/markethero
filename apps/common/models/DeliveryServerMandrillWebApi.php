@@ -2,28 +2,28 @@
 
 /**
  * DeliveryServerMandrillWebApi
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.3.4.8
- * 
+ *
  */
- 
+
 class DeliveryServerMandrillWebApi extends DeliveryServer
 {
     protected $serverType = 'mandrill-web-api';
-    
+
     protected $_initStatus;
-    
+
     protected $_preCheckError;
-    
+
     public $subaccount;
-    
+
     public $webhook = array();
-    
+
     /**
      * @return array validation rules for model attributes.
      */
@@ -35,7 +35,7 @@ class DeliveryServerMandrillWebApi extends DeliveryServer
         );
         return CMap::mergeArray($rules, parent::rules());
     }
-    
+
     /**
      * @return array customized attribute labels (name=>label)
      */
@@ -47,7 +47,7 @@ class DeliveryServerMandrillWebApi extends DeliveryServer
         );
         return CMap::mergeArray(parent::attributeLabels(), $labels);
     }
-    
+
     public function attributeHelpTexts()
     {
         $texts = array(
@@ -55,20 +55,20 @@ class DeliveryServerMandrillWebApi extends DeliveryServer
             'password'    => Yii::t('servers', 'One of your mandrill api keys.'),
             'subaccount'  => Yii::t('servers', 'The subaccount name, optional.'),
         );
-        
+
         return CMap::mergeArray(parent::attributeHelpTexts(), $texts);
     }
-    
+
     public function attributePlaceholders()
     {
         $placeholders = array(
             'username'  => Yii::t('servers', 'Username'),
             'password'  => Yii::t('servers', 'Api key'),
         );
-        
+
         return CMap::mergeArray(parent::attributePlaceholders(), $placeholders);
     }
-    
+
     /**
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
@@ -79,7 +79,7 @@ class DeliveryServerMandrillWebApi extends DeliveryServer
     {
         return parent::model($className);
     }
-    
+
     public function sendEmail(array $params = array())
     {
         $params = (array)Yii::app()->hooks->applyFilters('delivery_server_before_send_email', $this->getParamsArray($params), $this);
@@ -87,8 +87,8 @@ class DeliveryServerMandrillWebApi extends DeliveryServer
         if (!isset($params['from'], $params['to'], $params['subject'], $params['body'])) {
             return false;
         }
-        
-        list($toEmail, $toName)     = $this->getMailer()->findEmailAndName($params['to']); 
+
+        list($toEmail, $toName)     = $this->getMailer()->findEmailAndName($params['to']);
         list($fromEmail, $fromName) = $this->getMailer()->findEmailAndName($params['from']);
 
         if (!empty($params['fromName'])) {
@@ -97,21 +97,26 @@ class DeliveryServerMandrillWebApi extends DeliveryServer
 
         $replyToEmail = $replyToName = null;
         if (!empty($params['replyTo'])) {
-            list($replyToEmail, $replyToName) = $this->getMailer()->findEmailAndName($params['replyTo']); 
+            list($replyToEmail, $replyToName) = $this->getMailer()->findEmailAndName($params['replyTo']);
         }
-        
+
         $headerPrefix = Yii::app()->params['email.custom.header.prefix'];
-        $headers      = !empty($params['headers']) && is_array($params['headers']) ? $params['headers'] : array();
+
+        $headers = array();
+        if (!empty($params['headers'])) {
+            $headers = $this->parseHeadersIntoKeyValue($params['headers']);
+        }
+
         $headers['Reply-To']    = !empty($replyToEmail) ? $replyToEmail : $fromEmail;
         $headers['X-Sender']    = $fromEmail;
         $headers['X-Receiver']  = $toEmail;
         $headers[$headerPrefix . 'Mailer'] = 'Mandrill Web API';
-        
+
         if (!isset($headers['Return-Path']) && !empty($params['returnPath'])) {
             list($returnPathEmail) = $this->getMailer()->findEmailAndName($params['returnPath']);
             $headers['Return-Path'] = $returnPathEmail;
         }
-        
+
         $recipientMetaData = array('rcpt' => $toEmail, 'values' => array());
         if (isset($headers[$headerPrefix . 'Campaign-Uid'])) {
             $recipientMetaData['values']['campaign_uid'] = $headers[$headerPrefix . 'Campaign-Uid'];
@@ -121,18 +126,11 @@ class DeliveryServerMandrillWebApi extends DeliveryServer
         }
 
         $sent = false;
-        
+
         try {
             if (!$this->preCheckWebHook()) {
                 throw new Exception($this->_preCheckError);
             }
- 
-            $headerSearchReplace = array(
-                '[LIST_UNSUBSCRIBE_EMAIL]' => $headers['Reply-To'],
-            );  
-            foreach ($headers as $key => $value) {
-                $headers[$key] = str_replace(array_keys($headerSearchReplace), array_values($headerSearchReplace), $value);
-            } 
 
             $message = array(
                 'html'       => $params['body'],
@@ -167,7 +165,7 @@ class DeliveryServerMandrillWebApi extends DeliveryServer
                 'attachments'           => array(),
                 'images'                => array(),
             );
-            
+
             if (!empty($this->subaccount)) {
                 $message['subaccount'] = $this->subaccount;
             }
@@ -185,7 +183,7 @@ class DeliveryServerMandrillWebApi extends DeliveryServer
                     }
                 }
             }
-            
+
             if (!$onlyPlainText && !empty($params['embedImages']) && is_array($params['embedImages'])) {
                 $cids = array();
                 foreach ($params['embedImages'] as $imageData) {
@@ -205,12 +203,12 @@ class DeliveryServerMandrillWebApi extends DeliveryServer
                 $message['html'] = str_replace(array_keys($cids), array_values($cids), $message['html']);
                 unset($cids);
             }
-            
+
             $async  = true; // this returns queued status
             $ipPool = 'Main Pool';
             $sendAt = '';
             $result = $this->getClient()->messages->send($message, $async, $ipPool, $sendAt);
-            
+
             if (!empty($result[0]) && !empty($result[0]['status']) && in_array($result[0]['status'], array('sent', 'queued'))) {
                 if (!empty($result[0]['reject_reason']) && stripos($result[0]['reject_reason'], 'bounce') !== false) {
                     if (stripos($result[0]['reject_reason'], 'hard-bounce') !== false) {
@@ -227,7 +225,7 @@ class DeliveryServerMandrillWebApi extends DeliveryServer
         } catch (Exception $e) {
             $this->getMailer()->addLog(get_class($e) . ' - ' . $e->getMessage());
         }
-        
+
         if ($sent) {
             $this->logUsage();
         }
@@ -237,15 +235,12 @@ class DeliveryServerMandrillWebApi extends DeliveryServer
         return $sent;
     }
 
-    public function getDefaultParamsArray()
+    public function getParamsArray(array $params = array())
     {
-        $params = array(
-            'transport' => self::TRANSPORT_MANDRILL_WEB_API,
-        );
-        
-        return CMap::mergeArray(parent::getDefaultParamsArray(), $params);
+        $params['transport'] = self::TRANSPORT_MANDRILL_WEB_API;
+        return parent::getParamsArray($params);
     }
-    
+
     public function requirementsFailed()
     {
         if (!MW_COMPOSER_SUPPORT) {
@@ -256,7 +251,7 @@ class DeliveryServerMandrillWebApi extends DeliveryServer
         }
         return false;
     }
-    
+
     public function getClient()
     {
         static $clients = array();
@@ -266,7 +261,7 @@ class DeliveryServerMandrillWebApi extends DeliveryServer
         }
         return $clients[$id] = new Mandrill($this->password);
     }
-    
+
     protected function afterConstruct()
     {
         parent::afterConstruct();
@@ -275,7 +270,7 @@ class DeliveryServerMandrillWebApi extends DeliveryServer
         $this->subaccount  = $this->getModelMetaData()->itemAt('subaccount');
         $this->webhook     = (array)$this->getModelMetaData()->itemAt('webhook');
     }
-    
+
     protected function afterFind()
     {
         $this->_initStatus = $this->status;
@@ -283,14 +278,14 @@ class DeliveryServerMandrillWebApi extends DeliveryServer
         $this->webhook     = (array)$this->getModelMetaData()->itemAt('webhook');
         parent::afterFind();
     }
-    
+
     protected function beforeSave()
     {
         $this->getModelMetaData()->add('subaccount', $this->subaccount);
         $this->getModelMetaData()->add('webhook', (array)$this->webhook);
         return parent::beforeSave();
     }
-    
+
     protected function afterDelete()
     {
         if (!empty($this->webhook['id'])) {
@@ -300,22 +295,22 @@ class DeliveryServerMandrillWebApi extends DeliveryServer
         }
         parent::afterDelete();
     }
-    
+
     protected function preCheckWebHook()
     {
         if (MW_IS_CLI || $this->isNewRecord || $this->_initStatus !== self::STATUS_INACTIVE) {
             return true;
         }
-        
+
         $options     = Yii::app()->options;
         $url         = $options->get('system.urls.frontend_absolute_url') . sprintf('dswh/%d', $this->server_id);
         $events      = array('hard_bounce', 'soft_bounce', 'spam', 'unsub', 'reject', 'blacklist');
         $description = 'Notifications Webhook - DO NOT ALTER THIS IN ANY WAY!';
-        
+
         if (!is_array($this->webhook)) {
             $this->webhook = array();
         }
-        
+
         if (!empty($this->webhook['id'])) {
             try {
                 $info = $this->getClient()->webhooks->info($this->webhook['id']);
@@ -332,7 +327,7 @@ class DeliveryServerMandrillWebApi extends DeliveryServer
                 return false;
             }
         }
-        
+
         if (empty($this->webhook)) {
             try {
                 $this->webhook = $this->getClient()->webhooks->add($url, $description, $events);
@@ -342,7 +337,7 @@ class DeliveryServerMandrillWebApi extends DeliveryServer
                 return false;
             }
         }
-        
+
         return $this->save(false);
     }
 }

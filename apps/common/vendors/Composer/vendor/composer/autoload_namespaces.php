@@ -6,19 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Zend\\Validator\\' => array($vendorDir . '/zendframework/zend-validator'),
-    'Zend\\Uri\\' => array($vendorDir . '/zendframework/zend-uri'),
-    'Zend\\Stdlib\\' => array($vendorDir . '/zendframework/zend-stdlib'),
-    'Zend\\ServiceManager\\' => array($vendorDir . '/zendframework/zend-servicemanager'),
-    'Zend\\Mime\\' => array($vendorDir . '/zendframework/zend-mime'),
-    'Zend\\Math\\' => array($vendorDir . '/zendframework/zend-math'),
-    'Zend\\Mail\\' => array($vendorDir . '/zendframework/zend-mail'),
-    'Zend\\Loader\\' => array($vendorDir . '/zendframework/zend-loader'),
-    'Zend\\Http\\' => array($vendorDir . '/zendframework/zend-http'),
-    'Zend\\Escaper\\' => array($vendorDir . '/zendframework/zend-escaper'),
-    'Zend\\Crypt\\' => array($vendorDir . '/zendframework/zend-crypt'),
     'Unirest' => array($vendorDir . '/mashape/unirest-php/lib'),
-    'Symfony\\Component\\EventDispatcher\\' => array($vendorDir . '/symfony/event-dispatcher'),
     'Smtpapi' => array($vendorDir . '/sendgrid/smtpapi/lib'),
     'SendGrid' => array($vendorDir . '/sendgrid/sendgrid/lib'),
     'Resque' => array($vendorDir . '/chrisboulton/php-resque/lib'),

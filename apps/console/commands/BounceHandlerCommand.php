@@ -2,11 +2,11 @@
 
 /**
  * BounceHandlerCommand
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
@@ -121,16 +121,16 @@ class BounceHandlerCommand extends CConsoleCommand
         if (empty($servers)) {
             return $this;
         }
-        
+
         $serversIds = array();
         foreach ($servers as $server) {
             $serversIds[] = $server->server_id;
         }
         unset($servers, $server);
-        
+
         $options      = Yii::app()->options->resetLoaded();
         $processLimit = (int)$options->get('system.cron.process_bounce_servers.emails_at_once', 500);
-                
+
         try {
             foreach ($serversIds as $serverId) {
                 $this->_server = BounceServer::model()->findByPk((int)$serverId);
@@ -158,12 +158,12 @@ class BounceHandlerCommand extends CConsoleCommand
                         $headerPrefix . 'Subscriber-Uid'
                     ),
                 ));
-                
+
                 $results = $bounceHandler->getResults();
 
                 // re-open the db connection
                 Yii::app()->getDb()->setActive(true);
-                
+
                 if (empty($results)) {
                     $this->_server = BounceServer::model()->findByPk((int)$this->_server->server_id);
                     if (empty($this->_server)) {
@@ -175,13 +175,13 @@ class BounceHandlerCommand extends CConsoleCommand
                     }
                     continue;
                 }
-                
+
                 foreach ($results as $result) {
                     foreach ($result['originalEmailHeadersArray'] as $key => $value) {
                         unset($result['originalEmailHeadersArray'][$key]);
                         $result['originalEmailHeadersArray'][strtoupper($key)] = $value;
                     }
-                    
+
                     if (!isset($result['originalEmailHeadersArray'][$headerPrefixUp . 'CAMPAIGN-UID'], $result['originalEmailHeadersArray'][$headerPrefixUp . 'SUBSCRIBER-UID'])) {
                         continue;
                     }
@@ -225,6 +225,11 @@ class BounceHandlerCommand extends CConsoleCommand
                         $bounceLog->message         = $result['diagnosticCode'];
                         $bounceLog->bounce_type     = $result['bounceType'] == BounceHandler::BOUNCE_HARD ? CampaignBounceLog::BOUNCE_HARD : CampaignBounceLog::BOUNCE_SOFT;
                         $bounceLog->save();
+
+                        // since 1.3.5.9
+                        if ($bounceLog->bounce_type == CampaignBounceLog::BOUNCE_HARD) {
+                            $subscriber->addToBlacklist($bounceLog->message);
+                        }
                     } else {
                         if ($options->get('system.cron.process_feedback_loop_servers.subscriber_action', 'unsubscribe') == 'delete') {
                             $subscriber->delete();
@@ -245,18 +250,18 @@ class BounceHandlerCommand extends CConsoleCommand
                 if (empty($this->_server)) {
                     continue;
                 }
-                
+
                 if ($this->_server->status == BounceServer::STATUS_CRON_RUNNING) {
                     $this->_server->status = BounceServer::STATUS_ACTIVE;
                     $this->_server->saveStatus();
                 }
-                
+
                 // close the db connection, save some resources...
                 Yii::app()->getDb()->setActive(false);
-                
+
                 // sleep
                 sleep((int)$options->get('system.cron.process_bounce_servers.pause', 5));
-                
+
                 // open db connection
                 Yii::app()->getDb()->setActive(true);
             }
@@ -267,13 +272,13 @@ class BounceHandlerCommand extends CConsoleCommand
                 if (!empty($this->_server) && $this->_server->status == BounceServer::STATUS_CRON_RUNNING) {
                     $this->_server->status = BounceServer::STATUS_ACTIVE;
                     $this->_server->saveStatus();
-                }    
+                }
             }
             Yii::log($e->getMessage(), CLogger::LEVEL_ERROR);
         }
-        
+
         $this->_server = null;
-        
+
         return $this->process($offset + (int)$options->get('system.cron.process_bounce_servers.servers_at_once', 10), $limit);
     }
 }

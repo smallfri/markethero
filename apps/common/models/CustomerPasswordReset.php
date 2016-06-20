@@ -2,15 +2,15 @@
 
 /**
  * CustomerPasswordReset
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
+
 /**
  * This is the model class for table "customer_password_reset".
  *
@@ -29,9 +29,9 @@
 class CustomerPasswordReset extends ActiveRecord
 {
     const STATUS_USED = 'used';
-    
+
     public $email;
-    
+
     /**
      * @return string the associated database table name
      */
@@ -49,10 +49,10 @@ class CustomerPasswordReset extends ActiveRecord
         // will receive customer inputs.
         $rules = array(
             array('email', 'required'),
-            array('email', 'email'),
+            array('email', 'email', 'validateIDN' => true),
             array('email', 'exist', 'className' => 'Customer', 'criteria' => array('condition' => 'status = :st', 'params' => array(':st' => Customer::STATUS_ACTIVE))),
         );
-        
+
         return CMap::mergeArray($rules, parent::rules());
     }
 
@@ -64,7 +64,7 @@ class CustomerPasswordReset extends ActiveRecord
         $relations = array(
             'customer' => array(self::BELONGS_TO, 'Customer', 'customer_id'),
         );
-        
+
         return CMap::mergeArray($relations, parent::relations());
     }
 
@@ -80,7 +80,7 @@ class CustomerPasswordReset extends ActiveRecord
             'ip_address'    => Yii::t('customers', 'Ip address'),
             'email'         => Yii::t('customers', 'Email'),
         );
-        
+
         return CMap::mergeArray($labels, parent::attributeLabels());
     }
 
@@ -94,7 +94,7 @@ class CustomerPasswordReset extends ActiveRecord
     {
         return parent::model($className);
     }
-    
+
     protected function beforeSave()
     {
         if ($this->isNewRecord) {
@@ -102,18 +102,18 @@ class CustomerPasswordReset extends ActiveRecord
             $this->ip_address = Yii::app()->request->userHostAddress;
             self::model()->updateAll(array('status' => self::STATUS_USED), 'customer_id = :uid', array(':uid' => (int)$this->customer_id));
         }
-        
+
         return parent::beforeSave();
     }
-    
+
     public function sendEmail(array $params = array())
     {
         if (!($server = DeliveryServer::pickServer())) {
             return $this->sendEmailFallback($params);
         }
-        
+
         $params['from'] = array($server->getFromEmail() => Yii::app()->options->get('system.common.site_name'));
-        
+
         $sent = false;
         for ($i = 0; $i < 3; ++$i) {
             if ($server->sendEmail($params)) {
@@ -122,14 +122,14 @@ class CustomerPasswordReset extends ActiveRecord
             }
             $server = DeliveryServer::pickServer($server->server_id);
         }
-        
+
         if (!$sent) {
             $sent = $this->sendEmailFallback($params);
         }
-        
+
         return (bool)$sent;
     }
-    
+
     public function sendEmailFallback(array $params = array())
     {
         $request             = Yii::app()->request;
@@ -137,7 +137,7 @@ class CustomerPasswordReset extends ActiveRecord
         $email               = 'noreply@' . $request->getServer('HTTP_HOST', $request->getServer('SERVER_NAME', 'domain.com'));
         $params['from']      = array($email => $options->get('system.common.site_name'));
         $params['transport'] = 'php-mail';
-        
+
         return Yii::app()->mailer->send($params);
     }
 }

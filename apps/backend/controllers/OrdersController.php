@@ -2,17 +2,17 @@
 
 /**
  * OrdersController
- * 
+ *
  * Handles the actions for price plans orders related tasks
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.3.4.3
  */
- 
+
 class OrdersController extends Controller
 {
     public function init()
@@ -20,7 +20,7 @@ class OrdersController extends Controller
         $this->onBeforeAction = array($this, '_registerJuiBs');
         parent::init();
     }
-    
+
     /**
      * Define the filters for various controller actions
      * Merge the filters with the ones from parent implementation
@@ -30,10 +30,10 @@ class OrdersController extends Controller
         $filters = array(
             'postOnly + delete, delete_note',
         );
-        
+
         return CMap::mergeArray($filters, parent::filters());
     }
-    
+
     /**
      * List all available orders
      */
@@ -43,9 +43,9 @@ class OrdersController extends Controller
         $ioFilter= Yii::app()->ioFilter;
         $order   = new PricePlanOrder('search');
         $order->unsetAttributes();
-        
+
         $order->attributes = $ioFilter->xssClean((array)$request->getOriginalQuery($order->modelName, array()));
-        
+
         $this->setData(array(
             'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('orders', 'View orders'),
             'pageHeading'       => Yii::t('orders', 'View orders'),
@@ -54,10 +54,10 @@ class OrdersController extends Controller
                 Yii::t('app', 'View all')
             )
         ));
-        
+
         $this->render('list', compact('order'));
     }
-    
+
     /**
      * Create order
      */
@@ -77,21 +77,21 @@ class OrdersController extends Controller
                 $note->order_id   = $order->order_id;
                 $note->user_id    = Yii::app()->user->getId();
                 $note->save();
-                
+
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller'=> $this,
                 'success'   => $notify->hasSuccess,
                 'order'     => $order,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('orders/index'));
             }
         }
-        
+
         $note = new PricePlanOrderNote('search');
         $note->attributes = (array)$request->getQuery($note->modelName, array());
         $note->order_id   = (int)$order->order_id;
@@ -104,10 +104,10 @@ class OrdersController extends Controller
                 Yii::t('app', 'Create'),
             )
         ));
-        
+
         $this->render('form', compact('order', 'note'));
     }
-    
+
     /**
      * Update existing order
      */
@@ -132,25 +132,25 @@ class OrdersController extends Controller
                 $note->order_id   = $order->order_id;
                 $note->user_id    = Yii::app()->user->getId();
                 $note->save();
-                
+
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller'=> $this,
                 'success'   => $notify->hasSuccess,
                 'order'     => $order,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('orders/index'));
             }
         }
-        
+
         $note = new PricePlanOrderNote('search');
         $note->attributes = (array)$request->getQuery($note->modelName, array());
         $note->order_id   = (int)$order->order_id;
-        
+
         $this->setData(array(
             'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('orders', 'Update order'),
             'pageHeading'       => Yii::t('orders', 'Update order'),
@@ -159,10 +159,10 @@ class OrdersController extends Controller
                 Yii::t('app', 'Update'),
             )
         ));
-        
+
         $this->render('form', compact('order', 'note'));
     }
-    
+
     /**
      * View order
      */
@@ -170,24 +170,24 @@ class OrdersController extends Controller
     {
         $request = Yii::app()->request;
         $order   = PricePlanOrder::model()->findByPk((int)$id);
-        
+
         if (empty($order)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         $pricePlan = $order->plan;
         $customer  = $order->customer;
-        
+
         $note = new PricePlanOrderNote('search');
         $note->unsetAttributes();
         $note->attributes = (array)$request->getQuery($note->modelName, array());
         $note->order_id   = (int)$order->order_id;
-        
+
         $transaction = new PricePlanOrderTransaction('search');
         $transaction->unsetAttributes();
         $transaction->attributes = (array)$request->getQuery($transaction->modelName, array());
         $transaction->order_id   = $order->order_id;
-        
+
         $this->setData(array(
             'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('orders', 'View your order'),
             'pageHeading'       => Yii::t('orders', 'View your order'),
@@ -197,10 +197,10 @@ class OrdersController extends Controller
                 Yii::t('app', 'View')
             )
         ));
-        
+
         $this->render('order_detail', compact('order', 'pricePlan', 'customer', 'note', 'transaction'));
     }
-    
+
     /**
      * View order in PDF format
      */
@@ -208,19 +208,19 @@ class OrdersController extends Controller
     {
         $request = Yii::app()->request;
         $order   = PricePlanOrder::model()->findByPk((int)$id);
-        
+
         if (empty($order)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         $pricePlan = $order->plan;
         $customer  = $order->customer;
         $invoiceOptions = new OptionMonetizationInvoices();
-        
+
         Yii::import('common.vendors.Invoicr.*');
-        
+
         $invoice = new Invoicr("A4", $order->currency->code, null);
-        
+
         if (!empty($invoiceOptions->logo)) {
             $logoImage = $_SERVER['DOCUMENT_ROOT'] . $invoiceOptions->getLogoUrl();
             if (is_file($logoImage)) {
@@ -243,13 +243,13 @@ class OrdersController extends Controller
             ->addTotal(Yii::t('orders', "Tax"). ' '. $order->formattedTaxPercent, $order->formattedTaxValue)
             ->addTotal(Yii::t('orders', "Discount"), $order->formattedDiscount)
             ->addTotal(Yii::t('orders', "Total"), $order->formattedTotal);
-        
+
         if ($order->getIsComplete()) {
             $order->total = 0.00;
         }
-        
+
         $invoice->addTotal(Yii::t('orders', "Total due"), $order->formattedTotal, true);
-        
+
         if ($order->getIsComplete()) {
             $invoice->addBadge(Yii::t('orders', "Paid"));
         }
@@ -257,13 +257,13 @@ class OrdersController extends Controller
         if (!empty($invoiceOptions->notes)) {
             $invoice->addTitle(Yii::t('orders', 'Extra notes'))->addParagraph($invoiceOptions->notes);
         }
-        
+
         $invoice->setFooternote(Yii::app()->options->get('system.urls.frontend_absolute_url'));
-        
+
         //Render
         $invoice->render($order->order_uid . '.pdf','I');
     }
-    
+
     /**
      * Email the invoice
      */
@@ -273,11 +273,11 @@ class OrdersController extends Controller
         $options = Yii::app()->options;
         $notify  = Yii::app()->notify;
         $order   = PricePlanOrder::model()->findByPk((int)$id);
-        
+
         if (empty($order)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         $pricePlan = $order->plan;
         $customer  = $order->customer;
 
@@ -285,10 +285,10 @@ class OrdersController extends Controller
             $notify->addWarning(Yii::t('orders', 'Please try again later!'));
             $this->redirect(array('orders/view', 'id' => $id));
         }
-        
+
         $invoiceOptions = new OptionMonetizationInvoices();
         $emailTemplate  = $options->get('system.email_templates.common');
-        
+
         if ($emailBody = $invoiceOptions->email_content) {
             $emailBody = nl2br($emailBody);
         } else {
@@ -299,26 +299,26 @@ class OrdersController extends Controller
                 '{ref}'   => $invoiceFileName = $invoiceOptions->prefix . ($order->order_id < 10 ? '0' . $order->order_id : $order->order_id),
             ));
         }
-        
+
         $emailTemplate  = str_replace('[CONTENT]', $emailBody, $emailTemplate);
-        
+
         $storagePath = Yii::getPathOfAlias('root.frontend.assets.files.invoices');
         if ((!file_exists($storagePath) || !is_dir($storagePath)) && !mkdir($storagePath, 0777, true)) {
             $notify->addWarning(Yii::t('orders', 'Unable to create the invoices storage directory!'));
             $this->redirect(array('orders/view', 'id' => $id));
         }
         $invoicePath = $storagePath . '/' . preg_replace('/(\-){2,}/', '-', preg_replace('/[^a-z0-9\-]+/i', '-', $invoiceFileName)) . '.pdf';
-        
+
         ob_start();
         ob_implicit_flush(false);
         $this->actionPdf($id);
         $pdf = ob_get_clean();
-        
+
         if (!file_put_contents($invoicePath, $pdf)) {
             $notify->addWarning(Yii::t('orders', 'Unable to create the invoice!'));
             $this->redirect(array('orders/view', 'id' => $id));
         }
-        
+
         $params = array(
             'to'          => array($customer->email => $customer->fullName),
             'subject'     => $emailSubject,
@@ -332,56 +332,68 @@ class OrdersController extends Controller
         } else {
             $notify->addError(Yii::t('orders', 'Unable to email the invoice!'));
         }
-        
+
         unlink($invoicePath);
-        
+
         $this->redirect(array('orders/view', 'id' => $id));
     }
-    
+
     /**
      * Delete existing order
      */
     public function actionDelete($id)
     {
         $order = PricePlanOrder::model()->findByPk((int)$id);
-        
+
         if (empty($order)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         $order->delete();
- 
+
         $request = Yii::app()->request;
         $notify  = Yii::app()->notify;
-        
+
+        $redirect = null;
         if (!$request->getQuery('ajax')) {
             $notify->addSuccess(Yii::t('app', 'The item has been successfully deleted!'));
-            $this->redirect($request->getPost('returnUrl', array('orders/index')));
+            $redirect = $request->getPost('returnUrl', array('orders/index'));
+        }
+
+        // since 1.3.5.9
+        Yii::app()->hooks->doAction('controller_action_delete_data', $collection = new CAttributeCollection(array(
+            'controller' => $this,
+            'model'      => $order,
+            'redirect'   => $redirect,
+        )));
+
+        if ($collection->redirect) {
+            $this->redirect($collection->redirect);
         }
     }
-    
+
     /**
      * Delete existing order note
      */
     public function actionDelete_note($id)
     {
         $note = PricePlanOrderNote::model()->findByPk((int)$id);
-        
+
         if (empty($note)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         $note->delete();
- 
+
         $request = Yii::app()->request;
         $notify  = Yii::app()->notify;
-        
+
         if (!$request->getQuery('ajax')) {
             $notify->addSuccess(Yii::t('app', 'The item has been successfully deleted!'));
             $this->redirect($request->getPost('returnUrl', array('orders/index')));
         }
     }
-    
+
     /**
      * Callback to register Jquery ui bootstrap only for certain actions
      */

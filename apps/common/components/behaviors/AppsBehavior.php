@@ -2,34 +2,34 @@
 
 /**
  * AppsBehavior
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
+
 class AppsBehavior extends CBehavior
 {
     private $_availableApps = array();
-    
+
     private $_webApps = array();
-    
+
     private $_notWebApps = array();
-    
+
     private $_currentAppName;
-    
+
     private $_currentAppIsWeb;
-    
+
     private $_appsUrls = array();
-    
+
     private $_cdnSubdomain;
-    
+
     /**
      * AppsBehavior::setAvailableApps()
-     * 
+     *
      * @param array $apps
      * @return AppsBehavior
      */
@@ -41,20 +41,20 @@ class AppsBehavior extends CBehavior
         $this->_availableApps = $apps;
         return $this;
     }
-    
+
     /**
      * AppsBehavior::getAvailableApps()
-     * 
+     *
      * @return array
      */
     public function getAvailableApps()
     {
         return $this->_availableApps;
     }
-    
+
     /**
      * AppsBehavior::setWebApps()
-     * 
+     *
      * @param array $apps
      * @return  AppsBehavior
      */
@@ -66,20 +66,20 @@ class AppsBehavior extends CBehavior
         $this->_webApps = $apps;
         return $this;
     }
-    
+
     /**
      * AppsBehavior::getWebApps()
-     * 
+     *
      * @return array
      */
     public function getWebApps()
     {
         return $this->_webApps;
     }
-    
+
     /**
      * AppsBehavior::setNotWebApps()
-     * 
+     *
      * @param array $apps
      * @return AppsBehavior
      */
@@ -91,20 +91,20 @@ class AppsBehavior extends CBehavior
         $this->_notWebApps = $apps;
         return $this;
     }
-    
+
     /**
      * AppsBehavior::getNotWebApps()
-     * 
+     *
      * @return array
      */
     public function getNotWebApps()
     {
         return $this->_notWebApps;
     }
-    
+
     /**
      * AppsBehavior::setCurrentAppName()
-     * 
+     *
      * @param string $appName
      * @return AppsBehavior
      */
@@ -116,20 +116,20 @@ class AppsBehavior extends CBehavior
         $this->_currentAppName = $appName;
         return $this;
     }
-    
+
     /**
      * AppsBehavior::getCurrentAppName()
-     * 
+     *
      * @return string
      */
     public function getCurrentAppName()
     {
         return $this->_currentAppName;
     }
-    
+
     /**
      * AppsBehavior::setCurrentAppIsWeb()
-     * 
+     *
      * @param mixed $isWeb
      * @return mixed
      */
@@ -141,20 +141,20 @@ class AppsBehavior extends CBehavior
         $this->_currentAppIsWeb = (bool)$isWeb;
         return $this;
     }
-    
+
     /**
      * AppsBehavior::getCurrentAppIsWeb()
-     * 
+     *
      * @return bool
      */
     public function getCurrentAppIsWeb()
     {
         return $this->_currentAppIsWeb;
     }
-    
+
     /**
      * AppsBehavior::setCdnSubdomain()
-     * 
+     *
      * @param mixed
      */
     public function setCdnSubdomain($cdnSubdomain)
@@ -162,20 +162,20 @@ class AppsBehavior extends CBehavior
         $this->_cdnSubdomain = $cdnSubdomain;
         return $this;
     }
-    
+
     /**
      * AppsBehavior::getCdnSubdomain()
-     * 
+     *
      * @return mixed
      */
     public function getCdnSubdomain()
     {
         return $this->_cdnSubdomain;
     }
-    
+
     /**
      * AppsBehavior::isAppName()
-     * 
+     *
      * @param string $appName
      * @return bool
      */
@@ -183,10 +183,10 @@ class AppsBehavior extends CBehavior
     {
         return strtolower($appName) === strtolower($this->getCurrentAppName());
     }
-    
+
     /**
      * AppsBehavior::getAppBaseUrl()
-     * 
+     *
      * @param mixed $appName
      * @param bool $absolute
      * @param bool $hideScriptName
@@ -197,33 +197,33 @@ class AppsBehavior extends CBehavior
         if (empty($appName)) {
             $appName = $this->getCurrentAppName();
         }
-        
+
         if (!in_array($appName, $this->getWebApps())) {
             return false;
         }
-        
+
         $currentApp = $this->getCurrentAppName();
         $baseUrl    = $this->owner->getBaseUrl($absolute);
         $baseUrl    = preg_replace('/(\/frontend)$/ix', '', $baseUrl);
-        
+
         if ($appName == 'frontend') {
             $appName = null;
         }
 
         $url = preg_replace('/\/('.preg_quote($currentApp, '/').')$/ix', '', $baseUrl) . (!empty($appName) ? '/' . ltrim($appName, '/') : '') . '/';
-        
+
         $showScriptName = $this->owner->urlManager->showScriptName;
-        
+
         if (!$hideScriptName && $showScriptName) {
             $url .= 'index.php/';
         }
-        
+
         return $url;
     }
-    
+
     /**
      * AppsBehavior::getAppUrl()
-     * 
+     *
      * @param mixed $appName
      * @param mixed $uri
      * @param bool $absolute
@@ -235,11 +235,11 @@ class AppsBehavior extends CBehavior
         if (!($base = $this->getAppBaseUrl($appName, $absolute, $hideScriptName))) {
             return false;
         }
-        
+
         if (substr($base, -1, 1) != '/') {
             $base .= '/';
         }
-        
+
         $fullUrl = $base . ltrim($uri, '/');
         if ($this->getCdnSubdomain() !== false && $this->getCanUseCdnSubdomain($absolute, $uri, $fullUrl)) {
             if ($this->getCdnSubdomain() === null) {
@@ -255,12 +255,12 @@ class AppsBehavior extends CBehavior
         }
 
         return $fullUrl;
-        
+
     }
-    
+
     /**
      * AppsBehavior::getBaseUrl()
-     * 
+     *
      * @param mixed $appendThis
      * @param bool $absolute
      * @return string
@@ -271,7 +271,7 @@ class AppsBehavior extends CBehavior
         $baseUrl  = preg_replace('/\/?' . preg_quote($this->getCurrentAppName(), '/') . '\/?$/', '', $relative);
         $baseUrl  = '/' . trim($baseUrl, '/') . '/' . trim($appendThis, '/');
         $baseUrl  = str_replace('//', '/', $baseUrl);
-        
+
         if ($absolute) {
             $absolute = $this->owner->getBaseUrl(true);
             $absolute = str_replace($relative, '', $absolute);
@@ -293,32 +293,55 @@ class AppsBehavior extends CBehavior
 
         return $baseUrl;
     }
-    
+
+    /**
+     * AppsBehavior::getCurrentHostUrl()
+     *
+     * @param string $appendThis
+     * @return string
+     */
+    public function getCurrentHostUrl($appendThis = null)
+    {
+        $info  = $this->getAppUrl('frontend', '/', true, true);
+        $host  = parse_url($info, PHP_URL_SCHEME) . '://';
+        $host .= parse_url($info, PHP_URL_HOST);
+
+        if (($port = parse_url($info, PHP_URL_PORT)) && !empty($port) && $port != 80) {
+            $host .= ':' . $port;
+        }
+
+        if ($appendThis) {
+            $host .= '/' . ltrim($appendThis, '/');
+        }
+
+        return $host;
+    }
+
     /**
      * AppsBehavior::getCanUseCdnSubdomain()
-     * 
+     *
      * @param bool $absolute
      * @param string $uri
      * @param string $fullUrl
      * @return bool
      */
-    protected function getCanUseCdnSubdomain($absolute, $uri, $fullUrl) 
+    protected function getCanUseCdnSubdomain($absolute, $uri, $fullUrl)
     {
         if ($absolute || !$uri || !$fullUrl) {
             return false;
         }
-        
-        if (strpos($fullUrl, 'http') === 0 || stripos($fullUrl, '//') === 0 || filter_var($fullUrl, FILTER_VALIDATE_URL)) {
+
+        if (strpos($fullUrl, 'http') === 0 || stripos($fullUrl, '//') === 0 || FilterVarHelper::url($fullUrl)) {
             return false;
         }
-        
+
         if (!(strlen($extension = strtolower(pathinfo($uri, PATHINFO_EXTENSION))))) {
             return false;
         }
-        
+
         $allowedExtensions = array('css', 'js', 'png', 'jpg', 'jpeg', 'gif');
         $allowedExtensions = array_map('strtolower', $allowedExtensions);
-        
+
         return in_array($extension, $allowedExtensions);
     }
 }

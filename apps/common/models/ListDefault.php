@@ -2,15 +2,15 @@
 
 /**
  * ListDefault
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
+
 /**
  * This is the model class for table "list_default".
  *
@@ -41,13 +41,13 @@ class ListDefault extends ActiveRecord
     {
         $rules = array(
             array('from_name, reply_to, from_email', 'required'),
-            
+
             array('from_name', 'length', 'min' => 2, 'max' => 100),
             array('reply_to, from_email', 'length', 'min' => 5, 'max' => 100),
-            array('reply_to, from_email', 'email'),
+            array('reply_to, from_email', 'email', 'validateIDN' => true),
             array('subject', 'length', 'max'=>255),
         );
-        
+
         return CMap::mergeArray($rules, parent::rules());
     }
 
@@ -59,7 +59,7 @@ class ListDefault extends ActiveRecord
         $relations = array(
             'list' => array(self::BELONGS_TO, 'Lists', 'list_id'),
         );
-        
+
         return CMap::mergeArray($relations, parent::relations());
     }
 
@@ -75,7 +75,7 @@ class ListDefault extends ActiveRecord
             'reply_to'  => Yii::t('lists', 'Reply to'),
             'subject'   => Yii::t('lists', 'Subject'),
         );
-        
+
         return CMap::mergeArray($labels, parent::attributeLabels());
     }
 
@@ -89,7 +89,7 @@ class ListDefault extends ActiveRecord
     {
         return parent::model($className);
     }
-    
+
     public function attributeHelpTexts()
     {
         $texts = array(
@@ -100,7 +100,7 @@ class ListDefault extends ActiveRecord
         );
         return CMap::mergeArray($texts, parent::attributeHelpTexts());
     }
-    
+
     public function attributePlaceholders()
     {
         $placeholders = array(
@@ -111,13 +111,13 @@ class ListDefault extends ActiveRecord
         );
         return CMap::mergeArray($placeholders, parent::attributePlaceholders());
     }
-    
+
     public function mergeWithCustomerInfo(Customer $customer)
     {
         $this->from_name     = $customer->getFullName();
         $this->from_email    = $customer->email;
         $this->reply_to      = $customer->email;
-        
+
         return $this;
     }
 }

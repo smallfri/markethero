@@ -2,22 +2,22 @@
 
 /**
  * DeliveryServerSparkpostWebApi
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.3.5.6
- * 
+ *
  */
- 
+
 class DeliveryServerSparkpostWebApi extends DeliveryServer
 {
     protected $serverType = 'sparkpost-web-api';
-    
+
     protected $_initStatus;
-    
+
     protected $_preCheckError;
 
     /**
@@ -31,7 +31,7 @@ class DeliveryServerSparkpostWebApi extends DeliveryServer
         );
         return CMap::mergeArray($rules, parent::rules());
     }
-    
+
     /**
      * @return array customized attribute labels (name=>label)
      */
@@ -42,25 +42,25 @@ class DeliveryServerSparkpostWebApi extends DeliveryServer
         );
         return CMap::mergeArray(parent::attributeLabels(), $labels);
     }
-    
+
     public function attributeHelpTexts()
     {
         $texts = array(
             'password' => Yii::t('servers', 'One of your sparkpost api keys.'),
         );
-        
+
         return CMap::mergeArray(parent::attributeHelpTexts(), $texts);
     }
-    
+
     public function attributePlaceholders()
     {
         $placeholders = array(
             'password'  => Yii::t('servers', 'Api key'),
         );
-        
+
         return CMap::mergeArray(parent::attributePlaceholders(), $placeholders);
     }
-    
+
     /**
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
@@ -71,7 +71,7 @@ class DeliveryServerSparkpostWebApi extends DeliveryServer
     {
         return parent::model($className);
     }
-    
+
     public function sendEmail(array $params = array())
     {
         $params = (array)Yii::app()->hooks->applyFilters('delivery_server_before_send_email', $this->getParamsArray($params), $this);
@@ -79,33 +79,29 @@ class DeliveryServerSparkpostWebApi extends DeliveryServer
         if (!isset($params['from'], $params['to'], $params['subject'], $params['body'])) {
             return false;
         }
-        
-        list($toEmail, $toName)     = $this->getMailer()->findEmailAndName($params['to']); 
+
+        list($toEmail, $toName)     = $this->getMailer()->findEmailAndName($params['to']);
         list($fromEmail, $fromName) = $this->getMailer()->findEmailAndName($params['from']);
         $fromEmail = $returnPathEmail = $this->from_email; // force this
-        
+
         if (!empty($params['fromName'])) {
             $fromName = $params['fromName'];
         }
-        
+
         $replyToEmail = $replyToName = null;
         if (!empty($params['replyTo'])) {
-            list($replyToEmail, $replyToName) = $this->getMailer()->findEmailAndName($params['replyTo']); 
+            list($replyToEmail, $replyToName) = $this->getMailer()->findEmailAndName($params['replyTo']);
         }
-        
+
         $headerPrefix = Yii::app()->params['email.custom.header.prefix'];
-        $headers      = !empty($params['headers']) && is_array($params['headers']) ? $params['headers'] : array();
+        $headers = array();
+        if (!empty($params['headers'])) {
+            $headers = $this->parseHeadersIntoKeyValue($params['headers']);
+        }
         $headers['X-Sender']   = $fromEmail;
         $headers['X-Receiver'] = $toEmail;
         $headers[$headerPrefix . 'Mailer'] = 'Sparkpost Web API';
-        
-        /*$returnPathEmail = $fromEmail;
-        if (!isset($headers['Return-Path']) && !empty($params['returnPath'])) {
-            list($returnPathEmail) = $this->getMailer()->findEmailAndName($params['returnPath']);
-            $headers['Return-Path'] = $returnPathEmail;
-        }
-        */
-        
+
         $campaignId = StringHelper::random(40);
         $metaData   = array();
         if (isset($headers[$headerPrefix . 'Campaign-Uid'])) {
@@ -114,21 +110,14 @@ class DeliveryServerSparkpostWebApi extends DeliveryServer
         if (isset($headers[$headerPrefix . 'Subscriber-Uid'])) {
             $metaData['subscriber_uid'] = $headers[$headerPrefix . 'Subscriber-Uid'];
         }
-        
+
         $sent = false;
-        
+
         try {
             if (!$this->preCheckWebHook()) {
                 throw new Exception($this->_preCheckError);
             }
-            
-            $headerSearchReplace = array(
-                '[LIST_UNSUBSCRIBE_EMAIL]' => !empty($replyToEmail) ? $replyToEmail : $fromEmail,
-            );
-            foreach ($headers as $headerName => $headerValue) {
-                $headers[$headerName] = str_replace(array_keys($headerSearchReplace), array_values($headerSearchReplace), $headerValue);
-            }
- 
+
             $sendParams = array(
                 'options' => array(
                     'open_tracking'  => false,
@@ -159,7 +148,7 @@ class DeliveryServerSparkpostWebApi extends DeliveryServer
                     'html'     => $params['body'],
                 ),
             );
-           
+
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, "https://api.sparkpost.com/api/v1/transmissions");
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -170,7 +159,7 @@ class DeliveryServerSparkpostWebApi extends DeliveryServer
                 sprintf("Authorization: %s", $this->password),
                 "Accept: application/json"
             ));
-            
+
             $response = curl_exec($ch);
             if (curl_errno($ch)) {
                 $error = curl_error($ch);
@@ -178,7 +167,7 @@ class DeliveryServerSparkpostWebApi extends DeliveryServer
                 throw new Exception($error);
             }
             curl_close($ch);
-            
+
             $response = CJSON::decode($response, false);
             if (!empty($response->errors)) {
                 $errors = array();
@@ -187,13 +176,13 @@ class DeliveryServerSparkpostWebApi extends DeliveryServer
                 }
                 throw new Exception(implode("<br />", $errors));
             }
-            
+
             $this->getMailer()->addLog('OK');
             $sent = array('message_id' => $response->results->id);
         } catch (Exception $e) {
             $this->getMailer()->addLog($e->getMessage());
         }
-        
+
         if ($sent) {
             $this->logUsage();
         }
@@ -203,39 +192,36 @@ class DeliveryServerSparkpostWebApi extends DeliveryServer
         return $sent;
     }
 
-    public function getDefaultParamsArray()
+    public function getParamsArray(array $params = array())
     {
-        $params = array(
-            'transport' => self::TRANSPORT_SPARKPOST_WEB_API,
-        );
-        
-        return CMap::mergeArray(parent::getDefaultParamsArray(), $params);
+        $params['transport'] = self::TRANSPORT_SPARKPOST_WEB_API;
+        return parent::getParamsArray($params);
     }
-    
+
     protected function afterConstruct()
     {
         parent::afterConstruct();
         $this->_initStatus = $this->status;
         $this->hostname    = 'web-api.sparkpost.com';
     }
-    
+
     protected function afterFind()
     {
         $this->_initStatus = $this->status;
         parent::afterFind();
     }
-    
+
     protected function preCheckWebHook()
     {
         if (MW_IS_CLI || $this->isNewRecord || $this->_initStatus !== self::STATUS_INACTIVE) {
             return true;
         }
-        
+
         $options = Yii::app()->options;
         $url     = $options->get('system.urls.frontend_absolute_url') . sprintf('dswh/%d', $this->server_id);
-        
+
         try {
-            
+
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, "https://api.sparkpost.com/api/v1/webhooks");
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -244,7 +230,7 @@ class DeliveryServerSparkpostWebApi extends DeliveryServer
                 sprintf("Authorization: %s", $this->password),
                 "Accept: application/json"
             ));
-            
+
             $response = curl_exec($ch);
             if (curl_errno($ch)) {
                 $error = curl_error($ch);
@@ -252,7 +238,7 @@ class DeliveryServerSparkpostWebApi extends DeliveryServer
                 throw new Exception($error);
             }
             curl_close($ch);
-            
+
             $ids = array();
             $response = CJSON::decode($response, false);
             if (!empty($response->results)) {
@@ -262,7 +248,7 @@ class DeliveryServerSparkpostWebApi extends DeliveryServer
                     }
                 }
             }
-            
+
             foreach ($ids as $id) {
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, "https://api.sparkpost.com/api/v1/webhooks/" . $id);
@@ -273,7 +259,7 @@ class DeliveryServerSparkpostWebApi extends DeliveryServer
                     "Content-Type: application/json",
                     sprintf("Authorization: %s", $this->password),
                 ));
-                
+
                 curl_exec($ch);
                 if (curl_errno($ch)) {
                     $error = curl_error($ch);
@@ -282,7 +268,7 @@ class DeliveryServerSparkpostWebApi extends DeliveryServer
                 }
                 curl_close($ch);
             }
-            
+
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, "https://api.sparkpost.com/api/v1/webhooks");
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -298,7 +284,7 @@ class DeliveryServerSparkpostWebApi extends DeliveryServer
                 "Content-Type: application/json",
                 sprintf("Authorization: %s", $this->password),
             ));
-            
+
             $response = curl_exec($ch);
             if (curl_errno($ch)) {
                 $error = curl_error($ch);
@@ -306,7 +292,7 @@ class DeliveryServerSparkpostWebApi extends DeliveryServer
                 throw new Exception($error);
             }
             curl_close($ch);
-            
+
             $response = CJSON::decode($response, false);
             if (!empty($response->errors)) {
                 $errors = array();
@@ -315,15 +301,15 @@ class DeliveryServerSparkpostWebApi extends DeliveryServer
                 }
                 throw new Exception(implode("<br />", $errors));
             }
-            
+
         } catch (Exception $e) {
             $this->_preCheckError = $e->getMessage();
         }
-        
+
         if ($this->_preCheckError) {
             return false;
         }
-        
+
         return $this->save(false);
     }
 }

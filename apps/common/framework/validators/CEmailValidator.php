@@ -57,7 +57,7 @@ class CEmailValidator extends CValidator
 	 * value is false which means that validation of emails containing IDN will always fail.
 	 * @since 1.1.13
 	 */
-	public $validateIDN=false;
+	public $validateIDN=true;
 
 	/**
 	 * Validates the attribute of the object.
@@ -195,8 +195,13 @@ if(".($this->allowEmpty ? "jQuery.trim(value)!='' && " : '').$condition.") {
 			else
 			{
 				require_once(Yii::getPathOfAlias('system.vendors.Net_IDNA2.Net').DIRECTORY_SEPARATOR.'IDNA2.php');
-				$idna=new Net_IDNA2();
-				$value=$matches[1][0].'@'.@$idna->encode($matches[2][0]);
+				try {
+					$idna   = new Net_IDNA2();
+					$_value = $matches[1][0].'@'.@$idna->encode($matches[2][0]);
+					$value  = $_value;
+				} catch (Exception $e) {
+
+				}
 			}
 		}
 		return $value;

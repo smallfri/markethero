@@ -2,15 +2,15 @@
 
 /**
  * ListField
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
+
 /**
  * This is the model class for table "list_field".
  *
@@ -45,9 +45,9 @@
 class ListField extends ActiveRecord
 {
     const VISIBILITY_VISIBLE = 'visible';
-    
+
     const VISIBILITY_HIDDEN = 'hidden';
-    
+
     /**
      * @return string the associated database table name
      */
@@ -63,7 +63,7 @@ class ListField extends ActiveRecord
     {
         $rules = array(
             array('type_id, label, tag, required, visibility, sort_order', 'required'),
-            
+
             array('type_id', 'numerical', 'integerOnly' => true, 'min' => 1),
             array('type_id', 'exist', 'className' => 'ListFieldType'),
             array('label, help_text, default_value', 'length', 'min' => 1, 'max' => 255),
@@ -75,7 +75,7 @@ class ListField extends ActiveRecord
             array('visibility', 'in', 'range' => array_keys($this->getVisibilityOptionsArray())),
             array('sort_order', 'numerical', 'min' => -100, 'max' => 100),
         );
-        
+
         return CMap::mergeArray($rules, parent::rules());
     }
 
@@ -97,7 +97,7 @@ class ListField extends ActiveRecord
             'value' => array(self::HAS_ONE, 'ListFieldValue', 'field_id'),
             'segmentConditions' => array(self::HAS_MANY, 'ListSegmentCondition', 'field_id'),
         );
-        
+
         return CMap::mergeArray($relations, parent::relations());
     }
 
@@ -117,7 +117,7 @@ class ListField extends ActiveRecord
             'required'      => Yii::t('list_fields', 'Required'),
             'visibility'    => Yii::t('list_fields', 'Visibility'),
         );
-        
+
         return CMap::mergeArray($labels, parent::attributeLabels());
     }
 
@@ -144,35 +144,42 @@ class ListField extends ActiveRecord
         if ($this->hasErrors($attribute)) {
             return;
         }
-        
+
         $criteria = new CDbCriteria();
         $criteria->compare('list_id', (int)$this->list_id);
         $criteria->compare($attribute, $this->$attribute);
         $criteria->addNotInCondition('field_id', array((int)$this->field_id));
-        
+
         $exists = self::model()->find($criteria);
-        
+
         if (!empty($exists)) {
             $this->addError($attribute, Yii::t('list_fields', 'The {attribute} attribute must be unique in the mail list!', array(
                 '{attribute}' => $attribute,
             )));
         }
     }
-    
+
     public function _checkIfTagReserved($attribute, $params)
     {
         if ($this->hasErrors($attribute)) {
             return;
         }
-        
+
         $exists = TagRegistry::model()->findByAttributes(array('tag' => '['.$this->$attribute.']'));
         if (!empty($exists)) {
             $this->addError($attribute, Yii::t('list_fields', '"{tagName}" is reserved!', array(
                 '{tagName}' => CHtml::encode($this->$attribute),
             )));
         }
+
+        // since 1.3.5.9
+        if (strpos($this->$attribute, CustomerCampaignTag::getTagPrefix()) === 0) {
+            $this->addError($attribute, Yii::t('list_fields', '"{tagName}" is reserved!', array(
+                '{tagName}' => CHtml::encode($this->$attribute),
+            )));
+        }
     }
-    
+
     public function attributeHelpTexts()
     {
         $texts = array(
@@ -184,10 +191,10 @@ class ListField extends ActiveRecord
             'visibility'    => Yii::t('list_fields', 'Hidden fields are not shown to subscribers.'),
             'sort_order'    => Yii::t('list_fields', 'Decide the order of the fields shown in the form.'),
         );
-        
+
         return CMap::mergeArray($texts, parent::attributeHelpTexts());
     }
-    
+
     public function getRequiredOptionsArray()
     {
         return array(
@@ -195,7 +202,7 @@ class ListField extends ActiveRecord
             self::TEXT_NO    => Yii::t('app', 'No'),
         );
     }
-    
+
     public function getVisibilityOptionsArray()
     {
         return array(
@@ -203,18 +210,18 @@ class ListField extends ActiveRecord
             self::VISIBILITY_HIDDEN     => Yii::t('app', 'Hidden'),
         );
     }
-    
+
     public function getSortOrderOptionsArray()
     {
         static $_opts = array();
         if (!empty($_opts)) {
             return $_opts;
         }
-        
+
         for ($i = -100; $i <= 100; ++$i) {
-            $_opts[$i] = $i;    
+            $_opts[$i] = $i;
         }
-        
+
         return $_opts;
     }
 }

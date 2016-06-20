@@ -2,29 +2,30 @@
 
 /**
  * CampaignSenderBehavior
+ * NOTE: SINCE 1.3.5.9 THIS FILE IS NOT USED ANYMORE.
  * 
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
+
 class CampaignSenderBehavior extends CBehavior
 {
     // reference flag for the type of campaigns we're sending
     public $campaigns_type;
-    
+
     // reference flag for campaigns limit
     public $campaigns_limit = 0;
-    
+
     // reference flag for campaigns offset
     public $campaigns_offset = 0;
-    
+
     // whether this should be verbose and output to console
     public $verbose = 0;
-    
+
     public function sendCampaign()
     {
         $campaign = $this->getOwner();
@@ -294,7 +295,6 @@ class CampaignSenderBehavior extends CBehavior
                 }
 
                 $emailParams = $this->prepareEmail($subscriber);
-
                 if (empty($emailParams) || !is_array($emailParams)) {
                     $this->logDelivery($subscriber, Yii::t('campaigns', 'Unable to prepare the email content!'), CampaignDeliveryLog::STATUS_ERROR);
                     continue;
@@ -648,36 +648,28 @@ class CampaignSenderBehavior extends CBehavior
         $onlyPlainText  = !empty($campaign->template->only_plain_text) && $campaign->template->only_plain_text === CampaignTemplate::TEXT_YES;
         $emailAddress   = $subscriber->email;
 
-        if(!$onlyPlainText)
-        {
-
-//            if(!empty($campaign->option)&&$campaign->option->send_referral_url==1)
-//            {
-//                $emailContent = CampaignHelper::injectReferralLink($emailContent,$campaign->customer_id);
-//            }
-
-            if(($emailFooter = $customer->getGroupOption('campaigns.email_footer'))&&strlen(trim($emailFooter))>5)
-            {
-                $emailContent = CampaignHelper::injectEmailFooter($emailContent,$emailFooter,$campaign);
+        if (!$onlyPlainText) {
+            if (($emailFooter = $customer->getGroupOption('campaigns.email_footer')) && strlen(trim($emailFooter)) > 5) {
+                $emailContent = CampaignHelper::injectEmailFooter($emailContent, $emailFooter, $campaign);
             }
 
             if (!empty($campaign->option) && !empty($campaign->option->embed_images) && $campaign->option->embed_images == CampaignOption::TEXT_YES) {
                 list($emailContent, $embedImages) = CampaignHelper::embedContentImages($emailContent, $campaign);
             }
-            
+
             if (!empty($campaign->option) && $campaign->option->xml_feed == CampaignOption::TEXT_YES) {
                 $emailContent = CampaignXmlFeedParser::parseContent($emailContent, $campaign, $subscriber, true);
             }
-            
+
             if (!empty($campaign->option) && $campaign->option->json_feed == CampaignOption::TEXT_YES) {
                 $emailContent = CampaignJsonFeedParser::parseContent($emailContent, $campaign, $subscriber, true);
             }
-    
+
             if (!empty($campaign->option) && $campaign->option->url_tracking == CampaignOption::TEXT_YES) {
                 $emailContent = CampaignHelper::transformLinksForTracking($emailContent, $campaign, $subscriber, true);
             }
-            
-            $emailData = CampaignHelper::parseContent($emailContent, $campaign, $subscriber, true);    
+
+            $emailData = CampaignHelper::parseContent($emailContent, $campaign, $subscriber, true);
             list($toName, $emailSubject, $emailContent) = $emailData;
         }
 
@@ -687,13 +679,18 @@ class CampaignSenderBehavior extends CBehavior
             if ($campaign->template->auto_plain_text === CampaignTemplate::TEXT_YES /* && empty($campaign->template->plain_text)*/) {
                 $emailPlainText = CampaignHelper::htmlToText($emailContent);
             }
-            
+
             if (empty($emailPlainText) && !empty($campaign->template->plain_text) && !$onlyPlainText) {
                 $_emailData = CampaignHelper::parseContent($campaign->template->plain_text, $campaign, $subscriber, false);
                 list(, , $emailPlainText) = $_emailData;
+                if (($emailFooter = $customer->getGroupOption('campaigns.email_footer')) && strlen(trim($emailFooter)) > 5) {
+                    $emailPlainText .= "\n\n\n";
+                    $emailPlainText .= strip_tags($emailFooter);
+                }
+                $emailPlainText = preg_replace('%<br(\s{0,}?/?)?>%i', "\n", $emailPlainText);
             }
         }
-        
+
         if ($onlyPlainText) {
             $_emailData = CampaignHelper::parseContent($campaign->template->plain_text, $campaign, $subscriber, false);
             list($toName, $emailSubject, $emailPlainText) = $_emailData;
@@ -703,16 +700,16 @@ class CampaignSenderBehavior extends CBehavior
             }
             $emailPlainText = preg_replace('%<br(\s{0,}?/?)?>%i', "\n", $emailPlainText);
         }
-        
+
         // since 1.3.5.3
         if (!empty($campaign->option) && $campaign->option->xml_feed == CampaignOption::TEXT_YES) {
             $emailSubject = CampaignXmlFeedParser::parseContent($emailSubject, $campaign, $subscriber, true, $campaign->subject);
         }
-        
+
         if (!empty($campaign->option) && $campaign->option->json_feed == CampaignOption::TEXT_YES) {
             $emailSubject = CampaignJsonFeedParser::parseContent($emailSubject, $campaign, $subscriber, true, $campaign->subject);
         }
-        
+
         return array(
             'to'              => array($emailAddress => $toName),
             'subject'         => $emailSubject,
@@ -724,16 +721,16 @@ class CampaignSenderBehavior extends CBehavior
             //'trackingEnabled' => !empty($campaign->option) && $campaign->option->url_tracking == CampaignOption::TEXT_YES,
         );
     }
-    
+
     protected function markCampaignSent()
     {
         $campaign = $this->getOwner();
-        
+
         if ($campaign->isAutoresponder) {
             $campaign->saveStatus(Campaign::STATUS_SENDING);
             return;
         }
-        
+
         $campaign->saveStatus(Campaign::STATUS_SENT);
 
         if (Yii::app()->options->get('system.customer.action_logging_enabled', true)) {
@@ -743,41 +740,41 @@ class CampaignSenderBehavior extends CBehavior
                 $customer->attachBehavior('logAction', array(
                     'class' => 'customer.components.behaviors.CustomerActionLogBehavior',
                 ));
-                $logAction = $customer->asa('logAction');        
+                $logAction = $customer->asa('logAction');
             }
             $logAction->campaignSent($campaign);
         }
-        
+
         // since 1.3.4.6
         Yii::app()->hooks->doAction('console_command_send_campaigns_campaign_sent', $campaign);
 
         $this->sendCampaignStats();
-        
+
         // since 1.3.5.3
         $campaign->tryReschedule(true);
     }
-    
+
     protected function sendCampaignStats()
     {
         $campaign = $this->getOwner();
         if (empty($campaign->option->email_stats)) {
             return $this;
         }
-        
+
         if (!($server = DeliveryServer::pickServer(0, $campaign))) {
             return $this;
         }
-        
+
         $campaign->attachBehavior('stats', array(
             'class' => 'customer.components.behaviors.CampaignStatsProcessorBehavior',
         ));
         $viewData   = compact('campaign');
-        
+
         // prepare and send the email.
         $emailTemplate  = Yii::app()->options->get('system.email_templates.common');
         $emailBody      = Yii::app()->command->renderFile(Yii::getPathOfAlias('console.views.campaign-stats').'.php', $viewData, true);
         $emailTemplate  = str_replace('[CONTENT]', $emailBody, $emailTemplate);
-        
+
         $recipients = explode(',', $campaign->option->email_stats);
         $recipients = array_map('trim', $recipients);
 
@@ -786,45 +783,45 @@ class CampaignSenderBehavior extends CBehavior
         $emailParams['replyTo'] = array($campaign->reply_to => $campaign->from_name);
         $emailParams['subject'] = Yii::t('campaign_reports', 'The campaign {name} has finished sending, here are the stats', array('{name}' => $campaign->name));
         $emailParams['body']    = $emailTemplate;
-        
+
         foreach ($recipients as $recipient) {
-            if (!filter_var($recipient, FILTER_VALIDATE_EMAIL)) {
+            if (!FilterVarHelper::email($recipient)) {
                 continue;
             }
             $emailParams['to']  = array($recipient => $campaign->from_name);
             $server->setDeliveryFor(DeliveryServer::DELIVERY_FOR_CAMPAIGN)->setDeliveryObject($campaign)->sendEmail($emailParams);
         }
-        
+
         return $this;
     }
-    
+
     protected function getFailStatusFromResponse($response)
-    {        
+    {
         if (empty($response) || strlen($response) < 5) {
             return CampaignDeliveryLog::STATUS_ERROR;
         }
-        
+
         $status = CampaignDeliveryLog::STATUS_TEMPORARY_ERROR;
-        
+
         if(preg_match('/code\s"(\d+)"/ix', $response, $matches)) {
             $code = (int)$matches[1];
             if ($code >= 450 && !in_array($code, array(503))) {
                 $status = CampaignDeliveryLog::STATUS_FATAL_ERROR;
-            } 
+            }
         }
-        
+
         $temporaryErrors = array(
             'graylist', 'greylist', 'nested mail command', 'incorrect authentication', 'failed',
-            'timed out'
+            'timed out', 'sending suspended'
         );
-        
+
         foreach ($temporaryErrors as $error) {
             if (stripos($response, $error) !== false) {
                 $status = CampaignDeliveryLog::STATUS_TEMPORARY_ERROR;
                 break;
             }
         }
-        
+
         return $status;
     }
 }

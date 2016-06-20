@@ -2,17 +2,17 @@
 
 /**
  * UsersController
- * 
+ *
  * Handles the actions for users related tasks
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
+
 class UsersController extends Controller
 {
     /**
@@ -24,10 +24,10 @@ class UsersController extends Controller
         $filters = array(
             'postOnly + delete', // we only allow deletion via POST request
         );
-        
+
         return CMap::mergeArray($filters, parent::filters());
     }
-    
+
     /**
      * List all available users
      */
@@ -36,22 +36,22 @@ class UsersController extends Controller
         $request = Yii::app()->request;
         $user = new User('search');
         $user->unsetAttributes();
-        
+
         // for filters.
         $user->attributes = (array)$request->getQuery($user->modelName, array());
 
         $this->setData(array(
-            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('users', 'View users'), 
+            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('users', 'View users'),
             'pageHeading'       => Yii::t('users', 'View users'),
             'pageBreadcrumbs'   => array(
                 Yii::t('users', 'Users') => $this->createUrl('users/index'),
                 Yii::t('app', 'View all')
             )
         ));
-        
+
         $this->render('list', compact('user'));
     }
-    
+
     /**
      * Create a new user
      */
@@ -60,7 +60,7 @@ class UsersController extends Controller
         $request = Yii::app()->request;
         $notify = Yii::app()->notify;
         $user = new User();
-        
+
         if ($request->isPostRequest && ($attributes = (array)$request->getPost($user->modelName, array()))) {
             $user->attributes = $attributes;
             if (!$user->save()) {
@@ -68,30 +68,30 @@ class UsersController extends Controller
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller' => $this,
                 'success'    => $notify->hasSuccess,
                 'user'       => $user,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('users/index'));
             }
         }
-        
+
         $this->setData(array(
-            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('users', 'Create new user'), 
+            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('users', 'Create new user'),
             'pageHeading'       => Yii::t('users', 'Create new user'),
             'pageBreadcrumbs'   => array(
                 Yii::t('users', 'Users') => $this->createUrl('users/index'),
                 Yii::t('app', 'Create new'),
             )
         ));
-        
+
         $this->render('form', compact('user'));
     }
-    
+
     /**
      * Update existing user
      */
@@ -102,20 +102,20 @@ class UsersController extends Controller
         if (empty($user)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         if ($user->user_id == Yii::app()->user->getId()) {
             $this->redirect(array('account/index'));
         }
-        
+
         if ($user->removable === User::TEXT_NO && $user->user_id != Yii::app()->user->getId())  {
             Yii::app()->notify->addWarning(Yii::t('users', 'You are not allowed to update the master administrator!'));
             $this->redirect(array('users/index'));
         }
-        
+
         $user->confirm_email = $user->email;
         $request = Yii::app()->request;
         $notify = Yii::app()->notify;
-        
+
         if ($request->isPostRequest && ($attributes = (array)$request->getPost($user->modelName, array()))) {
             $user->attributes = $attributes;
             if (!$user->save()) {
@@ -123,18 +123,18 @@ class UsersController extends Controller
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller' => $this,
                 'success'    => $notify->hasSuccess,
                 'user'       => $user,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('users/index'));
             }
         }
-        
+
         $this->setData(array(
             'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('users', 'Update user'),
             'pageHeading'       => Yii::t('users', 'Update user'),
@@ -143,32 +143,44 @@ class UsersController extends Controller
                 Yii::t('app', 'Update'),
             )
         ));
-        
+
         $this->render('form', compact('user'));
     }
-    
+
     /**
      * Delete existing user
      */
     public function actionDelete($id)
     {
         $user = User::model()->findByPk((int)$id);
-        
+
         if (empty($user)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         if ($user->removable == User::TEXT_YES) {
-            $user->delete();    
+            $user->delete();
         }
 
         $request = Yii::app()->request;
-        $notify = Yii::app()->notify;
-        
+        $notify  = Yii::app()->notify;
+
+        $redirect = null;
         if (!$request->getQuery('ajax')) {
             $notify->addSuccess(Yii::t('app', 'The item has been successfully deleted!'));
-            $this->redirect($request->getPost('returnUrl', array('users/index')));
+            $redirect = $request->getPost('returnUrl', array('users/index'));
+        }
+
+        // since 1.3.5.9
+        Yii::app()->hooks->doAction('controller_action_delete_data', $collection = new CAttributeCollection(array(
+            'controller' => $this,
+            'model'      => $user,
+            'redirect'   => $redirect,
+        )));
+
+        if ($collection->redirect) {
+            $this->redirect($collection->redirect);
         }
     }
-    
+
 }

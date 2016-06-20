@@ -2,14 +2,14 @@
 
 ##
 # This file is part of the MailWizz EMA application.
-# 
+#
 # @package MailWizz EMA
-# @author Serban George Cristian <cristian.serban@mailwizz.com> 
+# @author Serban George Cristian <cristian.serban@mailwizz.com>
 # @link http://www.mailwizz.com/
-# @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+# @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
 # @license http://www.mailwizz.com/license/
 # @since 1.0
-# 
+#
 ##
 
 printf "%s\n" "Waiting 2 seconds to init..."
@@ -24,7 +24,7 @@ FILE_NAME="$( basename "$0" )"
 # full path with file
 COMMAND_FILE_PATH="$DIR/$FILE_NAME"
 
-if [ ! -f "$COMMAND_FILE_PATH" ]; then 
+if [ ! -f "$COMMAND_FILE_PATH" ]; then
     printf "%s\n" "Cannot find correct command: $COMMAND_FILE_PATH"
     exit 1
 fi
@@ -74,7 +74,7 @@ done
 shift $((OPTIND - 1))
 
 # help is available in all cases
-if [ $help -eq 1 ]; then 
+if [ $help -eq 1 ]; then
     printf "%s\n" "---------------------------------------------------------------"
     printf "%s\n" "| Usage: ./"$FILE_NAME" -s 5 -c 100 -p /usr/bin/php-cli        "
     printf "%s\n" "| To force PHP CLI binary :                                    "
@@ -95,12 +95,12 @@ printf "%s\n" "Looking for php binary..."
 if [ "$PHP_PATH" ] && [ ! -f "$PHP_PATH" ] && [ "$LOOKED_FOR_PHP" -eq 0 ]; then
     php_variants=( "php-cli" "php5-cli" "php5" "php" )
     LOOKED_FOR_PHP=1
-    
+
     for i in "${php_variants[@]}"
     do
         command -v $i >/dev/null 2>&1
         if [ $? -eq 0 ]; then
-            PHP_PATH="$(command -v $i)" 
+            PHP_PATH="$(command -v $i)"
             break
         fi
     done
@@ -116,13 +116,13 @@ printf "%s\n" "Found a valid php binary at $PHP_PATH"
 # check provided campaigns type
 allowed_campaign_types=( "regular" "autoresponder" )
 campaigns_type_valid=0
-if [ "$campaigns_type" != "" ]; then 
+if [ "$campaigns_type" != "" ]; then
     for i in "${allowed_campaign_types[@]}"
     do
         if [ "$campaigns_type" == "$i" ]; then
             campaigns_type_valid=1
             break;
-        fi     
+        fi
     done
     if [ $campaigns_type_valid -ne 1 ]; then
         campaigns_type=""

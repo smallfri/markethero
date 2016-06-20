@@ -2,15 +2,15 @@
 
 /**
  * User
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
+
 /**
  * This is the model class for table "user".
  *
@@ -41,11 +41,11 @@ class User extends ActiveRecord
     public $fake_password;
 
     public $confirm_password;
-    
+
     public $confirm_email;
-    
+
     public $new_avatar;
-    
+
     /**
      * @return string the associated database table name
      */
@@ -63,7 +63,7 @@ class User extends ActiveRecord
         if (CommonHelper::functionExists('finfo_open')) {
             $avatarMimes = Yii::app()->extensionMimes->get(array('png', 'jpg', 'gif'))->toArray();
         }
-        
+
         $rules = array(
             // when new user is created .
             array('first_name, last_name, email, confirm_email, fake_password, confirm_password, timezone, status', 'required', 'on' => 'insert'),
@@ -75,20 +75,20 @@ class User extends ActiveRecord
             array('language_id', 'exist', 'className' => 'Language'),
             array('first_name, last_name', 'length', 'min' => 2, 'max' => 100),
             array('email, confirm_email', 'length', 'min' => 4, 'max' => 100),
-            array('email, confirm_email', 'email'),
+            array('email, confirm_email', 'email', 'validateIDN' => true),
             array('timezone', 'in', 'range' => array_keys(DateTimeHelper::getTimeZones())),
             array('fake_password, confirm_password', 'length', 'min' => 6, 'max' => 100),
             array('confirm_password', 'compare', 'compareAttribute' => 'fake_password'),
             array('confirm_email', 'compare', 'compareAttribute' => 'email'),
             array('email', 'unique', 'criteria' => array('condition' => 'user_id != :uid', 'params' => array(':uid' => (int)$this->user_id) )),
-            
+
             // avatar
             array('new_avatar', 'file', 'types' => array('png', 'jpg', 'gif'), 'mimeTypes' => $avatarMimes, 'allowEmpty' => true),
-            
+
             // mark them as safe for search
             array('first_name, last_name, email, status, group_id', 'safe', 'on' => 'search'),
         );
-        
+
         return CMap::mergeArray($rules, parent::rules());
     }
 
@@ -103,7 +103,7 @@ class User extends ActiveRecord
             'autoLoginTokens'       => array(self::HAS_MANY, 'UserAutoLoginToken', 'user_id'),
             'pricePlanOrderNotes'   => array(self::HAS_MANY, 'PricePlanOrderNote', 'user_id'),
         );
-        
+
         return CMap::mergeArray($relations, parent::relations());
     }
 
@@ -124,15 +124,15 @@ class User extends ActiveRecord
             'avatar'        => Yii::t('users', 'Avatar'),
             'new_avatar'    => Yii::t('users', 'New avatar'),
             'removable'     => Yii::t('users', 'Removable'),
-            
+
             'confirm_email'     => Yii::t('users', 'Confirm email'),
             'fake_password'     => Yii::t('users', 'Password'),
             'confirm_password'  => Yii::t('users', 'Confirm password'),
         );
-        
+
         return CMap::mergeArray($labels, parent::attributeLabels());
     }
-    
+
     /**
     * Retrieves a list of models based on the current search/filter conditions.
     * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
@@ -146,7 +146,7 @@ class User extends ActiveRecord
         $criteria->compare('email', $this->email, true);
         $criteria->compare('status', $this->status);
         $criteria->compare('group_id', $this->group_id);
-        
+
         return new CActiveDataProvider(get_class($this), array(
             'criteria'      => $criteria,
             'pagination'    => array(
@@ -171,51 +171,51 @@ class User extends ActiveRecord
     {
         return parent::model($className);
     }
-    
+
     protected function afterValidate()
     {
         parent::afterValidate();
         $this->handleUploadedAvatar();
     }
-    
+
     protected function beforeSave()
     {
         if (!parent::beforeSave()) {
             return false;
         }
-        
+
         if ($this->isNewRecord) {
             $this->user_uid = $this->generateUid();
         }
-        
+
         if (!empty($this->fake_password)) {
             $this->password = Yii::app()->passwordHasher->hash($this->fake_password);
         }
-        
+
         if ($this->removable === self::TEXT_NO) {
             $this->status = self::STATUS_ACTIVE;
             $this->group_id = null;
         }
-        
+
         return true;
     }
-    
+
     protected function beforeDelete()
     {
         if (!parent::beforeDelete()) {
             return false;
         }
-        
+
         return $this->removable === self::TEXT_YES;
     }
-    
+
     public function getFullName()
     {
         if ($this->first_name && $this->last_name) {
             return $this->first_name.' '.$this->last_name;
         }
     }
-    
+
     public function getStatusesArray()
     {
         return array(
@@ -223,28 +223,28 @@ class User extends ActiveRecord
             self::STATUS_INACTIVE   => Yii::t('app', 'Inactive'),
         );
     }
-    
+
     public function getTimeZonesArray()
     {
         return DateTimeHelper::getTimeZones();
     }
-    
-    public function findByKeyUid($public_key)
+
+    public function findByUid($user_uid)
     {
         return $this->findByAttributes(array(
-            'public' => $public_key,
-        ));    
+            'user_uid' => $user_uid,
+        ));
     }
-    
+
     public function generateUid()
     {
         $unique = StringHelper::uniqid();
         $exists = $this->findByUid($unique);
-        
+
         if (!empty($exists)) {
             return $this->generateUid();
         }
-        
+
         return $unique;
     }
 
@@ -252,13 +252,13 @@ class User extends ActiveRecord
     {
         return $this->user_uid;
     }
-    
+
     public function getGravatarUrl($size = 50)
     {
         $gravatar = sprintf('//www.gravatar.com/avatar/%s?s=%d', md5(strtolower(trim($this->email))), (int)$size);
         return Yii::app()->hooks->applyFilters('user_get_gravatar_url', $gravatar, $this, $size);
     }
-    
+
     public function getAvatarUrl($width = 50, $height = 50, $forceSize = false)
     {
         if (empty($this->avatar)) {
@@ -266,7 +266,7 @@ class User extends ActiveRecord
         }
         return ImageHelper::resize($this->avatar, $width, $height, $forceSize);
     }
-    
+
     public function hasRouteAccess($route)
     {
         if (empty($this->group_id)) {
@@ -274,17 +274,17 @@ class User extends ActiveRecord
         }
         return $this->group->hasRouteAccess($route);
     }
-    
+
     protected function handleUploadedAvatar()
     {
         if ($this->hasErrors()) {
             return;
         }
-        
+
         if (!($avatar = CUploadedFile::getInstance($this, 'new_avatar'))) {
             return;
         }
-        
+
         $storagePath = Yii::getPathOfAlias('root.frontend.assets.files.avatars');
         if (!file_exists($storagePath) || !is_dir($storagePath)) {
             if (!@mkdir($storagePath, 0777, true)) {
@@ -294,13 +294,13 @@ class User extends ActiveRecord
                 return;
             }
         }
-        
+
         $newAvatarName = uniqid(rand(0, time())) . '-' . $avatar->getName();
         if (!$avatar->saveAs($storagePath . '/' . $newAvatarName)) {
             $this->addError('new_avatar', Yii::t('users', 'Cannot move the avatar into the correct storage folder!'));
             return;
         }
-        
+
         $this->avatar = '/frontend/assets/files/avatars/' . $newAvatarName;
     }
 }

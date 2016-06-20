@@ -2,15 +2,15 @@
 
 /**
  * ListCompany
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
+
 /**
  * This is the model class for table "list_company".
  *
@@ -20,6 +20,7 @@
  * @property integer $country_id
  * @property integer $zone_id
  * @property string $name
+ * @property string $website
  * @property string $address_1
  * @property string $address_2
  * @property string $zone_name
@@ -36,8 +37,8 @@
  */
 class ListCompany extends ActiveRecord
 {
-    public $defaultAddressFormat = "[COMPANY_NAME]\n[COMPANY_ADDRESS_1] [COMPANY_ADDRESS_2]\n[COMPANY_CITY] [COMPANY_ZONE] [COMPANY_ZIP]\n[COMPANY_COUNTRY]";
-    
+    public $defaultAddressFormat = "[COMPANY_NAME]\n[COMPANY_ADDRESS_1] [COMPANY_ADDRESS_2]\n[COMPANY_CITY] [COMPANY_ZONE] [COMPANY_ZIP]\n[COMPANY_COUNTRY]\n[COMPANY_WEBSITE]";
+
     /**
      * @return string the associated database table name
      */
@@ -53,8 +54,10 @@ class ListCompany extends ActiveRecord
     {
         $rules = array(
             array('name, country_id, address_1, city, zip_code, address_format', 'required'),
-            
+
             array('name', 'length', 'max' => 100),
+            array('website', 'length', 'max' => 255),
+            array('website', 'url'),
             array('country_id, zone_id', 'numerical', 'integerOnly' => true, 'min' => 1),
             array('address_1, address_2, city, address_format', 'length', 'max' => 255),
             array('zone_name', 'length', 'max' => 150),
@@ -66,7 +69,7 @@ class ListCompany extends ActiveRecord
             array('zone_name', 'match', 'pattern' => '/[a-zA-Z\s\-\.]+/'),
             array('phone', 'match', 'pattern' => '/[0-9\s\-]+/'),
         );
-        
+
         return CMap::mergeArray($rules, parent::rules());
     }
 
@@ -81,7 +84,7 @@ class ListCompany extends ActiveRecord
             'zone'      => array(self::BELONGS_TO, 'Zone', 'zone_id'),
             'list'      => array(self::BELONGS_TO, 'Lists', 'list_id'),
         );
-        
+
         return CMap::mergeArray($relations, parent::relations());
     }
 
@@ -96,6 +99,7 @@ class ListCompany extends ActiveRecord
             'country_id'        => Yii::t('lists', 'Country'),
             'zone_id'           => Yii::t('lists', 'Zone'),
             'name'              => Yii::t('lists', 'Name'),
+            'website'           => Yii::t('lists', 'Website'),
             'address_1'         => Yii::t('lists', 'Address 1'),
             'address_2'         => Yii::t('lists', 'Address 2'),
             'zone_name'         => Yii::t('lists', 'Zone name'),
@@ -104,7 +108,7 @@ class ListCompany extends ActiveRecord
             'phone'             => Yii::t('lists', 'Phone'),
             'address_format'    => Yii::t('lists', 'Address format'),
         );
-        
+
         return CMap::mergeArray($labels, parent::attributeLabels());
     }
 
@@ -118,7 +122,7 @@ class ListCompany extends ActiveRecord
     {
         return parent::model($className);
     }
-    
+
     protected function afterConstruct()
     {
         if (!$this->address_format) {
@@ -126,7 +130,7 @@ class ListCompany extends ActiveRecord
         }
         parent::afterConstruct();
     }
-    
+
     protected function afterFind()
     {
         if (!$this->address_format) {
@@ -134,7 +138,7 @@ class ListCompany extends ActiveRecord
         }
         parent::afterFind();
     }
-    
+
     protected function beforeValidate()
     {
         $tags = $this->getAvailableTags();
@@ -144,7 +148,7 @@ class ListCompany extends ActiveRecord
             if (!isset($tag['tag']) || !isset($tag['required']) || !$tag['required']) {
                 continue;
             }
-    
+
             if (!isset($tag['pattern']) && strpos($content, $tag['tag']) === false) {
                 $this->addError('address_format', Yii::t('lists', 'The following tag is required but was not found in your content: {tag}', array(
                     '{tag}' => $tag['tag'],
@@ -157,71 +161,72 @@ class ListCompany extends ActiveRecord
                 $hasErrors = true;
             }
         }
-        
+
         if ($hasErrors) {
             return false;
         }
-        
+
         return parent::beforeValidate();
     }
-    
-    public function mergeWithCustomerCompany(CustomerCompany $company) 
+
+    public function mergeWithCustomerCompany(CustomerCompany $company)
     {
         $attributes = array(
-            'name', 'type_id', 'country_id', 'zone_id', 'address_1', 'address_2', 
+            'name', 'website', 'type_id', 'country_id', 'zone_id', 'address_1', 'address_2',
             'zone_name', 'city', 'zip_code', 'phone'
         );
-        
+
         foreach ($attributes as $attribute) {
             $this->$attribute = $company->$attribute;
         }
-        
+
         return $this;
     }
-    
+
     public function getCountriesDropDown()
     {
         static $_countries = array();
-        
+
         if (empty($_countries)) {
             $_countries[""] = Yii::t('app', 'Please select');
-            
+
             $criteria = new CDbCriteria();
             $criteria->select = 'country_id, name';
             $models = Country::model()->findAll($criteria);
-            
+
             foreach ($models as $model) {
                 $_countries[$model->country_id] = $model->name;
             }
         }
-        
+
         $htmlOptions = $this->getHtmlOptions('country_id', array('data-placement' => 'right'));
         $htmlOptions['data-zones-by-country-url'] = Yii::app()->createUrl('account/zones_by_country');
-        
+
         return CHtml::activeDropDownList($this, 'country_id', $_countries, $htmlOptions);
     }
 
     public function getZonesDropDown()
     {
         $zones = array('' => Yii::t('app', 'Please select'));
-        
+
         $criteria = new CDbCriteria();
         $criteria->select = 'zone_id, name';
         $criteria->compare('country_id', (int)$this->country_id);
         $_zones = Zone::model()->findAll($criteria);
-        
+
         foreach ($_zones as $zone) {
             $zones[$zone->zone_id] = $zone->name;
         }
-        
+
         $htmlOptions = $this->getHtmlOptions('zone_id', array('data-placement' => 'left'));
         return CHtml::activeDropDownList($this, 'zone_id', $zones, $htmlOptions);
     }
-    
+
     public function getAvailableTags()
     {
         return array(
             array('tag' => '[COMPANY_NAME]', 'required' => true),
+            array('tag' => '[COMPANY_WEBSITE]', 'required' => false),
             array('tag' => '[COMPANY_ADDRESS_1]', 'required' => true),
             array('tag' => '[COMPANY_ADDRESS_2]', 'required' => false),
             array('tag' => '[COMPANY_CITY]', 'required' => true),
@@ -230,11 +235,12 @@ class ListCompany extends ActiveRecord
             array('tag' => '[COMPANY_COUNTRY]', 'required' => true),
         );
     }
-    
+
     public function getFormattedAddress()
     {
         $searchReplace = array(
             '[COMPANY_NAME]'        => $this->name,
+            '[COMPANY_WEBSITE]'     => $this->website,
             '[COMPANY_ADDRESS_1]'   => $this->address_1,
             '[COMPANY_ADDRESS_2]'   => $this->address_2,
             '[COMPANY_CITY]'        => $this->city,
@@ -242,7 +248,7 @@ class ListCompany extends ActiveRecord
             '[COMPANY_ZIP]'         => $this->zip_code,
             '[COMPANY_COUNTRY]'     => !empty($this->country) ? $this->country->name : null,
         );
-        
+
         return str_replace(array_keys($searchReplace), array_values($searchReplace), $this->address_format);
     }
 }

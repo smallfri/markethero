@@ -2,16 +2,16 @@
 
 /**
  * DeliveryServerElasticemailWebApi
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.3.5
- * 
+ *
  */
- 
+
 class DeliveryServerElasticemailWebApi extends DeliveryServer
 {
     protected $serverType = 'elasticemail-web-api';
@@ -27,7 +27,7 @@ class DeliveryServerElasticemailWebApi extends DeliveryServer
         );
         return CMap::mergeArray($rules, parent::rules());
     }
-    
+
     /**
      * @return array customized attribute labels (name=>label)
      */
@@ -38,27 +38,27 @@ class DeliveryServerElasticemailWebApi extends DeliveryServer
         );
         return CMap::mergeArray(parent::attributeLabels(), $labels);
     }
-    
+
     public function attributeHelpTexts()
     {
         $texts = array(
-            'username'    => Yii::t('servers', 'Your elastic email account username/email.'),
-            'password'    => Yii::t('servers', 'One of your elastic email api keys.'),
+            'username' => Yii::t('servers', 'Your elastic email account username/email.'),
+            'password' => Yii::t('servers', 'One of your elastic email api keys.'),
         );
-        
+
         return CMap::mergeArray(parent::attributeHelpTexts(), $texts);
     }
-    
+
     public function attributePlaceholders()
     {
         $placeholders = array(
             'username'  => Yii::t('servers', 'Username'),
             'password'  => Yii::t('servers', 'Api key'),
         );
-        
+
         return CMap::mergeArray(parent::attributePlaceholders(), $placeholders);
     }
-    
+
     /**
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
@@ -69,7 +69,7 @@ class DeliveryServerElasticemailWebApi extends DeliveryServer
     {
         return parent::model($className);
     }
-    
+
     public function sendEmail(array $params = array())
     {
         $params = (array)Yii::app()->hooks->applyFilters('delivery_server_before_send_email', $this->getParamsArray($params), $this);
@@ -77,22 +77,22 @@ class DeliveryServerElasticemailWebApi extends DeliveryServer
         if (!isset($params['from'], $params['to'], $params['subject'], $params['body'])) {
             return false;
         }
-        
+
         list($fromEmail, $fromName) = $this->getMailer()->findEmailAndName($params['from']);
         list($toEmail, $toName)     = $this->getMailer()->findEmailAndName($params['to']);
-        
+
         if (!empty($params['fromName'])) {
             $fromName = $params['fromName'];
         }
-        
+
         $replyToEmail = $replyToName = null;
         if (!empty($params['replyTo'])) {
-            list($replyToEmail, $replyToName) = $this->getMailer()->findEmailAndName($params['replyTo']); 
+            list($replyToEmail, $replyToName) = $this->getMailer()->findEmailAndName($params['replyTo']);
         }
-        
+
         $sent = false;
-        
-        try { 
+
+        try {
             $postData = array(
                 'username'      => $this->username,
                 'api_key'       => $this->password,
@@ -108,14 +108,13 @@ class DeliveryServerElasticemailWebApi extends DeliveryServer
                 'body_text'     => !empty($params['plainText']) ? $params['plainText'] : CampaignHelper::htmlToText($params['body']),
                 'encodingtype'  => 3,
             );
+
+            $headers = array();
             if (!empty($params['headers'])) {
+                $headers = $this->parseHeadersIntoKeyValue($params['headers']);
                 $i = 0;
-                $headerSearchReplace = array(
-                    '[LIST_UNSUBSCRIBE_EMAIL]' => $postData['reply_to'],
-                );
-                foreach ($params['headers'] as $name => $value) {
+                foreach ($headers as $name => $value) {
                     $i++;
-                    $value = str_replace(array_keys($headerSearchReplace), array_values($headerSearchReplace), $value);
                     $postData['header' . $i] = sprintf('%s: %s', $name, $value);
                 }
             }
@@ -126,8 +125,8 @@ class DeliveryServerElasticemailWebApi extends DeliveryServer
                 $attachments  = array();
                 $campaign     = null;
                 $headerPrefix = Yii::app()->params['email.custom.header.prefix'];
-                if (!empty($params['headers']) && !empty($params['headers'][$headerPrefix . 'Campaign-Uid'])) {
-                    $campaign = Campaign::model()->findByAttributes(array('campaign_uid' => $params[$headerPrefix . 'Campaign-Uid']));
+                if (!empty($headers) && !empty($headers[$headerPrefix . 'Campaign-Uid'])) {
+                    $campaign = Campaign::model()->findByAttributes(array('campaign_uid' => $headers[$headerPrefix . 'Campaign-Uid']));
                     if (!empty($campaign) && !$campaign->getIsDraft()) {
                         $attachments = Yii::app()->options->get(sprintf('customer.campaigns.tmp_attachments.%s', $campaign->campaign_uid), array());
                     }
@@ -144,7 +143,7 @@ class DeliveryServerElasticemailWebApi extends DeliveryServer
                         }
                     }
                     if (!empty($campaign) && !$campaign->getIsDraft()) {
-                        Yii::app()->options->set(sprintf('customer.campaigns.tmp_attachments.%s', $campaign->campaign_uid), $attachments);    
+                        Yii::app()->options->set(sprintf('customer.campaigns.tmp_attachments.%s', $campaign->campaign_uid), $attachments);
                     }
                 }
                 if (!empty($attachments)) {
@@ -155,17 +154,17 @@ class DeliveryServerElasticemailWebApi extends DeliveryServer
                 unset($message['body_html']);
             }
             $response = AppInitHelper::simpleCurlPost('https://api.elasticemail.com/mailer/send', $postData, (int)$this->timeout);
-            
+
             if ($response['status'] != 'success' || strpos($response['message'], '-') === false) {
                 throw new Exception(Yii::app()->ioFilter->stripClean($response['message']));
             }
-            
+
             $this->getMailer()->addLog('OK');
             $sent = array('message_id' => trim($response['message']));
         } catch (Exception $e) {
             $this->getMailer()->addLog($e->getMessage());
         }
-        
+
         if ($sent) {
             $this->logUsage();
         }
@@ -175,26 +174,23 @@ class DeliveryServerElasticemailWebApi extends DeliveryServer
         return $sent;
     }
 
-    public function getDefaultParamsArray()
+    public function getParamsArray(array $params = array())
     {
-        $params = array(
-            'transport' => self::TRANSPORT_ELASTICEMAIL_WEB_API,
-        );
-        
-        return CMap::mergeArray(parent::getDefaultParamsArray(), $params);
+        $params['transport'] = self::TRANSPORT_ELASTICEMAIL_WEB_API;
+        return parent::getParamsArray($params);
     }
-    
+
     public function requirementsFailed()
     {
         return false;
     }
-    
+
     protected function afterConstruct()
     {
         parent::afterConstruct();
         $this->hostname = 'web-api.elasticemail.com';
     }
-    
+
     // taken directly from http://elasticemail.com/api-documentation/attachments-upload
     // and added extra checks
     protected function uploadAttachment($filePath) {
@@ -219,10 +215,10 @@ class DeliveryServerElasticemailWebApi extends DeliveryServer
         }
         $data = http_build_query(array('username' => $this->username, 'api_key' => $this->password, 'file' => basename($filePath)), '', '&');
         $file = file_get_contents($filePath);
-        $result = ''; 
-    
-        $fp = @fsockopen('ssl://api.elasticemail.com', 443, $errno, $errstr, 30);   
-    
+        $result = '';
+
+        $fp = @fsockopen('ssl://api.elasticemail.com', 443, $errno, $errstr, 30);
+
         if ($fp){
             fputs($fp, "PUT /attachments/upload?" . $data . " HTTP/1.1\r\n");
             fputs($fp, "Host: api.elasticemail.com\r\n");
@@ -233,7 +229,7 @@ class DeliveryServerElasticemailWebApi extends DeliveryServer
             while(!feof($fp)) {
                 $result .= fgets($fp, 128);
             }
-        } else { 
+        } else {
             return array(
                 'status'  => false,
                 'error'   => $errstr.'('.$errno.')',
@@ -242,8 +238,8 @@ class DeliveryServerElasticemailWebApi extends DeliveryServer
             );
         }
         fclose($fp);
-        $_result = explode("\r\n\r\n", $result, 2); 
-        
+        $_result = explode("\r\n\r\n", $result, 2);
+
         return array(
             'status'   => true,
             'error'    => null,

@@ -6,7 +6,7 @@
  * @package MailWizz EMA
  * @author Serban George Cristian <cristian.serban@mailwizz.com> 
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.3.3
  */
@@ -19,7 +19,7 @@
             <h3 class="panel-title"><?php echo Yii::t('campaign_reports', 'Delivery rate');?></h3>
         </div>
         <div class="panel-body" style="height:350px;">
-            <div class="circliful-graph" data-dimension="250" data-text="<?php echo $campaign->stats->getDeliverySuccessRate(true);?>%" data-info="<?php echo Yii::t('campaign_reports', 'Delivery rate');?>" data-width="30" data-fontsize="38" data-percent="<?php echo ceil($campaign->stats->getDeliverySuccessRate());?>" data-fgcolor="#c6c7c8" data-bgcolor="#eee" data-border="inline" data-type="half"></div>
+            <div class="circliful-graph" data-dimension="250" data-text="<?php echo $campaign->stats->getDeliverySuccessRate(true);?>%" data-info="<?php echo Yii::t('campaign_reports', 'Delivery rate');?>" data-width="30" data-fontsize="38" data-percent="<?php echo ceil($campaign->stats->getDeliverySuccessRate());?>" data-fgcolor="#3c8dbc" data-bgcolor="#eee" data-border="inline" data-type="half"></div>
             <ul class="list-group">
                 <li class="list-group-item"><span class="badge"><?php echo $campaign->stats->getProcessedCount(true);?></span> <?php echo Yii::t('campaign_reports', 'Processed');?></li>
                 <li class="list-group-item"><span class="badge"><?php echo $campaign->stats->getDeliverySuccessCount(true);?></span> <?php echo Yii::t('campaign_reports', 'Delivery success');?></li>

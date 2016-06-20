@@ -2,11 +2,11 @@
 
 /**
  * SendingDomain
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.3.4.7
  */
@@ -31,10 +31,10 @@
  */
 class SendingDomain extends ActiveRecord
 {
+    // both constants are deprecated and will be removed.
     const DKIM_SELECTOR = 'mailer';
-    
     const DKIM_FULL_SELECTOR = 'mailer._domainkey';
-    
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -59,7 +59,7 @@ class SendingDomain extends ActiveRecord
             array('dkim_private_key, dkim_public_key', 'length', 'max' => 10000),
 			array('locked, verified, signing_enabled', 'length', 'max' => 3),
             array('locked, verified, signing_enabled', 'in', 'range' => array_keys($this->getYesNoOptions())),
-            
+
 			// The following rule is used by search().
 			array('customer_id, name, locked, verified, signing_enabled', 'safe', 'on'=>'search'),
 		);
@@ -76,7 +76,7 @@ class SendingDomain extends ActiveRecord
 		);
         return CMap::mergeArray($relations, parent::relations());
 	}
-    
+
     /**
 	 * @return array scopes.
 	 */
@@ -94,7 +94,7 @@ class SendingDomain extends ActiveRecord
         ));
         return CMap::mergeArray($scopes, parent::scopes());
     }
-    
+
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
@@ -112,7 +112,7 @@ class SendingDomain extends ActiveRecord
 		);
         return CMap::mergeArray($labels, parent::attributeLabels());
 	}
-    
+
     /**
 	 * @return array customized attribute labels (name=>label)
 	 */
@@ -145,7 +145,7 @@ class SendingDomain extends ActiveRecord
 	public function search()
 	{
 		$criteria=new CDbCriteria;
-        
+
         if (!empty($this->customer_id)) {
             if (is_numeric($this->customer_id)) {
                 $criteria->compare('t.customer_id', $this->customer_id);
@@ -166,9 +166,9 @@ class SendingDomain extends ActiveRecord
         $criteria->compare('t.locked', $this->locked);
         $criteria->compare('t.verified', $this->verified);
         $criteria->compare('t.signing_enabled', $this->signing_enabled);
-        
+
         $criteria->order = 't.domain_id DESC';
-        
+
 		return new CActiveDataProvider(get_class($this), array(
             'criteria'   => $criteria,
             'pagination' => array(
@@ -193,22 +193,22 @@ class SendingDomain extends ActiveRecord
 	{
 		return parent::model($className);
 	}
-    
+
     public function getIsVerified()
     {
         return $this->verified === self::TEXT_YES;
     }
-    
+
     public function getIsLocked()
     {
         return $this->locked == self::TEXT_YES;
     }
-    
+
     public function getSigningEnabled()
     {
         return $this->signing_enabled == self::TEXT_YES;
     }
-    
+
     protected function beforeSave()
     {
         if (!$this->isNewRecord) {
@@ -221,9 +221,9 @@ class SendingDomain extends ActiveRecord
                 }
             }
         }
-        return parent::beforeSave();    
+        return parent::beforeSave();
     }
-    
+
     protected function afterValidate()
     {
         if (!$this->hasErrors()) {
@@ -231,7 +231,7 @@ class SendingDomain extends ActiveRecord
         }
         parent::afterValidate();
     }
-    
+
     public function getRequirementsErrors()
     {
         $errors = array();
@@ -246,18 +246,18 @@ class SendingDomain extends ActiveRecord
         }
         return $errors;
     }
-    
+
     public function generateDkimKeys()
     {
         if (!empty($this->dkim_public_key) && !empty($this->dkim_private_key)) {
             return true;
         }
-        
+
         $key = StringHelper::random(10);
         $publicKey   = $key . '.public';
         $privateKey  = $key . '.private';
         $tempStorage = Yii::getPathOfAlias('common.runtime.dkim');
-        
+
         if ((!file_exists($tempStorage) || !is_dir($tempStorage)) && !mkdir($tempStorage, 0777)) {
             $this->addError('name', Yii::t('sending_domains', 'Unable to create {dir} directory.', array('{dir}' => $tempStorage)));
             return false;
@@ -275,7 +275,7 @@ class SendingDomain extends ActiveRecord
             $this->addError('name', Yii::t('sending_domains', 'Unable to check the private key file.'));
             return false;
         }
-        
+
         // public key
         $line = exec(sprintf('cd %s && /usr/bin/openssl rsa -in %s -out %s -pubout -outform PEM', escapeshellarg($tempStorage), escapeshellarg($privateKey), escapeshellarg($publicKey)), $output, $return);
         if ((int)$return != 0) {
@@ -289,28 +289,33 @@ class SendingDomain extends ActiveRecord
             $this->addError('name', Yii::t('sending_domains', 'Unable to check the public key file.'));
             return false;
         }
-        
+
         $this->dkim_private_key = file_get_contents($tempStorage . '/' . $privateKey);
         $this->dkim_public_key  = file_get_contents($tempStorage . '/' . $publicKey);
-        
+
         unlink($tempStorage . '/' . $privateKey);
         unlink($tempStorage . '/' . $publicKey);
-        
+
         return true;
     }
-    
+
     public function getCleanPublicKey()
     {
         $publicKey = str_replace(array('-----BEGIN PUBLIC KEY-----', '-----END PUBLIC KEY-----'), '', $this->dkim_public_key);
         $publicKey = trim($publicKey);
         return $publicKey;
     }
-    
+
     public function getDnsTxtDkimSelectorToAdd()
     {
-        return sprintf('%s         TXT     "v=DKIM1; k=rsa; p=%s;"', self::DKIM_FULL_SELECTOR, $this->getCleanPublicKey());
+        $record = sprintf('%s         TXT     "v=DKIM1; k=rsa; p=%s;"', self::getDkimFullSelector(), $this->getCleanPublicKey());
+
+        // since 1.3.5.9
+        $record = Yii::app()->hooks->applyFilters('sending_domain_get_dns_txt_dkim_record', $record, $this);
+
+        return $record;
     }
-    
+
     public function getDnsTxtSpfRecordToAdd()
     {
         $smtpHosts = array();
@@ -335,55 +340,61 @@ class SendingDomain extends ActiveRecord
                 $smtpHosts[] = sprintf('ip6:%s', $_SERVER['SERVER_ADDR']);
             }
         }
-        return sprintf('%s.      IN TXT     "v=spf1 mx a ptr %s ~all"', $this->name, implode(" ", $smtpHosts));   
+
+        $record = sprintf('%s.      IN TXT     "v=spf1 mx a ptr %s ~all"', $this->name, implode(" ", $smtpHosts));
+
+        // since 1.3.5.9
+        $record = Yii::app()->hooks->applyFilters('sending_domain_get_dns_txt_spf_record', $record, $this, $smtpHosts);
+
+        return $record;
     }
-    
+
     public function findVerifiedByEmailForCustomer($email, $customer_id)
     {
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if (!FilterVarHelper::email($email)) {
             return null;
         }
-        
+
         static $domains = array();
-        
+
         $parts  = explode('@', $email);
         $domain = $parts[1];
-        
+
         if (isset($domains[$domain]) || array_key_exists($domain, $domains)) {
             return $domains[$domain];
         }
-        
+
         $criteria = new CDbCriteria();
         $criteria->compare('t.name', $domain);
         $criteria->compare('t.verified', self::TEXT_YES);
         $criteria->compare('t.customer_id', $customer_id);
-        
+
         return $domains[$domain] = self::model()->find($criteria);
     }
-    
+
     public function findVerifiedByEmailForSystem($email)
     {
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if (!FilterVarHelper::email($email)) {
             return null;
         }
-        
+
         static $domains = array();
-        
+
         $parts  = explode('@', $email);
         $domain = $parts[1];
-        
+
         if (isset($domains[$domain]) || array_key_exists($domain, $domains)) {
             return $domains[$domain];
         }
-        
+
         $criteria = new CDbCriteria();
         $criteria->compare('t.name', $domain);
         $criteria->compare('t.verified', self::TEXT_YES);
         $criteria->addCondition('t.customer_id IS NULL');
-        
+
         return $domains[$domain] = self::model()->find($criteria);
     }
-    
+
     public function findVerifiedByEmail($email, $customer_id = null)
     {
         $domain = null;
@@ -394,5 +405,15 @@ class SendingDomain extends ActiveRecord
             $domain = $this->findVerifiedByEmailForSystem($email);
         }
         return $domain;
+    }
+
+    public static function getDkimSelector()
+    {
+        return Yii::app()->params['email.custom.dkim.selector'];
+    }
+
+    public static function getDkimFullSelector()
+    {
+        return Yii::app()->params['email.custom.dkim.full_selector'];
     }
 }

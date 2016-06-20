@@ -94,7 +94,7 @@ class PHPMailer
      * If empty, it will be set to either From or Sender.
      * @type string
      */
-    public $ReturnPath = 'bounces@marketherobounce1.com';
+    public $ReturnPath = '';
 
     /**
      * The Subject of the message.
@@ -902,7 +902,7 @@ class PHPMailer
                 break;
             case 'php':
             default:
-                return (bool)filter_var($address, FILTER_VALIDATE_EMAIL);
+                return (bool)FilterVarHelper::email($address);
                 break;
             case 'noregex':
                 //No PCRE! Do something _very_ approximate!
@@ -1027,7 +1027,7 @@ class PHPMailer
                     if (method_exists($this, $sendMethod)) {
                         return $this->$sendMethod($this->MIMEHeader, $this->MIMEBody);
                     }
-                    
+
                     return $this->mailSend($this->MIMEHeader, $this->MIMEBody);
             }
         } catch (phpmailerException $exc) {

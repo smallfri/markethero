@@ -2,14 +2,14 @@
 
 /**
  * This file is part of the MailWizz EMA application.
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  */
- 
+
 ?>
 
 <?php $form = $this->beginWidget('CActiveForm'); ?>
@@ -24,21 +24,26 @@
         <div class="clearfix"><!-- --></div>
     </div>
     <div class="box-body">
-         <div class="form-group col-lg-4">
+         <div class="form-group col-lg-3">
             <?php echo $form->labelEx($model, 'enable_filemanager_user');?>
             <?php echo $form->dropDownList($model, 'enable_filemanager_user', $model->getOptionsDropDown(), $model->getHtmlOptions('enable_filemanager_user')); ?>
             <?php echo $form->error($model, 'enable_filemanager_user');?>
-        </div> 
-        <div class="form-group col-lg-4">
+        </div>
+        <div class="form-group col-lg-3">
             <?php echo $form->labelEx($model, 'enable_filemanager_customer');?>
             <?php echo $form->dropDownList($model, 'enable_filemanager_customer', $model->getOptionsDropDown(), $model->getHtmlOptions('enable_filemanager_customer')); ?>
             <?php echo $form->error($model, 'enable_filemanager_customer');?>
-        </div>  
-        <div class="form-group col-lg-4">
+        </div>
+        <div class="form-group col-lg-3">
             <?php echo $form->labelEx($model, 'default_toolbar');?>
             <?php echo $form->dropDownList($model, 'default_toolbar', $model->getToolbarsDropDown(), $model->getHtmlOptions('default_toolbar')); ?>
             <?php echo $form->error($model, 'default_toolbar');?>
-        </div>  
+        </div>
+        <div class="form-group col-lg-3">
+            <?php echo $form->labelEx($model, 'filemanager_theme');?>
+            <?php echo $form->dropDownList($model, 'filemanager_theme', $model->getFilemanagerThemesDropDown(), $model->getHtmlOptions('filemanager_theme')); ?>
+            <?php echo $form->error($model, 'filemanager_theme');?>
+        </div>
         <div class="clearfix"><!-- --></div>
     </div>
     <div class="box-footer">

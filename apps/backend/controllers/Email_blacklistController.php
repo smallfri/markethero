@@ -2,17 +2,17 @@
 
 /**
  * Email_blacklistController
- * 
+ *
  * Handles the actions for blacklisted emails related tasks
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
+
 class Email_blacklistController extends Controller
 {
     public function init()
@@ -20,7 +20,7 @@ class Email_blacklistController extends Controller
         $this->getData('pageScripts')->add(array('src' => AssetsUrl::js('email-blacklist.js')));
         parent::init();
     }
-    
+
     /**
      * Define the filters for various controller actions
      * Merge the filters with the ones from parent implementation
@@ -30,10 +30,10 @@ class Email_blacklistController extends Controller
         $filters = array(
             'postOnly + delete, delete_all',
         );
-        
+
         return CMap::mergeArray($filters, parent::filters());
     }
-    
+
     /**
      * List all blacklisted emails.
      * Delivery to blacklisted emails is denied
@@ -43,22 +43,22 @@ class Email_blacklistController extends Controller
         $request = Yii::app()->request;
         $blacklist = new EmailBlacklist('search');
         $blacklist->unsetAttributes();
-        
+
         // for filters.
         $blacklist->attributes = (array)$request->getQuery($blacklist->modelName, array());
 
         $this->setData(array(
-            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('email_blacklist', 'Blacklisted emails'), 
+            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('email_blacklist', 'Blacklisted emails'),
             'pageHeading'       => Yii::t('email_blacklist', 'Blacklisted emails'),
             'pageBreadcrumbs'   => array(
                 Yii::t('email_blacklist', 'Blacklisted emails') => $this->createUrl('email_blacklist/index'),
                 Yii::t('app', 'View all')
             )
         ));
-        
+
         $this->render('list', compact('blacklist'));
     }
-    
+
     /**
      * Add a new email in the blacklist
      */
@@ -75,30 +75,30 @@ class Email_blacklistController extends Controller
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller'=> $this,
                 'success'   => $notify->hasSuccess,
                 'blacklist' => $blacklist,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('email_blacklist/index'));
             }
         }
-        
+
         $this->setData(array(
-            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('email_blacklist', 'Blacklisted emails'), 
+            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('email_blacklist', 'Blacklisted emails'),
             'pageHeading'       => Yii::t('email_blacklist', 'Add a new email address to blacklist.'),
             'pageBreadcrumbs'   => array(
                 Yii::t('email_blacklist', 'Blacklisted emails') => $this->createUrl('email_blacklist/index'),
                 Yii::t('app', 'Add new'),
             )
         ));
-        
+
         $this->render('form', compact('blacklist'));
     }
-    
+
     /**
      * Update an existing email from the blacklist
      */
@@ -109,7 +109,7 @@ class Email_blacklistController extends Controller
         if (empty($blacklist)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         $request = Yii::app()->request;
         $notify = Yii::app()->notify;
 
@@ -120,30 +120,30 @@ class Email_blacklistController extends Controller
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller'=> $this,
                 'success'   => $notify->hasSuccess,
                 'blacklist' => $blacklist,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('email_blacklist/index'));
             }
         }
-        
+
         $this->setData(array(
-            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('email_blacklist', 'Blacklisted emails'), 
+            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('email_blacklist', 'Blacklisted emails'),
             'pageHeading'       => Yii::t('email_blacklist', 'Update blacklisted email address.'),
             'pageBreadcrumbs'   => array(
                 Yii::t('email_blacklist', 'Blacklisted emails') => $this->createUrl('email_blacklist/index'),
                 Yii::t('app', 'Update'),
             )
         ));
-        
+
         $this->render('form', compact('blacklist'));
     }
-    
+
     /**
      * Delete an email from the blacklist.
      * Once removed from the blacklist, the delivery servers will be able to deliver the email to the removed address
@@ -155,18 +155,30 @@ class Email_blacklistController extends Controller
         if (empty($blacklist)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         $blacklist->delete();
-        
+
         $request = Yii::app()->request;
-        $notify = Yii::app()->notify;
-        
+        $notify  = Yii::app()->notify;
+
+        $redirect = null;
         if (!$request->getQuery('ajax')) {
             $notify->addSuccess(Yii::t('app', 'The item has been successfully deleted!'));
-            $this->redirect($request->getPost('returnUrl', array('email_blacklist/index')));
+            $redirect = $request->getPost('returnUrl', array('email_blacklist/index'));
+        }
+
+        // since 1.3.5.9
+        Yii::app()->hooks->doAction('controller_action_delete_data', $collection = new CAttributeCollection(array(
+            'controller' => $this,
+            'model'      => $blacklist,
+            'redirect'   => $redirect,
+        )));
+
+        if ($collection->redirect) {
+            $this->redirect($collection->redirect);
         }
     }
-    
+
     /**
      * Run a bulk action against the email blacklist
      */
@@ -174,46 +186,56 @@ class Email_blacklistController extends Controller
     {
         $request = Yii::app()->request;
         $notify  = Yii::app()->notify;
-        
+
         $action = $request->getPost('bulk_action');
         $items  = array_unique(array_map('intval', (array)$request->getPost('bulk_item', array())));
 
         if ($action == EmailBlacklist::BULK_ACTION_DELETE && count($items)) {
             $affected = 0;
             foreach ($items as $item) {
-                $server = EmailBlacklist::model()->findByPk((int)$item);
-                if (empty($server)) {
+                $email = EmailBlacklist::model()->findByPk((int)$item);
+                if (empty($email)) {
                     continue;
                 }
 
-                $server->delete();
+                $email->delete();
                 $affected++;
             }
             if ($affected) {
                 $notify->addSuccess(Yii::t('app', 'The action has been successfully completed!'));
             }
         }
-        
+
         $defaultReturn = $request->getServer('HTTP_REFERER', array('email_blacklist/index'));
         $this->redirect($request->getPost('returnUrl', $defaultReturn));
     }
-    
+
     /**
      * Delete all the emails from the blacklist
      */
     public function actionDelete_all()
     {
-        EmailBlacklist::model()->deleteAll();
+        $criteria = new CDbCriteria();
+        $criteria->select = 'email_id, subscriber_id, email';
+        $criteria->limit  = 500;
+
+        $models = EmailBlacklist::model()->findAll($criteria);
+        while (!empty($models)) {
+            foreach ($models as $model) {
+                $model->delete();
+            }
+            $models = EmailBlacklist::model()->findAll($criteria);
+        }
 
         $request = Yii::app()->request;
-        $notify = Yii::app()->notify;
-        
+        $notify  = Yii::app()->notify;
+
         if (!$request->getQuery('ajax')) {
             $notify->addSuccess(Yii::t('app', 'Your items have been successfully deleted!'));
             $this->redirect($request->getPost('returnUrl', array('email_blacklist/index')));
         }
     }
-    
+
     /**
      * Export existing blacklisted emails
      */
@@ -229,7 +251,7 @@ class Email_blacklistController extends Controller
             $notify->addError(Yii::t('email_blacklist', 'Cannot open export temporary file!'));
             $this->redirect($redirect);
         }
-        
+
         $fileName = 'email-blacklist-' . date('Y-m-d-h-i-s') . '.csv';
         header("Pragma: public");
         header("Expires: 0");
@@ -238,15 +260,15 @@ class Email_blacklistController extends Controller
         header('Content-type: application/csv');
         header("Content-Transfer-Encoding: Binary");
         header('Content-Disposition: attachment; filename="'.$fileName.'"');
-        
+
         // columns
         $columns = array(
-            Yii::t('email_blacklist', 'Email'), 
-            Yii::t('email_blacklist', 'Reason'), 
+            Yii::t('email_blacklist', 'Email'),
+            Yii::t('email_blacklist', 'Reason'),
             Yii::t('email_blacklist', 'Date added')
         );
-        fputcsv($fp, $columns, ',', '"');  
-        
+        fputcsv($fp, $columns, ',', '"');
+
         // rows
         $limit  = 500;
         $offset = 0;
@@ -254,7 +276,7 @@ class Email_blacklistController extends Controller
         while (!empty($models)) {
             foreach ($models as $model) {
                 $row = array($model->email, $model->reason, $model->dateAdded);
-                fputcsv($fp, $row, ',', '"'); 
+                fputcsv($fp, $row, ',', '"');
             }
             if (connection_status() != 0) {
                 @fclose($fp);
@@ -263,11 +285,11 @@ class Email_blacklistController extends Controller
             $offset = $offset + $limit;
             $models = $this->getBlacklistedModels($limit, $offset);
         }
-        
+
         @fclose($fp);
         exit;
     }
-    
+
     protected function getBlacklistedModels($limit = 100, $offset = 0)
     {
         $criteria = new CDbCriteria;
@@ -276,7 +298,7 @@ class Email_blacklistController extends Controller
         $criteria->offset   = (int)$offset;
         return EmailBlacklist::model()->findAll($criteria);
     }
-    
+
     /**
      * Export existing blacklisted emails
      */
@@ -287,13 +309,13 @@ class Email_blacklistController extends Controller
         $request    = Yii::app()->request;
         $notify     = Yii::app()->notify;
         $redirect   = array('email_blacklist/index');
-        
+
         if (!$request->isPostRequest) {
             $this->redirect($redirect);
         }
-        
+
         ini_set('auto_detect_line_endings', true);
-        
+
         $import = new EmailBlacklist('import');
         $import->file = CUploadedFile::getInstance($import, 'file');
 
@@ -302,41 +324,41 @@ class Email_blacklistController extends Controller
             $notify->addError($import->shortErrors->getAllAsString());
             $this->redirect($redirect);
         }
-        
+
         $file = new SplFileObject($import->file->tempName);
         $file->setFlags(SplFileObject::READ_CSV | SplFileObject::SKIP_EMPTY | SplFileObject::DROP_NEW_LINE | SplFileObject::READ_AHEAD);
         $columns = $file->current(); // the header
-        
+
         if (!empty($columns)) {
             $columns = array_map('strtolower', $columns);
             if (array_search('email', $columns) === false) {
                 $columns = null;
             }
         }
-                
+
         if (empty($columns)) {
             $notify->addError(Yii::t('app', 'Your form has a few errors, please fix them and try again!'));
             $notify->addError(Yii::t('email_blacklist', 'Your file does not contain the header with the fields title!'));
             $this->redirect($redirect);
         }
-        
+
         $ioFilter     = Yii::app()->ioFilter;
         $columnCount  = count($columns);
         $totalRecords = 0;
         $totalImport  = 0;
-        
+
         while (!$file->eof()) {
-            
-            ++$totalRecords;    
-            
+
+            ++$totalRecords;
+
             $row = $file->fgetcsv();
             if (empty($row)) {
                 continue;
             }
-            
+
             $row = $ioFilter->stripTags($ioFilter->xssClean($row));
             $rowCount = count($row);
-            
+
             if ($rowCount == 0) {
                 continue;
             }
@@ -348,18 +370,18 @@ class Email_blacklistController extends Controller
                     break;
                 }
             }
-            
+
             if ($isEmpty) {
                 continue;
             }
-            
+
             if ($columnCount > $rowCount) {
                 $fill = array_fill($rowCount, $columnCount - $rowCount, '');
                 $row = array_merge($row, $fill);
             } elseif ($rowCount > $columnCount) {
                 $row = array_slice($row, 0, $columnCount);
             }
-            
+
             $model = new EmailBlacklist();
             $data  = new CMap(array_combine($columns, $row));
             $model->email = $data->itemAt('email');
@@ -369,13 +391,13 @@ class Email_blacklistController extends Controller
             }
             unset($model, $data);
         }
-        
+
         $notify->addSuccess(Yii::t('email_blacklist', 'Your file has been successfuly imported, from {count} records, {total} were imported!', array(
             '{count}'   => $totalRecords,
             '{total}'   => $totalImport,
         )));
-        
+
         $this->redirect($redirect);
     }
-    
+
 }

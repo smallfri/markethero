@@ -2,17 +2,17 @@
 
 /**
  * ZonesController
- * 
+ *
  * Handles the actions for zones related tasks
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.3.4.5
  */
- 
+
 class ZonesController extends Controller
 {
     /**
@@ -24,7 +24,7 @@ class ZonesController extends Controller
         $filters = array();
         return CMap::mergeArray($filters, parent::filters());
     }
-    
+
     /**
      * List all available zones
      */
@@ -34,9 +34,9 @@ class ZonesController extends Controller
 
         $zone = new Zone('search');
         $zone->unsetAttributes();
-        
+
         $zone->attributes = (array)$request->getQuery($zone->modelName, array());
-        
+
         $this->setData(array(
             'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('zones', 'View zones'),
             'pageHeading'       => Yii::t('articles', 'View zones'),
@@ -45,10 +45,10 @@ class ZonesController extends Controller
                 Yii::t('app', 'View all')
             )
         ));
-        
+
         $this->render('list', compact('zone'));
     }
-    
+
     /**
      * Create a new zone
      */
@@ -57,7 +57,7 @@ class ZonesController extends Controller
         $zone    = new Zone();
         $request = Yii::app()->request;
         $notify  = Yii::app()->notify;
-        
+
         if ($request->isPostRequest && ($attributes = (array)$request->getPost($zone->modelName, array()))) {
             $zone->attributes = $attributes;
             if (!$zone->save()) {
@@ -65,30 +65,30 @@ class ZonesController extends Controller
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller'=> $this,
                 'success'   => $notify->hasSuccess,
                 'zone'      => $zone,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('zones/index'));
             }
         }
-        
+
         $this->setData(array(
-            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('zones', 'Create new zone'), 
+            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('zones', 'Create new zone'),
             'pageHeading'       => Yii::t('zones', 'Create new zone'),
             'pageBreadcrumbs'   => array(
                 Yii::t('zones', 'Zones') => $this->createUrl('zones/index'),
                 Yii::t('app', 'Create new'),
             )
         ));
-        
+
         $this->render('form', compact('zone'));
     }
-    
+
     /**
      * Update existing zone
      */
@@ -102,7 +102,7 @@ class ZonesController extends Controller
 
         $request = Yii::app()->request;
         $notify  = Yii::app()->notify;
-        
+
         if ($request->isPostRequest && ($attributes = (array)$request->getPost($zone->modelName, array()))) {
             $zone->attributes = $attributes;
             if (!$zone->save()) {
@@ -110,18 +110,18 @@ class ZonesController extends Controller
             } else {
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller'=> $this,
                 'success'   => $notify->hasSuccess,
                 'zone'      => $zone,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('zones/index'));
             }
         }
-        
+
         $this->setData(array(
             'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('zones', 'Update zone'),
             'pageHeading'       => Yii::t('zones', 'Update zone'),
@@ -130,33 +130,44 @@ class ZonesController extends Controller
                 Yii::t('app', 'Update'),
             )
         ));
-        
+
         $this->render('form', compact('zone'));
     }
-    
+
     /**
      * Delete existing zone
      */
     public function actionDelete($id)
     {
         $zone = Zone::model()->findByPk((int)$id);
-        
+
         if (empty($zone)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         $request = Yii::app()->request;
         $notify  = Yii::app()->notify;
-        
+
         if ($request->isPostRequest) {
-            
+
             set_time_limit(0);
             ignore_user_abort(true);
-            
+
             $zone->delete();
 
             $notify->addSuccess(Yii::t('app', 'Your item has been successfully deleted!'));
-            $this->redirect($request->getPost('returnUrl', array('zones/index')));
+            $redirect = $request->getPost('returnUrl', array('zones/index'));
+
+            // since 1.3.5.9
+            Yii::app()->hooks->doAction('controller_action_delete_data', $collection = new CAttributeCollection(array(
+                'controller' => $this,
+                'model'      => $zone,
+                'redirect'   => $redirect,
+            )));
+
+            if ($collection->redirect) {
+                $this->redirect($collection->redirect);
+            }
         }
 
         $this->setData(array(
@@ -168,10 +179,10 @@ class ZonesController extends Controller
                 Yii::t('zones', 'Confirm zone removal')
             )
         ));
-        
+
         $this->render('delete', compact('zone'));
     }
-    
+
     /**
      * Ajax search for zones
      */
@@ -180,15 +191,15 @@ class ZonesController extends Controller
         $request  = Yii::app()->request;
         $zone     = new Zone('search');
         $zone->unsetAttributes();
-        
+
         $zone->attributes = (array)$request->getQuery($zone->modelName, array());
         $zones = $zone->search()->getData();
-        
-        $data = array(); 
+
+        $data = array();
         foreach ($zones as $zone) {
             $data[] = $zone->getAttributes(array('zone_id', 'country_id', 'name', 'code'));
         }
-        
+
         return $this->renderJson($data);
     }
 }

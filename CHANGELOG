@@ -1,4 +1,48 @@
 --- -------------------------------------------
+--- Version 1.3.5.9 - 2015-12-23
+--- -------------------------------------------
+[ADD] - Added bounce reason/message in the campaign reports for bounces
+[ADD] - Added list_import_data_bulk_check_failures filter hook
+[ADD] - Added in memory cache for emails blacklist verification and addition
+[ADD] - Added update ability for extensions
+[ADD] - Added the blocked status for campaigns
+[ADD] - Added ability for admins to block campaigns
+[ADD] - Added ability to block campaigns if subject/content match various blacklisted words
+[ADD] - Added ability to add blacklisted words for campaign subject and content
+[ADD] - Added ability to not allow various domain names in the "From email" campaign field
+[ADD] - Added ability to whitelist/blacklist access to the API based on the requesting IP address
+[ADD] - Ability for customers to add their own custom campaign tags
+[ADD] - Added ability to use subscriber custom fields in the list pages
+[ADD] - Added ability to import lists from command line
+[ADD] - Added ability for command line importer to import the subscribers from any csv/txt file placed in a given folder. Condition is the file name has to be the list uid followed by the .csv or .txt extension
+[ADD] - Added ability to export lists from command line
+[ADD] - Added controller_action_delete_data action hook in all controllers
+[ADD] - Added option to make lists un-removable
+[ADD] - Added controller_action_bulk_action action hook
+[ADD] - Added ability to export all subscribers at once, from all lists
+[ADD] - Added models_lists_after_copy_list filter hook
+[ADD] - Added company website to list company fields
+[ADD] - Added ability to block a campaign if the bounce rate is over what the admin defines
+[ADD] - Added htmlpurifier_adjust_configuration action hook
+[ADD] - Added [SUBSCRIBER_IP] tag
+[ADD] - Ability to decide if customers can export campaigns stats or not
+[ADD] - Ability to view campaigns sent for certain subscriber
+[ADD] - Ability to skip tracking domain validation
+[ADD] - Ability to optionally track opens
+[ADD] - Messaging/Notifications system for customers
+[ADD] - Added sending_domain_get_dns_txt_spf_record and sending_domain_get_dns_txt_dkim_record filter hooks
+[CHG] - When tracking opens/clicks, the subscriber status is not taken into consideration anymore
+[CHG] - Deprecated SendingDomain::DKIM_SELECTOR and SendingDomain::DKIM_FULL_SELECTOR in favor of SendingDomain::getDkimSelector() and SendingDomain::getDkimFullSelector()
+[CHG] - Abuse complaints via web forms will automatically unsubscribe the subscriber from the list
+[CHG] - Rewrote the entire send-campaigns command for better sendings
+[CHG] - Altered the soft-bounce rules to avoid blacklisting for when messages are treated like spam
+[CHG] - Email headers are now always in this format: array('name' => 'X', 'value' => 'Y') so that we can allow same header multiple times with diff values.
+[CHG] - Deprecated the REDIS QUEUE mechanism. If you were sending via Redis Queue, please go back to regular sending
+[CHG] - Deprecated the send-parallel-campaigns command. If you were using it for sending, please go back to regular sending
+[CHG] - Removing from blacklist will mark subscribers matching the email addresses as confirmed again
+[UPD] - Updated jQcron
+
+--- -------------------------------------------
 --- Version 1.3.5.8 - 2015-09-06
 --- -------------------------------------------
 [ADD] - Added [TAG:filter:md5] and [TAG:filter:sha1]
@@ -174,7 +218,7 @@
 [CHG] - All logic for fetching subscribes into a campaign has been moved in the campaign model
 [UPD] - Updated CKEditor to latest version
 [UPD] - Update Yii Framework to latest version
-[MSC] - Multiple other small changes 
+[MSC] - Multiple other small changes
 
 --- -------------------------------------------
 --- Version 1.3.4.9 - 2014-10-29
@@ -251,7 +295,7 @@
 [ADD] - Added sending domains management for backend/customer area for a better inbox rate
 [ADD] - Added ability to DKIM sign the emails for sending domains
 [ADD] - Added ability for administrators to force sending domain verification for campaigns
-[ADD] - Added following console action hooks: console_command_send_campaigns_before_process and console_command_send_campaigns_after_process 
+[ADD] - Added following console action hooks: console_command_send_campaigns_before_process and console_command_send_campaigns_after_process
 [ADD] - Added following console action hooks: console_command_transactional_emails_before_process and console_command_transactional_emails_after_process
 [ADD] - Added following console action hooks: console_command_bounce_handler_before_process and console_command_bounce_handler_after_process
 [ADD] - Added following console action hooks: console_command_feedback_loop_handler_before_process and console_command_feedback_loop_handler_after_process
@@ -412,14 +456,14 @@
 [ENH] - Better file extension support for mimes via Yii::app()->extensionMime->get('ext');
 
 --- -------------------------------------------
---- Version 1.3.4.1 - 2014-03-20 
+--- Version 1.3.4.1 - 2014-03-20
 --- -------------------------------------------
 [BUG] - Customer login page fix
 [BUG] - Temporary dir issues
 [BUG] - Cron exec data retrival
 
 --- -------------------------------------------
---- Version 1.3.4 - 2014-03-16 
+--- Version 1.3.4 - 2014-03-16
 --- -------------------------------------------
 [ADD] - Ability to process campaigns in parallel (high delivery speed)
 [ADD] - Ability for send-campaigns command to process recursive
@@ -509,7 +553,7 @@
 [ADD] - Settings area to control campaign attachments
 [ADD] - Template API endpoint now returns the template screenshot too
 [BUG] - Fixed a bug where email was imported even if blacklisted
-[BUG] - Fixed a bug where tracking links will not work when sending multiple campaigns in paralel 
+[BUG] - Fixed a bug where tracking links will not work when sending multiple campaigns in paralel
 [CHG] - Blacklisted emails are not exported anymore
 [CHG] - Removed reset area from backend and console commands
 [ENH] - Added a few missing translation strings

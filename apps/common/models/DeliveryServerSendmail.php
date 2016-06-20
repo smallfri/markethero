@@ -2,21 +2,21 @@
 
 /**
  * DeliveryServerSendmail
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.3.2
  */
- 
+
 class DeliveryServerSendmail extends DeliveryServer
 {
     protected $serverType = 'sendmail';
-    
+
     public $sendmail_path = '/usr/sbin/sendmail';
-    
+
     /**
      * @return array validation rules for model attributes.
      */
@@ -25,10 +25,10 @@ class DeliveryServerSendmail extends DeliveryServer
         $rules = array(
             array('sendmail_path', 'required'),
         );
-        
+
         return CMap::mergeArray($rules, parent::rules());
     }
-    
+
     /**
      * @return array customized attribute labels (name=>label)
      */
@@ -37,10 +37,10 @@ class DeliveryServerSendmail extends DeliveryServer
         $labels = array(
             'sendmail_path' => Yii::t('servers', 'Sendmail path'),
         );
-        
+
         return CMap::mergeArray(parent::attributeLabels(), $labels);
     }
-    
+
     /**
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
@@ -51,7 +51,7 @@ class DeliveryServerSendmail extends DeliveryServer
     {
         return parent::model($className);
     }
-    
+
     public function sendEmail(array $params = array())
     {
         $params = (array)Yii::app()->hooks->applyFilters('delivery_server_before_send_email', $this->getParamsArray($params), $this);
@@ -62,38 +62,35 @@ class DeliveryServerSendmail extends DeliveryServer
         }
 
         Yii::app()->hooks->doAction('delivery_server_after_send_email', $params, $this, $sent);
-        
+
         return $sent;
     }
-    
+
     protected function afterConstruct()
     {
         if ($path = $this->getModelMetaData()->itemAt('sendmail_path')) {
             $this->sendmail_path = $path;
         }
-        
+
         parent::afterConstruct();
     }
-    
+
     protected function afterFind()
     {
         if ($path = $this->getModelMetaData()->itemAt('sendmail_path')) {
             $this->sendmail_path = $path;
         }
-        
+
         parent::afterFind();
     }
 
-    public function getDefaultParamsArray()
+    public function getParamsArray(array $params = array())
     {
-        $params = array(
-            'transport'     => self::TRANSPORT_SENDMAIL,
-            'sendmailPath'  => $this->sendmail_path,
-        );
-        
-        return CMap::mergeArray(parent::getDefaultParamsArray(), $params);
+        $params['transport']    = self::TRANSPORT_SENDMAIL;
+        $params['sendmailPath'] = $this->sendmail_path;
+        return parent::getParamsArray($params);
     }
-    
+
     protected function beforeValidate()
     {
         $this->hostname = 'sendmail.local.host';
@@ -108,25 +105,25 @@ class DeliveryServerSendmail extends DeliveryServer
         $this->getModelMetaData()->add('sendmail_path', $this->sendmail_path);
         return parent::beforeSave();
     }
-    
+
     public function attributeHelpTexts()
     {
         $texts = array(
             'sendmail_path'    => Yii::t('servers', 'The path to the sendmail executable, usually "{path}"', array('{path}' => '/usr/sbin/sendmail')),
         );
-        
+
         return CMap::mergeArray(parent::attributeHelpTexts(), $texts);
     }
-    
+
     public function attributePlaceholders()
     {
         $placeholders = array(
             'sendmail_path'    => Yii::t('servers', 'i.e: /usr/sbin/sendmail'),
         );
-        
+
         return CMap::mergeArray(parent::attributePlaceholders(), $placeholders);
     }
-    
+
     public function requirementsFailed()
     {
         if (!CommonHelper::functionExists('proc_open') && !CommonHelper::functionExists('popen')) {

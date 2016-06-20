@@ -2,17 +2,17 @@
 
 /**
  * User_groupsController
- * 
+ *
  * Handles the actions for user groups related tasks
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
+
 class User_groupsController extends Controller
 {
     public function init()
@@ -20,7 +20,7 @@ class User_groupsController extends Controller
         $this->getData('pageScripts')->add(array('src' => AssetsUrl::js('user-groups.js')));
         parent::init();
     }
-    
+
     /**
      * Define the filters for various controller actions
      * Merge the filters with the ones from parent implementation
@@ -30,10 +30,10 @@ class User_groupsController extends Controller
         $filters = array(
             'postOnly + delete', // we only allow deletion via POST request
         );
-        
+
         return CMap::mergeArray($filters, parent::filters());
     }
-    
+
     /**
      * List all available groups
      */
@@ -42,12 +42,12 @@ class User_groupsController extends Controller
         $request = Yii::app()->request;
         $group = new UserGroup('search');
         $group->unsetAttributes();
-        
+
         // for filters.
         $group->attributes = (array)$request->getQuery($group->modelName, array());
 
         $this->setData(array(
-            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('user_groups', 'View user groups'), 
+            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('user_groups', 'View user groups'),
             'pageHeading'       => Yii::t('user_groups', 'View user groups'),
             'pageBreadcrumbs'   => array(
                 Yii::t('users', 'Users') => $this->createUrl('users/index'),
@@ -55,10 +55,10 @@ class User_groupsController extends Controller
                 Yii::t('app', 'View all')
             )
         ));
-        
+
         $this->render('list', compact('group'));
     }
-    
+
     /**
      * Create a new group
      */
@@ -67,9 +67,9 @@ class User_groupsController extends Controller
         $request = Yii::app()->request;
         $notify  = Yii::app()->notify;
         $group   = new UserGroup('search');
-        
+
         $routesAccess = $group->getAllRoutesAccess();
-        
+
         if ($request->isPostRequest && ($attributes = (array)$request->getPost($group->modelName, array()))) {
             $group->attributes = $attributes;
             if (!$group->save()) {
@@ -89,24 +89,24 @@ class User_groupsController extends Controller
                 }
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller' => $this,
                 'success'    => $notify->hasSuccess,
                 'group'      => $group,
             )));
-            
+
             if ($request->isAjaxRequest) {
                 Yii::app()->end();
             }
-                
+
             if ($collection->success) {
                 $this->redirect(array('user_groups/index'));
             }
         }
 
         $this->setData(array(
-            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('user_groups', 'Create new user group'), 
+            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('user_groups', 'Create new user group'),
             'pageHeading'       => Yii::t('user_groups', 'Create new user group'),
             'pageBreadcrumbs'   => array(
                 Yii::t('users', 'Users') => $this->createUrl('users/index'),
@@ -114,10 +114,10 @@ class User_groupsController extends Controller
                 Yii::t('app', 'Create new'),
             )
         ));
-        
+
         $this->render('form', compact('group', 'routesAccess'));
     }
-    
+
     /**
      * Update existing group
      */
@@ -131,9 +131,9 @@ class User_groupsController extends Controller
 
         $request = Yii::app()->request;
         $notify  = Yii::app()->notify;
-        
+
         $routesAccess = $group->getAllRoutesAccess();
-        
+
         if ($request->isPostRequest && ($attributes = (array)$request->getPost($group->modelName, array()))) {
             $group->attributes = $attributes;
             if (!$group->save()) {
@@ -153,22 +153,22 @@ class User_groupsController extends Controller
                 }
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller' => $this,
                 'success'    => $notify->hasSuccess,
                 'group'      => $group,
             )));
-            
+
             if ($request->isAjaxRequest) {
                 Yii::app()->end();
             }
-                
+
             if ($collection->success) {
                 $this->redirect(array('user_groups/index'));
             }
         }
-        
+
         $this->setData(array(
             'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('users', 'Update user group'),
             'pageHeading'       => Yii::t('users', 'Update user group'),
@@ -178,30 +178,42 @@ class User_groupsController extends Controller
                 Yii::t('app', 'Update'),
             )
         ));
-        
+
         $this->render('form', compact('group', 'routesAccess'));
     }
-    
+
     /**
      * Delete existing group
      */
     public function actionDelete($id)
     {
         $group = UserGroup::model()->findByPk((int)$id);
-        
+
         if (empty($group)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
-        $group->delete(); 
+
+        $group->delete();
 
         $request = Yii::app()->request;
         $notify  = Yii::app()->notify;
-        
+
+        $redirect = null;
         if (!$request->getQuery('ajax')) {
             $notify->addSuccess(Yii::t('app', 'The item has been successfully deleted!'));
-            $this->redirect($request->getPost('returnUrl', array('user_groups/index')));
+            $redirect = $request->getPost('returnUrl', array('user_groups/index'));
+        }
+
+        // since 1.3.5.9
+        Yii::app()->hooks->doAction('controller_action_delete_data', $collection = new CAttributeCollection(array(
+            'controller' => $this,
+            'model'      => $group,
+            'redirect'   => $redirect,
+        )));
+
+        if ($collection->redirect) {
+            $this->redirect($collection->redirect);
         }
     }
-    
+
 }

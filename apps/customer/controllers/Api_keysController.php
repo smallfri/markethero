@@ -2,18 +2,18 @@
 
 /**
  * Api_keysController
- * 
+ *
  * Handles the actions for api keys related tasks
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @version 1.0
  * @since 1.0
  */
- 
+
 class Api_keysController extends Controller
 {
     /**
@@ -26,9 +26,9 @@ class Api_keysController extends Controller
             $this->redirect(array('dashboard/index'));
         }
     }
-    
+
     /**
-     * Define the filters for various controller actions
+     * Define the filters for various controller actions.
      * Merge the filters with the ones from parent implementation
      */
     public function filters()
@@ -37,7 +37,7 @@ class Api_keysController extends Controller
             'postOnly + delete',
         ), parent::filters());
     }
-    
+
     /**
      * List available api keys
      */
@@ -47,19 +47,19 @@ class Api_keysController extends Controller
         $model = new CustomerApiKey('search');
         $model->attributes = (array)$request->getQuery($model->modelName, array());
         $model->customer_id = Yii::app()->customer->getId();
-        
+
         $this->setData(array(
-            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('api_keys', 'Api keys'), 
+            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('api_keys', 'Api keys'),
             'pageHeading'       => Yii::t('api_keys', 'Api keys'),
             'pageBreadcrumbs'   => array(
                 Yii::t('api_keys', 'Api keys') => $this->createUrl('api_keys/index'),
                 Yii::t('app', 'View all')
             )
         ));
-        
+
         $this->render('list', compact('model'));
     }
-    
+
     /**
      * Generate a new api key
      */
@@ -68,15 +68,15 @@ class Api_keysController extends Controller
         $model = new CustomerApiKey();
         $model->customer_id = Yii::app()->customer->getId();
         $model->save();
-        
+
         Yii::app()->notify->addInfo(Yii::t('api_keys', 'A new API access has been added:<br />Public key: {public} <br />Private key: {private}', array(
             '{public}'  => $model->public,
             '{private}' => $model->private,
         )));
-        
+
         $this->redirect(array('api_keys/index'));
     }
-    
+
     /**
      * Delete existing api key
      */
@@ -86,19 +86,30 @@ class Api_keysController extends Controller
             'key_id'        => (int)$id,
             'customer_id'   => (int)Yii::app()->customer->getId(),
         ));
-        
+
         if (empty($model)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         $model->delete();
-        
+
         $request = Yii::app()->request;
         $notify = Yii::app()->notify;
-        
+
+        $redirect = null;
         if (!$request->getQuery('ajax')) {
             $notify->addSuccess(Yii::t('api_keys', 'Requested API access has been successfully removed!'));
-            $this->redirect($request->getPost('returnUrl', array('api_keys/index')));
+        }
+
+        // since 1.3.5.9
+        Yii::app()->hooks->doAction('controller_action_delete_data', $collection = new CAttributeCollection(array(
+            'controller' => $this,
+            'model'      => $model,
+            'redirect'   => $redirect,
+        )));
+
+        if ($collection->redirect) {
+            $this->redirect($collection->redirect);
         }
     }
 }

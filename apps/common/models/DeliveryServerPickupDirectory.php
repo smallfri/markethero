@@ -2,21 +2,21 @@
 
 /**
  * DeliveryServerPickupDirectory
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.3.2
  */
- 
+
 class DeliveryServerPickupDirectory extends DeliveryServer
 {
     protected $serverType = 'pickup-directory';
-    
+
     public $pickup_directory_path;
-    
+
     /**
      * @return array validation rules for model attributes.
      */
@@ -26,10 +26,10 @@ class DeliveryServerPickupDirectory extends DeliveryServer
             array('pickup_directory_path', 'required'),
             array('pickup_directory_path', '_validateDirectoryPath'),
         );
-        
+
         return CMap::mergeArray($rules, parent::rules());
     }
-    
+
     /**
      * @return array customized attribute labels (name=>label)
      */
@@ -38,10 +38,10 @@ class DeliveryServerPickupDirectory extends DeliveryServer
         $labels = array(
             'pickup_directory_path' => Yii::t('servers', 'Pickup directory path')
         );
-        
+
         return CMap::mergeArray(parent::attributeLabels(), $labels);
     }
-    
+
     /**
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
@@ -52,20 +52,20 @@ class DeliveryServerPickupDirectory extends DeliveryServer
     {
         return parent::model($className);
     }
-    
+
     public function sendEmail(array $params = array())
     {
         $dirPath = $this->pickup_directory_path;
-        
+
         static $canWrite;
         if ($canWrite === null) {
             $canWrite = (!empty($dirPath) && file_exists($dirPath) && is_dir($dirPath) && is_writable($dirPath));
         }
-        
+
         if (!$canWrite) {
             return false;
         }
-        
+
         $params = (array)Yii::app()->hooks->applyFilters('delivery_server_before_send_email', $this->getParamsArray($params), $this);
 
         $dirPath  = rtrim($dirPath, '/\\');
@@ -79,32 +79,29 @@ class DeliveryServerPickupDirectory extends DeliveryServer
         }
 
         Yii::app()->hooks->doAction('delivery_server_after_send_email', $params, $this, $sent);
-        
+
         return $sent;
     }
-    
+
     protected function afterConstruct()
     {
         $this->pickup_directory_path = $this->getModelMetaData()->itemAt('pickup_directory_path');
         parent::afterConstruct();
     }
-    
+
     protected function afterFind()
     {
         $this->pickup_directory_path = $this->getModelMetaData()->itemAt('pickup_directory_path');
         parent::afterFind();
     }
 
-    public function getDefaultParamsArray()
+    public function getParamsArray(array $params = array())
     {
-        $params = array(
-            'transport'             => self::TRANSPORT_PICKUP_DIRECTORY,
-            'pickup_directory_path' => $this->pickup_directory_path,
-        );
-        
-        return CMap::mergeArray(parent::getDefaultParamsArray(), $params);
+        $params['transport']             = self::TRANSPORT_PICKUP_DIRECTORY;
+        $params['pickup_directory_path'] = $this->pickup_directory_path;
+        return parent::getParamsArray($params);
     }
-    
+
     protected function beforeValidate()
     {
         $this->hostname = 'pickup-directory.local.host';
@@ -113,28 +110,28 @@ class DeliveryServerPickupDirectory extends DeliveryServer
 
         return parent::beforeValidate();
     }
-    
+
     protected function beforeSave()
     {
         $this->getModelMetaData()->add('pickup_directory_path', $this->pickup_directory_path);
         return parent::beforeSave();
     }
-    
+
     public function attributeHelpTexts()
     {
         $texts = array(
             'pickup_directory_path'    => Yii::t('servers', 'The path where the messages must be saved in order to be picked up by your MTA'),
         );
-        
+
         return CMap::mergeArray(parent::attributeHelpTexts(), $texts);
     }
-    
+
     public function attributePlaceholders()
     {
         $placeholders = array(
             'pickup_directory_path' => Yii::t('servers', 'i.e: /home/username/pickup'),
         );
-        
+
         return CMap::mergeArray(parent::attributePlaceholders(), $placeholders);
     }
 
@@ -146,7 +143,7 @@ class DeliveryServerPickupDirectory extends DeliveryServer
             )));
             return;
         }
-        
+
         $directory = @realpath($this->$attribute);
         if (empty($directory) || !file_exists($directory) || !is_dir($directory) || !is_writable($directory)) {
             $this->addError($attribute, Yii::t('servers', 'The directory "{dir}" must exist and be writable by the web server process!', array(
@@ -154,7 +151,7 @@ class DeliveryServerPickupDirectory extends DeliveryServer
             )));
             return;
         }
-        
+
         $this->$attribute = $directory;
     }
 

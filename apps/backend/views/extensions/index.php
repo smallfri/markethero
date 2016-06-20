@@ -2,11 +2,11 @@
 
 /**
  * This file is part of the MailWizz EMA application.
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
@@ -15,7 +15,7 @@
  * This hook gives a chance to prepend content or to replace the default view content with a custom content.
  * Please note that from inside the action callback you can access all the controller view
  * variables via {@CAttributeCollection $collection->controller->data}
- * In case the content is replaced, make sure to set {@CAttributeCollection $collection->renderContent} to false 
+ * In case the content is replaced, make sure to set {@CAttributeCollection $collection->renderContent} to false
  * in order to stop rendering the default content.
  * @since 1.3.3.1
  */
@@ -45,12 +45,12 @@ if ($viewCollection->renderContent) { ?>
         </div>
         <div class="box-body">
             <div class="table-responsive">
-            <?php 
+            <?php
             /**
              * This hook gives a chance to prepend content or to replace the default grid view content with a custom content.
              * Please note that from inside the action callback you can access all the controller view
              * variables via {@CAttributeCollection $collection->controller->data}
-             * In case the content is replaced, make sure to set {@CAttributeCollection $collection->renderGrid} to false 
+             * In case the content is replaced, make sure to set {@CAttributeCollection $collection->renderGrid} to false
              * in order to stop rendering the default content.
              * @since 1.3.3.1
              */
@@ -59,7 +59,7 @@ if ($viewCollection->renderContent) { ?>
                 'renderGrid'    => true,
                 'ID'            => 1,
             )));
-            
+
             // and render if allowed
             if ($collection->renderGrid) {
                 $this->widget('zii.widgets.grid.CGridView', $hooks->applyFilters('grid_view_properties', array(
@@ -111,41 +111,48 @@ if ($viewCollection->renderContent) { ?>
                             'afterDelete'=> 'function(){window.location.reload();}',
                             'buttons'    => array(
                                 'page' => array(
-                                    'label'     => '<i class="glyphicon glyphicon-eye-open"></i>', 
+                                    'label'     => '<i class="glyphicon glyphicon-eye-open"></i>',
                                     'url'       => '$data["pageUrl"]',
                                     'imageUrl'  => null,
                                     'options'   => array('title' => Yii::t('extensions', 'Extension detail page'), 'class'=>'btn btn-xs'),
                                     'visible'   => '$data["enabled"] && !empty($data["pageUrl"])',
                                 ),
                                 'enable' => array(
-                                    'label'     => '<i class="glyphicon glyphicon-ok"></i>', 
+                                    'label'     => '<i class="glyphicon glyphicon-ok"></i>',
                                     'url'       => 'Yii::app()->createUrl("extensions/enable", array("id" => $data["id"]))',
                                     'imageUrl'  => null,
                                     'options'   => array('title' => Yii::t('app', 'Enable'), 'class'=>'btn btn-xs'),
                                     'visible'   => 'AccessHelper::hasRouteAccess("extensions/enable") && !$data["enabled"]',
                                 ),
                                 'disable' => array(
-                                    'label'     => '<i class="glyphicon glyphicon-ban-circle"></i>', 
+                                    'label'     => '<i class="glyphicon glyphicon-ban-circle"></i>',
                                     'url'       => 'Yii::app()->createUrl("extensions/disable", array("id" => $data["id"]))',
                                     'imageUrl'  => null,
                                     'options'   => array('title' => Yii::t('app', 'Disable'), 'class'=>'btn btn-xs'),
                                     'visible'   => 'AccessHelper::hasRouteAccess("extensions/disable") && $data["enabled"]',
-                                ),   
+                                ),
+                                'update' => array(
+                                    'label'     => '<i class="glyphicon glyphicon-arrow-up"></i>',
+                                    'url'       => 'Yii::app()->createUrl("extensions/update", array("id" => $data["id"]))',
+                                    'imageUrl'  => null,
+                                    'options'   => array('title' => Yii::t('app', 'Update'), 'class'=>'btn btn-xs'),
+                                    'visible'   => 'AccessHelper::hasRouteAccess("extensions/update") && $data["mustUpdate"]',
+                                ),
                                 'delete' => array(
-                                    'label'     => '<i class="glyphicon glyphicon-remove"></i>', 
+                                    'label'     => '<i class="glyphicon glyphicon-remove"></i>',
                                     'url'       => 'Yii::app()->createUrl("extensions/delete", array("id" => $data["id"]))',
                                     'imageUrl'  => null,
                                     'options'   => array('title' => Yii::t('app', 'Delete'), 'class'=>'btn btn-xs delete'),
                                     'visible'   => 'AccessHelper::hasRouteAccess("extensions/delete")',
-                                ),   
+                                ),
                             ),
                             'htmlOptions' => array(
-                                'style' => 'width:110px;',
+                                'style' => 'width:140px;',
                             ),
-                            'template' => '{page} {enable} {disable} {delete}'
+                            'template' => '{page} {enable} {disable} {update} {delete}'
                         ),
                     ), $this),
-                ), $this)); 
+                ), $this));
             }
             /**
              * This hook gives a chance to append content after the grid view content.
@@ -159,10 +166,10 @@ if ($viewCollection->renderContent) { ?>
             )));
             ?>
             <div class="clearfix"><!-- --></div>
-            </div>    
+            </div>
         </div>
     </div>
-    
+
     <div class="box box-primary">
         <div class="box-header">
             <div class="pull-left">
@@ -174,12 +181,12 @@ if ($viewCollection->renderContent) { ?>
         </div>
         <div class="box-body">
             <div class="table-responsive">
-            <?php 
+            <?php
             /**
              * This hook gives a chance to prepend content or to replace the default grid view content with a custom content.
              * Please note that from inside the action callback you can access all the controller view
              * variables via {@CAttributeCollection $collection->controller->data}
-             * In case the content is replaced, make sure to set {@CAttributeCollection $collection->renderGrid} to false 
+             * In case the content is replaced, make sure to set {@CAttributeCollection $collection->renderGrid} to false
              * in order to stop rendering the default content.
              * @since 1.3.3.1
              */
@@ -188,7 +195,7 @@ if ($viewCollection->renderContent) { ?>
                 'renderGrid'    => true,
                 'ID'            => 2,
             )));
-            
+
             // and render if allowed
             if ($collection->renderGrid) {
                 $this->widget('zii.widgets.grid.CGridView', $hooks->applyFilters('grid_view_properties', array(
@@ -240,41 +247,48 @@ if ($viewCollection->renderContent) { ?>
                             'afterDelete'=> 'function(){window.location.reload();}',
                             'buttons'    => array(
                                 'page' => array(
-                                    'label'     => '<i class="glyphicon glyphicon-eye-open"></i>', 
+                                    'label'     => '<i class="glyphicon glyphicon-eye-open"></i>',
                                     'url'       => '$data["pageUrl"]',
                                     'imageUrl'  => null,
                                     'options'   => array('title' => Yii::t('extensions', 'Extension detail page'), 'class'=>'btn btn-xs'),
                                     'visible'   => '$data["enabled"] && !empty($data["pageUrl"])',
                                 ),
                                 'enable' => array(
-                                    'label'     => '<i class="glyphicon glyphicon-ok"></i>', 
+                                    'label'     => '<i class="glyphicon glyphicon-ok"></i>',
                                     'url'       => 'Yii::app()->createUrl("extensions/enable", array("id" => $data["id"]))',
                                     'imageUrl'  => null,
                                     'options'   => array('title' => Yii::t('app', 'Enable'), 'class'=>'btn btn-xs'),
                                     'visible'   => 'AccessHelper::hasRouteAccess("extensions/enable") && !$data["enabled"]',
                                 ),
                                 'disable' => array(
-                                    'label'     => '<i class="glyphicon glyphicon-ban-circle"></i>', 
+                                    'label'     => '<i class="glyphicon glyphicon-ban-circle"></i>',
                                     'url'       => 'Yii::app()->createUrl("extensions/disable", array("id" => $data["id"]))',
                                     'imageUrl'  => null,
                                     'options'   => array('title' => Yii::t('app', 'Disable'), 'class'=>'btn btn-xs'),
                                     'visible'   => 'AccessHelper::hasRouteAccess("extensions/disable") && $data["enabled"] && $data["canBeDisabled"]',
-                                ),   
+                                ),
+                                'update' => array(
+                                    'label'     => '<i class="glyphicon glyphicon-arrow-up"></i>',
+                                    'url'       => 'Yii::app()->createUrl("extensions/update", array("id" => $data["id"]))',
+                                    'imageUrl'  => null,
+                                    'options'   => array('title' => Yii::t('app', 'Update'), 'class'=>'btn btn-xs'),
+                                    'visible'   => 'AccessHelper::hasRouteAccess("extensions/update") && $data["mustUpdate"]',
+                                ),
                                 'delete' => array(
-                                    'label'     => '<i class="glyphicon glyphicon-remove"></i>', 
+                                    'label'     => '<i class="glyphicon glyphicon-remove"></i>',
                                     'url'       => 'Yii::app()->createUrl("extensions/delete", array("id" => $data["id"]))',
                                     'imageUrl'  => null,
                                     'options'   => array('title' => Yii::t('app', 'Delete'), 'class'=>'btn btn-xs delete'),
                                     'visible'   => 'AccessHelper::hasRouteAccess("extensions/delete") && $data["enabled"] && $data["canBeDeleted"]',
-                                ),   
+                                ),
                             ),
                             'htmlOptions' => array(
-                                'style' => 'width:110px;',
+                                'style' => 'width:140px;',
                             ),
-                            'template' => '{page} {enable} {disable} {delete}'
+                            'template' => '{page} {enable} {disable} {update} {delete}'
                         ),
                     ), $this),
-                ), $this));  
+                ), $this));
             }
             /**
              * This hook gives a chance to append content after the grid view content.
@@ -288,10 +302,10 @@ if ($viewCollection->renderContent) { ?>
             )));
             ?>
             <div class="clearfix"><!-- --></div>
-            </div>    
+            </div>
         </div>
     </div>
-    
+
     <div class="modal fade" id="extension-upload-modal" tabindex="-1" role="dialog" aria-labelledby="extension-upload-modal-label" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -303,7 +317,7 @@ if ($viewCollection->renderContent) { ?>
                  <div class="callout callout-info">
                      <?php echo Yii::t('extensions', 'Please note that only zip files are allowed for upload.')?>
                  </div>
-                <?php 
+                <?php
                 $form = $this->beginWidget('CActiveForm', array(
                     'action'        => array('extensions/upload'),
                     'id'            => $model->modelName.'-upload-form',
@@ -324,7 +338,7 @@ if ($viewCollection->renderContent) { ?>
           </div>
         </div>
     </div>
-<?php 
+<?php
 }
 /**
  * This hook gives a chance to append content after the view file default content.

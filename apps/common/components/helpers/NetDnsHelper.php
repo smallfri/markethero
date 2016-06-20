@@ -2,20 +2,20 @@
 
 /**
  * NetDnsHelper
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.3.3.1
  */
- 
-class NetDnsHelper 
+
+class NetDnsHelper
 {
     /**
      * NetDnsHelper::isIpBlacklistedAtDnsbls()
-     * 
+     *
      * @param mixed $ipAddress
      * @param mixed $dnsBls
      * @return mixed
@@ -32,8 +32,8 @@ class NetDnsHelper
         }
 
         $blackListed = false;
-        
-        if (!filter_var($ipAddress, FILTER_VALIDATE_IP)) {
+
+        if (!FilterVarHelper::ip($ipAddress)) {
             if (($_ipAddress = self::getHostByName($ipAddress)) == $ipAddress) {
                 return $checked[$ipAddress] = $blackListed;
             }
@@ -43,27 +43,27 @@ class NetDnsHelper
         if ($checkdnsrrExists === null) {
             $checkdnsrrExists = CommonHelper::functionExists('checkdnsrr');
         }
-        
+
         if ($execExists === null) {
             $execExists = CommonHelper::functionExists('exec');
         }
-        
+
         if (!$checkdnsrrExists && !$execExists) {
             return $checked[$ipAddress] = $blackListed;
         }
-        
+
         if (empty($dnsBls)) {
             $dnsBls = (array)Yii::app()->options->get('system.email_blacklist.remote_dnsbls', array());
             if (empty($dnsBls)) {
                 return $checked[$ipAddress] = $blackListed;
             }
         }
-        
+
         shuffle($dnsBls);
 
         $ipBlocks  = explode('.', $ipAddress);
         $reverseIp = implode('.', array_reverse($ipBlocks));
-        
+
         if ($execExists) {
             if ($digLookupExists !== false) {
                 if ($digLookupExists === null) {
@@ -78,9 +78,9 @@ class NetDnsHelper
                                 return $checked[$ipAddress] = $host;
                             }
                         }
-                    }       
-                } 
-            }    
+                    }
+                }
+            }
         }
 
         if ($checkdnsrrExists && !$digLookupExists) {
@@ -88,15 +88,15 @@ class NetDnsHelper
                 if (@checkdnsrr($reverseIp.'.'.$host.'.', 'A')) {
                     return $checked[$ipAddress] = $host;
                 }
-            }  
+            }
         }
-        
+
         return $checked[$ipAddress] = $blackListed;
     }
-    
+
     /**
      * NetDnsHelper::getHostByName()
-     * 
+     *
      * @param mixed $hostname
      * @return string
      */
@@ -106,23 +106,23 @@ class NetDnsHelper
         static $execExists;
         static $digExists;
         static $checked = array();
-        
+
         if (isset($checked[$hostname])) {
             return $checked[$hostname];
         }
-        
+
         if ($gethostbynameExists === null) {
             $gethostbynameExists = CommonHelper::functionExists('gethostbyname');
         }
-        
+
         if ($execExists === null) {
             $execExists = CommonHelper::functionExists('exec');
         }
-        
+
         if (!$gethostbynameExists && !$execExists) {
             return $checked[$hostname] = $hostname;
         }
-        
+
         if ($execExists) {
             if ($digExists !== false) {
                 if ($digExists === null) {
@@ -132,12 +132,12 @@ class NetDnsHelper
                 if ($digExists) {
                     exec(sprintf('dig +short %s', escapeshellarg($hostname)), $lines, $status);
                     foreach ($lines as $line) {
-                        if (filter_var($line, FILTER_VALIDATE_IP)) {
+                        if (FilterVarHelper::ip($line)) {
                             return $checked[$hostname] = $line;
                         }
                     }
                 }
-            }    
+            }
         }
 
         if ($gethostbynameExists && !$digExists) {
@@ -145,7 +145,7 @@ class NetDnsHelper
                 return $checked[$hostname] = $ip;
             }
         }
-        
+
         return $checked[$hostname] = $hostname;
     }
 }

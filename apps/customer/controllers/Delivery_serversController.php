@@ -2,32 +2,32 @@
 
 /**
  * Delivery_serversController
- * 
+ *
  * Handles the actions for delivery servers related tasks
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.3.4
  */
- 
+
 class Delivery_serversController extends Controller
 {
     // init method
     public function init()
     {
         parent::init();
-        
+
         $customer = Yii::app()->customer->getModel();
         if (!((int)$customer->getGroupOption('servers.max_delivery_servers', 0))) {
             $this->redirect(array('dashboard/index'));
         }
-        
+
         $this->getData('pageScripts')->add(array('src' => AssetsUrl::js('delivery-servers.js')));
     }
-    
+
     /**
      * Define the filters for various controller actions
      * Merge the filters with the ones from parent implementation
@@ -37,7 +37,7 @@ class Delivery_serversController extends Controller
         $filters = array(
             'postOnly + delete, validate, copy, enable, disable',
         );
-        
+
         return CMap::mergeArray($filters, parent::filters());
     }
 
@@ -50,7 +50,7 @@ class Delivery_serversController extends Controller
         $request    = Yii::app()->request;
         $server     = new DeliveryServer('search');
         $server->unsetAttributes();
-        
+
         $server->attributes  = (array)$request->getQuery($server->modelName, array());
         $server->customer_id = (int)$customer->customer_id;
 
@@ -62,12 +62,12 @@ class Delivery_serversController extends Controller
                 Yii::t('app', 'View all')
             )
         ));
-        
+
         $types = DeliveryServer::getCustomerTypesMapping($customer);
 
         $this->render('list', compact('server', 'types'));
     }
-    
+
     /**
      * Create a new delivery server
      */
@@ -75,20 +75,20 @@ class Delivery_serversController extends Controller
     {
         $customer = Yii::app()->customer->getModel();
         $types    = DeliveryServer::getCustomerTypesMapping($customer);
-        
+
         if (!isset($types[$type])) {
             throw new CHttpException(500, Yii::t('servers', 'Server type not allowed.'));
         }
-        
+
         $request    = Yii::app()->request;
         $notify     = Yii::app()->notify;
         $modelClass = $types[$type];
         $server     = new $modelClass();
-        
+
         $server->type            = $type;
         $server->customer_id     = (int)$customer->customer_id;
         $server->onAfterValidate = array($this, '_checkBounceRequirement');
-        
+
         if (($limit = (int)$customer->getGroupOption('servers.max_delivery_servers', 0)) > -1) {
             $count = DeliveryServer::model()->countByAttributes(array('customer_id' => (int)$customer->customer_id));
             if ($count >= $limit) {
@@ -96,24 +96,24 @@ class Delivery_serversController extends Controller
                 $this->redirect(array('delivery_servers/index'));
             }
         }
-        
+
         if (($failureMessage = $server->requirementsFailed())) {
             $notify->addWarning($failureMessage);
             $this->redirect(array('delivery_servers/index'));
         }
-        
+
         $policy   = new DeliveryServerDomainPolicy();
         $policies = array();
-        
+
         $canSelectTrackingDomains = $customer->getGroupOption('tracking_domains.can_select_for_delivery_servers', 'no') == 'yes';
-        
+
         if ($request->isPostRequest && ($attributes = (array)$request->getPost($server->modelName, array()))) {
             if (!$server->isNewRecord && empty($attributes['password']) && isset($attributes['password'])) {
                 unset($attributes['password']);
             }
             $server->attributes  = $attributes;
             $server->customer_id = $customer->customer_id;
-            
+
             if ($policiesAttributes = (array)$request->getPost($policy->modelName, array())) {
                 foreach ($policiesAttributes as $attributes) {
                     $policyModel = new DeliveryServerDomainPolicy();
@@ -121,7 +121,7 @@ class Delivery_serversController extends Controller
                     $policies[] = $policyModel;
                 }
             }
-            
+
             if (!$server->save()) {
                 $notify->addError(Yii::t('app', 'Your form has a few errors, please fix them and try again!'));
             } else {
@@ -133,30 +133,30 @@ class Delivery_serversController extends Controller
                 }
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller'=> $this,
                 'success'   => $notify->hasSuccess,
                 'server'    => $server,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('delivery_servers/update', 'type' => $type, 'id' => $server->server_id));
             }
         }
 
         $this->setData(array(
-            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('servers', 'Create new server'), 
+            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('servers', 'Create new server'),
             'pageHeading'       => Yii::t('servers', 'Create new delivery server'),
             'pageBreadcrumbs'   => array(
                 Yii::t('servers', 'Delivery servers') => $this->createUrl('delivery_servers/index'),
                 Yii::t('app', 'Create new'),
             )
         ));
-        
+
         $this->render('form-' . $type, compact('server', 'policy', 'policies', 'canSelectTrackingDomains'));
     }
-    
+
     /**
      * Update existing delivery server
      */
@@ -164,11 +164,11 @@ class Delivery_serversController extends Controller
     {
         $customer = Yii::app()->customer->getModel();
         $types    = DeliveryServer::getCustomerTypesMapping($customer);
-        
+
         if (!isset($types[$type])) {
             throw new CHttpException(500, Yii::t('servers', 'Server type not allowed.'));
         }
-                
+
         $server = DeliveryServer::model($types[$type])->findByAttributes(array(
             'server_id'     => (int)$id,
             'customer_id'   => (int)$customer->customer_id,
@@ -178,38 +178,38 @@ class Delivery_serversController extends Controller
         if (empty($server)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         $request = Yii::app()->request;
         $notify  = Yii::app()->notify;
-        
+
         if (!$server->getCanBeUpdated()) {
             $this->redirect(array('delivery_servers/index'));
         }
-        
+
         if ($server->getIsLocked()) {
             $notify->addWarning(Yii::t('servers', 'This server is locked, you cannot update, enable, disable, copy or delete it!'));
             $this->redirect(array('delivery_servers/index'));
         }
-        
+
         $server->onAfterValidate = array($this, '_checkBounceRequirement');
 
         if (($failureMessage = $server->requirementsFailed())) {
             $notify->addWarning($failureMessage);
             $this->redirect(array('delivery_servers/index'));
         }
-        
+
         $policy   = new DeliveryServerDomainPolicy();
         $policies = DeliveryServerDomainPolicy::model()->findAllByAttributes(array('server_id' => $server->server_id));
-        
+
         $canSelectTrackingDomains = $customer->getGroupOption('tracking_domains.can_select_for_delivery_servers', 'no') == 'yes';
-        
+
         if ($request->isPostRequest && ($attributes = (array)$request->getPost($server->modelName, array()))) {
             if (!$server->isNewRecord && empty($attributes['password']) && isset($attributes['password'])) {
                 unset($attributes['password']);
             }
             $server->attributes = $attributes;
             $server->customer_id= $customer->customer_id;
-            
+
             $policies = array();
             if ($policiesAttributes = (array)$request->getPost($policy->modelName, array())) {
                 foreach ($policiesAttributes as $attributes) {
@@ -218,7 +218,7 @@ class Delivery_serversController extends Controller
                     $policies[] = $policyModel;
                 }
             }
-            
+
             if (!$server->save()) {
                 $notify->addError(Yii::t('app', 'Your form has a few errors, please fix them and try again!'));
             } else {
@@ -231,30 +231,30 @@ class Delivery_serversController extends Controller
                 }
                 $notify->addSuccess(Yii::t('app', 'Your form has been successfully saved!'));
             }
-            
+
             Yii::app()->hooks->doAction('controller_action_save_data', $collection = new CAttributeCollection(array(
                 'controller'=> $this,
                 'success'   => $notify->hasSuccess,
                 'server'    => $server,
             )));
-            
+
             if ($collection->success) {
                 $this->redirect(array('delivery_servers/update', 'type' => $type, 'id' => $server->server_id));
             }
         }
-        
+
         $this->setData(array(
-            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('servers', 'Update server'), 
+            'pageMetaTitle'     => $this->data->pageMetaTitle . ' | '. Yii::t('servers', 'Update server'),
             'pageHeading'       => Yii::t('servers', 'Update delivery server'),
             'pageBreadcrumbs'   => array(
                 Yii::t('servers', 'Delivery servers') => $this->createUrl('delivery_servers/index'),
                 Yii::t('app', 'Update'),
             )
         ));
-        
+
         $this->render('form-' . $type, compact('server', 'policy', 'policies', 'canSelectTrackingDomains'));
     }
-    
+
     /**
      * Delete existing delivery server
      */
@@ -264,14 +264,14 @@ class Delivery_serversController extends Controller
         if (empty($_server)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         $customer = Yii::app()->customer->getModel();
         $types    = DeliveryServer::getCustomerTypesMapping($customer);
-        
+
         if (!isset($types[$_server->type])) {
             throw new CHttpException(500, Yii::t('servers', 'Server type not allowed.'));
         }
-                
+
         $server = DeliveryServer::model($types[$_server->type])->findByAttributes(array(
             'server_id'     => (int)$id,
             'customer_id'   => (int)$customer->customer_id,
@@ -281,10 +281,10 @@ class Delivery_serversController extends Controller
         if (empty($server)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         $request = Yii::app()->request;
         $notify  = Yii::app()->notify;
-        
+
         if ($server->getIsLocked()) {
             $notify->addWarning(Yii::t('servers', 'This server is locked, you cannot update, enable, disable, copy or delete it!'));
             if (!$request->isAjaxRequest) {
@@ -296,13 +296,25 @@ class Delivery_serversController extends Controller
         if ($server->getCanBeDeleted()) {
             $server->delete();
         }
-        
+
+        $redirect = null;
         if (!$request->getQuery('ajax')) {
             $notify->addSuccess(Yii::t('app', 'The item has been successfully deleted!'));
-            $this->redirect($request->getPost('returnUrl', array('delivery_servers/index')));
+            $redirect = $request->getPost('returnUrl', array('delivery_servers/index'));
+        }
+
+        // since 1.3.5.9
+        Yii::app()->hooks->doAction('controller_action_delete_data', $collection = new CAttributeCollection(array(
+            'controller' => $this,
+            'model'      => $server,
+            'redirect'   => $redirect,
+        )));
+
+        if ($collection->redirect) {
+            $this->redirect($collection->redirect);
         }
     }
-    
+
     /**
      * Validate a delivery server
      * The delivery server will stay inactive until validation by email.
@@ -314,34 +326,34 @@ class Delivery_serversController extends Controller
         $request    = Yii::app()->request;
         $notify     = Yii::app()->notify;
         $options    = Yii::app()->options;
-        
+
         if (!($email = $request->getPost('email'))) {
             throw new CHttpException(500, Yii::t('servers', 'The email address is missing.'));
         }
-        
+
         $_server = DeliveryServer::model()->findByAttributes(array(
             'server_id'     => (int)$id,
             'customer_id'   => (int)$customer->customer_id,
         ));
-        
+
         if (empty($_server)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+
+        if (!FilterVarHelper::email($email)) {
             throw new CHttpException(500, Yii::t('app', 'The email address you provided does not seem to be valid.'));
         }
-        
+
         $mapping = DeliveryServer::getCustomerTypesMapping($customer);
         if (!isset($mapping[$_server->type])) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         $server = DeliveryServer::model($mapping[$_server->type])->findByPk((int)$_server->server_id);
 
         $server->confirmation_key = sha1(uniqid(rand(0, time()), true));
         $server->save(false);
-        
+
         $emailTemplate  = $options->get('system.email_templates.common');
         $emailBody      = $this->renderPartial('confirm-server-email', compact('server'), true);
         $emailTemplate  = str_replace('[CONTENT]', $emailBody, $emailTemplate);
@@ -368,60 +380,60 @@ class Delivery_serversController extends Controller
             $notify->addError(Yii::t('servers', 'Cannot send the confirmation email using the data you provided.'));
             $notify->addWarning(Yii::t('servers', 'Here is a transcript of the error message:') . '<hr />');
             $notify->addWarning($dump);
-            
+
             $redirect = array('delivery_servers/update', 'type' => $server->type, 'id' => $server->server_id);
         }
-        
+
         $this->redirect($redirect);
     }
-    
+
     /**
      * Confirm the validation of a delivery server
-     * This is accessed from the validation email and changes 
-     * the status of a delivery server from inactive in active thus allowing the application to send 
+     * This is accessed from the validation email and changes
+     * the status of a delivery server from inactive in active thus allowing the application to send
      * emails using this server.
      */
     public function actionConfirm($key)
     {
         $customer = Yii::app()->customer->getModel();
-        
+
         $_server = DeliveryServer::model()->findByAttributes(array(
             'customer_id'       => (int)$customer->customer_id,
             'confirmation_key'  => $key,
         ));
-        
+
         if (empty($_server)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         $mapping = DeliveryServer::getCustomerTypesMapping($customer);
         if (!isset($mapping[$_server->type])) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         $request = Yii::app()->request;
         $notify = Yii::app()->notify;
         $server = DeliveryServer::model($mapping[$_server->type])->findByPk((int)$_server->server_id);
-        
+
         if (empty($server)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         $server->status = DeliveryServer::STATUS_ACTIVE;
         $server->confirmation_key = null;
         $server->save(false);
-        
+
         if (!empty($server->hostname)) {
             $notify->addSuccess(Yii::t('servers', 'You have successfully confirmed the server {serverName}.', array(
                 '{serverName}' => $server->hostname,
-            )));    
+            )));
         } else {
             $notify->addSuccess(Yii::t('servers', 'The server has been successfully confirmed!'));
         }
 
         $this->redirect(array('delivery_servers/index'));
     }
-    
+
     /**
      * Create a copy of an existing delivery server!
      */
@@ -431,14 +443,14 @@ class Delivery_serversController extends Controller
         if (empty($_server)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         $customer = Yii::app()->customer->getModel();
         $types    = DeliveryServer::getCustomerTypesMapping($customer);
-        
+
         if (!isset($types[$_server->type])) {
             throw new CHttpException(500, Yii::t('servers', 'Server type not allowed.'));
         }
-                
+
         $server = DeliveryServer::model($types[$_server->type])->findByAttributes(array(
             'server_id'     => (int)$id,
             'customer_id'   => (int)$customer->customer_id,
@@ -448,7 +460,7 @@ class Delivery_serversController extends Controller
         if (empty($server)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         $request  = Yii::app()->request;
         $notify   = Yii::app()->notify;
         $customer = Yii::app()->customer->getModel();
@@ -460,7 +472,7 @@ class Delivery_serversController extends Controller
             }
             Yii::app()->end();
         }
-        
+
         if (($limit = (int)$customer->getGroupOption('servers.max_delivery_servers', 0)) > -1) {
             $count = DeliveryServer::model()->countByAttributes(array('customer_id' => (int)$customer->customer_id));
             if ($count >= $limit) {
@@ -471,7 +483,7 @@ class Delivery_serversController extends Controller
                 Yii::app()->end();
             }
         }
-        
+
         if ($server->copy()) {
             $notify->addSuccess(Yii::t('servers', 'Your server has been successfully copied!'));
         } else {
@@ -482,7 +494,7 @@ class Delivery_serversController extends Controller
             $this->redirect($request->getPost('returnUrl', array('delivery_servers/index')));
         }
     }
-    
+
     /**
      * Enable a server that has been previously disabled.
      */
@@ -492,14 +504,14 @@ class Delivery_serversController extends Controller
         if (empty($_server)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         $customer = Yii::app()->customer->getModel();
         $types    = DeliveryServer::getCustomerTypesMapping($customer);
-        
+
         if (!isset($types[$_server->type])) {
             throw new CHttpException(500, Yii::t('servers', 'Server type not allowed.'));
         }
-                
+
         $server = DeliveryServer::model($types[$_server->type])->findByAttributes(array(
             'server_id'     => (int)$id,
             'customer_id'   => (int)$customer->customer_id,
@@ -509,10 +521,10 @@ class Delivery_serversController extends Controller
         if (empty($server)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         $request = Yii::app()->request;
         $notify  = Yii::app()->notify;
-        
+
         if ($server->getIsLocked()) {
             $notify->addWarning(Yii::t('servers', 'This server is locked, you cannot update, enable, disable, copy or delete it!!'));
             if (!$request->isAjaxRequest) {
@@ -520,7 +532,7 @@ class Delivery_serversController extends Controller
             }
             Yii::app()->end();
         }
-        
+
         if ($server->getIsDisabled()) {
             $server->enable();
             $notify->addSuccess(Yii::t('servers', 'Your server has been successfully enabled!'));
@@ -532,7 +544,7 @@ class Delivery_serversController extends Controller
             $this->redirect($request->getPost('returnUrl', array('delivery_servers/index')));
         }
     }
-    
+
     /**
      * Disable a server that has been previously verified.
      */
@@ -542,14 +554,14 @@ class Delivery_serversController extends Controller
         if (empty($_server)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         $customer = Yii::app()->customer->getModel();
         $types    = DeliveryServer::getCustomerTypesMapping($customer);
-        
+
         if (!isset($types[$_server->type])) {
             throw new CHttpException(500, Yii::t('servers', 'Server type not allowed.'));
         }
-                
+
         $server = DeliveryServer::model($types[$_server->type])->findByAttributes(array(
             'server_id'     => (int)$id,
             'customer_id'   => (int)$customer->customer_id,
@@ -559,10 +571,10 @@ class Delivery_serversController extends Controller
         if (empty($server)) {
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         $request = Yii::app()->request;
         $notify  = Yii::app()->notify;
-        
+
         if ($server->getIsLocked()) {
             $notify->addWarning(Yii::t('servers', 'This server is locked, you cannot update, enable, disable, copy or delete it!'));
             if (!$request->isAjaxRequest) {
@@ -570,7 +582,7 @@ class Delivery_serversController extends Controller
             }
             Yii::app()->end();
         }
-        
+
         if ($server->getIsActive()) {
             $server->disable();
             $notify->addSuccess(Yii::t('servers', 'Your server has been successfully disabled!'));
@@ -582,23 +594,23 @@ class Delivery_serversController extends Controller
             $this->redirect($request->getPost('returnUrl', array('delivery_servers/index')));
         }
     }
-    
+
     public function _checkBounceRequirement($event)
     {
         $server = $event->sender;
         if ($server->hasErrors()) {
             return;
         }
-        
+
         if ($server->bounceServerNotSupported) {
             return;
         }
-        
+
         $customer = Yii::app()->customer->getModel();
         if ($customer->getGroupOption('servers.must_add_bounce_server', 'yes') == 'no') {
             return;
         }
-        
+
         if (empty($server->bounce_server_id)) {
             $server->addError('bounce_server_id', Yii::t('servers', 'The bounce server is required!'));
         }

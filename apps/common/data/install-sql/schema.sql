@@ -76,14 +76,15 @@ CREATE TABLE IF NOT EXISTS `bounce_server` (
   `protocol` enum('ssl','tls','notls') NOT NULL DEFAULT 'notls',
   `validate_ssl` enum('yes','no') NOT NULL DEFAULT 'no',
   `locked` enum('yes', 'no') NOT NULL DEFAULT 'no',
-  `disable_authenticator` VARCHAR(50) NULL, 
-  `search_charset` VARCHAR(50) NOT NULL DEFAULT 'UTF-8', 
+  `disable_authenticator` VARCHAR(50) NULL,
+  `search_charset` VARCHAR(50) NOT NULL DEFAULT 'UTF-8',
   `delete_all_messages` ENUM('yes','no') NOT NULL DEFAULT 'no',
   `status` char(15) NOT NULL DEFAULT 'active',
   `date_added` datetime NOT NULL,
   `last_updated` datetime NOT NULL,
   PRIMARY KEY (`server_id`),
-  KEY `fk_bounce_server_customer1_idx` (`customer_id`)
+  KEY `fk_bounce_server_customer1_idx` (`customer_id`),
+  KEY `status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -108,7 +109,7 @@ CREATE TABLE IF NOT EXISTS `campaign` (
   `reply_to` varchar(100) NULL,
   `subject` varchar(255) NULL,
   `send_at` datetime NULL,
-  `started_at` datetime NULL, 
+  `started_at` datetime NULL,
   `finished_at` datetime NULL,
   `delivery_logs_archived` ENUM('yes','no') NOT NULL DEFAULT 'no',
   `status` char(15) NOT NULL DEFAULT 'draft',
@@ -191,7 +192,8 @@ CREATE TABLE IF NOT EXISTS `campaign_bounce_log` (
   PRIMARY KEY (`log_id`),
   KEY `fk_campaign_bounce_log_campaign1_idx` (`campaign_id`),
   KEY `fk_campaign_bounce_log_list_subscriber1_idx` (`subscriber_id`),
-  KEY `sub_proc_bt` (`subscriber_id`,`processed`,`bounce_type`)
+  KEY `sub_proc_bt` (`subscriber_id`,`processed`,`bounce_type`),
+  KEY `proc_bt` (`processed`,`bounce_type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -216,7 +218,10 @@ CREATE TABLE IF NOT EXISTS `campaign_delivery_log` (
   KEY `fk_campaign_delivery_log_list_subscriber1_idx` (`subscriber_id`),
   KEY `fk_campaign_delivery_log_campaign1_idx` (`campaign_id`),
   KEY `sub_proc_status` (`subscriber_id`,`processed`,`status`),
-  KEY `email_message_id` (`email_message_id`)
+  KEY `proc_status` (`processed`,`status`),
+  KEY `email_message_id` (`email_message_id`),
+  KEY `cid_status`(`campaign_id`, `status`),
+  KEY `cid_date_added`(`campaign_id`, `date_added`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -241,6 +246,7 @@ CREATE TABLE IF NOT EXISTS `campaign_delivery_log_archive` (
   KEY `fk_campaign_delivery_log_archive_list_subscriber1_idx` (`subscriber_id`),
   KEY `fk_campaign_delivery_log_archive_campaign1_idx` (`campaign_id`),
   KEY `sub_proc_status` (`subscriber_id`,`processed`,`status`),
+  KEY `proc_status` (`processed`,`status`),
   KEY `email_message_id` (`email_message_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
@@ -338,6 +344,7 @@ CREATE TABLE IF NOT EXISTS `campaign_open_action_subscriber` (
 DROP TABLE IF EXISTS `campaign_option`;
 CREATE TABLE IF NOT EXISTS `campaign_option` (
   `campaign_id` int(11) NOT NULL,
+  `open_tracking` enum('yes','no') NOT NULL DEFAULT 'yes',
   `url_tracking` enum('yes','no') NOT NULL DEFAULT 'no',
   `json_feed` enum('yes','no') NOT NULL DEFAULT 'no',
   `xml_feed` enum('yes','no') NOT NULL DEFAULT 'no',
@@ -349,11 +356,11 @@ CREATE TABLE IF NOT EXISTS `campaign_option` (
   `autoresponder_open_campaign_id` INT(11) NULL,
   `autoresponder_include_imported` enum('yes','no') NOT NULL DEFAULT 'no',
   `email_stats` varchar(255) NOT NULL,
-  `send_referral_url` INT(11) NULL,
   `regular_open_unopen_action` char(10) NULL,
   `regular_open_unopen_campaign_id` int(11) NULL,
   `cronjob` VARCHAR(255) NULL,
   `cronjob_enabled` TINYINT(1) NOT NULL DEFAULT '0',
+  `blocked_reason` VARCHAR(255) NULL DEFAULT NULL,
   PRIMARY KEY (`campaign_id`),
   KEY `fk_campaign_option_campaign1_idx` (`campaign_id`),
   KEY `fk_campaign_option_campaign2_idx` (`autoresponder_open_campaign_id`),
@@ -463,9 +470,9 @@ CREATE TABLE IF NOT EXISTS `campaign_to_delivery_server` (
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `ip_location`
--- 
+--
 
 DROP TABLE IF EXISTS `ip_location`;
 CREATE TABLE IF NOT EXISTS `ip_location` (
@@ -623,7 +630,7 @@ CREATE TABLE IF NOT EXISTS `customer` (
   `hourly_quota` INT NOT NULL DEFAULT '0',
   `removable` enum('yes','no') NOT NULL DEFAULT 'yes',
   `confirmation_key` char(40) NULL,
-  `oauth_uid` bigint(20) NULL, 
+  `oauth_uid` bigint(20) NULL,
   `oauth_provider` char(10) NULL,
   `status` char(15) NOT NULL DEFAULT 'inactive',
   `date_added` datetime NOT NULL,
@@ -906,7 +913,7 @@ CREATE TABLE IF NOT EXISTS `delivery_server_to_customer_group` (
   `server_id` int(11) NOT NULL,
   `group_id` int(11) NOT NULL,
   PRIMARY KEY (`server_id`,`group_id`),
-  KEY `fk_delivery_server_to_customer_group_customer_group1_idx` (`group_id`), 
+  KEY `fk_delivery_server_to_customer_group_customer_group1_idx` (`group_id`),
   KEY `fk_delivery_server_to_customer_group_delivery_server1_idx` (`server_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -969,8 +976,8 @@ CREATE TABLE IF NOT EXISTS `feedback_loop_server` (
   `protocol` enum('ssl','tls','notls') NOT NULL DEFAULT 'notls',
   `validate_ssl` enum('yes','no') NOT NULL DEFAULT 'no',
   `locked` enum('yes', 'no') NOT NULL DEFAULT 'no',
-  `disable_authenticator` VARCHAR(50) NULL, 
-  `search_charset` VARCHAR(50) NOT NULL DEFAULT 'UTF-8', 
+  `disable_authenticator` VARCHAR(50) NULL,
+  `search_charset` VARCHAR(50) NOT NULL DEFAULT 'UTF-8',
   `delete_all_messages` ENUM('yes','no') NOT NULL DEFAULT 'no',
   `status` char(15) NOT NULL DEFAULT 'active',
   `date_added` datetime NOT NULL,
@@ -1034,7 +1041,9 @@ CREATE TABLE IF NOT EXISTS `list` (
   `opt_out` enum('double','single') NOT NULL DEFAULT 'single',
   `merged` enum('yes','no') NOT NULL DEFAULT 'no',
   `welcome_email` enum('yes','no') NOT NULL DEFAULT 'no',
+  `removable` enum('yes','no') NOT NULL DEFAULT 'yes',
   `subscriber_404_redirect` VARCHAR(255) NULL,
+  `subscriber_exists_redirect` VARCHAR(255) NULL,
   `meta_data` BLOB NULL DEFAULT NULL,
   `status` char(15) NOT NULL DEFAULT 'active',
   `date_added` datetime NOT NULL,
@@ -1058,6 +1067,7 @@ CREATE TABLE IF NOT EXISTS `list_company` (
   `country_id` int(11) NOT NULL,
   `zone_id` int(11) NULL,
   `name` varchar(100) NOT NULL,
+  `website` VARCHAR(255) NULL,
   `address_1` varchar(255) NOT NULL,
   `address_2` varchar(255) NULL,
   `zone_name` varchar(150) NULL,
@@ -1306,7 +1316,8 @@ CREATE TABLE IF NOT EXISTS `list_subscriber` (
   KEY `fk_list_subscriber_list1_idx` (`list_id`),
   KEY `list_email` (`list_id`,`email`),
   KEY `status_last_updated` (`status`,`last_updated`),
-  KEY `list_id_status`(`list_id`,`status`)
+  KEY `list_id_status`(`list_id`,`status`),
+  KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -1322,8 +1333,8 @@ CREATE TABLE IF NOT EXISTS `list_subscriber_action` (
   `source_action` char(15) NOT NULL DEFAULT 'subscribe',
   `target_list_id` int(11) NOT NULL,
   `target_action` char(15) NOT NULL DEFAULT 'unsubscribe',
-  PRIMARY KEY (`action_id`), 
-  KEY `fk_list_subscriber_action_list1_idx` (`source_list_id`), 
+  PRIMARY KEY (`action_id`),
+  KEY `fk_list_subscriber_action_list1_idx` (`source_list_id`),
   KEY `fk_list_subscriber_action_list2_idx` (`target_list_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
@@ -1482,7 +1493,7 @@ CREATE TABLE IF NOT EXISTS `sending_domain` (
   `signing_enabled` enum('yes','no') NOT NULL DEFAULT 'yes',
   `date_added` datetime NOT NULL,
   `last_updated` datetime NOT NULL,
-  PRIMARY KEY (`domain_id`), 
+  PRIMARY KEY (`domain_id`),
   KEY `fk_sending_domain_customer1_idx` (`customer_id`),
   KEY `name_verified_customer` (`name`, `verified`, `customer_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
@@ -1705,6 +1716,48 @@ CREATE TABLE IF NOT EXISTS `user_password_reset` (
 
 -- --------------------------------------------------------
 
+
+--
+-- Table structure for table `customer_campaign_tag`
+--
+
+DROP TABLE IF EXISTS `customer_campaign_tag`;
+CREATE TABLE IF NOT EXISTS `customer_campaign_tag` (
+    `tag_id` INT NOT NULL AUTO_INCREMENT,
+    `tag_uid` CHAR(13) NOT NULL,
+    `customer_id` INT(11) NOT NULL,
+    `tag` VARCHAR(50) NOT NULL,
+    `content` TEXT NOT NULL,
+    `random` ENUM('yes','no') NOT NULL DEFAULT 'no',
+    `date_added` DATETIME NOT NULL,
+    `last_updated` DATETIME NOT NULL,
+    PRIMARY KEY (`tag_id`),
+    KEY `fk_customer_campaign_tag_customer1_idx` (`customer_id`),
+    UNIQUE KEY `customer_campaign_tag_uid` (`tag_uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `customer_campaign_tag`
+--
+DROP TABLE IF EXISTS `customer_message`;
+CREATE TABLE IF NOT EXISTS `customer_message` (
+  `message_id` INT NOT NULL AUTO_INCREMENT,
+  `message_uid` CHAR(13) NOT NULL,
+  `customer_id` INT(11) NOT NULL,
+  `title` VARCHAR(255) NULL,
+  `message` TEXT NOT NULL,
+  `params` TEXT NULL,
+  `status` CHAR(15) NOT NULL DEFAULT 'unseen',
+  `date_added` DATETIME NOT NULL,
+  `last_updated` DATETIME NOT NULL,
+  PRIMARY KEY (`message_id`),
+  KEY `fk_customer_message_customer1_idx` (`customer_id`)
+) ENGINE = InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+-- --------------------------------------------------------
+
 --
 -- Table structure for table `zone`
 --
@@ -1812,14 +1865,14 @@ ALTER TABLE `campaign_open_action_list_field`
   ADD CONSTRAINT `fk_campaign_open_action_list_field_list1` FOREIGN KEY (`list_id`) REFERENCES `list` (`list_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_campaign_open_action_list_field_campaign1` FOREIGN KEY (`campaign_id`) REFERENCES `campaign` (`campaign_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_campaign_open_action_list_field_list_field1` FOREIGN KEY (`field_id`) REFERENCES `list_field` (`field_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
-  
+
 --
 -- Constraints for table `campaign_open_action_subscriber`
 --
 ALTER TABLE `campaign_open_action_subscriber`
   ADD CONSTRAINT `fk_campaign_open_action_subscriber_campaign1` FOREIGN KEY (`campaign_id`) REFERENCES `campaign` (`campaign_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_campaign_open_action_subscriber_list1` FOREIGN KEY (`list_id`) REFERENCES `list` (`list_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
-   
+
 --
 -- Constraints for table `campaign_option`
 --
@@ -1859,7 +1912,7 @@ ALTER TABLE `campaign_temporary_source`
   ADD CONSTRAINT `fk_campaign_temporary_source_campaign1` FOREIGN KEY (`campaign_id`) REFERENCES `campaign` (`campaign_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_campaign_temporary_source_list1` FOREIGN KEY (`list_id`) REFERENCES `list` (`list_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_campaign_temporary_source_list_segment1` FOREIGN KEY (`segment_id`) REFERENCES `list_segment` (`segment_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
-  
+
 --
 -- Constraints for table `campaign_to_delivery_server`
 --
@@ -1954,7 +2007,7 @@ ALTER TABLE `customer_password_reset`
 --
 ALTER TABLE `customer_quota_mark`
   ADD CONSTRAINT `fk_customer_quota_mark_customer1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
-  
+
 --
 -- Constraints for table `delivery_server`
 --
@@ -2161,6 +2214,18 @@ ALTER TABLE `user_group_route_access`
 --
 ALTER TABLE `user_password_reset`
   ADD CONSTRAINT `fk_user_password_reset_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `customer_campaign_tag`
+--
+ALTER TABLE `customer_campaign_tag`
+    ADD CONSTRAINT `fk_customer_campaign_tag_customer1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `customer_campaign_tag`
+--
+ALTER TABLE `customer_message`
+    ADD CONSTRAINT `fk_customer_message_customer1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `zone`

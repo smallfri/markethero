@@ -2,15 +2,15 @@
 
 /**
  * CustomerEmailTemplate
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
+
 /**
  * This is the model class for table "customer_email_template".
  *
@@ -23,7 +23,7 @@
  * @property string $content_hash
  * @property string $create_screenshot
  * @property string $screenshot
- * @property string $inline_css 
+ * @property string $inline_css
  * @property string $minify
  * @property integer $sort_order
  * @property string $date_added
@@ -35,7 +35,7 @@
 class CustomerEmailTemplate extends ActiveRecord
 {
     public $archive;
-    
+
     /**
      * @return string the associated database table name
      */
@@ -66,10 +66,10 @@ class CustomerEmailTemplate extends ActiveRecord
             array('archive', 'file', 'types' => array('zip'), 'mimeTypes' => $mimes, 'allowEmpty' => true),
             array('sort_order', 'numerical', 'integerOnly' => true),
         );
-        
+
         return CMap::mergeArray($rules, parent::rules());
     }
-    
+
     public function behaviors()
     {
         $behaviors = array(
@@ -78,7 +78,7 @@ class CustomerEmailTemplate extends ActiveRecord
                 'class' => 'common.components.db.behaviors.EmailTemplateUploadBehavior',
             ),
         );
-        
+
         return CMap::mergeArray($behaviors, parent::behaviors());
     }
 
@@ -90,7 +90,7 @@ class CustomerEmailTemplate extends ActiveRecord
         $relations = array(
             'customer' => array(self::BELONGS_TO, 'Customer', 'customer_id'),
         );
-        
+
         return CMap::mergeArray($relations, parent::relations());
     }
 
@@ -113,7 +113,7 @@ class CustomerEmailTemplate extends ActiveRecord
             'archive'       => Yii::t('email_templates', 'Archive file'),
             'sort_order'    => Yii::t('email_templates', 'Sort order'),
         );
-        
+
         return CMap::mergeArray($labels, parent::attributeLabels());
     }
 
@@ -164,16 +164,20 @@ class CustomerEmailTemplate extends ActiveRecord
         if (empty($this->template_uid)) {
             $this->template_uid = $this->generateUid();
         }
-        
+
+        if (empty($this->name)) {
+            $this->name = 'Untitled';
+        }
+
         if ($this->content_hash != sha1($this->content)) {
             $this->create_screenshot = self::TEXT_YES;
         }
-        
+
         $this->content_hash = sha1($this->content);
-        
+
         return parent::beforeSave();
     }
-    
+
     protected function afterDelete()
     {
         // clean template files, if any.
@@ -182,7 +186,7 @@ class CustomerEmailTemplate extends ActiveRecord
         if (file_exists($templateFiles) && is_dir($templateFiles)) {
             FileSystemHelper::deleteDirectoryContents($templateFiles, true, 1);
         }
-        
+
         parent::afterDelete();
     }
 
@@ -190,21 +194,21 @@ class CustomerEmailTemplate extends ActiveRecord
     {
         return $this->findByAttributes(array(
             'template_uid' => $template_uid,
-        ));    
+        ));
     }
-    
+
     public function generateUid()
     {
         $unique = StringHelper::uniqid();
         $exists = $this->findByUid($unique);
-        
+
         if (!empty($exists)) {
             return $this->generateUid();
         }
-        
+
         return $unique;
     }
-    
+
     public function getInlineCssArray()
     {
         return $this->getYesNoOptions();
@@ -213,32 +217,32 @@ class CustomerEmailTemplate extends ActiveRecord
     public function attributeHelpTexts()
     {
         $texts = array(
-            'name'       => Yii::t('email_templates', 'The name of the template, used for you to make the difference if having to many templates.'), 
+            'name'       => Yii::t('email_templates', 'The name of the template, used for you to make the difference if having to many templates.'),
             'inline_css' => Yii::t('email_templates', 'Whether the parser should extract the css from the head of the document and inline it for each matching attribute found in the document body.'),
             'minify'     => Yii::t('email_templates', 'Whether the parser should minify the template to reduce size.'),
         );
-        
+
         return CMap::mergeArray($texts, parent::attributeHelpTexts());
     }
-    
+
     public function copy()
     {
         if ($this->isNewRecord) {
             return false;
         }
-        
+
         $storagePath = Yii::getPathOfAlias('root.frontend.assets.gallery');
         $filesPath   = $storagePath.'/'.$this->template_uid;
-        
+
         $templateUid  = $this->generateUid();
         $newFilesPath = $storagePath.'/'.$templateUid;
-        
+
         if (file_exists($filesPath) && is_dir($filesPath) && mkdir($newFilesPath, 0777, true)) {
             if (!FileSystemHelper::copyOnlyDirectoryContents($filesPath, $newFilesPath)) {
                 return false;
             }
-        } 
-        
+        }
+
         $template = clone $this;
         $template->isNewRecord  = true;
         $template->template_id  = null;
@@ -248,17 +252,17 @@ class CustomerEmailTemplate extends ActiveRecord
         $template->screenshot   = preg_replace('#' . $this->template_uid . '#', $templateUid, $this->screenshot, 1);
         $template->date_added   = null;
         $template->last_updated = null;
-        
+
         if (!$template->save(false)) {
             if (file_exists($newFilesPath) && is_dir($newFilesPath)) {
                 FileSystemHelper::deleteDirectoryContents($newFilesPath, true, 1);
             }
             return false;
         }
-        
+
         return $template;
     }
-    
+
     public function getScreenshotSrc($width = 160, $height = 160)
     {
         if (!empty($this->screenshot)) {
@@ -270,12 +274,12 @@ class CustomerEmailTemplate extends ActiveRecord
         }
         return ImageHelper::resize('/frontend/assets/files/no-image-160x160.gif', $width, $height);
     }
-    
+
     public function getShortName($length = 20)
     {
         return StringHelper::truncateLength($this->name, (int)$length);
     }
-    
+
     public function getUid()
     {
         return $this->template_uid;

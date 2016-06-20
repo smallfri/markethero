@@ -2,17 +2,17 @@
 
 /**
  * Common application main configuration file
- * 
+ *
  * This file should not be altered in any way!
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
-    
+
 return array(
     'basePath'          => Yii::getPathOfAlias('common'),
     'runtimePath'       => Yii::getPathOfAlias('common.runtime'),
@@ -20,23 +20,23 @@ return array(
     'id'                => 'MailWizz', // never change this
     'sourceLanguage'    => 'en',
     'language'          => 'en',
-    'defaultController' => '', 
+    'defaultController' => '',
     'charset'           => 'utf-8',
     'timeZone'          => 'UTC', // make sure we stay UTC
-    
+
     // preloading components
     'preload' => array(
         'log', 'systemInit'
     ),
-    
+
     // autoloading model and component classes
-    'import' => array(      
+    'import' => array(
         'common.components.*',
         'common.components.db.*',
         'common.components.db.ar.*',
         'common.components.db.behaviors.*',
         'common.components.helpers.*',
-        'common.components.init.*', 
+        'common.components.init.*',
         'common.components.managers.*',
         'common.components.mutex.*',
         'common.components.mailer.*',
@@ -47,12 +47,13 @@ return array(
         'common.components.web.widgets.*',
         'common.models.*',
         'common.models.option.*',
+
         'common.vendors.Urlify.*',
     ),
-    
+
     // application components
     'components' => array(
-        
+
         // will be merged with the custom one to get connection string/username/password and table prefix
         'db' => array(
             'connectionString'      => '{DB_CONNECTION_STRING}',
@@ -66,14 +67,14 @@ return array(
             'enableProfiling'       => MW_DEBUG,
             'queryCacheID'          => 'cache',
             'initSQLs'              => array(
-                'SET time_zone="+00:00"', 
+                'SET time_zone="+00:00"',
                 'SET NAMES utf8',
                 'SET SQL_MODE=""',
             ), // make sure we stay UTC and utf-8,
             'autoConnect'           => true,
         ),
-        
-        'request'=>array( 
+
+        'request'=>array(
             'class'             => 'common.components.web.BaseHttpRequest',
             'csrfCookie'        => array(
                 'httpOnly'      => true,
@@ -82,32 +83,32 @@ return array(
             'enableCsrfValidation'    => true,
             'enableCookieValidation'  => true,
         ),
-        
+
         'cache' => array(
             'class'     => 'system.caching.CFileCache',
             'keyPrefix' => md5('v.' . MW_VERSION . Yii::getPathOfAlias('common')),
         ),
-        
+
         'urlManager' => array(
             'class'          => 'CUrlManager',
             'urlFormat'      => 'path',
             'showScriptName' => true,
             'caseSensitive'  => false,
-            'urlSuffix'      => null, 
+            'urlSuffix'      => null,
             'rules'          => array(),
         ),
-        
+
         'messages' => array(
             'class'     => 'CPhpMessageSource',
             'basePath'  => Yii::getPathOfAlias('common.messages'),
         ),
-        
+
         'log' => array(
             'class' => 'CLogRouter',
             'routes' => array(
                 array(
                     'class'   => 'CFileLogRoute',
-                    'levels'  => 'error, info, warning',
+                    'levels'  => 'error',
                     'enabled' => true,
                 ),
                 array(
@@ -117,71 +118,71 @@ return array(
                 ),
                 array(
                     'class'   => 'CProfileLogRoute',
-                    'report'  => 'summary', 
+                    'report'  => 'summary',
                     'enabled' => MW_DEBUG,
                 ),
             ),
         ),
-        
+
         'errorHandler' => array(
             'errorAction' => 'site/error',
         ),
-        
+
         'format' => array(
             'class' => 'system.utils.CLocalizedFormatter',
         ),
-        
+
         'passwordHasher' => array(
             'class' =>  'common.components.utils.PasswordHasher',
         ),
-        
+
         'ioFilter' => array(
             'class' => 'common.components.utils.IOFilter',
         ),
-        
+
         'hooks' => array(
             'class' => 'common.components.managers.HooksManager',
         ),
-        
+
         'options' => array(
             'class' => 'common.components.managers.OptionsManager',
             'cacheTtl' => MW_CACHE_TTL,
         ),
-        
+
         'notify' => array(
             'class' => 'common.components.managers.NotifyManager',
         ),
-        
+
         'mailer' => array(
             'class' => 'common.components.mailer.Mailer',
         ),
-        
+
         'mutex' => array(
             'class'     => 'common.components.mutex.FileMutex',
             'fileMode'  => 0666,
             'dirMode'   => 0777,
         ),
-        
+
         'queue' => array(
             'class'    => 'common.components.queue.RedisQueue',
             'hostname' => null,
             'port'     => null,
             'database' => null,
         ),
-        
+
         'extensionMimes' => array(
             'class' => 'common.components.utils.FileExtensionMimes',
         ),
-        
+
         'extensionsManager' => array(
             'class'    => 'common.components.managers.ExtensionsManager',
             'paths'    => array(
                 array(
-                    'alias'    => 'common.extensions', 
+                    'alias'    => 'common.extensions',
                     'priority' => -1000
                 ),
                 array(
-                    'alias'    => 'extensions', 
+                    'alias'    => 'extensions',
                     'priority' => -999
                 ),
             ),
@@ -191,12 +192,8 @@ return array(
         'systemInit' => array(
             'class' => 'common.components.init.SystemInit',
         ),
-        'curl' => array(
-            'class' => 'common.extensions.curl.Curl',
-            'options' => array(/* additional curl options */),
-        ),
     ),
-    
+
     'modules' => array(
         /*
         'gii' => array(
@@ -206,12 +203,19 @@ return array(
         ),
         */
     ),
-    
+
     // application-level parameters that can be accessed
     // using Yii::app()->params['paramName']
     'params' => array(
-    
+
         // if you change this param, you know what you are doing and the implications!
         'email.custom.header.prefix' => 'X-Mw-',
+
+        // dkim custom selectors for sending domains
+        'email.custom.dkim.selector'      => 'mailer',
+        'email.custom.dkim.full_selector' => 'mailer._domainkey',
+
+        // custom campaign tags prefix
+        'customer.campaigns.custom_tags.prefix'  => 'CCT_',
     ),
 );

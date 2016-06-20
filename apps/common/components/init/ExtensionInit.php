@@ -2,59 +2,59 @@
 
 /**
  * ExtensionInit
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
+
 abstract class ExtensionInit extends CApplicationComponent
 {
     public $name = 'Missing extension name';
-    
+
     public $author = 'Unknown';
-    
+
     public $website = 'javascript:;';
-    
+
     public $email = 'missing@email.com';
-    
+
     public $description = 'Missing extension description';
-    
+
     public $priority = 0;
-    
+
     public $version = '1.0';
-    
+
     public $minAppVersion = '1.0';
-    
+
     public $cliEnabled = false;
 
     public $notAllowedApps = array();
-    
+
     public $allowedApps = array();
 
     protected $_canBeDisabled = true;
-    
+
     protected $_canBeDeleted = true;
-    
+
     // data to be passed in extension between callbacks mostly
     protected $_data;
-    
+
     /**
      * ExtensionInit::getIsEnabled()
-     * 
+     *
      * @return bool
      */
     public final function getIsEnabled()
     {
         return $this->getManager()->isExtensionEnabled($this->getDirName());
     }
-    
+
     /**
      * ExtensionInit::getCanBeDisabled()
-     * 
+     *
      * @return bool
      */
     public final function getCanBeDisabled()
@@ -64,10 +64,10 @@ abstract class ExtensionInit extends CApplicationComponent
         }
         return true;
     }
-    
+
     /**
      * ExtensionInit::getCanBeDeleted()
-     * 
+     *
      * @return bool
      */
     public final function getCanBeDeleted()
@@ -77,10 +77,10 @@ abstract class ExtensionInit extends CApplicationComponent
         }
         return true;
     }
-    
+
     /**
      * ExtensionInit::setOption()
-     * 
+     *
      * @param string $key
      * @param mixed $value
      * @return mixed
@@ -93,10 +93,10 @@ abstract class ExtensionInit extends CApplicationComponent
 
         return Yii::app()->options->set('system.extension.'.$this->getDirName().'.data.'.$key, $value);
     }
-    
+
     /**
      * ExtensionInit::getOption()
-     * 
+     *
      * @param string $key
      * @param mixed $defaultValue
      * @return mixed
@@ -109,10 +109,10 @@ abstract class ExtensionInit extends CApplicationComponent
 
         return Yii::app()->options->get('system.extension.'.$this->getDirName().'.data.'.$key, $defaultValue);
     }
-    
+
     /**
      * ExtensionInit::removeOption()
-     * 
+     *
      * @param string $key
      * @return mixed
      */
@@ -124,20 +124,20 @@ abstract class ExtensionInit extends CApplicationComponent
 
         return Yii::app()->options->remove('system.extension.'.$this->getDirName().'.data.'.$key);
     }
-    
+
     /**
      * ExtensionInit::removeAllOptions()
-     * 
+     *
      * @return bool
      */
     public final function removeAllOptions()
     {
         return Yii::app()->options->removeCategory('system.extension.'.$this->getDirName().'.data');
     }
-    
+
     /**
      * ExtensionInit::getReflection()
-     * 
+     *
      * @return ReflectionClass
      */
     public final function getReflection()
@@ -148,10 +148,10 @@ abstract class ExtensionInit extends CApplicationComponent
         }
         return $_reflection = new ReflectionClass($this);
     }
-    
+
     /**
      * ExtensionInit::getDirName()
-     * 
+     *
      * @return string
      */
     public final function getDirName()
@@ -160,34 +160,34 @@ abstract class ExtensionInit extends CApplicationComponent
         if ($_dirName) {
             return $_dirName;
         }
-        
+
         $reflection = $this->getReflection();
         return $_dirName = basename(dirname($reflection->getFilename()));
     }
-    
+
     /**
      * ExtensionInit::getPathAlias()
-     * 
+     *
      * @return string
      */
     public final function getPathAlias()
     {
         return 'ext-' . $this->getDirName();
     }
-    
+
     /**
      * ExtensionInit::getManager()
-     * 
+     *
      * @return ExtensionsManager
      */
     public final function getManager()
     {
         return Yii::app()->extensionsManager;
     }
-    
+
     /**
      * ExtensionInit::isAppName()
-     * 
+     *
      * @param string $name
      * @return bool
      */
@@ -195,92 +195,111 @@ abstract class ExtensionInit extends CApplicationComponent
     {
         return Yii::app()->apps->isAppName($name);
     }
-    
+
     /**
      * ExtensionInit::getPageUrl()
-     * 
+     *
      * Used so that extensions can register a landing page.
      * @since 1.1
-     * 
+     *
      * @return mixed
      */
     public function getPageUrl()
     {
-        
+
     }
-    
+
     /**
      * ExtensionInit::beforeEnable()
-     * 
+     *
      * @return bool
      */
     public function beforeEnable()
     {
         return true;
     }
-    
+
     /**
      * ExtensionInit::afterEnable()
-     * 
+     *
      * @return
      */
     public function afterEnable()
     {
     }
-    
+
     /**
      * ExtensionInit::beforeDisable()
-     * 
+     *
      * @return bool
      */
     public function beforeDisable()
     {
         return true;
     }
-    
+
     /**
      * ExtensionInit::afterDisable()
-     * 
+     *
      * @return
      */
     public function afterDisable()
     {
     }
-    
+
     /**
      * ExtensionInit::beforeDelete()
-     * 
+     *
      * @return bool
      */
     public function beforeDelete()
     {
         return true;
     }
-    
+
     /**
      * ExtensionInit::afterDelete()
-     * 
+     *
      * @return
      */
     public function afterDelete()
     {
     }
-    
+
+    /**
+     * ExtensionInit::checkUpdate()
+     *
+     * @return
+     */
+    public function checkUpdate()
+    {
+    }
+
+    /**
+     * ExtensionInit::update()
+     *
+     * @return
+     */
+    public function update()
+    {
+        return true;
+    }
+
     /**
      * ExtensionInit::run()
-     * 
+     *
      * @return
      */
     abstract public function run();
-    
+
     /**
      * ExtensionInit::setData()
-     * 
+     *
      * @param string $key
      * @param mixed $value
      * @return {@CAttributeCollection}
      */
-    final public function setData($key, $value = null) 
+    final public function setData($key, $value = null)
     {
         if (!is_array($key) && $value !== null) {
             $this->getData()->mergeWith(array($key => $value), false);
@@ -289,10 +308,10 @@ abstract class ExtensionInit extends CApplicationComponent
         }
         return $this;
     }
-    
+
     /**
      * ExtensionInit::getData()
-     * 
+     *
      * @param mixed $key
      * @param mixed $defaultValue
      * @return mixed
@@ -307,7 +326,28 @@ abstract class ExtensionInit extends CApplicationComponent
         if ($key !== null) {
             return $this->_data->contains($key) ? $this->_data->itemAt($key) : $defaultValue;
         }
-        
+
         return $this->_data;
     }
+
+    /**
+     * ExtensionInit::getMustUpdate()
+     *
+     * @return bool
+     */
+    final public function getMustUpdate()
+    {
+        return $this->getIsEnabled() && version_compare($this->getDatabaseVersion(), $this->version, '<');
+    }
+
+    /**
+     * ExtensionInit::getDatabaseVersion()
+     *
+     * @return bool
+     */
+    final public function getDatabaseVersion($defaultValue = '1.0')
+    {
+        return $this->getManager()->getExtensionDatabaseVersion($this->getDirName(), $defaultValue);
+    }
+
 }

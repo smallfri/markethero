@@ -2,11 +2,11 @@
 
 /**
  * This file is part of the MailWizz EMA application.
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
@@ -15,7 +15,7 @@
  * This hook gives a chance to prepend content or to replace the default view content with a custom content.
  * Please note that from inside the action callback you can access all the controller view
  * variables via {@CAttributeCollection $collection->controller->data}
- * In case the content is replaced, make sure to set {@CAttributeCollection $collection->renderContent} to false 
+ * In case the content is replaced, make sure to set {@CAttributeCollection $collection->renderContent} to false
  * in order to stop rendering the default content.
  * @since 1.3.3.1
  */
@@ -40,11 +40,13 @@ if ($viewCollection->renderContent) { ?>
             <div class="clearfix"><!-- --></div>
         </div>
         <div class="box-body">
+
+            <?php if (!empty($webEnabled)) { ?>
             <div class="col-lg-2 col-xs-6">
                 <div class="small-box bg-orange">
                     <div class="inner">
                         <h3><?php echo Yii::t('list_import', 'CSV');?></h3>
-                        <p><?php echo Yii::t('app', 'File');?></p>
+                        <p><?php echo Yii::t('app', 'File (live import)');?></p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-ios7-upload"></i>
@@ -57,11 +59,34 @@ if ($viewCollection->renderContent) { ?>
                     </div>
                 </div>
             </div>
+            <?php } ?>
+
+            <?php if (!empty($cliEnabled)) {?>
+            <div class="col-lg-2 col-xs-6">
+                <div class="small-box bg-orange">
+                    <div class="inner">
+                        <h3><?php echo Yii::t('list_import', 'CSV');?></h3>
+                        <p><?php echo Yii::t('app', 'File (queue import)');?></p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-ios7-upload"></i>
+                    </div>
+                    <div class="small-box-footer">
+                        <div class="pull-left">
+                            &nbsp; <a href="#csv-queue-upload-modal" data-toggle="modal" class="btn bg-orange btn-flat btn-xs btn-csv-import"><span class="glyphicon glyphicon-import"></span> <?php echo Yii::t('list_import', 'Select file to import');?></a>
+                        </div>
+                        <div class="clearfix"><!-- --></div>
+                    </div>
+                </div>
+            </div>
+            <?php } ?>
+
+            <?php if (!empty($webEnabled)) { ?>
             <div class="col-lg-2 col-xs-6">
                 <div class="small-box bg-purple">
                     <div class="inner">
                         <h3><?php echo Yii::t('list_import', 'Text');?></h3>
-                        <p><?php echo Yii::t('app', 'File');?></p>
+                        <p><?php echo Yii::t('app', 'File (live import)');?></p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-ios7-upload"></i>
@@ -74,11 +99,33 @@ if ($viewCollection->renderContent) { ?>
                     </div>
                 </div>
             </div>
+            <?php } ?>
+
+            <?php if (!empty($cliEnabled)) {?>
+            <div class="col-lg-2 col-xs-6">
+                <div class="small-box bg-purple">
+                    <div class="inner">
+                        <h3><?php echo Yii::t('list_import', 'Text');?></h3>
+                        <p><?php echo Yii::t('app', 'File (queue import)');?></p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-ios7-upload"></i>
+                    </div>
+                    <div class="small-box-footer">
+                        <div class="pull-left">
+                            &nbsp; <a href="#text-queue-upload-modal" data-toggle="modal" class="btn bg-purple btn-flat btn-xs btn-text-import"><span class="glyphicon glyphicon-import"></span> <?php echo Yii::t('list_import', 'Select file to import');?></a>
+                        </div>
+                        <div class="clearfix"><!-- --></div>
+                    </div>
+                </div>
+            </div>
+            <?php } ?>
+
             <div class="col-lg-2 col-xs-6">
                 <div class="small-box bg-red">
                     <div class="inner">
-                        <h3><?php echo Yii::t('list_import', 'Db');?></h3>
-                        <p><?php echo Yii::t('app', 'Sql import');?></p>
+                        <h3><?php echo Yii::t('list_import', 'Database');?></h3>
+                        <p><?php echo Yii::t('app', 'Sql import (live import)');?></p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-ios7-upload"></i>
@@ -95,7 +142,8 @@ if ($viewCollection->renderContent) { ?>
         </div>
         <div class="box-footer"></div>
     </div>
-    
+
+    <?php if (!empty($webEnabled)) { ?>
     <div class="modal fade" id="csv-upload-modal" tabindex="-1" role="dialog" aria-labelledby="csv-upload-modal-label" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -105,7 +153,7 @@ if ($viewCollection->renderContent) { ?>
             </div>
             <div class="modal-body">
                  <div class="callout callout-info">
-                    <?php 
+                    <?php
                     $text = 'Please note, we only accept valid CSV files that contain a header, that is the column names for the data to be imported.<br />
                      We also have a limit on the file size you are allowed to upload, that is {uploadLimit}.<br />
                      The import process might fail with some of the files, mainly because these are not correctly formatted or they contain invalid data.<br />
@@ -118,11 +166,11 @@ if ($viewCollection->renderContent) { ?>
                     ));
                     ?>
                  </div>
-                <?php 
+                <?php
                 $form = $this->beginWidget('CActiveForm', array(
                     'action'        => array('list_import/csv', 'list_uid' => $list->list_uid),
                     'htmlOptions'   => array(
-                        'id'        => 'upload-csv-form', 
+                        'id'        => 'upload-csv-form',
                         'enctype'   => 'multipart/form-data'
                     ),
                 ));
@@ -141,7 +189,57 @@ if ($viewCollection->renderContent) { ?>
           </div>
         </div>
     </div>
-    
+    <?php } ?>
+
+    <?php if (!empty($cliEnabled)) { ?>
+    <div class="modal fade" id="csv-queue-upload-modal" tabindex="-1" role="dialog" aria-labelledby="csv-queue-upload-modal-label" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title"><?php echo Yii::t('list_import', 'Import from CSV file');?></h4>
+            </div>
+            <div class="modal-body">
+                 <div class="callout callout-info">
+                    <?php
+                    $text = 'Please note, we only accept valid CSV files that contain a header, that is the column names for the data to be imported.<br />
+                     We also have a limit on the file size you are allowed to upload, that is {uploadLimit}.<br />
+                     The import process might fail with some of the files, mainly because these are not correctly formatted or they contain invalid data.<br />
+                     You should first do a test import(in a test list) and see if that goes as planned then do it for your actual list.<br />
+                     <strong>Important</strong>: The CSV file column names will be used to create the list TAGS, if a tag does not exist, it will be created.<br />
+                     You can also click <a href="{exampleArchiveHref}" target="_blank">here</a> to see a csv file example.';
+                    echo Yii::t('list_import', StringHelper::normalizeTranslationString($text), array(
+                        '{uploadLimit}'         => $maxUploadSize . 'MB',
+                        '{exampleArchiveHref}'  => Yii::app()->apps->getAppUrl('customer', 'assets/files/example-csv-import.csv', false, true),
+                    ));
+                    ?>
+                 </div>
+                <?php
+                $form = $this->beginWidget('CActiveForm', array(
+                    'action'        => array('list_import/csv_queue', 'list_uid' => $list->list_uid),
+                    'htmlOptions'   => array(
+                        'id'        => 'upload-csv-queue-form',
+                        'enctype'   => 'multipart/form-data'
+                    ),
+                ));
+                ?>
+                <div class="form-group">
+                    <?php echo $form->labelEx($importCsv, 'file');?>
+                    <?php echo $form->fileField($importCsv, 'file', $importCsv->getHtmlOptions('file')); ?>
+                    <?php echo $form->error($importCsv, 'file');?>
+                </div>
+                <?php $this->endWidget(); ?>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo Yii::t('app', 'Close');?></button>
+              <button type="button" class="btn btn-primary btn-submit" data-loading-text="<?php echo Yii::t('app', 'Please wait, processing...');?>" onclick="$('#upload-csv-queue-form').submit();"><?php echo Yii::t('list_import', 'Upload file')?></button>
+            </div>
+          </div>
+        </div>
+    </div>
+    <?php } ?>
+
+    <?php if (!empty($webEnabled)) { ?>
     <div class="modal fade" id="text-upload-modal" tabindex="-1" role="dialog" aria-labelledby="text-upload-modal-label" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -151,7 +249,7 @@ if ($viewCollection->renderContent) { ?>
             </div>
             <div class="modal-body">
                  <div class="callout callout-info">
-                    <?php 
+                    <?php
                     $text = '
                     Please note that you should list each email address on a separate line in your text file.<br />
                     You can also click <a href="{exampleArchiveHref}" target="_blank">here</a> to see a text file example.<br />
@@ -162,11 +260,11 @@ if ($viewCollection->renderContent) { ?>
                     ));
                     ?>
                  </div>
-                <?php 
+                <?php
                 $form = $this->beginWidget('CActiveForm', array(
                     'action'        => array('list_import/text', 'list_uid' => $list->list_uid),
                     'htmlOptions'   => array(
-                        'id'        => 'upload-text-form', 
+                        'id'        => 'upload-text-form',
                         'enctype'   => 'multipart/form-data'
                     ),
                 ));
@@ -185,6 +283,53 @@ if ($viewCollection->renderContent) { ?>
           </div>
         </div>
     </div>
+    <?php } ?>
+
+    <?php if (!empty($cliEnabled)) { ?>
+    <div class="modal fade" id="text-queue-upload-modal" tabindex="-1" role="dialog" aria-labelledby="text-queue-upload-modal-label" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title"><?php echo Yii::t('list_import', 'Import from text file');?></h4>
+            </div>
+            <div class="modal-body">
+                 <div class="callout callout-info">
+                    <?php
+                    $text = '
+                    Please note that you should list each email address on a separate line in your text file.<br />
+                    You can also click <a href="{exampleArchiveHref}" target="_blank">here</a> to see a text file example.<br />
+                    We also have a limit on the file size you are allowed to upload, that is {uploadLimit}.';
+                    echo Yii::t('list_import', StringHelper::normalizeTranslationString($text), array(
+                        '{uploadLimit}'         => $maxUploadSize . 'MB',
+                        '{exampleArchiveHref}'  => Yii::app()->apps->getAppUrl('customer', 'assets/files/example-text-import.txt', false, true),
+                    ));
+                    ?>
+                 </div>
+                <?php
+                $form = $this->beginWidget('CActiveForm', array(
+                    'action'        => array('list_import/text_queue', 'list_uid' => $list->list_uid),
+                    'htmlOptions'   => array(
+                        'id'        => 'upload-text-queue-form',
+                        'enctype'   => 'multipart/form-data'
+                    ),
+                ));
+                ?>
+                <div class="form-group">
+                    <?php echo $form->labelEx($importText, 'file');?>
+                    <?php echo $form->fileField($importText, 'file', $importText->getHtmlOptions('file')); ?>
+                    <?php echo $form->error($importText, 'file');?>
+                </div>
+                <?php $this->endWidget(); ?>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo Yii::t('app', 'Close');?></button>
+              <button type="button" class="btn btn-primary btn-submit" data-loading-text="<?php echo Yii::t('app', 'Please wait, processing...');?>" onclick="$('#upload-text-queue-form').submit();"><?php echo Yii::t('list_import', 'Upload file')?></button>
+            </div>
+          </div>
+        </div>
+    </div>
+    <?php } ?>
     
     <div class="modal fade" id="database-import-modal" tabindex="-1" role="dialog" aria-labelledby="database-import-modal-label" aria-hidden="true">
         <div class="modal-dialog">
@@ -197,7 +342,7 @@ if ($viewCollection->renderContent) { ?>
                  <div class="callout callout-info">
                     <?php echo Yii::t('list_import', 'Please enter your credentials for the external database in order to start the import.');?>
                  </div>
-                <?php 
+                <?php
                 $form = $this->beginWidget('CActiveForm', array(
                     'action'        => array('list_import/database', 'list_uid' => $list->list_uid),
                     'htmlOptions'   => array(
@@ -264,7 +409,7 @@ if ($viewCollection->renderContent) { ?>
           </div>
         </div>
     </div>
-<?php 
+<?php
 }
 /**
  * This hook gives a chance to append content after the view file default content.

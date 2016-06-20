@@ -2,11 +2,11 @@
 
 /**
  * This file is part of the MailWizz EMA application.
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
@@ -15,7 +15,7 @@
  * This hook gives a chance to prepend content or to replace the default view content with a custom content.
  * Please note that from inside the action callback you can access all the controller view
  * variables via {@CAttributeCollection $collection->controller->data}
- * In case the content is replaced, make sure to set {@CAttributeCollection $collection->renderContent} to false 
+ * In case the content is replaced, make sure to set {@CAttributeCollection $collection->renderContent} to false
  * in order to stop rendering the default content.
  * @since 1.3.3.1
  */
@@ -25,12 +25,12 @@ $hooks->doAction('before_view_file_content', $viewCollection = new CAttributeCol
 )));
 
 // and render if allowed
-if ($viewCollection->renderContent) { 
+if ($viewCollection->renderContent) {
     /**
      * This hook gives a chance to prepend content before the active form or to replace the default active form entirely.
-     * Please note that from inside the action callback you can access all the controller view variables 
+     * Please note that from inside the action callback you can access all the controller view variables
      * via {@CAttributeCollection $collection->controller->data}
-     * In case the form is replaced, make sure to set {@CAttributeCollection $collection->renderForm} to false 
+     * In case the form is replaced, make sure to set {@CAttributeCollection $collection->renderForm} to false
      * in order to stop rendering the default content.
      * @since 1.3.3.1
      */
@@ -38,7 +38,7 @@ if ($viewCollection->renderContent) {
         'controller'    => $this,
         'renderForm'    => true,
     )));
-    
+
     // and render if allowed
     if ($collection->renderForm) {
         $form = $this->beginWidget('CActiveForm', array(
@@ -60,16 +60,16 @@ if ($viewCollection->renderContent) {
                 <div class="clearfix"><!-- --></div>
             </div>
             <div class="box-body">
-                <?php 
+                <?php
                 /**
                  * This hook gives a chance to prepend content before the active form fields.
-                 * Please note that from inside the action callback you can access all the controller view variables 
+                 * Please note that from inside the action callback you can access all the controller view variables
                  * via {@CAttributeCollection $collection->controller->data}
                  * @since 1.3.3.1
                  */
                 $hooks->doAction('before_active_form_fields', new CAttributeCollection(array(
                     'controller'    => $this,
-                    'form'          => $form    
+                    'form'          => $form
                 )));
                 ?>
                 <div class="clearfix"><!-- --></div>
@@ -96,7 +96,7 @@ if ($viewCollection->renderContent) {
                 <div class="clearfix"><!-- --></div>
                 <div class="form-group col-lg-12">
                     <?php echo $form->labelEx($campaign, 'subject');?> [<a data-toggle="modal" href="#available-tags-modal"><?php echo Yii::t('campaigns', 'Available tags');?></a>]
-                    <?php echo $form->textField($campaign, 'subject', $campaign->getHtmlOptions('subject')); ?> 
+                    <?php echo $form->textField($campaign, 'subject', $campaign->getHtmlOptions('subject')); ?>
                     <?php echo $form->error($campaign, 'subject');?>
                 </div>
                 <div class="clearfix"><!-- --></div>
@@ -113,15 +113,20 @@ if ($viewCollection->renderContent) {
                         </div>
                         <div class="box-body">
                             <div class="form-group col-lg-2">
+                                <?php echo $form->labelEx($campaign->option, 'open_tracking');?>
+                                <?php echo $form->dropDownList($campaign->option, 'open_tracking', $campaign->option->getYesNoOptionsArray(), $campaign->option->getHtmlOptions('open_tracking')); ?>
+                                <?php echo $form->error($campaign->option, 'open_tracking');?>
+                            </div>
+                            <div class="form-group col-lg-2">
                                 <?php echo $form->labelEx($campaign->option, 'url_tracking');?>
                                 <?php echo $form->dropDownList($campaign->option, 'url_tracking', $campaign->option->getYesNoOptionsArray(), $campaign->option->getHtmlOptions('url_tracking')); ?>
                                 <?php echo $form->error($campaign->option, 'url_tracking');?>
                             </div>
-<!--                            <div class="form-group col-lg-2">-->
-<!--                                --><?php //echo $form->labelEx($campaign->option, 'json_feed');?>
-<!--                                --><?php //echo $form->dropDownList($campaign->option, 'json_feed', $campaign->option->getYesNoOptionsArray(), $campaign->option->getHtmlOptions('json_feed')); ?>
-<!--                                --><?php //echo $form->error($campaign->option, 'json_feed');?>
-<!--                            </div>-->
+                            <div class="form-group col-lg-2">
+                                <?php echo $form->labelEx($campaign->option, 'json_feed');?>
+                                <?php echo $form->dropDownList($campaign->option, 'json_feed', $campaign->option->getYesNoOptionsArray(), $campaign->option->getHtmlOptions('json_feed')); ?>
+                                <?php echo $form->error($campaign->option, 'json_feed');?>
+                            </div>
                             <div class="form-group col-lg-2">
                                 <?php echo $form->labelEx($campaign->option, 'xml_feed');?>
                                 <?php echo $form->dropDownList($campaign->option, 'xml_feed', $campaign->option->getYesNoOptionsArray(), $campaign->option->getHtmlOptions('xml_feed')); ?>
@@ -137,37 +142,19 @@ if ($viewCollection->renderContent) {
                                 <?php echo $form->dropDownList($campaign->option, 'plain_text_email', $campaign->option->getYesNoOptionsArray(), $campaign->option->getHtmlOptions('plain_text_email')); ?>
                                 <?php echo $form->error($campaign->option, 'plain_text_email');?>
                             </div>
+                            <div class="clearfix"><!-- --></div>
                             <?php if (!$campaign->isAutoresponder) {?>
-                            <div class="form-group col-lg-2">
+                            <div class="form-group col-lg-12">
                                 <?php echo $form->labelEx($campaign->option, 'email_stats');?>
                                 <?php echo $form->textField($campaign->option, 'email_stats', $campaign->option->getHtmlOptions('email_stats')); ?>
-                                <?php echo $form->error($campaign->option,'email_stats'); ?>
+                                <?php echo $form->error($campaign->option, 'email_stats');?>
                             </div>
-<!--                                --><?php
-//                                $send_referral_url = null;
-//                                $value = 0;
-//                                if(isset($campaign->option->send_referral_url))
-//                                {
-//                                    $send_referral_url = "checked";
-//                                    $value = 1;
-//                                }
-//
-//                                ?>
-<!--                                <div class="form-group col-lg-2">-->
-<!--                                    --><?php //echo $form->labelEx($campaign->option,'send_referral_url'); ?>
-<!--                                    <select data-title="Send Referral Link" data-container="body" data-toggle="popover" data-content="Whether to send referral link" class="form-control has-help-text" data-placement="top" name="CampaignOption[send_referral_url]" id="CampaignOption_send_referral_url" data-original-title="" title="">-->
-<!--                                    <option value="1">Yes</option>-->
-<!--                                    <option value="0" selected="selected" >No</option>-->
-<!--                                    </select>-->
-<!--                                    --><?php //echo $form->error($campaign->option,'send_referral_url'); ?>
-<!--                                </div>-->
-
                             <?php } ?>
-                            <div class="clearfix"><!-- --></div>   
+                            <div class="clearfix"><!-- --></div>
                         </div>
                     </div>
                 </div>
-                <div class="clearfix"><!-- --></div> 
+                <div class="clearfix"><!-- --></div>
 
                 <?php if (!empty($canShowOpenListFieldActions)) { ?>
                 <div class="col-lg-12">
@@ -213,7 +200,7 @@ if ($viewCollection->renderContent) {
                     </div>
                 </div>
                 <?php } ?>
-                
+
                 <?php if (!empty($canShowOpenActions)) { ?>
                 <div class="col-lg-12">
                     <div class="box box-primary panel-campaign-open-actions">
@@ -257,7 +244,7 @@ if ($viewCollection->renderContent) {
                     </div>
                 </div>
                 <?php } ?>
-                
+
                 <?php if ($canSelectDeliveryServers && !empty($deliveryServers)) { ?>
                 <div class="col-lg-12">
                     <div class="box box-primary">
@@ -281,12 +268,12 @@ if ($viewCollection->renderContent) {
                                         <?php echo $server->displayName;?>
                                     </div>
                                 </div>
-                            <?php } ?> 
-                            <div class="clearfix"><!-- --></div>   
+                            <?php } ?>
+                            <div class="clearfix"><!-- --></div>
                         </div>
                     </div>
                 </div>
-                <div class="clearfix"><!-- --></div> 
+                <div class="clearfix"><!-- --></div>
                 <?php } ?>
 
                 <?php if ($canAddAttachments) { ?>
@@ -330,27 +317,27 @@ if ($viewCollection->renderContent) {
                                         <?php echo $file->name;?>
                                     </div>
                                 </div>
-                            <?php } ?>  
+                            <?php } ?>
                             <?php } ?>
                             <div class="clearfix"><!-- --></div>
                         </div>
                     </div>
                 </div>
-                <div class="clearfix"><!-- --></div> 
-                <?php 
+                <div class="clearfix"><!-- --></div>
+                <?php
                 }
                 /**
                  * This hook gives a chance to append content after the active form fields.
-                 * Please note that from inside the action callback you can access all the controller view variables 
+                 * Please note that from inside the action callback you can access all the controller view variables
                  * via {@CAttributeCollection $collection->controller->data}
-                 * 
+                 *
                  * @since 1.3.3.1
                  */
                 $hooks->doAction('after_active_form_fields', new CAttributeCollection(array(
                     'controller'    => $this,
-                    'form'          => $form    
+                    'form'          => $form
                 )));
-                ?>     
+                ?>
                 <div class="clearfix"><!-- --></div>
             </div>
             <div class="box-footer">
@@ -367,13 +354,13 @@ if ($viewCollection->renderContent) {
                     </div>
                 </div>
             </div>
-        </div>    
-        <?php 
-        $this->endWidget(); 
-    } 
+        </div>
+        <?php
+        $this->endWidget();
+    }
     /**
      * This hook gives a chance to append content after the active form fields.
-     * Please note that from inside the action callback you can access all the controller view variables 
+     * Please note that from inside the action callback you can access all the controller view variables
      * via {@CAttributeCollection $collection->controller->data}
      * @since 1.3.3.1
      */
@@ -409,7 +396,7 @@ if ($viewCollection->renderContent) {
           </div>
         </div>
     </div>
-    
+
     <div id="campaign-open-actions-template" style="display: none;">
         <div class="col-lg-6 campaign-open-actions-row" data-start-index="{index}" style="margin-bottom: 10px;">
             <div class="col-lg-4">
@@ -428,7 +415,7 @@ if ($viewCollection->renderContent) {
             <div class="clearfix"><!-- --></div>
         </div>
     </div>
-    
+
     <div id="campaign-open-list-fields-actions-template" style="display: none;">
         <div class="col-lg-6 campaign-open-list-fields-actions-row" data-start-index="{index}" style="margin-bottom: 10px;">
             <div class="col-lg-4">
@@ -447,7 +434,7 @@ if ($viewCollection->renderContent) {
             <div class="clearfix"><!-- --></div>
         </div>
     </div>
-<?php 
+<?php
 }
 /**
  * This hook gives a chance to append content after the view file default content.

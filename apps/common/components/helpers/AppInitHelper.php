@@ -2,26 +2,26 @@
 
 /**
  * AppInitHelper
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
-class AppInitHelper 
+
+class AppInitHelper
 {
     private static $_entryScriptUrl;
-    
+
     private static $_baseUrl;
-    
+
     /**
      * AppInitHelper::getEntryScriptUrl()
-     * 
+     *
      * Inspired from Yii
-     * 
+     *
      * @return string
      */
     public static function getEntryScriptUrl()
@@ -29,7 +29,7 @@ class AppInitHelper
         if(self::$_entryScriptUrl === null)
         {
             $scriptName = basename($_SERVER['SCRIPT_FILENAME']);
-            
+
             if (basename($_SERVER['SCRIPT_NAME']) === $scriptName) {
                 self::$_entryScriptUrl = $_SERVER['SCRIPT_NAME'];
             } elseif (basename($_SERVER['PHP_SELF']) === $scriptName) {
@@ -42,14 +42,14 @@ class AppInitHelper
                 self::$_entryScriptUrl = str_replace('\\','/', str_replace($_SERVER['DOCUMENT_ROOT'], '', $_SERVER['SCRIPT_FILENAME']));
             } else {
                 throw new Exception('Unable to determine the entry script URL.');
-            }   
+            }
         }
         return self::$_entryScriptUrl;
     }
-    
+
     /**
      * AppInitHelper::getBaseUrl()
-     * 
+     *
      * @param mixed $appendThis
      * @return string
      */
@@ -60,10 +60,10 @@ class AppInitHelper
         }
         return self::$_baseUrl . (!empty($appendThis) ? '/' . trim($appendThis, '/') : null);
     }
-    
+
     /**
      * AppInitHelper::noMagicQuotes()
-     * 
+     *
      * @return
      */
     public static function noMagicQuotes()
@@ -73,7 +73,7 @@ class AppInitHelper
         if ($hasRan || !get_magic_quotes_gpc()) {
             return;
         }
-        
+
         $process = array(&$_GET, &$_POST, &$_COOKIE, &$_REQUEST);
         while (list($key, $val) = each($process)) {
             foreach ($val as $k => $v) {
@@ -89,10 +89,10 @@ class AppInitHelper
         unset($process);
         $hasRan = true;
     }
-    
+
     /**
      * AppInitHelper::fixRemoteAddress()
-     * 
+     *
      * @return
      */
     public static function fixRemoteAddress()
@@ -102,15 +102,15 @@ class AppInitHelper
             return;
         }
         $hasRan = true;
-        
+
         // keep a reference
         $_SERVER['ORIGINAL_REMOTE_ADDR'] = $_SERVER['REMOTE_ADDR'];
-        
+
         $keys = array(
-            'HTTP_CF_CONNECTING_IP', 'HTTP_CLIENT_IP', 'HTTP_X_REAL_IP', 'HTTP_X_FORWARDED_FOR', 
+            'HTTP_CF_CONNECTING_IP', 'HTTP_CLIENT_IP', 'HTTP_X_REAL_IP', 'HTTP_X_FORWARDED_FOR',
             'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED'
         );
-        
+
         foreach ($keys as $key) {
             if (empty($_SERVER[$key])) {
                 continue;
@@ -124,151 +124,136 @@ class AppInitHelper
             }
         }
     }
-    
+
     /**
      * AppInitHelper::isValidIp()
-     * 
+     *
      * @param string $ip
      * @return bool
      */
-    public static function isValidIp($ip) 
+    public static function isValidIp($ip)
     {
-        return filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE);
+        return FilterVarHelper::ip($ip);
     }
-    
+
     /**
      * AppInitHelper::isModRewriteEnabled()
-     * 
+     *
      * @return bool
      */
     public static function isModRewriteEnabled()
     {
-        return CommonHelper::functionExists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules());
+        return CommonHelper::functionExists('apache_get_modules') ? in_array('mod_rewrite', apache_get_modules()) : true;
     }
-    
+
     /**
      * AppInitHelper::isSecureConnection()
-     * 
+     *
      * @return bool
      */
     public static function isSecureConnection()
     {
         return !empty($_SERVER['HTTPS']) && strcasecmp($_SERVER['HTTPS'], 'off');
     }
-    
+
     /**
      * AppInitHelper::simpleCurlPost()
-     * 
+     *
      * @param string $requestUrl
+     * @param array $postData
+     * @param int $timeout
      * @return array
      */
-    public static function simpleCurlPost($requestUrl, array $postData = array(), $timeout = 30) 
+    public static function simpleCurlPost($requestUrl, array $postData = array(), $timeout = 30)
     {
-        if (!CommonHelper::functionExists('curl_init')) {
-            return array('status' => 'error', 'message' => 'cURL not available, please install cURL and try again!');
-        }
-        
-        $ch = curl_init($requestUrl);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-        curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
-        curl_setopt($ch, CURLOPT_AUTOREFERER , true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);    
-        
-        curl_setopt($ch, CURLOPT_POST, count($postData));
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData, '', '&'));
-        
-        $body           = curl_exec($ch);
-        $curlCode       = curl_errno($ch);
-        $curlMessage    = curl_error($ch);
-    
-        curl_close($ch);
-        
-        if ($curlCode !== 0) {
-            return array('status' => 'error', 'message' => $curlMessage);
-        }
-        
-        return array('status' => 'success', 'message' => $body);
+        return self::makeRemoteRequest($requestUrl, array(
+            CURLOPT_CONNECTTIMEOUT => $timeout,
+            CURLOPT_TIMEOUT        => $timeout,
+            CURLOPT_POST           => count($postData),
+            CURLOPT_POSTFIELDS     => http_build_query($postData, '', '&'),
+        ));
     }
-    
+
     /**
      * AppInitHelper::simpleCurlGet()
-     * 
+     *
      * @since 1.2
      * @param string $requestUrl
+     * @param int $timeout
      * @return array
      */
-    public static function simpleCurlGet($requestUrl, $timeout = 30) 
+    public static function simpleCurlGet($requestUrl, $timeout = 30)
     {
-        if (!CommonHelper::functionExists('curl_init')) {
+        return self::makeRemoteRequest($requestUrl, array(
+            CURLOPT_CONNECTTIMEOUT => $timeout,
+            CURLOPT_TIMEOUT        => $timeout,
+        ));
+    }
+
+    /**
+     * AppInitHelper::simpleCurlPut()
+     *
+     * @param string $requestUrl
+     * @param array $postData
+     * @param int $timeout
+     * @return array
+     */
+    public static function simpleCurlPut($requestUrl, array $postData = array(), $timeout = 30)
+    {
+        return self::makeRemoteRequest($requestUrl, array(
+            CURLOPT_CONNECTTIMEOUT => $timeout,
+            CURLOPT_TIMEOUT        => $timeout,
+            CURLOPT_CUSTOMREQUEST  => "PUT",
+            CURLOPT_POSTFIELDS     => http_build_query($postData, '', '&'),
+        ));
+    }
+
+    /**
+     * AppInitHelper::makeRemoteRequest()
+     *
+     * @param string $requestUrl
+     * @param array $curlOptions
+     * @return array
+     * @since 1.3.5.9
+     */
+    public static function makeRemoteRequest($requestUrl, array $curlOptions = array())
+    {
+        if (!CommonHelper::functionExists('curl_exec')) {
             return array('status' => 'error', 'message' => 'cURL not available, please install cURL and try again!');
         }
-        
+
         $ch = curl_init($requestUrl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-        curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_AUTOREFERER , true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);    
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 
         if (ini_get('open_basedir') == '' && ini_get('safe_mode') != 'On') {
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        }   
-    
-        $body           = curl_exec($ch);
-        $curlCode       = curl_errno($ch);
-        $curlMessage    = curl_error($ch);
-    
+        }
+
+        foreach ($curlOptions as $key => $value) {
+            curl_setopt($ch, $key, $value);
+        }
+
+        $body        = curl_exec($ch);
+        $curlCode    = curl_errno($ch);
+        $curlMessage = curl_error($ch);
+
         curl_close($ch);
-        
+
         if ($curlCode !== 0) {
             return array('status' => 'error', 'message' => $curlMessage);
         }
-        
+
         return array('status' => 'success', 'message' => $body);
     }
-    
-    /**
-     * AppInitHelper::simpleCurlPut()
-     * 
-     * @param string $requestUrl
-     * @return array
-     */
-    public static function simpleCurlPut($requestUrl, array $postData = array(), $timeout = 30) 
-    {
-        if (!CommonHelper::functionExists('curl_init')) {
-            return array('status' => 'error', 'message' => 'cURL not available, please install cURL and try again!');
-        }
-        
-        $ch = curl_init($requestUrl);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-        curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
-        curl_setopt($ch, CURLOPT_AUTOREFERER , true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);    
-        
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData, '', '&'));
-        
-        $body           = curl_exec($ch);
-        $curlCode       = curl_errno($ch);
-        $curlMessage    = curl_error($ch);
-    
-        curl_close($ch);
-        
-        if ($curlCode !== 0) {
-            return array('status' => 'error', 'message' => $curlMessage);
-        }
-        
-        return array('status' => 'success', 'message' => $body);
-    }
-    
+
     /**
      * AppInitHelper::findPhpCliPath()
-     * 
+     *
      * @since 1.3.3.1
      * @return string
      */

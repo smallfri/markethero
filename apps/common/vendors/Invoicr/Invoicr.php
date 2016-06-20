@@ -16,7 +16,7 @@ class Invoicr extends FPDF_rotation
     public $columnOpacity = 0.06;
     public $columnSpacing = 0.3;
     public $referenceformat = array('.', ',');
-    
+
     public $margins = array(
         'l' => 20,
         't' => 20,
@@ -42,7 +42,7 @@ class Invoicr extends FPDF_rotation
 
     /**
      * Invoicr::__construct()
-     * 
+     *
      * @param string $size
      * @param string $currency
      * @param string $language
@@ -69,7 +69,7 @@ class Invoicr extends FPDF_rotation
 
     /**
      * Invoicr::setType()
-     * 
+     *
      * @param mixed $title
      * @return
      */
@@ -81,7 +81,7 @@ class Invoicr extends FPDF_rotation
 
     /**
      * Invoicr::setColor()
-     * 
+     *
      * @param mixed $rgbcolor
      * @return
      */
@@ -93,7 +93,7 @@ class Invoicr extends FPDF_rotation
 
     /**
      * Invoicr::setDate()
-     * 
+     *
      * @param mixed $date
      * @return
      */
@@ -105,7 +105,7 @@ class Invoicr extends FPDF_rotation
 
     /**
      * Invoicr::setDue()
-     * 
+     *
      * @param mixed $date
      * @return
      */
@@ -117,7 +117,7 @@ class Invoicr extends FPDF_rotation
 
     /**
      * Invoicr::setLogo()
-     * 
+     *
      * @param integer $logo
      * @param integer $maxWidth
      * @param integer $maxHeight
@@ -135,7 +135,7 @@ class Invoicr extends FPDF_rotation
 
     /**
      * Invoicr::setFrom()
-     * 
+     *
      * @param mixed $data
      * @return
      */
@@ -147,7 +147,7 @@ class Invoicr extends FPDF_rotation
 
     /**
      * Invoicr::setTo()
-     * 
+     *
      * @param mixed $data
      * @return
      */
@@ -159,7 +159,7 @@ class Invoicr extends FPDF_rotation
 
     /**
      * Invoicr::setReference()
-     * 
+     *
      * @param mixed $reference
      * @return
      */
@@ -171,7 +171,7 @@ class Invoicr extends FPDF_rotation
 
     /**
      * Invoicr::setNumberFormat()
-     * 
+     *
      * @param mixed $decimals
      * @param mixed $thousands_sep
      * @return
@@ -184,7 +184,7 @@ class Invoicr extends FPDF_rotation
 
     /**
      * Invoicr::flipflop()
-     * 
+     *
      * @return
      */
     public function flipflop()
@@ -195,7 +195,7 @@ class Invoicr extends FPDF_rotation
 
     /**
      * Invoicr::addItem()
-     * 
+     *
      * @param mixed $item
      * @param mixed $description
      * @param mixed $quantity
@@ -229,7 +229,7 @@ class Invoicr extends FPDF_rotation
 
     /**
      * Invoicr::addTotal()
-     * 
+     *
      * @param mixed $name
      * @param mixed $value
      * @param integer $colored
@@ -247,7 +247,7 @@ class Invoicr extends FPDF_rotation
 
     /**
      * Invoicr::addTitle()
-     * 
+     *
      * @param mixed $title
      * @return
      */
@@ -259,7 +259,7 @@ class Invoicr extends FPDF_rotation
 
     /**
      * Invoicr::addParagraph()
-     * 
+     *
      * @param mixed $paragraph
      * @return
      */
@@ -272,7 +272,7 @@ class Invoicr extends FPDF_rotation
 
     /**
      * Invoicr::addBadge()
-     * 
+     *
      * @param mixed $badge
      * @return
      */
@@ -284,7 +284,7 @@ class Invoicr extends FPDF_rotation
 
     /**
      * Invoicr::setFooternote()
-     * 
+     *
      * @param mixed $note
      * @return
      */
@@ -296,7 +296,7 @@ class Invoicr extends FPDF_rotation
 
     /**
      * Invoicr::render()
-     * 
+     *
      * @param string $name
      * @param string $destination
      * @return
@@ -311,7 +311,7 @@ class Invoicr extends FPDF_rotation
 
     /**
      * Invoicr::Header()
-     * 
+     *
      * @return
      */
     public function Header()
@@ -388,7 +388,7 @@ class Invoicr extends FPDF_rotation
             $this->SetLineWidth(0.3);
             $this->Line($this->margins['l'], $this->GetY(), $this->margins['l'] + $width - 10, $this->GetY());
             $this->Line($this->margins['l'] + $width, $this->GetY(), $this->margins['l'] + $width + $width, $this->GetY());
-            
+
             if (count($this->from) && count($this->to)) {
                 //Information
                 $this->Ln(5);
@@ -445,7 +445,7 @@ class Invoicr extends FPDF_rotation
 
     /**
      * Invoicr::Body()
-     * 
+     *
      * @return
      */
     public function Body()
@@ -595,7 +595,7 @@ class Invoicr extends FPDF_rotation
 
     /**
      * Invoicr::Footer()
-     * 
+     *
      * @return
      */
     public function Footer()
@@ -609,7 +609,7 @@ class Invoicr extends FPDF_rotation
 
     /**
      * Invoicr::setLanguage()
-     * 
+     *
      * @param mixed $language
      * @return
      */
@@ -619,7 +619,7 @@ class Invoicr extends FPDF_rotation
 
     /**
      * Invoicr::setDocumentSize()
-     * 
+     *
      * @param mixed $dsize
      * @return
      */
@@ -650,7 +650,7 @@ class Invoicr extends FPDF_rotation
 
     /**
      * Invoicr::resizeToFit()
-     * 
+     *
      * @param mixed $image
      * @return
      */
@@ -665,7 +665,7 @@ class Invoicr extends FPDF_rotation
 
     /**
      * Invoicr::pixelsToMM()
-     * 
+     *
      * @param mixed $val
      * @return
      */
@@ -678,7 +678,7 @@ class Invoicr extends FPDF_rotation
 
     /**
      * Invoicr::hex2rgb()
-     * 
+     *
      * @param mixed $hex
      * @return
      */
@@ -703,7 +703,7 @@ class Invoicr extends FPDF_rotation
 
     /**
      * Invoicr::br2nl()
-     * 
+     *
      * @param mixed $string
      * @return
      */

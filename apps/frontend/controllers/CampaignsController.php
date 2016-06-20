@@ -2,21 +2,21 @@
 
 /**
  * CampaignsController
- * 
+ *
  * Handles the actions for campaigns related tasks
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
- 
+
 class CampaignsController extends Controller
 {
     public $layout = 'thin';
-    
+
     /**
      * Will show the web version of a campaign email
      */
@@ -26,33 +26,30 @@ class CampaignsController extends Controller
         $criteria->compare('campaign_uid', $campaign_uid);
         $criteria->addNotInCondition('status', array(Campaign::STATUS_PENDING_DELETE));
         $campaign = Campaign::model()->find($criteria);
-        
+
         if (empty($campaign)) {
             $this->redirect(array('site/index'));
         }
-        
+
         $subscriber = null;
         if (!empty($subscriber_uid)) {
-            $subscriber = ListSubscriber::model()->findByAttributes(array(
-                'subscriber_uid'    => $subscriber_uid,
-                'status'            => ListSubscriber::STATUS_CONFIRMED,
-            ));
+            $subscriber = ListSubscriber::model()->findByUid($subscriber_uid);
         }
-        
+
         $list           = $campaign->list;
         $customer       = $list->customer;
         $template       = $campaign->template;
         $emailContent   = $template->content;
         $emailFooter    = null;
-        
+
         if (($emailFooter = $customer->getGroupOption('campaigns.email_footer')) && strlen(trim($emailFooter)) > 5) {
             $emailContent = CampaignHelper::injectEmailFooter($emailContent, $emailFooter, $campaign);
         }
-        
+
         if (!empty($campaign->option) && $campaign->option->xml_feed == CampaignOption::TEXT_YES) {
             $emailContent = CampaignXmlFeedParser::parseContent($emailContent, $campaign, $subscriber, true);
         }
-        
+
         if (!empty($campaign->option) && $campaign->option->json_feed == CampaignOption::TEXT_YES) {
             $emailContent = CampaignJsonFeedParser::parseContent($emailContent, $campaign, $subscriber, true);
         }
@@ -64,21 +61,21 @@ class CampaignsController extends Controller
         } else {
             $subscriber = new ListSubscriber();
         }
-        
+
         $emailData = CampaignHelper::parseContent($emailContent, $campaign, $subscriber, true);
         list(,,$emailContent) = $emailData;
 
         echo $emailContent;
     }
-    
+
     /**
      * Will track and register the email openings
-     * 
+     *
      * GMail will store the email images, therefore there might be cases when successive opens by same subscriber
      * will not be tracked.
      * In order to trick this, it seems that the content length must be set to 0 as pointed out here:
      * http://www.emailmarketingtipps.de/2013/12/07/gmails-image-caching-affects-email-marketing-heal-opens-tracking/
-     * 
+     *
      * Note: When mod gzip enabled on server, the content length will be at least 20 bytes as explained in this bug:
      * https://issues.apache.org/bugzilla/show_bug.cgi?id=51350
      * In order to alleviate this, seems that we need to use a fake content type, like application/json
@@ -99,7 +96,7 @@ class CampaignsController extends Controller
         $criteria->compare('campaign_uid', $campaign_uid);
         $criteria->addNotInCondition('status', array(Campaign::STATUS_PENDING_DELETE));
         $campaign = Campaign::model()->find($criteria);
-        
+
         if (empty($campaign)) {
             Yii::app()->end();
         }
@@ -111,45 +108,38 @@ class CampaignsController extends Controller
             Yii::app()->end();
         }
 
-        $subscriber = ListSubscriber::model()->findByAttributes(array(
-            'subscriber_uid'    => $subscriber_uid,
-            'status'            => ListSubscriber::STATUS_CONFIRMED,
-        ));
-        
+        $subscriber = ListSubscriber::model()->findByUid($subscriber_uid);
         if (empty($subscriber)) {
             Yii::app()->end();
         }
-        
+
         Yii::app()->hooks->addAction('frontend_campaigns_after_track_opening', array($this, '_openActionChangeSubscriberListField'), 99);
         Yii::app()->hooks->addAction('frontend_campaigns_after_track_opening', array($this, '_openActionAgainstSubscriber'), 100);
-        
+
         $track = new CampaignTrackOpen();
         $track->campaign_id     = $campaign->campaign_id;
         $track->subscriber_id   = $subscriber->subscriber_id;
         $track->ip_address      = Yii::app()->request->getUserHostAddress();
         $track->user_agent      = substr(Yii::app()->request->getUserAgent(), 0, 255);
-        
+
         if ($track->save(false)) {
             // raise the action, hook added in 1.2
             $this->setData('ipLocationSaved', false);
             try {
                 Yii::app()->hooks->doAction('frontend_campaigns_after_track_opening', $this, $track, $campaign, $subscriber);
             } catch (Exception $e) {
-                
+
             }
         }
-        
+
         Yii::app()->end();
     }
-    
+
     /**
      * Will track the clicks the subscribers made in the campaign email
      */
     public function actionTrack_url($campaign_uid, $subscriber_uid, $hash)
     {
-        Logger::addProgress('(Frontend/Campaigns) getting ready to send header','(Frontend/Campaigns) getting ready to send header');
-
-
         header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
         header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
         header("Cache-Control: no-store, no-cache, must-revalidate");
@@ -161,15 +151,10 @@ class CampaignsController extends Controller
         $criteria->addNotInCondition('status', array(Campaign::STATUS_PENDING_DELETE));
         $campaign = Campaign::model()->find($criteria);
 
-        Logger::addProgress('(Frontend/Campaigns) Campaign '.print_r($campaign,true),'(Frontend/Campaigns) Campaign');
-
         if (empty($campaign)) {
             Yii::app()->hooks->doAction('frontend_campaigns_track_url_item_not_found', array(
                 'step' => 'campaign'
             ));
-
-            Logger::addWarning('(Frontend/Campaigns) The requested page does not exist '.print_r($campaign,true),'(Frontend/Campaigns) The requested page does not exist');
-
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
 
@@ -179,12 +164,8 @@ class CampaignsController extends Controller
         if (!$canTrack) {
             Yii::app()->end();
         }
-        
-        $subscriber = ListSubscriber::model()->findByAttributes(array(
-            'subscriber_uid'    => $subscriber_uid,
-            'status'            => ListSubscriber::STATUS_CONFIRMED,
-        ));
-        
+
+        $subscriber = ListSubscriber::model()->findByUid($subscriber_uid);
         if (empty($subscriber)) {
             Yii::app()->hooks->doAction('frontend_campaigns_track_url_item_not_found', array(
                 'step' => 'subscriber'
@@ -194,12 +175,12 @@ class CampaignsController extends Controller
             }
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         $url = CampaignUrl::model()->findByAttributes(array(
             'campaign_id'   => $campaign->campaign_id,
             'hash'          => $hash,
         ));
-        
+
         if (empty($url)) {
             Yii::app()->hooks->doAction('frontend_campaigns_track_url_item_not_found', array(
                 'step' => 'url'
@@ -209,41 +190,53 @@ class CampaignsController extends Controller
             }
             throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
         }
-        
+
         Yii::app()->hooks->addAction('frontend_campaigns_after_track_url_before_redirect', array($this, '_urlActionChangeSubscriberListField'), 99);
         Yii::app()->hooks->addAction('frontend_campaigns_after_track_url_before_redirect', array($this, '_urlActionAgainstSubscriber'), 100);
-        
+
         $track = new CampaignTrackUrl();
         $track->url_id          = $url->url_id;
         $track->subscriber_id   = $subscriber->subscriber_id;
         $track->ip_address      = Yii::app()->request->getUserHostAddress();
         $track->user_agent      = substr(Yii::app()->request->getUserAgent(), 0, 255);
-        
+
         if ($track->save(false)) {
             // hook added in 1.2
             $this->setData('ipLocationSaved', false);
             try {
-                Yii::app()->hooks->doAction('frontend_campaigns_after_track_url', $this, $track, $campaign, $subscriber); 
+                Yii::app()->hooks->doAction('frontend_campaigns_after_track_url', $this, $track, $campaign, $subscriber);
             } catch (Exception $e) {
-                
-            }   
+
+            }
         }
 
-        $destination = str_replace('&amp;', '&', $url->destination);
+        // changed since 1.3.5.9
+        $url->destination = str_replace('&amp;', '&', $url->destination);
+        Yii::app()->hooks->doAction('frontend_campaigns_after_track_url_before_redirect', $this, $campaign, $subscriber, $url);
 
-        Logger::addProgress('(Frontend/Campaigns) Destination '.print_r($destination,true),'(Frontend/Campaigns) Destination');
-
+        $destination = $url->destination;
         if (preg_match('/\[(.*)?\]/', $destination)) {
             list(,,$destination) = CampaignHelper::parseContent($destination, $campaign, $subscriber, false);
         }
-        
-        Yii::app()->hooks->doAction('frontend_campaigns_after_track_url_before_redirect', $this, $campaign, $subscriber, $url, $destination);
 
-        Logger::addProgress('(Frontend/Campaigns) Redirecting to '.print_r($destination,true),'(Frontend/Campaigns) Redirecting...');
+        // since 1.3.5.9
+        if ($campaign->option->open_tracking == CampaignOption::TEXT_YES && !$subscriber->hasOpenedCampaign($campaign)) {
+            $track = new CampaignTrackOpen();
+            $track->campaign_id   = $campaign->campaign_id;
+            $track->subscriber_id = $subscriber->subscriber_id;
+            $track->ip_address    = Yii::app()->request->getUserHostAddress();
+            $track->user_agent    = substr(Yii::app()->request->getUserAgent(), 0, 255);
+            if ($track->save(false)) {
+                try {
+                    Yii::app()->hooks->doAction('frontend_campaigns_after_track_opening', $this, $track, $campaign, $subscriber);
+                } catch (Exception $e) {}
+            }
+        }
+        //
 
         $this->redirect($destination, true, 301);
     }
-    
+
     /**
      * Will forward this campaign link to a friend email address
      */
@@ -253,59 +246,55 @@ class CampaignsController extends Controller
         $criteria->compare('campaign_uid', $campaign_uid);
         $criteria->addNotInCondition('status', array(Campaign::STATUS_PENDING_DELETE));
         $campaign = Campaign::model()->find($criteria);
-        
+
         if (empty($campaign)) {
             $this->redirect(array('site/index'));
         }
-        
+
         $subscriber = null;
         if (!empty($subscriber_uid)) {
-            $subscriber = ListSubscriber::model()->findByAttributes(array(
-                'subscriber_uid'    => $subscriber_uid,
-                'status'            => ListSubscriber::STATUS_CONFIRMED,
-            ));
-            
+            $subscriber = ListSubscriber::model()->findByUid($subscriber_uid);
             if (empty($subscriber)) {
                 $this->redirect(array('site/index'));
-            }    
+            }
         }
-        
+
         $forward     = new CampaignForwardFriend();
         $request     = Yii::app()->request;
         $notify      = Yii::app()->notify;
         $options     = Yii::app()->options;
         $forwardUrl  = $options->get('system.urls.frontend_absolute_url') . 'campaigns/' . $campaign->campaign_uid;
-        
+
         if (!empty($subscriber)) {
             $forward->from_email = $subscriber->email;
         }
         $forward->subject = Yii::t('campaigns', 'Hey, check out this url, i think you will like it.');
-        
+
         if ($request->isPostRequest && ($attributes = $request->getPost($forward->modelName, array()))) {
             $forward->attributes    = $attributes;
             $forward->campaign_id   = $campaign->campaign_id;
             $forward->subscriber_id = $subscriber ? $subscriber->subscriber_id : null;
             $forward->ip_address    = $request->getUserHostAddress();
             $forward->user_agent    = substr($request->getUserAgent(), 0, 255);
-            
+
             $forwardsbyIp = CampaignForwardFriend::model()->countByAttributes(array(
-                'campaign_id' => $forward->campaign_id, 
+                'campaign_id' => $forward->campaign_id,
                 'ip_address'  => $forward->ip_address
             ));
-            
+
             $forwardLimit = 10;
             if ($forwardsbyIp >= $forwardLimit) {
                 $notify->addError(Yii::t('campaigns', 'You can only forward a campaign {num} times!', array('{num}' => $forwardLimit)));
                 $this->refresh();
             }
-            
+
             if (!$forward->save()) {
                 $notify->addError(Yii::t('app', 'Your form has a few errors, please fix them and try again!'));
             } else {
                 $emailTemplate = $options->get('system.email_templates.common');
                 $emailBody     = $this->renderPartial('_email-forward-friend', compact('campaign', 'subscriber', 'forward', 'forwardUrl'), true);
                 $emailTemplate = str_replace('[CONTENT]', $emailBody, $emailTemplate);
-                
+
                 $email = new TransactionalEmail();
                 $email->to_name     = $forward->to_name;
                 $email->to_email    = $forward->to_email;
@@ -314,21 +303,21 @@ class CampaignsController extends Controller
                 $email->subject     = $forward->subject;
                 $email->body        = $emailTemplate;
                 $email->save();
-                
+
                 $notify->addSuccess(Yii::t('campaigns', 'Your message has been successfully forwarded!'));
-                $this->refresh();   
+                $this->refresh();
             }
         }
-        
+
         $this->setData(array(
-            'pageMetaTitle'   => $this->data->pageMetaTitle . ' | '. Yii::t('campaigns', 'Forward to a friend'), 
+            'pageMetaTitle'   => $this->data->pageMetaTitle . ' | '. Yii::t('campaigns', 'Forward to a friend'),
             'pageHeading'     => Yii::t('campaigns', 'Forward to a friend'),
             'pageBreadcrumbs' => array()
         ));
-        
+
         $this->render('forward-friend', compact('campaign', 'subscriber', 'forward', 'forwardUrl'));
     }
-    
+
     /**
      * Will record the abuse report for a campaign
      */
@@ -338,25 +327,30 @@ class CampaignsController extends Controller
         $criteria->compare('campaign_uid', $campaign_uid);
         $criteria->addNotInCondition('status', array(Campaign::STATUS_PENDING_DELETE));
         $campaign = Campaign::model()->find($criteria);
-        
+
         if (empty($campaign)) {
             $this->redirect(array('site/index'));
         }
-        
+
         $list = Lists::model()->findByUid($list_uid);
         if (empty($list)) {
             $this->redirect(array('site/index'));
         }
-        
-        $subscriber = ListSubscriber::model()->findByUid($subscriber_uid);
+
+        $subscriber = ListSubscriber::model()->findByAttributes(array(
+            'subscriber_uid' => $subscriber_uid,
+            'status'         => ListSubscriber::STATUS_CONFIRMED,
+        ));
+
         if (empty($subscriber)) {
             $this->redirect(array('site/index'));
         }
+
         $request = Yii::app()->request;
         $notify  = Yii::app()->notify;
         $options = Yii::app()->options;
         $report  = new CampaignAbuseReport();
-        
+
         if ($request->isPostRequest && ($attributes = (array)$request->getPost($report->modelName, array()))) {
             $report->attributes      = $attributes;
             $report->customer_id     = $list->customer_id;
@@ -367,35 +361,42 @@ class CampaignsController extends Controller
             $report->campaign_info   = $campaign->name;
             $report->list_info       = sprintf('%s(%s)', $list->name, $list->display_name);
             $report->subscriber_info = $subscriber->email;
-            
+
             if ($report->save()) {
+                $subscriber->status = ListSubscriber::STATUS_UNSUBSCRIBED;
+                $subscriber->save(false);
+
+                $trackUnsubscribe = new CampaignTrackUnsubscribe();
+                $trackUnsubscribe->campaign_id   = $campaign->campaign_id;
+                $trackUnsubscribe->subscriber_id = $subscriber->subscriber_id;
+                $trackUnsubscribe->note          = 'Abuse complaint!';
+                $trackUnsubscribe->save(false);
+
                 $notify->addSuccess(Yii::t('campaigns', 'Thank you for your report, we will take proper actions against this as soon as possible!'));
             } else {
                 $notify->addError(Yii::t('app', 'Your form has a few errors, please fix them and try again!'));
             }
-            
-            $this->refresh();
         }
 
         $this->setData(array(
-            'pageMetaTitle'   => $this->data->pageMetaTitle . ' | '. Yii::t('campaigns', 'Report abuse'), 
+            'pageMetaTitle'   => $this->data->pageMetaTitle . ' | '. Yii::t('campaigns', 'Report abuse'),
             'pageHeading'     => Yii::t('campaigns', 'Report abuse'),
             'pageBreadcrumbs' => array()
         ));
-        
+
         $this->render('report-abuse', compact('report'));
     }
-    
+
     public function _openActionChangeSubscriberListField(Controller $controller, CampaignTrackOpen $track, Campaign $campaign, ListSubscriber $subscriber)
     {
         $models = CampaignOpenActionListField::model()->findAllByAttributes(array(
             'campaign_id' => $campaign->campaign_id,
         ));
-        
+
         if (empty($models)) {
             return;
         }
-        
+
         foreach ($models as $model) {
             $valueModel = ListFieldValue::model()->findByAttributes(array(
                 'field_id'      => $model->field_id,
@@ -410,17 +411,17 @@ class CampaignsController extends Controller
             $valueModel->save();
         }
     }
-    
+
     public function _openActionAgainstSubscriber(Controller $controller, CampaignTrackOpen $track, Campaign $campaign, ListSubscriber $subscriber)
     {
         $models = CampaignOpenActionSubscriber::model()->findAllByAttributes(array(
             'campaign_id' => $campaign->campaign_id,
         ));
-        
+
         if (empty($models)) {
             return;
         }
-        
+
         $move = false;
         foreach ($models as $model) {
             $status = $subscriber->copyToList($model->list_id);
@@ -428,23 +429,23 @@ class CampaignsController extends Controller
                 $move = true;
             }
         }
-        
+
         if ($move) {
             $subscriber->delete();
         }
     }
-    
+
     public function _urlActionChangeSubscriberListField(Controller $controller, Campaign $campaign, ListSubscriber $subscriber, CampaignUrl $url, $destination)
     {
         $models = CampaignTemplateUrlActionListField::model()->findAllByAttributes(array(
             'campaign_id' => $campaign->campaign_id,
             'url'         => $destination,
         ));
-        
+
         if (empty($models)) {
             return;
         }
-        
+
         foreach ($models as $model) {
             $valueModel = ListFieldValue::model()->findByAttributes(array(
                 'field_id'      => $model->field_id,
@@ -459,14 +460,14 @@ class CampaignsController extends Controller
             $valueModel->save();
         }
     }
-    
+
     public function _urlActionAgainstSubscriber(Controller $controller, Campaign $campaign, ListSubscriber $subscriber, CampaignUrl $url, $destination)
     {
         $models = CampaignTemplateUrlActionSubscriber::model()->findAllByAttributes(array(
             'campaign_id' => $campaign->campaign_id,
             'url'         => $destination,
         ));
-        
+
         if (empty($models)) {
             return;
         }
@@ -478,7 +479,7 @@ class CampaignsController extends Controller
                 $move = true;
             }
         }
-        
+
         if ($move) {
             $subscriber->delete();
         }

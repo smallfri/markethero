@@ -2,11 +2,11 @@
 
 /**
  * This file is part of the MailWizz EMA application.
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
@@ -15,7 +15,7 @@
  * This hook gives a chance to prepend content or to replace the default view content with a custom content.
  * Please note that from inside the action callback you can access all the controller view
  * variables via {@CAttributeCollection $collection->controller->data}
- * In case the content is replaced, make sure to set {@CAttributeCollection $collection->renderContent} to false 
+ * In case the content is replaced, make sure to set {@CAttributeCollection $collection->renderContent} to false
  * in order to stop rendering the default content.
  * @since 1.3.3.1
  */
@@ -27,7 +27,7 @@ $hooks->doAction('before_view_file_content', $viewCollection = new CAttributeCol
 // and render if allowed
 if ($viewCollection->renderContent) { ?>
     <div class="callout callout-info">
-        <?php 
+        <?php
         $text = 'This report shows all the subscribers that did not get your email.<br />
         These subscribers are not removed from the list, but at a certain point the delivery for them will be denied by the system.<br />
         This report is a good start point to clean up your list of subscribers.';
@@ -43,7 +43,9 @@ if ($viewCollection->renderContent) { ?>
             </div>
             <div class="pull-right">
                 <?php echo CHtml::link(Yii::t('campaign_reports', 'Campaign overview'), array('campaigns/overview', 'campaign_uid' => $campaign->campaign_uid), array('class' => 'btn btn-primary btn-xs', 'title' => Yii::t('campaign_reports', 'Back to campaign overview')));?>
+                <?php if (!empty($canExportStats)) { ?>
                 <?php echo CHtml::link(Yii::t('campaign_reports', 'Export reports'), array('campaign_reports_export/bounce', 'campaign_uid' => $campaign->campaign_uid), array('class' => 'btn btn-primary btn-xs', 'title' => Yii::t('campaign_reports', 'Export reports')));?>
+                <?php } ?>
             </div>
             <div class="clearfix"><!-- --></div>
         </div>
@@ -51,17 +53,17 @@ if ($viewCollection->renderContent) { ?>
             <div class="table-responsive">
                 <div class="pull-left bulk-selected-options" style="display:none; margin-bottom: 5px;">
                     <?php echo CHtml::dropDownList('bulk_action', null, CMap::mergeArray(array('' => Yii::t('list_subscribers', 'With selected:')), $bulkActions), array(
-                        'class'         => 'form-control bulk-action', 
+                        'class'         => 'form-control bulk-action',
                         'data-bulkurl'  => $this->createUrl('list_subscribers/bulk_action', array('list_uid' => $campaign->list->list_uid)),
-                        'data-delete'   => Yii::t('app', 'Are you sure you want to delete this item? There is no way coming back after you do it.'), 
+                        'data-delete'   => Yii::t('app', 'Are you sure you want to delete this item? There is no way coming back after you do it.'),
                     ));?>
                 </div>
-            <?php 
+            <?php
             /**
              * This hook gives a chance to prepend content or to replace the default grid view content with a custom content.
              * Please note that from inside the action callback you can access all the controller view
              * variables via {@CAttributeCollection $collection->controller->data}
-             * In case the content is replaced, make sure to set {@CAttributeCollection $collection->renderGrid} to false 
+             * In case the content is replaced, make sure to set {@CAttributeCollection $collection->renderGrid} to false
              * in order to stop rendering the default content.
              * @since 1.3.3.1
              */
@@ -69,7 +71,7 @@ if ($viewCollection->renderContent) { ?>
                 'controller'    => $this,
                 'renderGrid'    => true,
             )));
-            
+
             // and render if allowed
             if ($collection->renderGrid) {
                 $this->widget('zii.widgets.grid.CGridView', $hooks->applyFilters('grid_view_properties', array(
@@ -113,6 +115,11 @@ if ($viewCollection->renderContent) { ?>
                             'filter'=> $bounceLogs->getBounceTypesArray(),
                         ),
                         array(
+                            'name'  => 'message',
+                            'value' => '$data->message',
+                            'filter'=> false,
+                        ),
+                        array(
                             'name'  => 'date_added',
                             'value' => '$data->dateAdded',
                             'filter'=> false,
@@ -123,17 +130,17 @@ if ($viewCollection->renderContent) { ?>
                             'footer'    => $bounceLogs->paginationOptions->getGridFooterPagination(),
                             'buttons'   => array(
                                 'update' => array(
-                                    'label'     => ' &nbsp; <span class="glyphicon glyphicon-pencil"></span> &nbsp;', 
+                                    'label'     => ' &nbsp; <span class="glyphicon glyphicon-pencil"></span> &nbsp;',
                                     'url'       => 'Yii::app()->createUrl("list_subscribers/update", array("list_uid" => $data->subscriber->list->list_uid, "subscriber_uid" => $data->subscriber->subscriber_uid))',
                                     'imageUrl'  => null,
                                     'options'   => array('title' => Yii::t('campaign_reports', 'Update subscriber'), 'class' => ''),
                                 ),
                                 'delete' => array(
-                                    'label'     => ' &nbsp; <span class="glyphicon glyphicon-remove-circle"></span> &nbsp; ', 
+                                    'label'     => ' &nbsp; <span class="glyphicon glyphicon-remove-circle"></span> &nbsp; ',
                                     'url'       => 'Yii::app()->createUrl("list_subscribers/delete", array("list_uid" => $data->subscriber->list->list_uid, "subscriber_uid" => $data->subscriber->subscriber_uid))',
                                     'imageUrl'  => null,
                                     'options'   => array('title' => Yii::t('campaign_reports', 'Delete subscriber'), 'class' => 'delete'),
-                                ),    
+                                ),
                             ),
                             'htmlOptions' => array(
                                 'style' => 'width:110px;',
@@ -141,7 +148,7 @@ if ($viewCollection->renderContent) { ?>
                             'template'=>'{update} {delete}'
                         ),
                     ), $this),
-                ), $this));  
+                ), $this));
             }
             /**
              * This hook gives a chance to append content after the grid view content.
@@ -155,10 +162,10 @@ if ($viewCollection->renderContent) { ?>
             )));
             ?>
             <div class="clearfix"><!-- --></div>
-            </div>    
+            </div>
         </div>
     </div>
-<?php 
+<?php
 }
 /**
  * This hook gives a chance to append content after the view file default content.

@@ -6,7 +6,7 @@
  * @package MailWizz EMA
  * @author Serban George Cristian <cristian.serban@mailwizz.com> 
  * @link http://www.mailwizz.com/
- * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
@@ -40,7 +40,7 @@ if ($viewCollection->renderContent) { ?>
             </div>
             <div class="clearfix"><!-- --></div>
         </div>
-        <div class="box-body sortable-box"><script type="text/javascript"> _t.push({start:'My Templates'}); </script> 
+        <div class="box-body sortable-box">
             <?php foreach ($templates as $model) { ?>
             <div class="box box-primary panel-template-box" style="height: 270px;" data-id="<?php echo $model->template_id;?>" data-url="<?php echo $this->createUrl('templates/update_sort_order');?>">
                 <div class="box-header"><h3 class="box-title"><?php echo $model->shortName;?></h3></div>
