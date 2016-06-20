@@ -506,7 +506,7 @@ class MailerPHPMailer extends MailerAbstract
         $mailer->Port           = (int)$params->itemAt('port');
         $mailer->Timeout        = (int)$params->itemAt('timeout');
         $mailer->SMTPAuth       = $params->itemAt('username') && $params->itemAt('password');
-        $mailer->SMTPKeepAlive  = false;
+        $mailer->SMTPKeepAlive  = true;
         
         if ($params->itemAt('username')) {
             $mailer->Username = $params->itemAt('username');    

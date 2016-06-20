@@ -39,14 +39,15 @@ class DeliveryServerSmtp extends DeliveryServer
     
     public function sendEmail(array $params = array())
     {
-        $params = (array)Yii::app()->hooks->applyFilters('delivery_server_before_send_email', $this->getParamsArray($params), $this);
 
-        if ($sent = $this->getMailer()->send($params)) {
+//        $params = (array)Yii::app()->hooks->applyFilters('delivery_server_before_send_email', $this->getParamsArray($params), $this);
+
+        if ($sent = $this->getMailer()->send($this->getParamsArray($params))) {
             $sent = array('email_id' => $params['email_id']);
             $this->logUsage();
         }
         
-        Yii::app()->hooks->doAction('delivery_server_after_send_email', $params, $this, $sent);
+//        Yii::app()->hooks->doAction('delivery_server_after_send_email', $params, $this, $sent);
         
         return $sent;
     }
