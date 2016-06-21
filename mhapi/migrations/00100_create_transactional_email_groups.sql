@@ -5,17 +5,18 @@ $$
 
 CREATE PROCEDURE migrate_down_00100()
 BEGIN
-  drop table if exists mw_group_email_options;
-  drop table if exists mw_group_email_groups;
+     drop table if exists mw_group_email_options;
   drop table if exists mw_compliance_level_ids;
-  drop table if exists mw_compliance_levels;
-  drop table if exists mw_group_email;
   drop table if exists mw_group_email_compliance;
   drop table if exists mw_group_email_abuse_report;
   drop table if exists mw_group_email_log;
   drop table if exists mw_group_email_bounce_log;
   drop table if exists mw_group_email_unsubscribe;
   drop table if exists mw_group_email_compliance_score;
+  drop table if exists mw_group_email_status;
+  drop table if exists mw_compliance_levels;
+  drop table if exists mw_group_email;
+  drop table if exists mw_group_email_groups;
 END
 $$
 
@@ -198,6 +199,18 @@ CREATE TABLE `mw_group_email_compliance_score` (
   `last_updated` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+CREATE TABLE `mw_group_email_status` (
+  `email_id` bigint(20) NOT NULL,
+  `group_email_id` int(11) DEFAULT NULL,
+  `status` varchar(19) DEFAULT NULL,
+  `dated_added` datetime DEFAULT NULL,
+  `last_updated` datetime DEFAULT NULL,
+  PRIMARY KEY (`email_id`),
+  KEY `group_email_id` (`group_email_id`),
+  CONSTRAINT `mw_group_email_status_ibfk_1` FOREIGN KEY (`group_email_id`) REFERENCES `mw_group_email` (`group_email_id`),
+  CONSTRAINT `mw_group_email_status_ibfk_2` FOREIGN KEY (`email_id`) REFERENCES `mw_group_email` (`email_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 END
 $$
