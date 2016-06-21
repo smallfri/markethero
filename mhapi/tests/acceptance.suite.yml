@@ -8,8 +8,8 @@ class_name: AcceptanceTester
 modules:
     enabled:
         - PhpBrowser:
-            url: http://localhost/mhapi
+            url: http://m-staging.markethero.io/mhapi
         - \Helper\Acceptance
         - REST:
-            url: http://localhost/mhapi
+            url: http://m-staging.markethero.io/mhapi
             depends: PhpBrowser

@@ -1,4 +1,4 @@
-<?php defined('MW_PATH') || exit('No direct script access allowed');
+<?php defined('MW_PATH')||exit('No direct script access allowed');
 
 /**
  * Console application main configuration file
@@ -28,10 +28,10 @@ return array(
 
     'commandMap' => array(
         'migrate' => array(
-            'class'             => 'system.cli.commands.MigrateCommand',
-            'migrationPath'     => 'console.migrations',
-            'migrationTable'    => '{{migration}}',
-            'connectionID'      => 'db',
+            'class' => 'system.cli.commands.MigrateCommand',
+            'migrationPath' => 'console.migrations',
+            'migrationTable' => '{{migration}}',
+            'connectionID' => 'db',
         ),
         'hello' => array(
             'class' => 'console.commands.HelloCommand'
@@ -41,6 +41,9 @@ return array(
         ),
         'bounce-handler' => array(
             'class' => 'console.commands.BounceHandlerCommand'
+        ),
+        'group-bounce-handler' => array(
+            'class' => 'console.commands.GroupsBounceHandlerCommand'
         ),
         'process-delivery-and-bounce-log' => array(
             'class' => 'console.commands.ProcessDeliveryAndBounceLogCommand'
@@ -57,6 +60,12 @@ return array(
         ),
         'send-transactional-emails' => array(
             'class' => 'console.commands.SendTransactionalEmailsCommand'
+        ),
+        'send-group-emails' => array(
+            'class' => 'console.commands.NewSendGroupsCommand'
+        ),
+        'send-unsents-group-emails' => array(
+            'class' => 'console.commands.ProcessUnsetGroupEmailsCommand'
         ),
         'daily' => array(
             'class' => 'console.commands.DailyCommand'
@@ -79,6 +88,19 @@ return array(
         'mailerq-handler-daemon' => array(
             'class' => 'console.commands.MailerqHandlerDaemon'
         ),
+        'compliance' => array(
+            'class' => 'console.commands.GroupsComplianceHandlerCommand'
+        ),
+        'compliance-average' => array(
+            'class' => 'console.commands.GroupsComplianceScoreCommand'
+        ),
+        'create-batches' => array(
+            'class' => 'console.commands.BatchGroupsCommand'
+        ),
+        'send-batches' => array(
+                    'class' => 'console.commands.SendBatchesCommand'
+                ),
+
     ),
 
     'components' => array(

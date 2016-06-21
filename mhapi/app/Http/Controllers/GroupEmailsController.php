@@ -61,7 +61,7 @@ class GroupEmailsController extends ApiController
         {
             return $this->respondWithError($missing_fields);
         }
-
+        
         $emailUid = uniqid();
 //TODO check for $data['group_id'] and if it doesn't exist return error.
         $EmailGroup = new GroupEmailModel();

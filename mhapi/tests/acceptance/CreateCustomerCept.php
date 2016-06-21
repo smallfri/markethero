@@ -1,7 +1,7 @@
 <?php 
 $I = new AcceptanceTester($scenario);
 
-$I->wantTo('Create a bounce server');
+$I->wantTo('Create a customer');
 
 $I->amHttpAuthenticated('russell@smallfri.com','KjV9g2JcyFGAHng');
 

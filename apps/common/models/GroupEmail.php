@@ -21,6 +21,7 @@ defined('MW_PATH')||exit('No direct script access allowed');
  * @property string $email_uid
  * @property integer $customer_id
  * @property integer $group_email_id
+ * @property integer $group_batch_id
  * @property string $to_email
  * @property string $to_name
  * @property string $from_email
@@ -107,7 +108,7 @@ class GroupEmail extends ActiveRecord
 
             // The following rule is used by search().
             array(
-                'to_email, to_name, from_email, from_name, reply_to_email, reply_to_name, subject, status, group_email_id',
+                'to_email, to_name, from_email, from_name, reply_to_email, reply_to_name, subject, status, group_email_id, group_batch_id',
                 'safe',
                 'on' => 'search'
             ),
@@ -152,6 +153,7 @@ class GroupEmail extends ActiveRecord
             'send_at' => Yii::t('group_emails', 'Send at'),
             'status' => Yii::t('group_emails', 'Status'),
             'group_email_id' => Yii::t('group_emails', 'Group ID'),
+            'group_batch_id' => Yii::t('group_emails', 'Group ID'),
         );
         return CMap::mergeArray($labels, parent::attributeLabels());
     }
