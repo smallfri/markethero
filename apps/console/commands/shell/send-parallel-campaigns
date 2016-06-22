@@ -224,7 +224,7 @@ wait
 printf "%s\n" "Done waiting, all background processes are done!"
 
 printf "\n%s\n" "Sending a new process in background..."
-$COMMAND_FILE_PATH -s "$sleep_seconds" -c "$processes_count" -t "$campaigns_type" -p "$PHP_PATH" >/dev/null 2>&1 &
+$COMMAND_FILE_PATH -s "$sleep_seconds" -c 5 -t "$campaigns_type" -p "/var/www/html/apps/console/console.php send-batches" >/dev/null 2>&1 &
 printf "%s\n" "The new process has been sent in background."
 
 printf "%s\n" "Removing the existing lock for this process."

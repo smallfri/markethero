@@ -301,13 +301,87 @@ class GroupBatchEmailSenderBehavior extends CBehavior
                     continue;
                 }
 
-                $sent = $server->sendEmail($emailParams);
-
-                if ($sent['email_id']==0)
+//                $sent = $server->sendEmail($emailParams);
+                if ($this->verbose)
                 {
-                    $email->status = GROUP::STATUS_UNSENT;
-                    $email->save();
+                    echo "done, took ".round(microtime(true)-$timeStart, 3)." seconds.\n";
+                    echo "[".date("Y-m-d H:i:s")."] -> Sending the email for ".$email->to_email;
+                    if ($server->getUseQueue())
+                    {
+                        echo " by using the queue method";
+                    }
+                    else
+                    {
+                        echo " by using direct method";
+                    }
+                    echo "...";
                 }
+
+
+                // set delivery object
+                $server->setDeliveryFor(DeliveryServer::DELIVERY_FOR_CAMPAIGN)->setDeliveryObject($batch);
+
+                // default status
+                $status = CampaignDeliveryLog::STATUS_SUCCESS;
+
+                // since 1.3.5 - try via queue
+                $sent = null;
+                if ($server->getUseQueue())
+                {
+                    $sent = array('message_id' => $server->server_id.StringHelper::random(40));
+                    $response = 'OK';
+                    $allParams = array_merge(array(
+                        'server_id' => $server->server_id,
+                        'server_type' => $server->type,
+                        'params' => $emailParams
+                    ), $sent);
+
+                    if ($server->getCampaignQueueEmailsChunkSize()>1)
+                    {
+                        if (!$server->pushEmailInCampaignQueue($allParams))
+                        {
+                            print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
+
+                            $sent = $response = null;
+                        }
+                        else
+                        {
+                            print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
+
+                            $server->logUsage();
+                        }
+                    }
+                    else
+                    {
+                        if (!Yii::app()->queue->enqueue($server->getQueueName(), 'SendEmailFromQueue', $allParams))
+                        {
+                            print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
+
+                            $sent = $response = null;
+                        }
+                        else
+                        {
+                            print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
+
+                            $server->logUsage();
+                        }
+                    }
+
+                    unset($allParams);
+                }
+
+                // if not via queue or queue failed
+                if (!$sent)
+                {
+                    $sent = $server->sendEmail($emailParams);
+                    $response = $server->getMailer()->getLog();
+                }
+
+//                if ($sent['email_id']==0)
+//                {
+//                    $email->status = GROUP::STATUS_UNSENT;
+//                    $email->save();
+//                }
 
                 $this->logGroupEmailDelivery($sent, $server);
 

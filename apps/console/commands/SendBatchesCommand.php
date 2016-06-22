@@ -57,6 +57,7 @@ class SendBatchesCommand extends CConsoleCommand
             echo "[".date("Y-m-d H:i:s")."] Starting the send-batch command...\n";
         }
 
+
         $limit    = 100;
 
         if ((int)$this->batches_limit > 0) {
@@ -66,7 +67,7 @@ class SendBatchesCommand extends CConsoleCommand
          $batches = GroupBatch::model()->findAll([
              'condition' => 'status = "pending-sending"',
          ]);
-        
+
         if (empty($batches)) {
             if ($this->verbose) {
                 echo "[".date("Y-m-d H:i:s")."] No batches found for processing!\n";

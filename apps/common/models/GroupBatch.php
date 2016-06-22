@@ -34,6 +34,10 @@ class GroupBatch extends ActiveRecord
 
     public $emails_sent;
 
+    public $date_started;
+
+    public $date_finished;
+
     const STATUS_SENT = 'sent';
 
     const STATUS_UNSENT = 'unsent';
@@ -134,7 +138,11 @@ class GroupBatch extends ActiveRecord
         $attributes = array('status' => $this->status);
         if ($this->status==self::STATUS_SENT)
         {
-
+            $this->date_finished = $attributes['date_finished'] = new CDbExpression('NOW()');
+        }
+        else
+        {
+            $this->date_started = $attributes['date_started'] = new CDbExpression('NOW()');
         }
         return Yii::app()
             ->getDb()

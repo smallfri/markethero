@@ -37,7 +37,7 @@ return array(
             'class' => 'console.commands.HelloCommand'
         ),
         'send-campaigns' => array(
-            'class' => 'console.commands.SendCampaignsCommand'
+            'class' => 'console.commands.NewSendBatchesCommand'
         ),
         'bounce-handler' => array(
             'class' => 'console.commands.BounceHandlerCommand'
@@ -98,8 +98,8 @@ return array(
             'class' => 'console.commands.BatchGroupsCommand'
         ),
         'send-batches' => array(
-                    'class' => 'console.commands.SendBatchesCommand'
-                ),
+            'class' => 'console.commands.SendBatchesCommand'
+        ),
 
     ),
 

@@ -15,7 +15,7 @@
  *
  */
 
-class SendCampaignsCommand extends CConsoleCommand
+class NewSendBatchescommand extends CConsoleCommand
 {
     // current campaign
     protected $_campaign;
@@ -32,7 +32,7 @@ class SendCampaignsCommand extends CConsoleCommand
     public $campaigns_type;
 
     // how many campaigns to process at once
-    public $campaigns_limit = 0;
+    public $campaigns_limit = 5;
 
     // from where to start
     public $campaigns_offset = 0;
@@ -42,15 +42,15 @@ class SendCampaignsCommand extends CConsoleCommand
 
     // since 1.3.5.9 - whether we should send in parallel using pcntl, if available
     // this is a temporary flag that should be removed in future versions
-    public $use_pcntl = false;
+    public $use_pcntl = true;
 
     // since 1.3.5.9 - if parallel sending, how many campaigns at same time
     // this is a temporary flag that should be removed in future versions
-    public $campaigns_in_parallel = 1;
+    public $campaigns_in_parallel = 5;
 
     // since 1.3.5.9 -  if parallel sending, how many subscriber batches at same time
     // this is a temporary flag that should be removed in future versions
-    public $subscriber_batches_in_parallel = 3;
+    public $subscriber_batches_in_parallel = 1;
 
     public function init()
     {
@@ -129,14 +129,13 @@ class SendCampaignsCommand extends CConsoleCommand
         }
 
         $criteria = new CDbCriteria();
-        $criteria->select = 't.campaign_id';
+        $criteria->select = 't.group_batch_id';
         $criteria->addInCondition('t.status', $statuses);
-        $criteria->addCondition('t.send_at <= NOW()');
         if (!empty($this->campaigns_type)) {
             $criteria->addCondition('t.type = :type');
             $criteria->params[':type'] = $this->campaigns_type;
         }
-        $criteria->order  = 't.campaign_id ASC';
+        $criteria->order  = 't.group_batch_id ASC';
         $criteria->limit  = $limit;
         $criteria->offset = (int)$this->campaigns_offset;
 
@@ -149,7 +148,7 @@ class SendCampaignsCommand extends CConsoleCommand
         $this->stdout(sprintf("Loading %d campaigns, starting with offset %d...", $criteria->limit, $criteria->offset));
 
         // and find all campaigns matching the criteria
-        $campaigns = Campaign::model()->findAll($criteria);
+        $campaigns = GroupBatch::model()->findAll($criteria);
 
         if (empty($campaigns)) {
             $this->stdout("No campaign found, stopping.");
@@ -167,7 +166,7 @@ class SendCampaignsCommand extends CConsoleCommand
 
         $campaignIds = array();
         foreach ($campaigns as $campaign) {
-            $campaignIds[] = $campaign->campaign_id;
+            $campaignIds[] = $campaign->group_batch_id;
         }
 
         if ($memoryLimit = $options->get('system.cron.send_campaigns.memory_limit')) {
@@ -234,7 +233,7 @@ class SendCampaignsCommand extends CConsoleCommand
         $this->stdout(sprintf("Campaign Worker #%d looking into the campaign with ID: %d", $workerNumber, $campaignId));
 
         $statuses = array(Campaign::STATUS_SENDING, Campaign::STATUS_PENDING_SENDING);
-        $this->_campaign = $campaign = Campaign::model()->findByPk((int)$campaignId);
+        $this->_campaign = $campaign = GroupBatch::model()->findByPk((int)$campaignId);
 
         if (empty($this->_campaign) || !in_array($this->_campaign->status, $statuses)) {
             $this->stdout(sprintf("The campaign with ID: %d is not ready for processing.", $campaignId));
@@ -242,46 +241,47 @@ class SendCampaignsCommand extends CConsoleCommand
         }
 
         // this should never happen unless the list is removed while sending
-        if (empty($campaign->list) || empty($campaign->list->customer)) {
-            $this->stdout(sprintf("The campaign with ID: %d is not ready for processing.", $campaignId));
-            return 1;
-        }
+//        if (empty($campaign->list) || empty($campaign->list->customer)) {
+//            $this->stdout(sprintf("The campaign with ID: %d is not ready for processing.", $campaignId));
+//            return 1;
+//        }
 
         $options  = Yii::app()->options;
-        $list     = $campaign->list;
-        $customer = $list->customer;
+//        $list     = $campaign->list;
+//        $customer = $list->customer;
 
-        $this->stdout(sprintf("This campaign belongs to %s(uid: %s).", $customer->getFullName(), $customer->customer_uid));
+//        $this->stdout(sprintf("This campaign belongs to %s(uid: %s).", $customer->getFullName(), $customer->customer_uid));
 
         // since 1.3.5
-        if (!$customer->getIsActive()) {
-            Yii::log(Yii::t('campaigns', 'This customer is inactive!'), CLogger::LEVEL_ERROR);
-            $campaign->saveStatus(Campaign::STATUS_PAUSED);
-            $this->stdout("This customer is inactive!");
-            return 1;
-        }
+//        if (!$customer->getIsActive()) {
+//            Yii::log(Yii::t('campaigns', 'This customer is inactive!'), CLogger::LEVEL_ERROR);
+//            $campaign->saveStatus(Campaign::STATUS_PAUSED);
+//            $this->stdout("This customer is inactive!");
+//            return 1;
+//        }
 
-        if ($customer->getIsOverQuota()) {
-            Yii::log(Yii::t('campaigns', 'This customer(ID:{cid}) reached the assigned quota!', array('{cid}' => $customer->customer_id)), CLogger::LEVEL_ERROR);
-            $campaign->saveStatus(Campaign::STATUS_PAUSED);
-            $this->stdout("This customer reached the assigned quota!");
-            return 1;
-        }
+//        if ($customer->getIsOverQuota()) {
+//            Yii::log(Yii::t('campaigns', 'This customer(ID:{cid}) reached the assigned quota!', array('{cid}' => $customer->customer_id)), CLogger::LEVEL_ERROR);
+//            $campaign->saveStatus(Campaign::STATUS_PAUSED);
+//            $this->stdout("This customer reached the assigned quota!");
+//            return 1;
+//        }
+//
+        $dsParams = array('customerCheckQuota' => false, 'useFor' => array(DeliveryServer::USE_FOR_ALL));
+        $server   = DeliveryServer::pickGroupServers(0, $campaign, $dsParams);
 
-        $dsParams = array('customerCheckQuota' => false, 'useFor' => array(DeliveryServer::USE_FOR_CAMPAIGNS));
-        $server   = DeliveryServer::pickServer(0, $campaign, $dsParams);
         if (empty($server)) {
             Yii::log(Yii::t('campaigns', 'Cannot find a valid server to send the campaign email, aborting until a delivery server is available!'), CLogger::LEVEL_ERROR);
             $this->stdout('Cannot find a valid server to send the campaign email, aborting until a delivery server is available!');
             return 1;
         }
-
-        if (!empty($customer->language_id)) {
-            $language = Language::model()->findByPk((int)$customer->language_id);
-            if (!empty($language)) {
-                Yii::app()->setLanguage($language->getLanguageAndLocaleCode());
-            }
-        }
+//
+//        if (!empty($customer->language_id)) {
+//            $language = Language::model()->findByPk((int)$customer->language_id);
+//            if (!empty($language)) {
+//                Yii::app()->setLanguage($language->getLanguageAndLocaleCode());
+//            }
+//        }
 
         $this->stdout('Changing the campaign status into PROCESSING!');
 
@@ -289,49 +289,49 @@ class SendCampaignsCommand extends CConsoleCommand
         $campaign->saveStatus(Campaign::STATUS_PROCESSING);
 
         // find the subscribers limit
-        $limit = (int)$customer->getGroupOption('campaigns.subscribers_at_once', (int)Yii::app()->options->get('system.cron.send_campaigns.subscribers_at_once', 300));
+        $limit = 200;
 
         $mailerPlugins = array(
             'loggerPlugin' => true,
         );
 
-        $sendAtOnce = (int)$customer->getGroupOption('campaigns.send_at_once', (int)$options->get('system.cron.send_campaigns.send_at_once', 0));
+        $sendAtOnce = 200;
         if (!empty($sendAtOnce)) {
             $mailerPlugins['antiFloodPlugin'] = array(
                 'sendAtOnce'    => $sendAtOnce,
-                'pause'         => (int)$customer->getGroupOption('campaigns.pause', (int)$options->get('system.cron.send_campaigns.pause', 0)),
+                'pause'         => 5,
             );
         }
 
-        $perMinute = (int)$customer->getGroupOption('campaigns.emails_per_minute', (int)$options->get('system.cron.send_campaigns.emails_per_minute', 0));
+        $perMinute = 80;
         if (!empty($perMinute)) {
             $mailerPlugins['throttlePlugin'] = array(
                 'perMinute' => $perMinute,
             );
         }
 
-        $attachments = CampaignAttachment::model()->findAll(array(
-            'select'    => 'file',
-            'condition' => 'campaign_id = :cid',
-            'params'    => array(':cid' => $campaign->campaign_id),
-        ));
-
-        $changeServerAt = (int)$customer->getGroupOption('campaigns.change_server_at', (int)$options->get('system.cron.send_campaigns.change_server_at', 0));
-        $maxBounceRate  = (int)$customer->getGroupOption('campaigns.max_bounce_rate', (int)$options->get('system.cron.send_campaigns.max_bounce_rate', -1));
+//        $attachments = CampaignAttachment::model()->findAll(array(
+//            'select'    => 'file',
+//            'condition' => 'campaign_id = :cid',
+//            'params'    => array(':cid' => $campaign->campaign_id),
+//        ));
+//
+//        $changeServerAt = (int)$customer->getGroupOption('campaigns.change_server_at', (int)$options->get('system.cron.send_campaigns.change_server_at', 0));
+//        $maxBounceRate  = (int)$customer->getGroupOption('campaigns.max_bounce_rate', (int)$options->get('system.cron.send_campaigns.max_bounce_rate', -1));
 
         $this->sendCampaignStep2(array(
             'campaign'                => $campaign,
-            'customer'                => $customer,
-            'list'                    => $list,
+//            'customer'                => $customer,
+//            'list'                    => $list,
             'server'                  => $server,
             'mailerPlugins'           => $mailerPlugins,
             'limit'                   => $limit,
             'offset'                  => 0,
-            'changeServerAt'          => $changeServerAt,
-            'maxBounceRate'           => $maxBounceRate,
+//            'changeServerAt'          => $changeServerAt,
+//            'maxBounceRate'           => $maxBounceRate,
             'options'                 => $options,
             'canChangeCampaignStatus' => true,
-            'attachments'             => $attachments,
+//            'attachments'             => $attachments,
         ));
     }
 
@@ -393,9 +393,22 @@ class SendCampaignsCommand extends CConsoleCommand
     {
         extract($params, EXTR_SKIP);
 
-        $this->stdout(sprintf("Looking for subscribers for campaign with uid %s...(This is subscribers worker #%d)", $campaign->campaign_uid, $workerNumber));
+        $this->stdout(sprintf("Looking for subscribers for campaign with group batch id %s...(This is subscribers worker #%d)", $campaign->group_batch_id, $workerNumber));
 
-        $subscribers = $this->findSubscribers($offset, $limit);
+//        $subscribers = $this->findSubscribers($offset, $limit);
+
+        $criteria = new CDbCriteria();
+               $criteria->with['logs'] = array(
+                   'select' => false,
+                   'together' => true,
+                   'joinType' => 'LEFT OUTER JOIN',
+                   'on' => 'logs.email_id = t.email_id',
+                   'condition' => '`status` = "pending-sending" AND `send_at` < NOW() AND group_batch_id = :id AND logs.email_id IS NULL',
+                   'params' => array(':id' => $campaign->group_batch_id),
+               );
+
+               // and find them
+               $subscribers = GroupEmail::model()->findAll($criteria);
 
         $this->stdout(sprintf("This subscribers worker(#%d) will process %d subscribers for this campaign...", $workerNumber, count($subscribers)));
 
@@ -423,13 +436,13 @@ class SendCampaignsCommand extends CConsoleCommand
         $this->stdout("Running subscribers cleanup...");
 
         foreach ($subscribers as $index => $subscriber) {
-            if (isset($subscribersQueue[$subscriber->subscriber_id])) {
+            if (isset($subscribersQueue[$subscriber->email_id])) {
                 unset($subscribers[$index]);
                 continue;
             }
 
             $containsNotAllowedEmailChars = false;
-            $part = explode('@', $subscriber->email);
+            $part = explode('@', $subscriber->to_email);
             $part = $part[0];
             foreach ($notAllowedEmailChars as $chr) {
                 if (strpos($part, $chr) === 0 || strrpos($part, $chr) === 0) {
@@ -444,7 +457,7 @@ class SendCampaignsCommand extends CConsoleCommand
                 continue;
             }
 
-            $subscribersQueue[$subscriber->subscriber_id] = true;
+            $subscribersQueue[$subscriber->email_id] = true;
         }
         unset($subscribersQueue);
 
@@ -473,131 +486,101 @@ class SendCampaignsCommand extends CConsoleCommand
 
             foreach ($subscribers as $index => $subscriber) {
                 $this->stdout("", false);
-                $this->stdout(sprintf("%s - %d/%d", $subscriber->email, ($index+1), $subscribersCount));
-                $this->stdout(sprintf('Checking if we can send to domain of %s...', $subscriber->email));
-                // if this server is not allowed to send to this email domain, then just skip it.
-                if (!$server->canSendToDomainOf($subscriber->email)) {
-                    continue;
-                }
+                $this->stdout(sprintf("%s - %d/%d", $subscriber->to_email, ($index+1), $subscribersCount));
+//                $this->stdout(sprintf('Checking if we can send to domain of %s...', $subscriber->to_email));
+//                // if this server is not allowed to send to this email domain, then just skip it.
+//                if (!$server->canSendToDomainOf($subscriber->to_email)) {
+//                    continue;
+//                }
+//
+//                $this->stdout(sprintf('Checking if %s is blacklisted...', $subscriber->to_email));
+//                // if blacklisted, goodbye.
+//                if ($subscriber->getIsBlacklisted()) {
+//                    $this->logDelivery($subscriber, Yii::t('campaigns', 'This email is blacklisted. Sending is denied!'), CampaignDeliveryLog::STATUS_BLACKLISTED);
+//                    continue;
+//                }
+//
+//                $this->stdout('Checking if the server is over quota...');
+//                // in case the server is over quota
+//                if ($server->getIsOverQuota()) {
+//                    $this->stdout('Server is over quota, choosing another one.');
+//                    $currentServerId = $server->server_id;
+//                    if (!($server = DeliveryServer::pickServer($currentServerId, $campaign, $dsParams))) {
+//                        throw new Exception(Yii::t('campaigns', 'Cannot find a valid server to send the campaign email, aborting until a delivery server is available!'), 99);
+//                    }
+//                }
+//
+//                $this->stdout('Checking if the customer is over quota...');
+//
+//                // in case current customer is over quota
+//                if ($customer->getIsOverQuota()) {
+//                    throw new Exception(Yii::t('campaigns', 'This customer reached the assigned quota!'), 98);
+//                }
+//
+//                $this->stdout('Preparing the entire email...');
+//                $emailParams = $this->prepareEmail($subscriber);
 
-                $this->stdout(sprintf('Checking if %s is blacklisted...', $subscriber->email));
-                // if blacklisted, goodbye.
-                if ($subscriber->getIsBlacklisted()) {
-                    $this->logDelivery($subscriber, Yii::t('campaigns', 'This email is blacklisted. Sending is denied!'), CampaignDeliveryLog::STATUS_BLACKLISTED);
-                    continue;
-                }
+//                if (empty($emailParams) || !is_array($emailParams)) {
+//                    $this->logDelivery($subscriber, Yii::t('campaigns', 'Unable to prepare the email content!'), CampaignDeliveryLog::STATUS_ERROR);
+//                    continue;
+//                }
+//
+//                if ($changeServerAt > 0 && $processedCounter >= $changeServerAt && !$serverHasChanged) {
+//                    $currentServerId = $server->server_id;
+//                    if ($newServer = DeliveryServer::pickServer($currentServerId, $campaign, $dsParams)) {
+//                        $server = $newServer;
+//                        unset($newServer);
+//                    }
+//
+//                    $processedCounter = 0;
+//                    $serverHasChanged = true;
+//                }
 
-                $this->stdout('Checking if the server is over quota...');
-                // in case the server is over quota
-                if ($server->getIsOverQuota()) {
-                    $this->stdout('Server is over quota, choosing another one.');
-                    $currentServerId = $server->server_id;
-                    if (!($server = DeliveryServer::pickServer($currentServerId, $campaign, $dsParams))) {
-                        throw new Exception(Yii::t('campaigns', 'Cannot find a valid server to send the campaign email, aborting until a delivery server is available!'), 99);
-                    }
-                }
+                $headerPrefix = 'X-Mw-';
+                  $emailParams = array(
+                      'from' => array($subscriber['from_email'] => $subscriber['from_name']),
+                      'fromName' => $subscriber['from_name'],
+                      'email_id' => $subscriber['email_id'],
+                      'from_email' => $subscriber['from_email'],
+                      'return_path' => 'bounces@marketherobounce1.com',
+                      'Return_Path' => 'bounces@marketherobounce1.com',
+                      'from_name' => $subscriber['from_name'],
+                      'to' => array($subscriber['to_email'] => $subscriber['to_name']),
+                      'subject' => $subscriber['subject'],
+                      'replyTo' => $subscriber['reply_to_email'],
+                      'body' => $subscriber['body'],
+                      'plainText' => $subscriber['plain_text'],
+                  );
 
-                $this->stdout('Checking if the customer is over quota...');
+                  $emailParams['headers'] = array(
+                      $headerPrefix.'Group-Uid' => $group->group_email_uid,
+                      $headerPrefix.'Customer-Id' => $group->customer_id
+                  );
 
-                // in case current customer is over quota
-                if ($customer->getIsOverQuota()) {
-                    throw new Exception(Yii::t('campaigns', 'This customer reached the assigned quota!'), 98);
-                }
+                  $emailParams['mailerPlugins'] = $mailerPlugins;
 
-                $this->stdout('Preparing the entire email...');
-                $emailParams = $this->prepareEmail($subscriber);
+//                if (!empty($attachments)) {
+//                    $emailParams['attachments'] = array();
+//                    foreach ($attachments as $attachment) {
+//                        $emailParams['attachments'][] = Yii::getPathOfAlias('root') . $attachment->file;
+//                    }
+//                }
+//                $processedCounter++;
+//                if ($processedCounter >= $changeServerAt) {
+//                    $serverHasChanged = false;
+//                }
 
-                if (empty($emailParams) || !is_array($emailParams)) {
-                    $this->logDelivery($subscriber, Yii::t('campaigns', 'Unable to prepare the email content!'), CampaignDeliveryLog::STATUS_ERROR);
-                    continue;
-                }
-
-                if ($changeServerAt > 0 && $processedCounter >= $changeServerAt && !$serverHasChanged) {
-                    $currentServerId = $server->server_id;
-                    if ($newServer = DeliveryServer::pickServer($currentServerId, $campaign, $dsParams)) {
-                        $server = $newServer;
-                        unset($newServer);
-                    }
-
-                    $processedCounter = 0;
-                    $serverHasChanged = true;
-                }
-
-                $listUnsubscribeHeaderValue = $options->get('system.urls.frontend_absolute_url');
-                $listUnsubscribeHeaderValue .= 'lists/'.$list->list_uid.'/unsubscribe/'.$subscriber->subscriber_uid . '/' . $campaign->campaign_uid;
-                $listUnsubscribeHeaderValue = '<'.$listUnsubscribeHeaderValue.'>';
-
-                $reportAbuseUrl  = $options->get('system.urls.frontend_absolute_url');
-                $reportAbuseUrl .= 'campaigns/'. $campaign->campaign_uid . '/report-abuse/' . $list->list_uid . '/' . $subscriber->subscriber_uid;
-
-                // since 1.3.4.9
-                if (!empty($campaign->reply_to)) {
-                    $_subject = 'Unsubscribe';
-                    $_body    = 'Please unsubscribe me from ' . $list->display_name . ' list.';
-                    $mailToUnsubscribeHeader    = sprintf(', <mailto:%s?subject=%s&body=%s>', $campaign->reply_to, $_subject, $_body);
-                    $listUnsubscribeHeaderValue .= $mailToUnsubscribeHeader;
-                }
-
-                $headerPrefix = Yii::app()->params['email.custom.header.prefix'];
-                $emailParams['headers'] = array(
-                    array('name' => $headerPrefix . 'Campaign-Uid',   'value' => $campaign->campaign_uid),
-                    array('name' => $headerPrefix . 'Subscriber-Uid', 'value' => $subscriber->subscriber_uid),
-                    array('name' => $headerPrefix . 'Customer-Uid',   'value' => $customer->customer_uid),
-                    array('name' => $headerPrefix . 'Customer-Gid',   'value' => (string)intval($customer->group_id)), // because of sendgrid
-                    array('name' => $headerPrefix . 'Delivery-Sid',   'value' => (string)intval($server->server_id)), // because of sendgrid
-                    array('name' => $headerPrefix . 'Tracking-Did',   'value' => (string)intval($server->tracking_domain_id)), // because of sendgrid
-                    array('name' => 'List-Unsubscribe',               'value' => $listUnsubscribeHeaderValue),
-                    array('name' => 'List-Id',                        'value' => $list->list_uid . ' <' . $list->display_name . '>'),
-                    array('name' => 'X-Report-Abuse',                 'value' => 'Please report abuse for this campaign here: ' . $reportAbuseUrl),
-                    array('name' => 'Feedback-ID',                    'value' => sprintf('%s:%s:%s:%s', $campaign->campaign_uid, $subscriber->subscriber_uid, $list->list_uid, $customer->customer_uid)),
-                );
-
-                // since 1.3.4.6
-                $headers = !empty($server->additional_headers) && is_array($server->additional_headers) ? $server->additional_headers : array();
-                $headers = (array)Yii::app()->hooks->applyFilters('console_command_send_campaigns_campaign_custom_headers', $headers, $campaign, $subscriber, $customer, $server, $emailParams);
-                $headers = $server->parseHeadersFormat($headers);
-
-                if (!empty($headers)) {
-                    $headerSearchReplace = array(
-                        '[CAMPAIGN_UID]'    => $campaign->campaign_uid,
-                        '[SUBSCRIBER_UID]'  => $subscriber->subscriber_uid,
-                        '[SUBSCRIBER_EMAIL]'=> $subscriber->email,
-                    );
-                    foreach ($headers as $header) {
-                        if (!is_array($header) || !isset($header['name'], $header['value'])) {
-                            continue;
-                        }
-                        $header['value'] = str_replace(array_keys($headerSearchReplace), array_values($headerSearchReplace), $header['value']);
-                        $emailParams['headers'][] = $header;
-                    }
-                    unset($headers);
-                }
-
-                $emailParams['mailerPlugins'] = $mailerPlugins;
-
-                if (!empty($attachments)) {
-                    $emailParams['attachments'] = array();
-                    foreach ($attachments as $attachment) {
-                        $emailParams['attachments'][] = Yii::getPathOfAlias('root') . $attachment->file;
-                    }
-                }
-
-                $processedCounter++;
-                if ($processedCounter >= $changeServerAt) {
-                    $serverHasChanged = false;
-                }
-
-                // since 1.3.4.6 (will be removed, don't hook into it)
-                Yii::app()->hooks->doAction('console_command_send_campaigns_before_send_to_subscriber', $campaign, $subscriber, $customer, $server, $emailParams);
-
-                // since 1.3.5.9
-                $emailParams = Yii::app()->hooks->applyFilters('console_command_send_campaigns_before_send_to_subscriber', $emailParams, $campaign, $subscriber, $customer, $server);
+//                // since 1.3.4.6 (will be removed, don't hook into it)
+//                Yii::app()->hooks->doAction('console_command_send_campaigns_before_send_to_subscriber', $campaign, $subscriber, $customer, $server, $emailParams);
+//
+//                // since 1.3.5.9
+//                $emailParams = Yii::app()->hooks->applyFilters('console_command_send_campaigns_before_send_to_subscriber', $emailParams, $campaign, $subscriber, $customer, $server);
 
                 // set delivery object
-                $server->setDeliveryFor(DeliveryServer::DELIVERY_FOR_CAMPAIGN)->setDeliveryObject($campaign);
+                $server->setDeliveryFor(DeliveryServer::DELIVERY_FOR_GROUP)->setDeliveryObject($campaign);
 
                 // default status
-                $status = CampaignDeliveryLog::STATUS_SUCCESS;
+//                $status = CampaignDeliveryLog::STATUS_SUCCESS;
 
                 $this->stdout(sprintf('Using delivery server: %s (ID: %d).', $server->hostname, $server->server_id));
 
@@ -610,7 +593,6 @@ class SendCampaignsCommand extends CConsoleCommand
                     $allParams = array_merge(array(
                         'server_id'   => $server->server_id,
                         'server_type' => $server->type,
-                        'campaign_id' => $campaign->campaign_id,
                         'params'      => $emailParams
                     ), $sent);
 
@@ -653,8 +635,11 @@ class SendCampaignsCommand extends CConsoleCommand
                     $this->stdout('Sending OK.');
                 }
 
-                $this->stdout(sprintf('Done for %s, logging delivery...', $subscriber->email));
-                $this->logDelivery($subscriber, $response, $status, $messageId);
+                $this->stdout(sprintf('Done for %s, logging delivery...', $subscriber->to_email));
+
+                $this->logGroupEmailDelivery($sent, $server);
+
+
 
                 // since 1.3.4.6
                 Yii::app()->hooks->doAction('console_command_send_campaigns_after_send_to_subscriber', $campaign, $subscriber, $customer, $server, $sent, $response, $status);
@@ -676,13 +661,13 @@ class SendCampaignsCommand extends CConsoleCommand
                 $campaign->status = Campaign::STATUS_PAUSED;
             }
 
-            if ($canChangeCampaignStatus) {
-                // save the changes, but no validation
-                $campaign->saveStatus();
-
-                // since 1.3.5.9
-                $this->checkCampaignOverMaxBounceRate($campaign, $maxBounceRate);
-            }
+//            if ($canChangeCampaignStatus) {
+//                // save the changes, but no validation
+//                $campaign->saveStatus();
+//
+//                // since 1.3.5.9
+//                $this->checkCampaignOverMaxBounceRate($campaign, $maxBounceRate);
+//            }
 
             // log the error so we can reference it
             Yii::log($e->getMessage(), CLogger::LEVEL_ERROR);
@@ -691,52 +676,54 @@ class SendCampaignsCommand extends CConsoleCommand
             return $code;
         }
 
+        $campaign->saveStatus(Campaign::STATUS_SENT);
+
         $this->stdout("", false);
         $this->stdout(sprintf('Done processing %d subscribers!', count($subscribers)));
 
-        if ($canChangeCampaignStatus) {
-
-            // since 1.3.5
-            try {
-                // make sure we're still connected to database...
-                Yii::app()->getDb()->setActive(true);
-            } catch (Exception $e) {
-                // log the error so we can reference it
-                Yii::log($e->getMessage(), CLogger::LEVEL_ERROR);
-            }
-
-            // do a final check for this campaign to see if it still exists or has been somehow changed from web interface.
-            // this used to exist in the foreach loop but would cause so much overhead that i think is better to move it here
-            // since if a campaign is paused from web interface it will keep that status anyway so it won't affect customers and will improve performance
-            $_campaign = Yii::app()->getDb()->createCommand()
-                ->select('status')
-                ->from($campaign->tableName())
-                ->where('campaign_id = :cid', array(':cid' => (int)$campaign->campaign_id))
-                ->queryRow();
-
-            if (empty($_campaign) || $_campaign['status'] != Campaign::STATUS_PROCESSING) {
-                if (!empty($_campaign)) {
-                    $campaign->saveStatus($_campaign['status']);
-                    $this->checkCampaignOverMaxBounceRate($campaign, $maxBounceRate);
-                    $this->stdout('Campaign status has been changed successfully!');
-                }
-                return 0;
-            }
-
-            // the sending batch is over.
-            // if we don't have enough subscribers for next batch, we stop.
-            $subscribers = $this->countSubscribers();
-            if (empty($subscribers)) {
-                $this->markCampaignSent();
-                $this->stdout('Campaign has been marked as sent!');
-                return 0;
-            }
-
-            // make sure sending is resumed next time
-            $campaign->saveStatus(Campaign::STATUS_SENDING);
-            $this->checkCampaignOverMaxBounceRate($campaign, $maxBounceRate);
-            $this->stdout('Campaign status has been changed successfully!');
-        }
+//        if ($canChangeCampaignStatus) {
+//
+//            // since 1.3.5
+//            try {
+//                // make sure we're still connected to database...
+//                Yii::app()->getDb()->setActive(true);
+//            } catch (Exception $e) {
+//                // log the error so we can reference it
+//                Yii::log($e->getMessage(), CLogger::LEVEL_ERROR);
+//            }
+//
+//            // do a final check for this campaign to see if it still exists or has been somehow changed from web interface.
+//            // this used to exist in the foreach loop but would cause so much overhead that i think is better to move it here
+//            // since if a campaign is paused from web interface it will keep that status anyway so it won't affect customers and will improve performance
+//            $_campaign = Yii::app()->getDb()->createCommand()
+//                ->select('status')
+//                ->from($campaign->tableName())
+//                ->where('campaign_id = :cid', array(':cid' => (int)$campaign->campaign_id))
+//                ->queryRow();
+//
+//            if (empty($_campaign) || $_campaign['status'] != Campaign::STATUS_PROCESSING) {
+//                if (!empty($_campaign)) {
+//                    $campaign->saveStatus($_campaign['status']);
+//                    $this->checkCampaignOverMaxBounceRate($campaign, $maxBounceRate);
+//                    $this->stdout('Campaign status has been changed successfully!');
+//                }
+//                return 0;
+//            }
+//
+//            // the sending batch is over.
+//            // if we don't have enough subscribers for next batch, we stop.
+//            $subscribers = $this->countSubscribers();
+//            if (empty($subscribers)) {
+//                $this->markCampaignSent();
+//                $this->stdout('Campaign has been marked as sent!');
+//                return 0;
+//            }
+//
+//            // make sure sending is resumed next time
+//            $campaign->saveStatus(Campaign::STATUS_SENDING);
+//            $this->checkCampaignOverMaxBounceRate($campaign, $maxBounceRate);
+//            $this->stdout('Campaign status has been changed successfully!');
+//        }
 
         $this->stdout('Done processing the campaign.');
 
@@ -769,9 +756,9 @@ class SendCampaignsCommand extends CConsoleCommand
     // since 1.3.5.9
     protected function getCanUsePcntl()
     {
-        if (Yii::app()->options->get('system.cron.send_campaigns.use_pcntl', 'no') != 'yes') {
-            return false;
-        }
+//        if (Yii::app()->options->get('system.cron.send_campaigns.use_pcntl', 'no') != 'yes') {
+//            return false;
+//        }
         if (!CommonHelper::functionExists('pcntl_fork') || !CommonHelper::functionExists('pcntl_waitpid')) {
             return false;
         }
@@ -781,13 +768,13 @@ class SendCampaignsCommand extends CConsoleCommand
     // since 1.3.5.9
     protected function getCampaignsInParallel()
     {
-        return (int)Yii::app()->options->get('system.cron.send_campaigns.campaigns_in_parallel', 5);
+        return 5;
     }
 
     // since 1.3.5.9
     protected function getSubscriberBatchesInParallel()
     {
-        return 5;
+        return 1;
     }
 
     // since 1.3.5.9
@@ -873,7 +860,7 @@ class SendCampaignsCommand extends CConsoleCommand
         $subscribersCount = count($subscribers);
         $_subscribers = array();
         foreach ($subscribers as $index => $subscriber) {
-            $emailParts = explode('@', $subscriber->email);
+            $emailParts = explode('@', $subscriber->to_email);
             $domainName = $emailParts[1];
             if (!isset($_subscribers[$domainName])) {
                 $_subscribers[$domainName] = array();
@@ -912,7 +899,7 @@ class SendCampaignsCommand extends CConsoleCommand
         $embedImages    = array();
         $emailFooter    = null;
         $onlyPlainText  = !empty($campaign->template->only_plain_text) && $campaign->template->only_plain_text === CampaignTemplate::TEXT_YES;
-        $emailAddress   = $subscriber->email;
+        $emailAddress   = $subscriber->to_email;
 
         // since 1.3.5.9
         $fromEmailCustom= null;
@@ -1130,5 +1117,14 @@ class SendCampaignsCommand extends CConsoleCommand
 
         return $status;
     }
+
+    public function logGroupEmailDelivery($sent, $server)
+       {
+
+           $log = new GroupEmailLog();
+           $log->email_id = $sent['email_id'];
+           $log->message = $server->getMailer()->getLog();
+           $log->save(false);
+       }
 
 }
