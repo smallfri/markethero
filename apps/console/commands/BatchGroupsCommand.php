@@ -41,6 +41,16 @@ class BatchGroupsCommand extends CConsoleCommand
         {
             $emails = $this->findGroupEmailsToBatch($group['group_email_id']);
 
+            if (!$emails&&$this->verbose)
+            {
+                echo "[".date("Y-m-d H:i:s")."] You probably already have batch ids in your email rows...Yes, this has been done before...\n";
+            }
+
+            if ($this->verbose)
+            {
+                echo "[".date("Y-m-d H:i:s")."] Batching group ".$group['group_email_id']."...\n";
+            }
+
             $chunks = array_chunk($emails, 200);
             foreach ($chunks as $chunk_of_rows)
             {
@@ -51,6 +61,11 @@ class BatchGroupsCommand extends CConsoleCommand
                 $batch->date_added = new \DateTime;
                 $batch->save(false);
 
+                if ($this->verbose)
+                {
+                    echo "[".date("Y-m-d H:i:s")."] Created batch id  ".$batch->primaryKey."...\n";
+                }
+
                 $criteria = new CDbCriteria;
                 $criteria->condition = 'group_email_id= '.$group['group_email_id'].' AND group_batch_id IS NULL';
                 $criteria->limit = 200;
@@ -59,7 +74,8 @@ class BatchGroupsCommand extends CConsoleCommand
                     );
 
             }
-
+            $groupStatus = Group::model()->findByPk($group['group_email_id']);
+            $groupStatus->saveStatus('processed');
         }
 
         return 0;
