@@ -32,7 +32,7 @@ class NewSendBatchescommand extends CConsoleCommand
     public $campaigns_type;
 
     // how many campaigns to process at once
-    public $campaigns_limit = 5;
+    public $campaigns_limit = 40;
 
     // from where to start
     public $campaigns_offset = 0;
@@ -46,7 +46,7 @@ class NewSendBatchescommand extends CConsoleCommand
 
     // since 1.3.5.9 - if parallel sending, how many campaigns at same time
     // this is a temporary flag that should be removed in future versions
-    public $campaigns_in_parallel = 5;
+    public $campaigns_in_parallel = 20;
 
     // since 1.3.5.9 -  if parallel sending, how many subscriber batches at same time
     // this is a temporary flag that should be removed in future versions
@@ -103,12 +103,12 @@ class NewSendBatchescommand extends CConsoleCommand
     public function actionIndex()
     {
         // added in 1.3.4.7
-        Yii::app()->hooks->doAction('console_command_send_campaigns_before_process', $this);
+//        Yii::app()->hooks->doAction('console_command_send_campaigns_before_process', $this);
 
         $result = $this->process();
 
         // added in 1.3.4.7
-        Yii::app()->hooks->doAction('console_command_send_campaigns_after_process', $this);
+//        Yii::app()->hooks->doAction('console_command_send_campaigns_after_process', $this);
 
         return $result;
     }
@@ -295,15 +295,15 @@ class NewSendBatchescommand extends CConsoleCommand
             'loggerPlugin' => true,
         );
 
-        $sendAtOnce = 200;
+        $sendAtOnce = 1;
         if (!empty($sendAtOnce)) {
             $mailerPlugins['antiFloodPlugin'] = array(
                 'sendAtOnce'    => $sendAtOnce,
-                'pause'         => 5,
+                'pause'         => 10,
             );
         }
 
-        $perMinute = 80;
+        $perMinute = 1;
         if (!empty($perMinute)) {
             $mailerPlugins['throttlePlugin'] = array(
                 'perMinute' => $perMinute,
@@ -414,7 +414,7 @@ class NewSendBatchescommand extends CConsoleCommand
 
         if (empty($subscribers)) {
             if ($canChangeCampaignStatus) {
-                $this->markCampaignSent();
+                $campaign->saveStatus('sent');
             }
             return 0;
         }
@@ -540,7 +540,7 @@ class NewSendBatchescommand extends CConsoleCommand
                   $emailParams = array(
                       'from' => array($subscriber['from_email'] => $subscriber['from_name']),
                       'fromName' => $subscriber['from_name'],
-                      'email_id' => $subscriber['email_id'],
+                      'message_id' => $subscriber['email_id'],
                       'from_email' => $subscriber['from_email'],
                       'return_path' => 'bounces@marketherobounce1.com',
                       'Return_Path' => 'bounces@marketherobounce1.com',
@@ -633,16 +633,21 @@ class NewSendBatchescommand extends CConsoleCommand
                 if ($sent && is_array($sent) && !empty($sent['message_id'])) {
                     $messageId = $sent['message_id'];
                     $this->stdout('Sending OK.');
+
                 }
+                else
+                {
+                    $this->stdout('Missing EMAIL ID !!!!!!.');
+
+                }
+                $subscriber->saveStatus('sent');
 
                 $this->stdout(sprintf('Done for %s, logging delivery...', $subscriber->to_email));
 
                 $this->logGroupEmailDelivery($sent, $server);
 
-
-
                 // since 1.3.4.6
-                Yii::app()->hooks->doAction('console_command_send_campaigns_after_send_to_subscriber', $campaign, $subscriber, $customer, $server, $sent, $response, $status);
+//                Yii::app()->hooks->doAction('console_command_send_campaigns_after_send_to_subscriber', $campaign, $subscriber, $customer, $server, $sent, $response, $status);
             }
 
         } catch (Exception $e) {
@@ -768,7 +773,7 @@ class NewSendBatchescommand extends CConsoleCommand
     // since 1.3.5.9
     protected function getCampaignsInParallel()
     {
-        return 5;
+        return 40;
     }
 
     // since 1.3.5.9
@@ -1122,7 +1127,7 @@ class NewSendBatchescommand extends CConsoleCommand
        {
 
            $log = new GroupEmailLog();
-           $log->email_id = $sent['email_id'];
+           $log->email_id = $sent['message_id'];
            $log->message = $server->getMailer()->getLog();
            $log->save(false);
        }

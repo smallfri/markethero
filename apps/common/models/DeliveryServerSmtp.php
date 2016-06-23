@@ -43,7 +43,8 @@ class DeliveryServerSmtp extends DeliveryServer
         $params = (array)Yii::app()->hooks->applyFilters('delivery_server_before_send_email', $this->getParamsArray($params), $this);
 
         if ($sent = $this->getMailer()->send($params)) {
-            $sent = array('message_id' => $this->getMailer()->getEmailMessageId());
+            $sent = array('message_id' => $params['message_id']);
+
             $this->logUsage();
         }
         

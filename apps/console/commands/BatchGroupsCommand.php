@@ -75,7 +75,7 @@ class BatchGroupsCommand extends CConsoleCommand
         $criteria = new CDbCriteria();
         $criteria->select = '*';
         $criteria->condition
-            = '`status` = "pending-sending" AND `send_at` < NOW() AND log.email_id IS NULL AND group_email_id='.$group_email_id;
+            = '`status` = "pending-sending" AND `send_at` < NOW() AND log.email_id IS NULL AND group_batch_id IS NULL AND group_email_id='.$group_email_id;
         $criteria->join = 'LEFT JOIN mw_group_email_log AS log ON log.email_id = t.email_id';
         $emails = GroupEmail::model()->findAll($criteria);
         return $emails;
