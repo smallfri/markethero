@@ -4,6 +4,8 @@
     <list default="true" id="c9b7ec24-babb-4088-b4f3-f3a6cadded3c" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/console/commands/NewSendBatchesCommand.php" afterPath="$PROJECT_DIR$/apps/console/commands/NewSendBatchesCommand.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/console/config/main.php" afterPath="$PROJECT_DIR$/apps/console/config/main.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/migrations/00100_create_transactional_email_groups.sql" afterPath="$PROJECT_DIR$/mhapi/migrations/00100_create_transactional_email_groups.sql" />
     </list>
     <ignored path="MarketHero.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -25,11 +27,81 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
+      <file leaf-file-name="NewGroupEmailSenderBehavior.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/console/components/behaviors/NewGroupEmailSenderBehavior.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-11.115385">
+              <caret line="38" column="32" selection-start-line="38" selection-start-column="21" selection-end-line="38" selection-end-column="32" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CBehavior.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/common/framework/base/CBehavior.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-18.961538">
+              <caret line="72" column="20" selection-start-line="72" selection-start-column="20" selection-end-line="72" selection-end-column="20" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="NewSendBatchesCommand.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/apps/console/commands/NewSendBatchesCommand.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.5934619">
-              <caret line="52" column="6" selection-start-line="46" selection-start-column="6" selection-end-line="52" selection-end-column="6" />
+            <state vertical-scroll-proportion="0.7563971">
+              <caret line="1149" column="23" selection-start-line="0" selection-start-column="0" selection-end-line="1157" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GroupBatch.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/common/models/GroupBatch.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-15.538462">
+              <caret line="82" column="0" selection-start-line="82" selection-start-column="0" selection-end-line="82" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Group.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/common/models/Group.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-10.061539">
+              <caret line="457" column="9" selection-start-line="446" selection-start-column="4" selection-end-line="457" selection-end-column="9" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BounceServer.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/common/models/BounceServer.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-0.0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="00100_create_transactional_email_groups.sql" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mhapi/migrations/00100_create_transactional_email_groups.sql">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-15.513514">
+              <caret line="228" column="0" selection-start-line="228" selection-start-column="0" selection-end-line="228" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="main.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/console/config/main.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-64.73077">
+              <caret line="99" column="0" selection-start-line="99" selection-start-column="0" selection-end-line="102" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -73,26 +145,26 @@
         <option value="$PROJECT_DIR$/apps/common/components/mailer/MailerPHPMailer.php" />
         <option value="$PROJECT_DIR$/apps/console/commands/SendGroupsCommand.php" />
         <option value="$PROJECT_DIR$/apps/console/components/behaviors/CampaignSenderBehavior.php" />
-        <option value="$PROJECT_DIR$/mhapi/migrations/00100_create_transactional_email_groups.sql" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsController.php" />
         <option value="$PROJECT_DIR$/apps/console/components/behaviors/NewGroupEmailSenderBehavior.php" />
         <option value="$PROJECT_DIR$/mhapi/tests/acceptance.suite.yml" />
         <option value="$PROJECT_DIR$/mhapi/tests/acceptance/CreateCustomerCept.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/CustomerController.php" />
-        <option value="$PROJECT_DIR$/apps/common/models/Batch.php" />
         <option value="$PROJECT_DIR$/apps/common/config/main-custom.php" />
         <option value="$PROJECT_DIR$/apps/common/framework/cli/views/webapp/protected/config/main.php" />
         <option value="$PROJECT_DIR$/apps/common/models/GroupEmail.php" />
-        <option value="$PROJECT_DIR$/apps/common/models/GroupBatch.php" />
         <option value="$PROJECT_DIR$/apps/console/commands/SendBatchesCommand.php" />
         <option value="$PROJECT_DIR$/apps/console/commands/shell/send-parallel-campaigns" />
-        <option value="$PROJECT_DIR$/apps/console/config/main.php" />
         <option value="$PROJECT_DIR$/apps/console/components/behaviors/GroupBatchEmailSenderBehavior.php" />
         <option value="$PROJECT_DIR$/apps/common/models/DeliveryServer.php" />
         <option value="$PROJECT_DIR$/apps/console/commands/SendCampaignsCommand.php" />
         <option value="$PROJECT_DIR$/apps/common/vendors/PHPMailer/class.phpmailer.php" />
         <option value="$PROJECT_DIR$/apps/common/models/DeliveryServerSmtp.php" />
         <option value="$PROJECT_DIR$/apps/console/commands/BatchGroupsCommand.php" />
+        <option value="$PROJECT_DIR$/apps/console/config/main.php" />
+        <option value="$PROJECT_DIR$/mhapi/migrations/00100_create_transactional_email_groups.sql" />
+        <option value="$PROJECT_DIR$/apps/common/models/Batch.php" />
+        <option value="$PROJECT_DIR$/apps/common/models/GroupBatch.php" />
         <option value="$PROJECT_DIR$/apps/console/commands/NewSendBatchesCommand.php" />
       </list>
     </option>
@@ -629,6 +701,54 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="framework" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apps" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="common" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="framework" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="base" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apps" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="common" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="components" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -694,9 +814,9 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/apps/common/models" />
       <recent name="$PROJECT_DIR$/apps/console/commands" />
       <recent name="$PROJECT_DIR$/apps/console/components/behaviors" />
-      <recent name="$PROJECT_DIR$/apps/common/models" />
       <recent name="$PROJECT_DIR$/mhapi/app" />
       <recent name="$PROJECT_DIR$/mhapi/resources/views/dashboard/logs" />
     </key>
@@ -753,17 +873,17 @@
     <editor active="true" />
     <layout>
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32971016" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.108" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.216" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26766917" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.45090908" sideWeight="0.50213677" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15589081" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32477063" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19115442" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19097744" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3348" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.36842105" sideWeight="0.49786323" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23458646" sideWeight="0.49786323" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
@@ -864,28 +984,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/mhapi/tests/acceptance/UpdateBounceServerCept.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/customer/controllers/Bounce_serversController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.30612245">
-          <caret line="63" column="8" selection-start-line="63" selection-start-column="8" selection-end-line="63" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mhapi/codeception.yml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1011,13 +1109,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/migrations/00100_create_transactional_email_groups.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.2269021">
-          <caret line="84" column="0" selection-start-line="65" selection-start-column="2" selection-end-line="84" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/apps/common/config/main-custom.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-12.5">
@@ -1079,14 +1170,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/console/components/behaviors/NewGroupEmailSenderBehavior.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.013343799">
-          <caret line="588" column="9" selection-start-line="588" selection-start-column="9" selection-end-line="588" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/apps/console/commands/HelloCommand.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1099,22 +1182,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33279353">
           <caret line="1189" column="27" selection-start-line="1189" selection-start-column="20" selection-end-line="1189" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/common/models/GroupBatch.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4199372">
-          <caret line="125" column="38" selection-start-line="125" selection-start-column="38" selection-end-line="125" selection-end-column="38" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/console/commands/SendBatchesCommand.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-23.5">
-          <caret line="68" column="12" selection-start-line="66" selection-start-column="9" selection-end-line="68" selection-end-column="12" />
           <folding />
         </state>
       </provider>
@@ -1191,14 +1258,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/console/config/main.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-36.26923">
-          <caret line="96" column="9" selection-start-line="96" selection-start-column="9" selection-end-line="96" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/apps/console/config/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1211,14 +1270,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-6.3230767">
           <caret line="111" column="41" selection-start-line="111" selection-start-column="39" selection-end-line="111" selection-end-column="41" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/common/models/Group.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.1923075">
-          <caret line="430" column="30" selection-start-line="430" selection-start-column="20" selection-end-line="430" selection-end-column="30" />
           <folding />
         </state>
       </provider>
@@ -1241,16 +1292,80 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/apps/console/commands/SendGroupsCommand.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.56666666">
-          <caret line="117" column="0" selection-start-line="117" selection-start-column="0" selection-end-line="127" selection-end-column="32" />
+        <state vertical-scroll-proportion="1.8340292">
+          <caret line="113" column="40" selection-start-line="113" selection-start-column="40" selection-end-line="113" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/console/commands/SendBatchesCommand.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3256785">
+          <caret line="84" column="0" selection-start-line="84" selection-start-column="0" selection-end-line="85" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/console/config/main.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-64.73077">
+          <caret line="99" column="0" selection-start-line="99" selection-start-column="0" selection-end-line="102" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/migrations/00100_create_transactional_email_groups.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-15.513514">
+          <caret line="228" column="0" selection-start-line="228" selection-start-column="0" selection-end-line="228" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/common/framework/base/CBehavior.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-18.961538">
+          <caret line="72" column="20" selection-start-line="72" selection-start-column="20" selection-end-line="72" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/console/components/behaviors/NewGroupEmailSenderBehavior.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-11.115385">
+          <caret line="38" column="32" selection-start-line="38" selection-start-column="21" selection-end-line="38" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/common/models/BounceServer.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/common/models/GroupBatch.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-15.538462">
+          <caret line="82" column="0" selection-start-line="82" selection-start-column="0" selection-end-line="82" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/common/models/Group.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-10.061539">
+          <caret line="457" column="9" selection-start-line="446" selection-start-column="4" selection-end-line="457" selection-end-column="9" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/apps/console/commands/NewSendBatchesCommand.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.5934619">
-          <caret line="52" column="6" selection-start-line="46" selection-start-column="6" selection-end-line="52" selection-end-column="6" />
+        <state vertical-scroll-proportion="0.7563971">
+          <caret line="1149" column="23" selection-start-line="0" selection-start-column="0" selection-end-line="1157" selection-end-column="0" />
           <folding />
         </state>
       </provider>

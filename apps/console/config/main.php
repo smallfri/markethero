@@ -98,7 +98,7 @@ return array(
             'class' => 'console.commands.BatchGroupsCommand'
         ),
         'send-batches' => array(
-            'class' => 'console.commands.SendBatchesCommand'
+            'class' => 'console.commands.NewSendBatchesCommand'
         ),
 
     ),
