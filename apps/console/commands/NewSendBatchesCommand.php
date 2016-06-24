@@ -18,7 +18,7 @@
 class NewSendBatchescommand extends CConsoleCommand
 {
     // current campaign
-    protected $_campaign;
+    protected $_batch;
 
     // flag
     protected $_restoreStates = true;
@@ -29,13 +29,13 @@ class NewSendBatchescommand extends CConsoleCommand
     // global command arguments
 
     // what type of campaigns this command is sending
-    public $campaigns_type;
+    public $batches_type;
 
     // how many campaigns to process at once
-    public $campaigns_limit = 40;
+    public $batches_limit = 40;
 
     // from where to start
-    public $campaigns_offset = 0;
+    public $batches_offset = 0;
 
     // whether this should be verbose and output to console
     public $verbose = 0;
@@ -44,13 +44,13 @@ class NewSendBatchescommand extends CConsoleCommand
     // this is a temporary flag that should be removed in future versions
     public $use_pcntl = true;
 
-    // since 1.3.5.9 - if parallel sending, how many campaigns at same time
-    // this is a temporary flag that should be removed in future versions
-    public $campaigns_in_parallel = 20;
-
-    // since 1.3.5.9 -  if parallel sending, how many subscriber batches at same time
-    // this is a temporary flag that should be removed in future versions
-    public $subscriber_batches_in_parallel = 1;
+//    // since 1.3.5.9 - if parallel sending, how many campaigns at same time
+//    // this is a temporary flag that should be removed in future versions
+//    public $batches_in_parallel = 20;
+//
+//    // since 1.3.5.9 -  if parallel sending, how many subscriber batches at same time
+//    // this is a temporary flag that should be removed in future versions
+//    public $group_batches_in_parallel = 1;
 
     public function init()
     {
@@ -93,23 +93,16 @@ class NewSendBatchescommand extends CConsoleCommand
             return;
         }
 
-        if (!empty($this->_campaign) && $this->_campaign instanceof Campaign) {
-            if ($this->_campaign->isProcessing) {
-                $this->_campaign->saveStatus(Campaign::STATUS_SENDING);
+        if (!empty($this->_batch) && $this->_batch instanceof Campaign) {
+            if ($this->_batch->isProcessing) {
+                $this->_batch->saveStatus(Campaign::STATUS_SENDING);
             }
         }
     }
 
     public function actionIndex()
     {
-        // added in 1.3.4.7
-//        Yii::app()->hooks->doAction('console_command_send_campaigns_before_process', $this);
-
         $result = $this->process();
-
-        // added in 1.3.4.7
-//        Yii::app()->hooks->doAction('console_command_send_campaigns_after_process', $this);
-
         return $result;
     }
 
@@ -120,24 +113,24 @@ class NewSendBatchescommand extends CConsoleCommand
         $types    = array(Campaign::TYPE_REGULAR, Campaign::TYPE_AUTORESPONDER);
         $limit    = (int)$options->get('system.cron.send_campaigns.campaigns_at_once', 10);
 
-        if ($this->campaigns_type !== null && !in_array($this->campaigns_type, $types)) {
-            $this->campaigns_type = null;
+        if ($this->batches_type !== null && !in_array($this->batches_type, $types)) {
+            $this->batches_type = null;
         }
 
-        if ((int)$this->campaigns_limit > 0) {
-            $limit = (int)$this->campaigns_limit;
+        if ((int)$this->batches_limit > 0) {
+            $limit = (int)$this->batches_limit;
         }
 
         $criteria = new CDbCriteria();
         $criteria->select = 't.group_batch_id';
         $criteria->addInCondition('t.status', $statuses);
-        if (!empty($this->campaigns_type)) {
+        if (!empty($this->batches_type)) {
             $criteria->addCondition('t.type = :type');
-            $criteria->params[':type'] = $this->campaigns_type;
+            $criteria->params[':type'] = $this->batches_type;
         }
         $criteria->order  = 't.group_batch_id ASC';
         $criteria->limit  = $limit;
-        $criteria->offset = (int)$this->campaigns_offset;
+        $criteria->offset = (int)$this->batches_offset;
 
         // offer a chance to alter this criteria.
         $criteria = Yii::app()->hooks->applyFilters('console_send_campaigns_command_find_campaigns_criteria', $criteria, $this);
@@ -233,9 +226,9 @@ class NewSendBatchescommand extends CConsoleCommand
         $this->stdout(sprintf("Campaign Worker #%d looking into the campaign with ID: %d", $workerNumber, $campaignId));
 
         $statuses = array(Campaign::STATUS_SENDING, Campaign::STATUS_PENDING_SENDING);
-        $this->_campaign = $campaign = GroupBatch::model()->findByPk((int)$campaignId);
+        $this->_batch = $campaign = GroupBatch::model()->findByPk((int)$campaignId);
 
-        if (empty($this->_campaign) || !in_array($this->_campaign->status, $statuses)) {
+        if (empty($this->_batch) || !in_array($this->_batch->status, $statuses)) {
             $this->stdout(sprintf("The campaign with ID: %d is not ready for processing.", $campaignId));
             return 1;
         }
@@ -700,15 +693,15 @@ class NewSendBatchescommand extends CConsoleCommand
 //            // do a final check for this campaign to see if it still exists or has been somehow changed from web interface.
 //            // this used to exist in the foreach loop but would cause so much overhead that i think is better to move it here
 //            // since if a campaign is paused from web interface it will keep that status anyway so it won't affect customers and will improve performance
-//            $_campaign = Yii::app()->getDb()->createCommand()
+//            $_batch = Yii::app()->getDb()->createCommand()
 //                ->select('status')
 //                ->from($campaign->tableName())
 //                ->where('campaign_id = :cid', array(':cid' => (int)$campaign->campaign_id))
 //                ->queryRow();
 //
-//            if (empty($_campaign) || $_campaign['status'] != Campaign::STATUS_PROCESSING) {
-//                if (!empty($_campaign)) {
-//                    $campaign->saveStatus($_campaign['status']);
+//            if (empty($_batch) || $_batch['status'] != Campaign::STATUS_PROCESSING) {
+//                if (!empty($_batch)) {
+//                    $campaign->saveStatus($_batch['status']);
 //                    $this->checkCampaignOverMaxBounceRate($campaign, $maxBounceRate);
 //                    $this->stdout('Campaign status has been changed successfully!');
 //                }
@@ -803,7 +796,7 @@ class NewSendBatchescommand extends CConsoleCommand
 
     protected function logDelivery(ListSubscriber $subscriber, $message, $status, $messageId = null)
     {
-        $campaign = $this->_campaign;
+        $campaign = $this->_batch;
 
         $deliveryLog = CampaignDeliveryLog::model()->findByAttributes(array(
             'campaign_id'   => (int)$campaign->campaign_id,
@@ -832,10 +825,10 @@ class NewSendBatchescommand extends CConsoleCommand
             'joinType'  => 'LEFT OUTER JOIN',
             'on'        => 'deliveryLogs.campaign_id = :cid',
             'condition' => '(deliveryLogs.subscriber_id IS NULL OR deliveryLogs.`status` = :tstatus)',
-            'params'    => array(':cid' => $this->_campaign->campaign_id, ':tstatus' => CampaignDeliveryLog::STATUS_TEMPORARY_ERROR),
+            'params'    => array(':cid' => $this->_batch->campaign_id, ':tstatus' => CampaignDeliveryLog::STATUS_TEMPORARY_ERROR),
         );
 
-        return $this->_campaign->countSubscribers($criteria);
+        return $this->_batch->countSubscribers($criteria);
     }
 
     // find subscribers
@@ -848,11 +841,11 @@ class NewSendBatchescommand extends CConsoleCommand
             'joinType'  => 'LEFT OUTER JOIN',
             'on'        => 'deliveryLogs.campaign_id = :cid',
             'condition' => '(deliveryLogs.subscriber_id IS NULL OR deliveryLogs.`status` = :tstatus)',
-            'params'    => array(':cid' => $this->_campaign->campaign_id, ':tstatus' => CampaignDeliveryLog::STATUS_TEMPORARY_ERROR),
+            'params'    => array(':cid' => $this->_batch->campaign_id, ':tstatus' => CampaignDeliveryLog::STATUS_TEMPORARY_ERROR),
         );
 
         // and find them
-        return $this->_campaign->findSubscribers($offset, $limit, $criteria);
+        return $this->_batch->findSubscribers($offset, $limit, $criteria);
     }
 
     /**
@@ -891,7 +884,7 @@ class NewSendBatchescommand extends CConsoleCommand
 
     protected function prepareEmail($subscriber)
     {
-        $campaign = $this->_campaign;
+        $campaign = $this->_batch;
 
         // how come ?
         if (empty($campaign->template)) {
@@ -1015,7 +1008,7 @@ class NewSendBatchescommand extends CConsoleCommand
 
     protected function markCampaignSent()
     {
-        $campaign = $this->_campaign;
+        $campaign = $this->_batch;
 
         if ($campaign->isAutoresponder) {
             $campaign->saveStatus(Campaign::STATUS_SENDING);
@@ -1047,7 +1040,7 @@ class NewSendBatchescommand extends CConsoleCommand
 
     protected function sendCampaignStats()
     {
-        $campaign = $this->_campaign;
+        $campaign = $this->_batch;
         if (empty($campaign->option->email_stats)) {
             return $this;
         }
