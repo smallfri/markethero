@@ -652,8 +652,6 @@ class NewSendBatchescommand extends CConsoleCommand
 
                 $this->logGroupEmailDelivery($sent, $server);
 
-                // since 1.3.4.6
-//                Yii::app()->hooks->doAction('console_command_send_campaigns_after_send_to_subscriber', $campaign, $subscriber, $customer, $server, $sent, $response, $status);
             }
 
         } catch (Exception $e)
@@ -1151,7 +1149,7 @@ class NewSendBatchescommand extends CConsoleCommand
             ->where('group_email_id=:id', array(':id' => $this->_batch->group_email_id))
             ->queryRow();
 
-        print_r($customer['status']);
+        return $customer['status'];
     }
 
 }
