@@ -20,6 +20,30 @@ class CampaignController extends ApiController
 
     public $endpoint;
 
+    const STATUS_DRAFT = 'draft';
+
+        const STATUS_PENDING_SENDING = 'pending-sending';
+
+        const STATUS_SENDING = 'sending';
+
+        const STATUS_SENT = 'sent';
+
+        const STATUS_PROCESSING = 'processing';
+
+        const STATUS_PAUSED = 'paused';
+
+        const STATUS_PENDING_DELETE = 'pending-delete';
+
+        const STATUS_BLOCKED = 'blocked';
+
+        const TYPE_REGULAR = 'regular';
+
+        const TYPE_AUTORESPONDER = 'autoresponder';
+
+        const BULK_ACTION_PAUSE_UNPAUSE = 'pause-unpause';
+
+        const BULK_ACTION_MARK_SENT = 'mark-sent';
+
     function __construct()
     {
 

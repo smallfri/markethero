@@ -159,20 +159,25 @@ class TransactionalEmail extends ActiveRecord
 
     public function send()
     {
+
         static $servers     = array();
         $this->sendDirectly = false;
         $serverParams       = array(
             'customerCheckQuota' => false,
             'serverCheckQuota'   => false,
-            'useFor'             => array(DeliveryServer::USE_FOR_TRANSACTIONAL)
+            'useFor'             => array(DeliveryServer::USE_FOR_ALL)
         );
+
+        print_r(DeliveryServer::pickServer(5, $this, $serverParams));
 
         $cid = (int)$this->customer_id;
         if (!array_key_exists($cid, $servers)) {
             $servers[$cid] = DeliveryServer::pickServer(0, $this, $serverParams);
+            print_r($servers[$cid]);
         }
 
         if (empty($servers[$cid])) {
+            print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
             return false;
         }
 
@@ -322,3 +327,4 @@ class TransactionalEmail extends ActiveRecord
         );
     }
 }
+

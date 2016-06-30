@@ -9,7 +9,38 @@ class GroupEmailGroupsModel extends Authenticatable
     public $timestamps = false;
 
     protected $table = 'mw_group_email_groups';
-    protected $primaryKey = "group_email_id";
+    public $primaryKey = "group_email_id";
+
+
+    protected $status;
+    protected $finished_at;
+
+    const STATUS_DRAFT = 'draft';
+
+
+
+            const STATUS_PENDING_SENDING = 'pending-sending';
+
+            const STATUS_SENDING = 'sending';
+
+            const STATUS_SENT = 'sent';
+
+            const STATUS_PROCESSING = 'processing';
+
+            const STATUS_PAUSED = 'paused';
+
+            const STATUS_PENDING_DELETE = 'pending-delete';
+
+            const STATUS_BLOCKED = 'blocked';
+
+            const TYPE_REGULAR = 'regular';
+
+            const TYPE_AUTORESPONDER = 'autoresponder';
+
+            const BULK_ACTION_PAUSE_UNPAUSE = 'pause-unpause';
+
+            const BULK_ACTION_MARK_SENT = 'mark-sent';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -28,4 +59,5 @@ class GroupEmailGroupsModel extends Authenticatable
     protected $hidden = [
 
     ];
+
 }

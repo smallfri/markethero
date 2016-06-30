@@ -61,9 +61,6 @@ return array(
         'send-transactional-emails' => array(
             'class' => 'console.commands.SendTransactionalEmailsCommand'
         ),
-        'send-group-emails' => array(
-            'class' => 'console.commands.NewSendGroupsCommand'
-        ),
         'send-unsents-group-emails' => array(
             'class' => 'console.commands.ProcessUnsetGroupEmailsCommand'
         ),
@@ -100,6 +97,11 @@ return array(
         'send-batches' => array(
             'class' => 'console.commands.NewSendBatchesCommand'
         ),
+        'send-groups' => array(
+            'class' => 'console.commands.SendGroupsCommand'
+        ),
+
+
 
     ),
 

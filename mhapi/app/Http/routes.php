@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 | and give it the controller to call when that URI is requested.
 |
 */
+Route::resource('send-groups', 'CronJobs\SendGroupsController');
 Route::resource('dashboard', 'DashboardController');
 Route::resource('logs', 'LogsController');
 Route::resource('logs/viewLog', 'LogsController@viewLog');

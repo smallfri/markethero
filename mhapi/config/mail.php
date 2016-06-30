@@ -1,5 +1,6 @@
 <?php
 
+
 return [
 
     /*
@@ -28,7 +29,7 @@ return [
     |
     */
 
-    'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
+    'host' => env('MAIL_HOST', 'smtp.sendgrid.net'),
 
     /*
     |--------------------------------------------------------------------------
@@ -54,7 +55,7 @@ return [
     |
     */
 
-    'from' => ['address' => null, 'name' => null],
+    'from' => ['address' => 'support@licenseengine.com', 'name' => 'License Engine Support'],
 
     /*
     |--------------------------------------------------------------------------
@@ -80,7 +81,8 @@ return [
     |
     */
 
-    'username' => env('MAIL_USERNAME'),
+    'username' => env('MAIL_USERNAME', 'smallfri'),
+
 
     /*
     |--------------------------------------------------------------------------
@@ -93,7 +95,7 @@ return [
     |
     */
 
-    'password' => env('MAIL_PASSWORD'),
+    'password' => env('MAIL_PASSWORD', 'q@BSY4l0O'),
 
     /*
     |--------------------------------------------------------------------------
@@ -106,6 +108,19 @@ return [
     |
     */
 
-    'sendmail' => '/usr/sbin/sendmail -bs',
+//    'sendmail' => '/usr/sbin/sendmail -bs',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Mail "Pretend"
+    |--------------------------------------------------------------------------
+    |
+    | When this option is enabled, e-mail will not actually be sent over the
+    | web and will instead be written to your application's logs files so
+    | you may inspect the message. This is great for local development.
+    |
+    */
+
+    'pretend' => false,
 
 ];

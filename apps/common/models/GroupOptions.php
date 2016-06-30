@@ -13,6 +13,8 @@
  * @property integer $compliance_abuse_range
  * @property integer $compliance_unsub_range
  * @property integer $compliance_bounce_range
+ * @property integer $groups_in_parallel
+ * @property integer $group_emails_in_parallel
  *
  */
 
@@ -27,6 +29,8 @@ class GroupOptions extends ActiveRecord
     public $compliance_abuse_range;
     public $compliance_unsub_range;
     public $compliance_bounce_range;
+    public $groups_in_parallel;
+    public $group_emails_in_parallel;
 
     /**
      * @return string the associated database table name

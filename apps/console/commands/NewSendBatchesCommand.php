@@ -32,7 +32,7 @@ class NewSendBatchescommand extends CConsoleCommand
     public $batches_type;
 
     // how many campaigns to process at once
-    public $batches_limit = 40;
+    public $batches_limit = 0;
 
     // from where to start
     public $batches_offset = 0;
@@ -112,7 +112,9 @@ class NewSendBatchescommand extends CConsoleCommand
     protected function process()
     {
 
-        $options = $this->options = $this->getOptions();
+        $options = $this->getOptions();
+
+        $options = $this->options = $options[0];
 
         $statuses = array(Campaign::STATUS_SENDING, Campaign::STATUS_PENDING_SENDING);
         $types = array(Campaign::TYPE_REGULAR, Campaign::TYPE_AUTORESPONDER);
@@ -140,7 +142,7 @@ class NewSendBatchescommand extends CConsoleCommand
         $criteria->limit = $limit;
         $criteria->offset = (int)$this->batches_offset;
 
-        $this->stdout(sprintf("Loading %d campaigns, starting with offset %d...", $criteria->limit, $criteria->offset));
+        $this->stdout(sprintf("Loading %d batches, starting with offset %d...", $criteria->limit, $criteria->offset));
 
         // and find all campaigns matching the criteria
         $campaigns = GroupBatch::model()->findAll($criteria);
@@ -307,6 +309,7 @@ class NewSendBatchescommand extends CConsoleCommand
 //        $changeServerAt = (int)$customer->getGroupOption('campaigns.change_server_at', (int)$options->get('system.cron.send_campaigns.change_server_at', 0));
 
         $this->sendCampaignStep2(array(
+            'campaign' => $campaign,
             'server' => $server,
             'mailerPlugins' => $mailerPlugins,
             'limit' => $limit,
@@ -730,7 +733,7 @@ class NewSendBatchescommand extends CConsoleCommand
     protected function getCampaignsInParallel()
     {
 
-        return 40;
+       return $this->options->groups_at_once;
     }
 
     // since 1.3.5.9
