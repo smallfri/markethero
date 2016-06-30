@@ -492,7 +492,7 @@ class SendGroupsCommand extends Command
 
                     $headers = $message->getHeaders();
                     $headers->addTextHeader('X-Mw-Group-Uid', $mail->group_email_uid);
-                    $headers->addTextHeader('X-Mw-Customer-Id', $mail->customer_idgit add );
+                    $headers->addTextHeader('X-Mw-Customer-Id', $mail->customer_id);
 
                 });
 
