@@ -29,7 +29,7 @@ return [
     |
     */
 
-    'host' => env('MAIL_HOST', 'smtp.sendgrid.net'),
+    'host' => env('MAIL_HOST', 'markethero.smtp.com'),
 
     /*
     |--------------------------------------------------------------------------
@@ -55,7 +55,7 @@ return [
     |
     */
 
-    'from' => ['address' => 'support@licenseengine.com', 'name' => 'License Engine Support'],
+    'from' => ['address' => 'chuck@markethero.io', 'name' => 'MarketHero Support'],
 
     /*
     |--------------------------------------------------------------------------
@@ -81,7 +81,7 @@ return [
     |
     */
 
-    'username' => env('MAIL_USERNAME', 'smallfri'),
+    'username' => env('MAIL_USERNAME', 'chuck@markethero.io'),
 
 
     /*
@@ -95,7 +95,7 @@ return [
     |
     */
 
-    'password' => env('MAIL_PASSWORD', 'q@BSY4l0O'),
+    'password' => env('MAIL_PASSWORD', 'market-hero'),
 
     /*
     |--------------------------------------------------------------------------

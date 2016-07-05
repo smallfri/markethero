@@ -14,6 +14,7 @@ class GroupEmailGroupsModel extends Authenticatable
 
     protected $status;
     protected $finished_at;
+    protected $last_offset;
 
     const STATUS_DRAFT = 'draft';
 
