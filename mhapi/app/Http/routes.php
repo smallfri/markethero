@@ -35,6 +35,7 @@ Route::get('v1/groups/{group_id}/approve', 'ManageGroupController@approve');
 Route::get('v1/groups/{group_id}/pause', 'ManageGroupController@pause');
 Route::get('v1/groups/{group_id}/resume', 'ManageGroupController@resume');
 Route::get('v1/groups/{group_id}/setassent', 'ManageGroupController@setAsSent');
+Route::get('v1/bounces/{customer_id}', 'BounceController@show');
 
 
 /*

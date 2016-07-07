@@ -6,7 +6,7 @@
  * @package MailWizz EMA
  * @author Serban George Cristian <cristian.serban@mailwizz.com> 
  * @link http://www.mailwizz.com/
- * @copyright 2013-2016 MailWizz EMA (http://www.mailwizz.com)
+ * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.3.3.1
  */
@@ -112,7 +112,7 @@ class FeedbackLoopHandlerCommand extends CConsoleCommand
     {
         $servers = FeedbackLoopServer::model()->findAll(array(
             'select'    => 't.server_id',
-            'condition' => 't.status = :status',
+            'condition' => 't.status = :status AND t.customer_id = 1',
             'params'    => array(':status' => FeedbackLoopServer::STATUS_ACTIVE),
             'limit'     => (int)$limit,
             'offset'    => (int)$offset,
@@ -152,8 +152,8 @@ class FeedbackLoopHandlerCommand extends CConsoleCommand
                     'searchCharset'              => $this->_server->getSearchCharset(),
                     'imapOpenParams'             => $this->_server->getImapOpenParams(),
                     'requiredHeaders'            => array(
-                        Yii::app()->params['email.custom.header.prefix'] . 'Campaign-Uid', 
-                        Yii::app()->params['email.custom.header.prefix'] . 'Subscriber-Uid'
+                        Yii::app()->params['email.custom.header.prefix'] . 'Group-Uid',
+                        Yii::app()->params['email.custom.header.prefix'] . 'Customer-Id'
                     ),
                 ));
     

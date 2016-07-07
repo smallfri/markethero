@@ -39,10 +39,10 @@ class BounceController extends ApiController
 
     }
 
-    public function show($campaign_id)
+    public function show($group_id)
     {
 
-        $Bounces = Bounce::where('campaign_id', '=', $campaign_id)->get();
+        $Bounces = Bounce::where('group_id', '=', $group_id)->get();
 
         if(empty($Bounces[0]))
         {

@@ -573,7 +573,7 @@ class SendGroupsCommand extends Command
 
         $options->id = 1;
         $options->groups_at_once = 2;
-        $options->emails_at_once = 100;
+        $options->emails_at_once = 10;
 //        $options->emails_per_minute = 60;
         $options->change_server_at = 1000;
         $options->compliance_limit = 1000;
@@ -582,7 +582,7 @@ class SendGroupsCommand extends Command
         $options->compliance_unsub_range = .01;
         $options->compliance_bounce_range = .01;
         $options->groups_in_parallel = 2;
-        $options->group_emails_in_parallel = 10;
+        $options->group_emails_in_parallel = 2;
 
 //        $options = DB::table('mw_group_email_options')->first();
 
@@ -743,7 +743,7 @@ class SendGroupsCommand extends Command
 
                 $data = ['body' => $mail['body']];
 
-                $mail['group_email_uid'] = $group->group_email_uid;
+                $mail['group_email_id'] = $group->group_email_id;
                 $mail['customer_id'] = $group->customer_id;
 
                 Mail::send('emails.main', $data, function ($message) use ($mail)
@@ -753,7 +753,7 @@ class SendGroupsCommand extends Command
                     $message->to($mail['to_email'], $mail['from_name'])->subject($mail['subject']);
 
                     $headers = $message->getHeaders();
-                    $headers->addTextHeader('X-Mw-Group-Uid', $mail['group_email_uid']);
+                    $headers->addTextHeader('X-Mw-Group-id', $mail['group_email_id']);
                     $headers->addTextHeader('X-Mw-Customer-Id', $mail['customer_id']);
                 });
 
@@ -848,6 +848,7 @@ class SendGroupsCommand extends Command
         $mail->Port = 2525;
         $mail->Username = "chuck@markethero.io";
         $mail->Password = "market-hero";
+        $mail->Sender ='bounces@marketherobounce1.com ';
 
         foreach ($emails as $index => $email)
         {
@@ -856,8 +857,8 @@ class SendGroupsCommand extends Command
             $this->stdout(sprintf("%s - %d/%d - group %d", $email['to_email'], ($index+1), $emailsCount,
                 $group->group_email_id));
 
-            $email['group_email_uid'] = $group->group_email_uid;
-            $email['customer_id'] = $group->customer_id;
+            $mail->addCustomHeader('X-Mw-Group-id', $group->group_email_id);
+            $mail->addCustomHeader('X-Mw-Customer-Id', $group->customer_id);
 
             $mail->setFrom($email['from_email'], $email['from_name']);
             $mail->Subject = $email['subject'];
