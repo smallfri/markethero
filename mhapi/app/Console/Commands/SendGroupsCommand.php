@@ -371,12 +371,7 @@ class SendGroupsCommand extends Command
 
         $this->stdout('limit '.$limit.' offset '.$offset);
 
-        $emails = GroupEmailModel::where('status', '=', 'pending-sending')
-            ->where('group_email_id', '=', $group->group_email_id)
-            ->take($limit)
-            ->skip($offset)
-            ->get()
-            ->toArray();
+        $emails = $this->findEmailsForSending($group, $limit, $offset);
 
         $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_PROCESSING);
 
@@ -468,7 +463,6 @@ class SendGroupsCommand extends Command
 
         $this->stdout('Start '.$start.' / End '.date('Y-m-d H:i:s'));
 
-//        return 0;
     }
 
     protected function getCanUsePcntl()
@@ -619,17 +613,13 @@ class SendGroupsCommand extends Command
     protected function findEmailsForSending($group, $limit, $offset)
     {
 
-        $group = GroupEmailGroupsModel::find($group->group_email_id);
-
-        $emails = GroupEmailModel::select('mw_group_email.to_email', 'mw_group_email.from_email', 'mw_group_email.body',
-            'mw_group_email.subject', 'mw_group_email.from_name', 'mw_group_email.to_name', 'mw_group_email.email_uid')
-            ->whereIn('status', ['pending-sending', 'sending'])
+        $emails = GroupEmailModel::where('status', '=', 'pending-sending')
             ->where('group_email_id', '=', $group->group_email_id)
-            ->whereNull('logs.email_uid')
-            ->leftJoin('mw_group_email_log AS logs', 'logs.email_uid', '=', 'mw_group_email.email_uid')
             ->take($limit)
             ->skip($offset)
-            ->get();
+            ->get()
+            ->toArray();
+
         return $emails;
     }
 

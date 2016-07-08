@@ -12,6 +12,7 @@ namespace App\Console\Commands;
 use App\ComplianceAverageModel;
 use App\ComplianceScoreModel;
 use DB;
+use App\Helpers\Helpers;
 use Illuminate\Console\Command;
 
 
@@ -34,20 +35,22 @@ class AvgComplianceScoreCommand extends Command
          *
          */
 
-        $normal = ComplianceScoreModel::select(DB::raw('AVG (bounce_report) as bounce_report,
-                               AVG (abuse_report) as abuse_report,
-                               AVG (unsubscribe_report) as unsubscribe_report,
-                               AVG (score) as score'))->get();
-
-        $normal = $normal[0];
+        $normal = Helpers::mapToClass(
+            ComplianceScoreModel::select(
+                DB::raw('
+                   AVG (bounce_report) as bounce_report,
+                   AVG (abuse_report) as abuse_report,
+                   AVG (unsubscribe_report) as unsubscribe_report,
+                   AVG (score) as score'
+                ))->get());
 
         ComplianceAverageModel::where('id', '=', 1)
             ->update(
                 [
-                    'bounce_report' => $normal['bounce_report'],
-                    'abuse_report' => $normal['abuse_report'],
-                    'unsubscribe_report' => $normal['unsubscribe_report'],
-                    'score' => $normal['score']
+                    'bounce_report' => $normal->bounce_report,
+                    'abuse_report' => $normal->abuse_report,
+                    'unsubscribe_report' => $normal->unsubscribe_report,
+                    'score' => $normal->score
                 ]
             );
 

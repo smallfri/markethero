@@ -46,9 +46,9 @@ class DashboardController extends ApiController
         $this_week2 = Carbon::parse('this week');
 
         $thisWeek
-            = DB::select(DB::raw('select DATE(date_added) AS date_added,COUNT(email_id) AS count from `mw_group_email_log` where `date_added` between "'.$this_week1.'" and "'.$this_week2.'" GROUP BY DATE(date_added)'));
+            = DB::select(DB::raw('select DATE(date_added) AS date_added,COUNT(email_uid) AS count from `mw_group_email_log` where `date_added` between "'.$this_week1.'" and "'.$this_week2.'" GROUP BY DATE(date_added)'));
         $lastWeek
-            = DB::select(DB::raw('select DATE(date_added) AS date_added,COUNT(email_id) AS count from `mw_group_email_log` where `date_added` between "'.$last_week1.'" and "'.$last_week2.'" GROUP BY DATE(date_added)'));
+            = DB::select(DB::raw('select DATE(date_added) AS date_added,COUNT(email_uid) AS count from `mw_group_email_log` where `date_added` between "'.$last_week1.'" and "'.$last_week2.'" GROUP BY DATE(date_added)'));
 
         $last_week = [];
         foreach ($lastWeek AS $key => $value)
@@ -286,7 +286,7 @@ class DashboardController extends ApiController
         $abuse_stats = rtrim($a_stats, ",");
 
 
-        $emails_monthly = GroupEmailModel::select('email_id', 'date_added', DB::raw('count(1) AS count'))
+        $emails_monthly = GroupEmailModel::select('email_uid', 'date_added', DB::raw('count(1) AS count'))
             ->groupBy(DB::raw('MONTH(date_added)'))
             ->get();
 
@@ -373,8 +373,8 @@ class DashboardController extends ApiController
     {
 
         $Emails = TransactionalEmailModel::select('mw_transactional_email.*', 'log.message')
-            ->join('mw_transactional_email_log AS log', 'log.email_id', '=', 'mw_transactional_email.email_id')
-            ->orderBy('mw_transactional_email.email_id', 'desc')
+            ->join('mw_transactional_email_log AS log', 'log.email_uid', '=', 'mw_transactional_email.email_uid')
+            ->orderBy('mw_transactional_email.email_uid', 'desc')
             ->get();
 
 
@@ -394,7 +394,7 @@ class DashboardController extends ApiController
 
         {
             $Emails = GroupEmailModel::select('mw_group_email.*', 'log.message')
-                ->leftJoin('mw_group_email_log AS log', 'log.email_id', '=', 'mw_group_email.email_id')
+                ->leftJoin('mw_group_email_log AS log', 'log.email_uid', '=', 'mw_group_email.email_uid')
                 ->where('group_email_id', '=', $_GET['id'])
                 ->orderBy('group_email_id', 'desc')
                 ->get();
@@ -402,7 +402,7 @@ class DashboardController extends ApiController
         else
         {
             $Emails = GroupEmailModel::select('mw_group_email.*', 'log.message')
-                ->leftJoin('mw_group_email_log AS log', 'log.email_id', '=', 'mw_group_email.email_id')
+                ->leftJoin('mw_group_email_log AS log', 'log.email_uid', '=', 'mw_group_email.email_uid')
                 ->orderBy('group_email_id', 'desc')
                 ->get();
         }
