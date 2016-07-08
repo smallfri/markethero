@@ -1,18 +1,18 @@
-<?php defined('MW_PATH') || exit('No direct script access allowed');
+<?php defined('MW_PATH')||exit('No direct script access allowed');
 
 /**
  * BounceHandlerCommand
- * 
+ *
  * @package MailWizz EMA
- * @author Serban George Cristian <cristian.serban@mailwizz.com> 
+ * @author Serban George Cristian <cristian.serban@mailwizz.com>
  * @link http://www.mailwizz.com/
  * @copyright 2013-2015 MailWizz EMA (http://www.mailwizz.com)
  * @license http://www.mailwizz.com/license/
  * @since 1.0
  */
-
 class GroupsBounceHandlerCommand extends CConsoleCommand
 {
+
     // lock name
     protected $_lockName;
 
@@ -27,17 +27,19 @@ class GroupsBounceHandlerCommand extends CConsoleCommand
 
     public function init()
     {
+
         parent::init();
 
         // set the lock name
         $this->_lockName = md5(__FILE__);
 
         // this will catch exit signals and restore states
-        if (CommonHelper::functionExists('pcntl_signal')) {
+        if (CommonHelper::functionExists('pcntl_signal'))
+        {
             declare(ticks = 1);
-            pcntl_signal(SIGINT,  array($this, '_handleExternalSignal'));
+            pcntl_signal(SIGINT, array($this, '_handleExternalSignal'));
             pcntl_signal(SIGTERM, array($this, '_handleExternalSignal'));
-            pcntl_signal(SIGHUP,  array($this, '_handleExternalSignal'));
+            pcntl_signal(SIGHUP, array($this, '_handleExternalSignal'));
         }
 
         register_shutdown_function(array($this, '_restoreStates'));
@@ -47,6 +49,7 @@ class GroupsBounceHandlerCommand extends CConsoleCommand
 
     public function _handleExternalSignal($signalNumber)
     {
+
         // this will trigger all the handlers attached via register_shutdown_function
         $this->_improperShutDown = true;
         exit;
@@ -54,7 +57,9 @@ class GroupsBounceHandlerCommand extends CConsoleCommand
 
     public function _restoreStates($event = null)
     {
-        if (!$this->_restoreStates) {
+
+        if (!$this->_restoreStates)
+        {
             return;
         }
         $this->_restoreStates = false;
@@ -64,12 +69,15 @@ class GroupsBounceHandlerCommand extends CConsoleCommand
 
         // called as a callback from register_shutdown_function
         // must pass only if improper shutdown in this case
-        if ($event === null && !$this->_improperShutDown) {
+        if ($event===null&&!$this->_improperShutDown)
+        {
             return;
         }
 
-        if (!empty($this->_server) && $this->_server instanceof BounceServer) {
-            if ($this->_server->status == BounceServer::STATUS_CRON_RUNNING) {
+        if (!empty($this->_server)&&$this->_server instanceof BounceServer)
+        {
+            if ($this->_server->status==BounceServer::STATUS_CRON_RUNNING)
+            {
                 $this->_server->status = BounceServer::STATUS_ACTIVE;
                 $this->_server->saveStatus();
             }
@@ -78,20 +86,24 @@ class GroupsBounceHandlerCommand extends CConsoleCommand
 
     public function actionIndex()
     {
+
         // because some cli are not compiled same way with the web module.
-        if (!CommonHelper::functionExists('imap_open')) {
+        if (!CommonHelper::functionExists('imap_open'))
+        {
             Yii::log(Yii::t('servers', 'The PHP CLI binary is missing the IMAP extension!'), CLogger::LEVEL_ERROR);
             return 1;
         }
 
-        if (!Yii::app()->mutex->acquire($this->_lockName, 5)) {
+        if (!Yii::app()->mutex->acquire($this->_lockName, 5))
+        {
             return 0;
         }
 
         Yii::import('common.vendors.BounceHandler.*');
         $options = Yii::app()->options;
 
-        if ($memoryLimit =  $options->get('system.cron.process_bounce_servers.memory_limit')) {
+        if ($memoryLimit = $options->get('system.cron.process_bounce_servers.memory_limit'))
+        {
             ini_set('memory_limit', $memoryLimit);
         }
 
@@ -110,34 +122,40 @@ class GroupsBounceHandlerCommand extends CConsoleCommand
 
     protected function process($offset = 0, $limit = 10)
     {
+
         $servers = BounceServer::model()->findAll(array(
-            'select'    => 't.server_id',
+            'select' => 't.server_id',
             'condition' => 't.status = :status AND t.customer_id = 1',
-            'params'    => array(':status' => BounceServer::STATUS_ACTIVE),
-            'limit'     => (int)$limit,
-            'offset'    => (int)$offset,
+            'params' => array(':status' => BounceServer::STATUS_ACTIVE),
+            'limit' => (int)$limit,
+            'offset' => (int)$offset,
         ));
 
-        if (empty($servers)) {
+        if (empty($servers))
+        {
             return $this;
         }
 
 //        print_r($servers);
 
         $serversIds = array();
-        foreach ($servers as $server) {
+        foreach ($servers as $server)
+        {
             $serversIds[] = $server->server_id;
         }
         unset($servers, $server);
 
-        $options      = Yii::app()->options->resetLoaded();
+        $options = Yii::app()->options->resetLoaded();
         $processLimit = (int)$options->get('system.cron.process_bounce_servers.emails_at_once', 500);
 
-        try {
+        try
+        {
 
-            foreach ($serversIds as $serverId) {
+            foreach ($serversIds as $serverId)
+            {
                 $this->_server = BounceServer::model()->findByPk((int)$serverId);
-                if (empty($this->_server) || $this->_server->status != BounceServer::STATUS_ACTIVE) {
+                if (empty($this->_server)||$this->_server->status!=BounceServer::STATUS_ACTIVE)
+                {
                     $this->_server = null;
                     continue;
                 }
@@ -150,36 +168,41 @@ class GroupsBounceHandlerCommand extends CConsoleCommand
                 $headerPrefix = 'X-Mw-';
                 $headerPrefixUp = strtoupper($headerPrefix);
 
-                $bounceHandler = new BounceHandler($this->_server->getConnectionString(), $this->_server->username, $this->_server->password, array(
-                    'deleteMessages'    => true,
-                    'deleteAllMessages' => $this->_server->getDeleteAllMessages(),
-                    'processLimit'      => $processLimit,
-                    'searchCharset'     => $this->_server->getSearchCharset(),
-                    'imapOpenParams'    => $this->_server->getImapOpenParams(),
-                    'requiredHeaders'   => array(
-                        $headerPrefix . 'Group-id',
-                        $headerPrefix . 'Customer-Id'
-                    ),
-                ));
+                $bounceHandler = new BounceHandler($this->_server->getConnectionString(), $this->_server->username,
+                    $this->_server->password, array(
+                        'deleteMessages' => true,
+                        'deleteAllMessages' => $this->_server->getDeleteAllMessages(),
+                        'processLimit' => $processLimit,
+                        'searchCharset' => $this->_server->getSearchCharset(),
+                        'imapOpenParams' => $this->_server->getImapOpenParams(),
+                        'requiredHeaders' => array(
+                            $headerPrefix.'Group-Id',
+                            $headerPrefix.'Customer-Id'
+                        ),
+                    ));
 
                 $results = $bounceHandler->getResults();
-
                 // re-open the db connection
                 Yii::app()->getDb()->setActive(true);
 
-                if (empty($results)) {
+                if (empty($results))
+                {
                     $this->_server = BounceServer::model()->findByPk((int)$this->_server->server_id);
-                    if (empty($this->_server)) {
+                    if (empty($this->_server))
+                    {
                         continue;
                     }
-                    if ($this->_server->status == BounceServer::STATUS_CRON_RUNNING) {
+                    if ($this->_server->status==BounceServer::STATUS_CRON_RUNNING)
+                    {
                         $this->_server->status = BounceServer::STATUS_ACTIVE;
                         $this->_server->saveStatus();
                     }
                     continue;
                 }
-                foreach ($results as $result) {
-                    foreach ($result['originalEmailHeadersArray'] as $key => $value) {
+                foreach ($results as $result)
+                {
+                    foreach ($result['originalEmailHeadersArray'] as $key => $value)
+                    {
                         unset($result['originalEmailHeadersArray'][$key]);
                         $result['originalEmailHeadersArray'][strtoupper($key)] = $value;
                     }
@@ -188,38 +211,57 @@ class GroupsBounceHandlerCommand extends CConsoleCommand
 //                    print_r($result['originalEmailHeadersArray']);
 
                     if (!isset(
-                        $result['originalEmailHeadersArray'][$headerPrefixUp . 'GROUP-ID'],
-                        $result['originalEmailHeadersArray'][$headerPrefixUp . 'CUSTOMER-ID'],
+                        $result['originalEmailHeadersArray'][$headerPrefixUp.'GROUP-ID'],
+                        $result['originalEmailHeadersArray'][$headerPrefixUp.'CUSTOMER-ID'],
                         $result['originalEmailHeadersArray']['TO']
-                        ))
+                    )
+                    )
                     {
                         continue;
                     }
 
-                    $groupid    = trim($result['originalEmailHeadersArray'][$headerPrefixUp . 'GROUP-ID']);
-                    $customerId = trim($result['originalEmailHeadersArray'][$headerPrefixUp . 'CUSTOMER-ID']);
+                    $groupId = trim($result['originalEmailHeadersArray'][$headerPrefixUp.'GROUP-ID']);
+                    $customerId = trim($result['originalEmailHeadersArray'][$headerPrefixUp.'CUSTOMER-ID']);
+                    $emailId = trim($result['originalEmailHeadersArray'][$headerPrefixUp.'EMAIL-UID']);
                     $email = trim($result['originalEmailHeadersArray']['TO']);
 
-//todo add logic here to check for a bounce and then blacklist the email address.
+                    $bounceLog = new GroupEmailBounceLog();
+                    $bounceLog->group_id = $groupId;
+                    $bounceLog->email_uid = $emailId;
+                    $bounceLog->customer_id = $customerId;
+                    $bounceLog->email = $email;
+                    $bounceLog->message = trim($result['originalEmailHeadersArray']['DIAGNOSTIC-CODE']);
+                    $bounceLog->bounce_type
+                        = $result['bounceType']==BounceHandler::BOUNCE_HARD?CampaignBounceLog::BOUNCE_HARD:CampaignBounceLog::BOUNCE_SOFT;
+                    $bounceLog->save();
 
-                        $bounceLog = new GroupEmailBounceLog();
-                        $bounceLog->group_id       = $groupid;
-                        $bounceLog->customer_id     = $customerId;
-                        $bounceLog->email           = $email;
-                        $bounceLog->message         = trim($result['originalEmailHeadersArray']['DIAGNOSTIC-CODE']);
-                        $bounceLog->bounce_type     = $result['bounceType'] == BounceHandler::BOUNCE_HARD ? CampaignBounceLog::BOUNCE_HARD : CampaignBounceLog::BOUNCE_SOFT;
-                        $bounceLog->save();
+                    if ($result['bounceType'])
+                    {
+                        $pattern = '/[A-Za-z0-9_-]+@[A-Za-z0-9_-]+\.([A-Za-z0-9_-][A-Za-z0-9_]+)/';
+
+                        preg_match_all($pattern, $email, $matches);
+
+                        $blacklist = new EmailBlacklist();
+                        $blacklist->email_id = $emailId;
+                        $blacklist->email = $matches[0][0];
+                        $blacklist->reason = trim($result['originalEmailHeadersArray']['DIAGNOSTIC-CODE']);
+                        $blacklist->save(false);
+
+                    }
+
 
                     echo 'Saved';
 
                 }
 
                 $this->_server = BounceServer::model()->findByPk((int)$this->_server->server_id);
-                if (empty($this->_server)) {
+                if (empty($this->_server))
+                {
                     continue;
                 }
 
-                if ($this->_server->status == BounceServer::STATUS_CRON_RUNNING) {
+                if ($this->_server->status==BounceServer::STATUS_CRON_RUNNING)
+                {
                     $this->_server->status = BounceServer::STATUS_ACTIVE;
                     $this->_server->saveStatus();
                 }
@@ -233,11 +275,14 @@ class GroupsBounceHandlerCommand extends CConsoleCommand
                 // open db connection
                 Yii::app()->getDb()->setActive(true);
             }
-        } catch (Exception $e) {
-            if (!empty($this->_server)) {
+        } catch (Exception $e)
+        {
+            if (!empty($this->_server))
+            {
                 Yii::app()->getDb()->setActive(true);
                 $this->_server = BounceServer::model()->findByPk((int)$this->_server->server_id);
-                if (!empty($this->_server) && $this->_server->status == BounceServer::STATUS_CRON_RUNNING) {
+                if (!empty($this->_server)&&$this->_server->status==BounceServer::STATUS_CRON_RUNNING)
+                {
                     $this->_server->status = BounceServer::STATUS_ACTIVE;
                     $this->_server->saveStatus();
                 }
@@ -247,6 +292,7 @@ class GroupsBounceHandlerCommand extends CConsoleCommand
 
         $this->_server = null;
 
-        return $this->process($offset + (int)$options->get('system.cron.process_bounce_servers.servers_at_once', 10), $limit);
+        return $this->process($offset+(int)$options->get('system.cron.process_bounce_servers.servers_at_once', 10),
+            $limit);
     }
 }

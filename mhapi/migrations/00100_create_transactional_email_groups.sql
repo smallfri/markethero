@@ -204,6 +204,16 @@ CREATE TABLE `mw_group_email_compliance_score` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
+CREATE TABLE `mw_group_email_compliance_average` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `bounce_report` float(9,3) DEFAULT NULL,
+  `abuse_report` float(9,3) DEFAULT NULL,
+  `unsubscribe_report` float(9,3) DEFAULT NULL,
+  `score` float(9,3) DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
+
 CREATE TABLE `mw_group_email_status` (
   `email_id` bigint(20) NOT NULL,
   `group_email_id` int(11) DEFAULT NULL,

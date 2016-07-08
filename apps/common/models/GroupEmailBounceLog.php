@@ -14,10 +14,11 @@
 /**
  * This is the model class for table "group_email_bounce_log".
  *
- * The followings are the available columns in table 'campaign_bounce_log':
+ * The followings are the available columns in table 'group_email_bounce_log':
  * @property integer $log_id
  * @property integer $customer_id
- * @property string $group_id
+ * @property integer $group_id
+ * @property string $email_uid
  * @property string $message
  * @property string $email
  * @property string $bounce_type

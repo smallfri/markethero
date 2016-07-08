@@ -11,6 +11,7 @@ namespace App\Console\Commands;
 
 use App\BlacklistModel;
 use App\DeliveryServerModel;
+use App\GroupControlsModel;
 use App\GroupEmailGroupsModel;
 use App\GroupEmailLogModel;
 use App\GroupEmailModel;
@@ -359,7 +360,7 @@ class SendGroupsCommand extends Command
 
         extract($params, EXTR_SKIP);
 
-        if(!isset($workerNumber))
+        if (!isset($workerNumber))
         {
             $workerNumber = 1;
         }
@@ -447,7 +448,9 @@ class SendGroupsCommand extends Command
 
         $this->sendByPHPMailer2($emails, $emailsCount, $group);
 
-        $emailsRemaining = GroupEmailModel::where('group_email_id', '=', $group->group_email_id)->where('status','=','pending-sending')->count();
+        $emailsRemaining = GroupEmailModel::where('group_email_id', '=', $group->group_email_id)
+            ->where('status', '=', 'pending-sending')
+            ->count();
         if ($emailsRemaining==0)
         {
             $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_SENT);
@@ -536,15 +539,15 @@ class SendGroupsCommand extends Command
         foreach ($emails as $index => $email)
         {
             $emailParts = explode('@', $email['to_email']);
-            if(array_key_exists(1, $emailParts))
+            if (array_key_exists(1, $emailParts))
             {
                 $domainName = $emailParts[1];
-                           if (!isset($_emails[$domainName]))
-                           {
-                               $_emails[$domainName] = array();
-                           }
-                           $_emails[$domainName][] = $email;
-                           unset($emails[$index]);
+                if (!isset($_emails[$domainName]))
+                {
+                    $_emails[$domainName] = array();
+                }
+                $_emails[$domainName][] = $email;
+                unset($emails[$index]);
             }
 
         }
@@ -569,24 +572,10 @@ class SendGroupsCommand extends Command
     protected function getOptions()
     {
 
-        $options = new \stdClass();
+        $options = GroupControlsModel::find(1);
 
-        $options->id = 1;
-        $options->groups_at_once = 2;
-        $options->emails_at_once = 10;
-//        $options->emails_per_minute = 60;
-        $options->change_server_at = 1000;
-        $options->compliance_limit = 1000;
-        $options->memory_limit = 3000;
-        $options->compliance_abuse_range = .01;
-        $options->compliance_unsub_range = .01;
-        $options->compliance_bounce_range = .01;
-        $options->groups_in_parallel = 2;
-        $options->group_emails_in_parallel = 2;
+        return (object)$options;
 
-//        $options = DB::table('mw_group_email_options')->first();
-
-        return $options;
     }
 
     protected function getCustomerStatus()
@@ -848,7 +837,7 @@ class SendGroupsCommand extends Command
         $mail->Port = 2525;
         $mail->Username = "chuck@markethero.io";
         $mail->Password = "market-hero";
-        $mail->Sender ='bounces@marketherobounce1.com ';
+        $mail->Sender = 'bounces@marketherobounce1.com ';
 
         foreach ($emails as $index => $email)
         {
@@ -857,8 +846,10 @@ class SendGroupsCommand extends Command
             $this->stdout(sprintf("%s - %d/%d - group %d", $email['to_email'], ($index+1), $emailsCount,
                 $group->group_email_id));
 
-            $mail->addCustomHeader('X-Mw-Group-id', $group->group_email_id);
+            $mail->addCustomHeader('X-Mw-Group-Id', $group->group_email_id);
+            $mail->addCustomHeader('X-Mw-Group-Id', $group->group_email_id);
             $mail->addCustomHeader('X-Mw-Customer-Id', $group->customer_id);
+            $mail->addCustomHeader('X-Mw-Email-Uid', $email['email_uid']);
 
             $mail->setFrom($email['from_email'], $email['from_name']);
             $mail->Subject = $email['subject'];

@@ -16,7 +16,7 @@
  *
  * The followings are the available columns in table 'email_blacklist':
  * @property integer $email_id
- * @property integer $subscriber_id
+ * @property string $email_uid
  * @property string $email
  * @property string $reason
  * @property string $date_added
