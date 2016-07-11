@@ -28,10 +28,60 @@ class CustomerController extends ApiController
 
     }
 
+    public function store()
+    {
+
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        $expected_input = [
+            'confirm_email',
+            'confirm_password',
+            'email',
+            'fake_password',
+            'first_name',
+            'group_id',
+            'last_name',
+        ];
+
+        $missing_fields = array();
+
+        foreach ($expected_input AS $input)
+        {
+            if (!isset($data['customer'][$input]))
+            {
+                $missing_fields[$input] = 'Input field not found.';
+            }
+
+        }
+
+        if (!empty($missing_fields))
+        {
+            return $this->respondWithError($missing_fields);
+        }
+
+        $uid = uniqid();
+
+        $customer = new Customer();
+        $customer->customer_uid = $uid;
+        $customer->first_name = $data['customer']['first_name'];
+        $customer->email = $data['customer']['email'];
+        $customer->password = bcrypt($data['customer']['confirm_password']);
+        $customer->date_added = new \DateTime();
+        $customer->save();
+
+        if($customer)
+        {
+            return $this->respond(['customer' => ['customer_uid' => $uid]]);
+        }
+        return $this->respondWithError('Customer not created.');
+
+
+    }
+
     /**
      * @return mixed
      */
-    public function store()
+    public function store2()
     {
 
         $data = json_decode(file_get_contents('php://input'), true);
@@ -50,24 +100,23 @@ class CustomerController extends ApiController
 
         $missing_fields = array();
 
-        foreach($expected_input AS $input)
+        foreach ($expected_input AS $input)
         {
-//            echo $input; exit;
-            if(!isset($data['customer'][$input]))
+            if (!isset($data['customer'][$input]))
             {
                 $missing_fields[$input] = 'Input field not found.';
             }
 
         }
 
-        if(!empty($missing_fields))
+        if (!empty($missing_fields))
         {
             return $this->respondWithError($missing_fields);
         }
 
         $response = $endpoint->create($data);
 
-        if($response->body['status']=='error')
+        if ($response->body['status']=='error')
         {
             $msg = $response->body['error'];
             return $this->respondWithError($msg);
@@ -85,7 +134,7 @@ class CustomerController extends ApiController
 
         $Customer = Customer::where('email', '=', $email)->get();
 
-        if(empty($Customer[0]))
+        if (empty($Customer[0]))
         {
             return $this->respondWithError('Customer not found');
         }

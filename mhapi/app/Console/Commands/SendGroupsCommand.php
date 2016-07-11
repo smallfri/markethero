@@ -10,6 +10,7 @@ namespace App\Console\Commands;
 
 
 use App\BlacklistModel;
+use App\BounceServer;
 use App\DeliveryServerModel;
 use App\GroupControlsModel;
 use App\GroupEmailComplianceLevelsModel;
@@ -17,14 +18,21 @@ use App\GroupEmailComplianceModel;
 use App\GroupEmailGroupsModel;
 use App\GroupEmailLogModel;
 use App\GroupEmailModel;
+use App\Helpers\Helpers;
 use DB;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
+use phpseclib\Crypt\AES;
 use Swift_Plugins_AntiFloodPlugin;
 
 
 class SendGroupsCommand extends Command
 {
+
+
+    protected $_cipher;
+
+        protected $_plainTextPassword;
 
     protected $signature = 'send-groups';
 
@@ -270,13 +278,12 @@ class SendGroupsCommand extends Command
             return 1;
         }
 
-//        $dsParams = array('customerCheckQuota' => false, 'useFor' => array(DeliveryServerModel::USE_FOR_ALL));
-//        $server = DeliveryServerModel::find(5);
-//        if (empty($server))
-//        {
-//            $this->stdout('Cannot find a valid server to send the group email, aborting until a delivery server is available!');
-//            return 1;
-//        }
+        $server = DeliveryServerModel::where('status','=','active')->where('use_for','=',DeliveryServerModel::USE_FOR_GROUPS)->get();
+        if (empty($server))
+        {
+            $this->stdout('Cannot find a valid server to send the group email, aborting until a delivery server is available!');
+            return 1;
+        }
 
         $this->stdout('Changing the group status into PROCESSING!');
 
@@ -289,7 +296,7 @@ class SendGroupsCommand extends Command
 
         $this->sendCampaignStep2(array(
             'group' => $group,
-//            'server' => $server,
+            'server' => $server,
             'limit' => $limit,
             'offset' => 0,
             'options' => $options,
@@ -391,7 +398,7 @@ class SendGroupsCommand extends Command
             else
             {
                 $this->stdout('No emails found to be ready for sending, setting group status '.$group->group_email_id.' to pending-sending.');
-                                $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_PENDING_SENDING);
+                $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_PENDING_SENDING);
             }
             exit;
         }
@@ -456,7 +463,7 @@ class SendGroupsCommand extends Command
 
         $start = date('Y-m-d H:i:s');
 
-        $this->sendByPHPMailer2($emails, $emailsCount, $group);
+        $this->sendByPHPMailer2($emails, $emailsCount, $group, $server);
 
         $emailsRemaining = GroupEmailModel::where('group_email_id', '=', $group->group_email_id)
             ->where('status', '=', 'pending-sending')
@@ -895,7 +902,7 @@ class SendGroupsCommand extends Command
         $mail->SmtpClose();
     }
 
-    protected function sendByPHPMailer2($emails, $emailsCount, $group)
+    protected function sendByPHPMailer2($emails, $emailsCount, $group, $server)
     {
 
         $mail = New \PHPMailer();
@@ -905,11 +912,11 @@ class SendGroupsCommand extends Command
         $mail->CharSet = "utf-8";
         $mail->SMTPAuth = true;
         $mail->SMTPSecure = "tls";
-        $mail->Host = "markethero.smtp.com";
+        $mail->Host = $server[0]['hostname'];
         $mail->Port = 2525;
-        $mail->Username = "chuck@markethero.io";
-        $mail->Password = "market-hero";
-        $mail->Sender = 'bounces@marketherobounce1.com ';
+        $mail->Username = $server[0]['username'];
+        $mail->Password = base64_decode($server[0]['password']);
+        $mail->Sender = Helpers::findBounceServerSenderEmail($server[0]['bounce_server_id']);
 
         foreach ($emails as $index => $email)
         {
@@ -918,7 +925,6 @@ class SendGroupsCommand extends Command
             $this->stdout(sprintf("%s - %d/%d - group %d", $email['to_email'], ($index+1), $emailsCount,
                 $group->group_email_id));
 
-            $mail->addCustomHeader('X-Mw-Group-Id', $group->group_email_id);
             $mail->addCustomHeader('X-Mw-Group-Id', $group->group_email_id);
             $mail->addCustomHeader('X-Mw-Customer-Id', $group->customer_id);
             $mail->addCustomHeader('X-Mw-Email-Uid', $email['email_uid']);

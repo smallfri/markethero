@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 
+use App\BounceServer;
+
 class Helpers
 {
 
@@ -70,10 +72,16 @@ class Helpers
 
     static function mapToClass($args)
     {
-        if(isset($args[0]))
+        if (isset($args[0]))
         {
             return (object)$args[0];
         }
         return false;
+    }
+
+    static function findBounceServerSenderEmail($bounce_server_id)
+    {
+        $bounceServer = BounceServer::find($bounce_server_id);
+        return $bounceServer->email;
     }
 }
