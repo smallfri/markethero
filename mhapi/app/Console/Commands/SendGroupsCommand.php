@@ -12,6 +12,8 @@ namespace App\Console\Commands;
 use App\BlacklistModel;
 use App\DeliveryServerModel;
 use App\GroupControlsModel;
+use App\GroupEmailComplianceLevelsModel;
+use App\GroupEmailComplianceModel;
 use App\GroupEmailGroupsModel;
 use App\GroupEmailLogModel;
 use App\GroupEmailModel;
@@ -146,6 +148,10 @@ class SendGroupsCommand extends Command
         }
 
         $groups = GroupEmailGroupsModel::whereIn('status', $statuses)->get();
+
+        //handle compliance
+
+        $this->complianceHandler($groups);
 
         $this->stdout(sprintf("Loading %d groups, starting with offset %d...", $limit, (int)$this->groups_offset));
 
@@ -377,8 +383,17 @@ class SendGroupsCommand extends Command
 
         if (count($emails)==0)
         {
-            $this->stdout('No emails found, setting group status '.$group->group_email_id.' to sent.');
-            $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_SENT);
+            if($this->groupIsFinished($group) > 0)
+            {
+                $this->stdout('No emails found, setting group status '.$group->group_email_id.' to sent.');
+                $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_SENT);
+            }
+            else
+            {
+                $this->stdout('No emails found to be ready for sending, setting group status '.$group->group_email_id.' to pending-sending.');
+                                $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_PENDING_SENDING);
+            }
+            exit;
         }
 
         $this->stdout(sprintf("This emails worker(#%d) will process %d emails for this group...", $workerNumber,
@@ -465,36 +480,59 @@ class SendGroupsCommand extends Command
 
     }
 
-    protected function getCanUsePcntl()
+    protected function complianceHandler($groups)
     {
 
-        if (!$this->functionExists('pcntl_fork')||!$this->functionExists('pcntl_waitpid'))
+        foreach ($groups AS $group)
         {
-            return false;
+
+            $this->stdout('Starting Compliance Handler');
+
+            $group->compliance = GroupEmailComplianceModel::find($group->group_email_id);
+
+            if(empty($group->compliance))
+            {
+                $this->stdout('Missing compliance entry in table...');
+                continue;
+            }
+
+            $group->compliance->compliance_levels
+                = GroupEmailComplianceLevelsModel::find($group->compliance->compliance_level_type_id);
+
+            $count = GroupEmailModel::where('group_email_id', '=', $group->group_email_id)->count();
+
+            $options = $this->getOptions();
+
+            if ($group->compliance->compliance_status=='in-review' AND $count>=$options->compliance_limit)
+            {
+
+                $this->stdout('This Group is in Compliance Review...');
+
+                $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_COMPLIANCE_REVIEW);
+
+                // Set emails to be sent = threshold X count
+                $emailsToBeSent = ceil($count*$group->compliance->compliance_levels->threshold);
+
+                $this->stdout('There are '.$emailsToBeSent.' emails to be sent...');
+
+
+                // Determine how many emails should be set to in-review status
+                $in_review_count = $count-$emailsToBeSent;
+
+                $this->stdout('Setting '.$in_review_count.' emails to in-review...');
+
+                // Update emails to in-review status
+                GroupEmailModel::where('group_email_id','=',$group->group_email_id)->where('status','=','pending-sending')->orderBy('email_id', 'asc')->limit($in_review_count)
+                    ->update(['status' => GroupEmailGroupsModel::STATUS_IN_REVIEW]);
+
+            }
+            elseif ($group->compliance->compliance_status=='approved')
+            {
+                // Update emails to pending-sending status if this Group is no longer under review
+                GroupEmailModel::where('group_email_id','=', $group->group_email_id)->where('status','=','in-review')
+                    ->update(['status' => GroupEmailGroupsModel::STATUS_PENDING_SENDING]);
+            }
         }
-
-        return true;
-    }
-
-    protected function getGroupsInParallel()
-    {
-
-        $options = $this->getOptions();
-
-        $this->stdout('Groups in Parallel '.$options->groups_in_parallel);
-
-        return $options->groups_in_parallel;
-    }
-
-    protected function getEmailBatchesInParallel()
-    {
-
-        $options = $this->getOptions();
-
-        $this->stdout('Batches in Parallel '.$options->group_emails_in_parallel);
-
-
-        return $options->group_emails_in_parallel;
     }
 
     protected function stdout($message, $timer = true, $separator = "\n")
@@ -595,6 +633,38 @@ class SendGroupsCommand extends Command
 
     }
 
+    protected function getCanUsePcntl()
+    {
+
+        if (!$this->functionExists('pcntl_fork')||!$this->functionExists('pcntl_waitpid'))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function getGroupsInParallel()
+    {
+
+        $options = $this->getOptions();
+
+        $this->stdout('Groups in Parallel '.$options->groups_in_parallel);
+
+        return $options->groups_in_parallel;
+    }
+
+    protected function getEmailBatchesInParallel()
+    {
+
+        $options = $this->getOptions();
+
+        $this->stdout('Batches in Parallel '.$options->group_emails_in_parallel);
+
+
+        return $options->group_emails_in_parallel;
+    }
+
     protected function updateGroupStatus($id, $status)
     {
 
@@ -622,6 +692,18 @@ class SendGroupsCommand extends Command
 
         return $emails;
     }
+
+    protected function groupIsFinished($group)
+        {
+
+            $count = GroupEmailModel::where('status', '=', 'sent')
+                ->where('group_email_id', '=', $group->group_email_id)
+                ->count();
+
+            return $count;
+        }
+
+
 
     /**
      * @param $email

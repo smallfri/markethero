@@ -24,6 +24,10 @@ class GroupEmailGroupsModel extends Authenticatable
 
             const STATUS_SENDING = 'sending';
 
+            const STATUS_IN_REVIEW = 'in-review';
+
+            const STATUS_COMPLIANCE_REVIEW = 'compliance-review';
+
             const STATUS_SENT = 'sent';
 
             const STATUS_PROCESSING = 'processing';
