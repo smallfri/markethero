@@ -2,18 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c9b7ec24-babb-4088-b4f3-f3a6cadded3c" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/apps/TransactionalEmail.php" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/common/models/TransactionalEmail.php" afterPath="$PROJECT_DIR$/apps/common/models/TransactionalEmail.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/console/commands/SendTransactionalEmailsCommand.php" afterPath="$PROJECT_DIR$/apps/console/commands/SendTransactionalEmailsCommand.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Console/Commands/SendGroupsCommand.php" afterPath="$PROJECT_DIR$/mhapi/app/Console/Commands/SendGroupsCommand.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/GroupControlsModel.php" afterPath="$PROJECT_DIR$/mhapi/app/GroupControlsModel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/GroupEmailGroupsModel.php" afterPath="$PROJECT_DIR$/mhapi/app/GroupEmailGroupsModel.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/DashboardController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/DashboardController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/composer.json" afterPath="$PROJECT_DIR$/mhapi/composer.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/composer.lock" afterPath="$PROJECT_DIR$/mhapi/composer.lock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/resources/views/dashboard/groups/controls.blade.php" afterPath="$PROJECT_DIR$/mhapi/resources/views/dashboard/groups/controls.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/resources/views/dashboard/groups/index.blade.php" afterPath="$PROJECT_DIR$/mhapi/resources/views/dashboard/groups/index.blade.php" />
     </list>
     <ignored path="MarketHero.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -48,30 +38,51 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DashboardController.php" pinned="false" current-in-tab="false">
+      <file leaf-file-name="DashboardController.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/DashboardController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-11.884615">
-              <caret line="342" column="31" selection-start-line="342" selection-start-column="31" selection-end-line="342" selection-end-column="31" />
+            <state vertical-scroll-proportion="0.4663923">
+              <caret line="279" column="33" selection-start-line="0" selection-start-column="0" selection-end-line="493" selection-end-column="1" />
               <folding>
-                <element signature="e#598#9453#0#PHP" expanded="false" />
-                <marker date="1468939573000" expanded="true" signature="991:1156" placeholder="select DATE(..." />
-                <marker date="1468939573000" expanded="true" signature="991:1189" placeholder="select DATE(..." />
-                <marker date="1468939573000" expanded="true" signature="1246:1444" placeholder="select DATE(..." />
-                <marker date="1468939573000" expanded="true" signature="3422:3608" placeholder="select DATE(..." />
-                <marker date="1468939573000" expanded="true" signature="3665:3851" placeholder="select DATE(..." />
-                <marker date="1468939573000" expanded="true" signature="5898:6089" placeholder="select DATE(..." />
-                <marker date="1468939573000" expanded="true" signature="6146:6337" placeholder="select DATE(..." />
+                <marker date="1468941491000" expanded="true" signature="991:1156" placeholder="select DATE(..." />
+                <marker date="1468941491000" expanded="true" signature="991:1189" placeholder="select DATE(..." />
+                <marker date="1468941491000" expanded="true" signature="1281:1894" placeholder="SELECT DATE(..." />
+                <marker date="1468941491000" expanded="true" signature="1322:1894" placeholder="select DATE(..." />
+                <marker date="1468941491000" expanded="true" signature="3868:4054" placeholder="select DATE(..." />
+                <marker date="1468941491000" expanded="true" signature="4148:4735" placeholder="SELECT DATE(..." />
+                <marker date="1468941491000" expanded="true" signature="6790:6981" placeholder="select DATE(..." />
+                <marker date="1468941491000" expanded="true" signature="7038:7768" placeholder="select DATE(..." />
+                <marker date="1468941491000" expanded="true" signature="7083:7747" placeholder="SELECT DATE(..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.blade.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="index.blade.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mhapi/resources/views/dashboard/groups/index.blade.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.47795275">
+            <state vertical-scroll-proportion="-23.346153">
               <caret line="43" column="0" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.blade.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mhapi/resources/views/dashboard/index.blade.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-5.8846154">
+              <caret line="15" column="44" selection-start-line="15" selection-start-column="44" selection-end-line="15" selection-end-column="83" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="dasboard.js.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mhapi/resources/views/dashboard/dasboard.js.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-0.0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -163,9 +174,9 @@
         <option value="$PROJECT_DIR$/mhapi/app/GroupControlsModel.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Console/Commands/SendGroupsCommand.php" />
         <option value="$PROJECT_DIR$/mhapi/resources/views/dashboard/groups/controls.blade.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/DashboardController.php" />
         <option value="$PROJECT_DIR$/mhapi/app/GroupEmailGroupsModel.php" />
         <option value="$PROJECT_DIR$/mhapi/resources/views/dashboard/groups/index.blade.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/DashboardController.php" />
       </list>
     </option>
   </component>
@@ -625,13 +636,13 @@
     <editor active="true" />
     <layout>
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2068" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2068" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26766917" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.45090908" sideWeight="0.50213677" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15589081" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18890555" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3344086" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.40676692" sideWeight="0.49786323" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.40676692" sideWeight="0.49786323" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
@@ -736,13 +747,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/CustomersController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/FieldsController.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1069,14 +1073,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/resources/views/dashboard/index.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mhapi/app/GroupControlsModel.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.2543307">
@@ -1112,23 +1108,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/DashboardController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-11.884615">
-          <caret line="342" column="31" selection-start-line="342" selection-start-column="31" selection-end-line="342" selection-end-column="31" />
-          <folding>
-            <element signature="e#598#9453#0#PHP" expanded="false" />
-            <marker date="1468939573000" expanded="true" signature="991:1156" placeholder="select DATE(..." />
-            <marker date="1468939573000" expanded="true" signature="991:1189" placeholder="select DATE(..." />
-            <marker date="1468939573000" expanded="true" signature="1246:1444" placeholder="select DATE(..." />
-            <marker date="1468939573000" expanded="true" signature="3422:3608" placeholder="select DATE(..." />
-            <marker date="1468939573000" expanded="true" signature="3665:3851" placeholder="select DATE(..." />
-            <marker date="1468939573000" expanded="true" signature="5898:6089" placeholder="select DATE(..." />
-            <marker date="1468939573000" expanded="true" signature="6146:6337" placeholder="select DATE(..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mhapi/app/GroupEmailGroupsModel.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-9.153846">
@@ -1137,11 +1116,45 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/resources/views/dashboard/dasboard.js.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/mhapi/resources/views/dashboard/groups/index.blade.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.47795275">
+        <state vertical-scroll-proportion="-23.346153">
           <caret line="43" column="0" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/resources/views/dashboard/index.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.8846154">
+          <caret line="15" column="44" selection-start-line="15" selection-start-column="44" selection-end-line="15" selection-end-column="83" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/DashboardController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.4663923">
+          <caret line="279" column="33" selection-start-line="0" selection-start-column="0" selection-end-line="493" selection-end-column="1" />
+          <folding>
+            <marker date="1468941491000" expanded="true" signature="991:1156" placeholder="select DATE(..." />
+            <marker date="1468941491000" expanded="true" signature="991:1189" placeholder="select DATE(..." />
+            <marker date="1468941491000" expanded="true" signature="1281:1894" placeholder="SELECT DATE(..." />
+            <marker date="1468941491000" expanded="true" signature="1322:1894" placeholder="select DATE(..." />
+            <marker date="1468941491000" expanded="true" signature="3868:4054" placeholder="select DATE(..." />
+            <marker date="1468941491000" expanded="true" signature="4148:4735" placeholder="SELECT DATE(..." />
+            <marker date="1468941491000" expanded="true" signature="6790:6981" placeholder="select DATE(..." />
+            <marker date="1468941491000" expanded="true" signature="7038:7768" placeholder="select DATE(..." />
+            <marker date="1468941491000" expanded="true" signature="7083:7747" placeholder="SELECT DATE(..." />
+          </folding>
         </state>
       </provider>
     </entry>

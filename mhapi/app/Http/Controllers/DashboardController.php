@@ -48,7 +48,18 @@ class DashboardController extends ApiController
         $thisWeek
             = DB::select(DB::raw('select DATE(date_added) AS date_added,COUNT(email_uid) AS count from `mw_group_email` where `date_added` between "'.$this_week1.'" and "'.$this_week2.'" AND status = "sent" GROUP BY DATE(date_added)'));
         $lastWeek
-            = DB::select(DB::raw('select DATE(date_added) AS date_added,COUNT(email_uid) AS count from `mw_group_email` where `date_added` between "'.$last_week1.'" and "'.$last_week2.'" AND status = "sent" GROUP BY DATE(date_added)'));
+            = DB::select(DB::raw('
+                                  SELECT
+                                   DATE(date_added) AS date_added,
+                                   COUNT(email_uid) AS count
+                                  FROM `mw_group_email`
+                                  WHERE
+                                    date_added >= curdate() - INTERVAL DAYOFWEEK(curdate())+6 DAY
+                                  AND
+                                    date_added < curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY
+                                  AND
+                                    status = "sent"
+                                  GROUP BY DATE(date_added)'));
 
         $last_week = [];
         foreach ($lastWeek AS $key => $value)
@@ -76,13 +87,13 @@ class DashboardController extends ApiController
                     $day = "Mon";
                     break;
                 case 3:
-                    $day = "Tues";
+                    $day = "Tue";
                     break;
                 case 4:
                     $day = "Wed";
                     break;
                 case 5:
-                    $day = "Thurs";
+                    $day = "Thu";
                     break;
                 case 6:
                     $day = "Fri";
@@ -123,11 +134,21 @@ class DashboardController extends ApiController
         }
         $delivery_stats = rtrim($d_stats, ",");
 
-
         $thisWeek
             = DB::select(DB::raw('select DATE(date_added) AS date_added,COUNT(log_id) AS count from `mw_group_email_bounce_log` where `date_added` between "'.$this_week1.'" and "'.$this_week2.'" GROUP BY DATE(date_added)'));
         $lastWeek
-            = DB::select(DB::raw('select DATE(date_added) AS date_added,COUNT(log_id) AS count from `mw_group_email_bounce_log` where `date_added` between "'.$last_week1.'" and "'.$last_week2.'" GROUP BY DATE(date_added)'));
+            = DB::select(DB::raw('
+                                    SELECT
+                                      DATE(date_added) AS date_added,
+                                      COUNT(log_id) AS count
+                                    FROM
+                                      `mw_group_email_bounce_log`
+                                    WHERE
+                                      date_added >= curdate() - INTERVAL DAYOFWEEK(curdate())+6 DAY
+                                    AND
+                                      date_added < curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY
+                                    GROUP BY DATE(date_added)
+            '));
 
         $last_week = [];
         foreach ($lastWeek AS $key => $value)
@@ -155,13 +176,13 @@ class DashboardController extends ApiController
                     $day = "Mon";
                     break;
                 case 3:
-                    $day = "Tues";
+                    $day = "Tue";
                     break;
                 case 4:
                     $day = "Wed";
                     break;
                 case 5:
-                    $day = "Thurs";
+                    $day = "Thu";
                     break;
                 case 6:
                     $day = "Fri";
@@ -189,7 +210,6 @@ class DashboardController extends ApiController
             {
                 $bounce_stats[$day] = $bounce_stats[$day].',0';
             }
-
             $d++;
 
         }
@@ -202,7 +222,6 @@ class DashboardController extends ApiController
         }
         $bounce_stats = rtrim($b_stats, ",");
 
-
         /*
          * This gathers Abuse stats for 2 weeks starting today
          */
@@ -210,7 +229,18 @@ class DashboardController extends ApiController
         $thisWeek
             = DB::select(DB::raw('select DATE(date_added) AS date_added,COUNT(report_id) AS count from `mw_group_email_abuse_report` where `date_added` between "'.$this_week1.'" and "'.$this_week2.'" GROUP BY DATE(date_added)'));
         $lastWeek
-            = DB::select(DB::raw('select DATE(date_added) AS date_added,COUNT(report_id) AS COUNT from `mw_group_email_abuse_report` where `date_added` between "'.$last_week1.'" and "'.$last_week2.'" GROUP BY DATE(date_added)'));
+            = DB::select(DB::raw('
+                                            SELECT
+                                              DATE(date_added) AS date_added,
+                                              COUNT(report_id) AS count
+                                            FROM
+                                              `mw_group_email_abuse_report`
+                                            WHERE
+                                              date_added >= curdate() - INTERVAL DAYOFWEEK(curdate())+6 DAY
+                                            AND
+                                              date_added < curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY
+                                            GROUP BY DATE(date_added)
+                    '));
 
         $last_week = [];
         foreach ($lastWeek AS $key => $value)
@@ -238,13 +268,13 @@ class DashboardController extends ApiController
                     $day = "Mon";
                     break;
                 case 3:
-                    $day = "Tues";
+                    $day = "Tue";
                     break;
                 case 4:
                     $day = "Wed";
                     break;
                 case 5:
-                    $day = "Thurs";
+                    $day = "Thu";
                     break;
                 case 6:
                     $day = "Fri";
@@ -340,7 +370,8 @@ class DashboardController extends ApiController
     public function groups()
     {
 
-        $Groups = GroupEmailGroupsModel::select('mw_customer.*', 'mw_group_email_groups.status AS status', 'mw_group_email_groups.*')
+        $Groups = GroupEmailGroupsModel::select('mw_customer.*', 'mw_group_email_groups.status AS status',
+            'mw_group_email_groups.*')
             ->Join('mw_customer', 'mw_customer.customer_id', '=', 'mw_group_email_groups.customer_id')
             ->orderBy('mw_group_email_groups.group_email_id', 'desc')
             ->get();
