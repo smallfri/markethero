@@ -404,7 +404,7 @@ class DashboardController extends ApiController
     {
 
         $Emails = TransactionalEmailModel::select('mw_transactional_email.*', 'log.message')
-            ->join('mw_transactional_email_log AS log', 'log.email_uid', '=', 'mw_transactional_email.email_uid')
+            ->join('mw_transactional_email_log AS log', 'log.email_id', '=', 'mw_transactional_email.email_id')
             ->orderBy('mw_transactional_email.email_uid', 'desc')
             ->get();
 
