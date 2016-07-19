@@ -12,7 +12,7 @@ class GroupEmailGroupsModel extends Authenticatable
     public $primaryKey = "group_email_id";
 
 
-    protected $status;
+//    protected $status;
     protected $finished_at;
     protected $last_offset;
 

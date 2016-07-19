@@ -159,7 +159,6 @@ class TransactionalEmail extends ActiveRecord
 
     public function send()
     {
-
         static $servers     = array();
         $this->sendDirectly = false;
         $serverParams       = array(
@@ -168,16 +167,12 @@ class TransactionalEmail extends ActiveRecord
             'useFor'             => array(DeliveryServer::USE_FOR_ALL)
         );
 
-        print_r(DeliveryServer::pickServer(5, $this, $serverParams));
-
         $cid = (int)$this->customer_id;
         if (!array_key_exists($cid, $servers)) {
             $servers[$cid] = DeliveryServer::pickServer(0, $this, $serverParams);
-            print_r($servers[$cid]);
         }
 
         if (empty($servers[$cid])) {
-            print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
             return false;
         }
 
@@ -201,9 +196,11 @@ class TransactionalEmail extends ActiveRecord
             $server = $servers[$cid];
         }
 
-        if (!empty($this->customer_id) && $this->customer->getIsOverQuota()) {
-            return false;
-        }
+//        if (!empty($this->customer_id) && $this->customer->getIsOverQuota()) {
+//            print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
+//
+//            return false;
+//        }
 
         $emailParams = array(
             'fromName'      => $this->from_name,
@@ -221,7 +218,7 @@ class TransactionalEmail extends ActiveRecord
             $emailParams['replyTo'] = array($this->reply_to_email => $this->reply_to_name);
         }
 
-        $sent = $server->setDeliveryFor(DeliveryServer::DELIVERY_FOR_TRANSACTIONAL)->setDeliveryObject($this)->sendEmail($emailParams);
+        $sent = $server->setDeliveryFor(DeliveryServer::USE_FOR_ALL)->setDeliveryObject($this)->sendEmail($emailParams);
         if ($sent) {
             $this->status = TransactionalEmail::STATUS_SENT;
         } else {

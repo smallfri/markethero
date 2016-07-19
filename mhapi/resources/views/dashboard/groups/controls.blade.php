@@ -27,9 +27,15 @@
                     <div class="box-content">
                         {!! Form::open(array( 'method'=>'post', 'class'=>'form-horizontal')) !!}
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="email">Groups At Once:</label>
+                            <label class="control-label col-sm-2" for="pwd">Groups in Parallel:</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="groups_at_once" name="groups_at_once" value="{{ $controls->groups_at_once }}">
+                                <input type="text" class="form-control" id="groups_in_parallel" name="groups_in_parallel" value="{{ $controls->groups_in_parallel }}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="pwd">Groups Emails in Parallel: (number of batches)</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="groups_emails_in_parallel" name="groups_emails_in_parallel" value="{{ $controls->group_emails_in_parallel }}">
                             </div>
                         </div>
                         <div class="form-group">
@@ -68,6 +74,7 @@
                                 <input type="text" class="form-control" id="compliance_bounce_range" name="compliance_bounce_range" value="{{ $controls->compliance_bounce_range }}">
                             </div>
                         </div>
+
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
                                 <button type="submit" class="btn btn-default" name="submit" value="1">Submit</button>

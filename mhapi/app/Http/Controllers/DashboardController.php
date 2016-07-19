@@ -46,9 +46,9 @@ class DashboardController extends ApiController
         $this_week2 = Carbon::parse('this week');
 
         $thisWeek
-            = DB::select(DB::raw('select DATE(date_added) AS date_added,COUNT(email_uid) AS count from `mw_group_email_log` where `date_added` between "'.$this_week1.'" and "'.$this_week2.'" GROUP BY DATE(date_added)'));
+            = DB::select(DB::raw('select DATE(date_added) AS date_added,COUNT(email_uid) AS count from `mw_group_email` where `date_added` between "'.$this_week1.'" and "'.$this_week2.'" AND status = "sent" GROUP BY DATE(date_added)'));
         $lastWeek
-            = DB::select(DB::raw('select DATE(date_added) AS date_added,COUNT(email_uid) AS count from `mw_group_email_log` where `date_added` between "'.$last_week1.'" and "'.$last_week2.'" GROUP BY DATE(date_added)'));
+            = DB::select(DB::raw('select DATE(date_added) AS date_added,COUNT(email_uid) AS count from `mw_group_email` where `date_added` between "'.$last_week1.'" and "'.$last_week2.'" AND status = "sent" GROUP BY DATE(date_added)'));
 
         $last_week = [];
         foreach ($lastWeek AS $key => $value)
@@ -127,7 +127,7 @@ class DashboardController extends ApiController
         $thisWeek
             = DB::select(DB::raw('select DATE(date_added) AS date_added,COUNT(log_id) AS count from `mw_group_email_bounce_log` where `date_added` between "'.$this_week1.'" and "'.$this_week2.'" GROUP BY DATE(date_added)'));
         $lastWeek
-            = DB::select(DB::raw('select DATE(date_added) AS date_added,COUNT(log_id) AS COUNT from `mw_group_email_bounce_log` where `date_added` between "'.$last_week1.'" and "'.$last_week2.'" GROUP BY DATE(date_added)'));
+            = DB::select(DB::raw('select DATE(date_added) AS date_added,COUNT(log_id) AS count from `mw_group_email_bounce_log` where `date_added` between "'.$last_week1.'" and "'.$last_week2.'" GROUP BY DATE(date_added)'));
 
         $last_week = [];
         foreach ($lastWeek AS $key => $value)
@@ -431,6 +431,8 @@ class DashboardController extends ApiController
             $Controls->compliance_abuse_range = $request->input('compliance_abuse_range');
             $Controls->compliance_unsub_range = $request->input('compliance_unsub_range');
             $Controls->compliance_bounce_range = $request->input('compliance_bounce_range');
+            $Controls->groups_in_parallel = $request->input('groups_in_parallel');
+            $Controls->groups_emails_in_parallel = $request->input('groups_emails_in_parallel');
             $Controls->save();
         }
         $data = ['controls' => $Controls];

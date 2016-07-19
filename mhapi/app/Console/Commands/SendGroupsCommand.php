@@ -20,6 +20,7 @@ use App\GroupEmailLogModel;
 use App\GroupEmailModel;
 use App\Helpers\Helpers;
 use DB;
+use GuzzleHttp\Client;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use phpseclib\Crypt\AES;
@@ -29,10 +30,9 @@ use Swift_Plugins_AntiFloodPlugin;
 class SendGroupsCommand extends Command
 {
 
-
     protected $_cipher;
 
-        protected $_plainTextPassword;
+    protected $_plainTextPassword;
 
     protected $signature = 'send-groups';
 
@@ -143,7 +143,7 @@ class SendGroupsCommand extends Command
 
         $statuses = array(GroupEmailGroupsModel::STATUS_SENDING, GroupEmailGroupsModel::STATUS_PENDING_SENDING);
         $types = array(GroupEmailGroupsModel::TYPE_REGULAR, GroupEmailGroupsModel::TYPE_AUTORESPONDER);
-        $limit = (int)$options->groups_at_once;
+        $limit = (int)$options->groups_in_parallel;
 
         if ($this->groups_type!==null&&!in_array($this->groups_type, $types))
         {
@@ -183,6 +183,23 @@ class SendGroupsCommand extends Command
         foreach ($groups as $group)
         {
             $groupIds[] = $group['group_email_id'];
+
+            $emails = $this->countEmails($group['group_email_id']);
+
+            if ($emails==0)
+            {
+                if ($this->groupIsFinished($group)>0)
+                {
+                    $this->stdout('No emails found, setting group status '.$group['group_email_id'].' to sent.');
+                    $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_SENT);
+                }
+                else
+                {
+                    $this->stdout('No emails found to be ready for sending, setting group status '.$group['group_email_id'].' to pending-sending.');
+                    $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_PENDING_SENDING);
+                }
+            }
+
         }
 
         $this->sendCampaignStep0($groupIds);
@@ -267,7 +284,6 @@ class SendGroupsCommand extends Command
             $this->updateGroupStatus($groupId, GroupEmailGroupsModel::STATUS_SENT);
             return 1;
         }
-
         $options = $this->getOptions();
 
         if ($this->getCustomerStatus()=='inactive')
@@ -278,7 +294,9 @@ class SendGroupsCommand extends Command
             return 1;
         }
 
-        $server = DeliveryServerModel::where('status','=','active')->where('use_for','=',DeliveryServerModel::USE_FOR_GROUPS)->get();
+        $server = DeliveryServerModel::where('status', '=', 'active')
+            ->where('use_for', '=', DeliveryServerModel::USE_FOR_ALL)
+            ->get();
         if (empty($server))
         {
             $this->stdout('Cannot find a valid server to send the group email, aborting until a delivery server is available!');
@@ -388,21 +406,6 @@ class SendGroupsCommand extends Command
 
         $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_PROCESSING);
 
-        if (count($emails)==0)
-        {
-            if($this->groupIsFinished($group) > 0)
-            {
-                $this->stdout('No emails found, setting group status '.$group->group_email_id.' to sent.');
-                $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_SENT);
-            }
-            else
-            {
-                $this->stdout('No emails found to be ready for sending, setting group status '.$group->group_email_id.' to pending-sending.');
-                $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_PENDING_SENDING);
-            }
-            exit;
-        }
-
         $this->stdout(sprintf("This emails worker(#%d) will process %d emails for this group...", $workerNumber,
             count($emails)));
 
@@ -468,6 +471,7 @@ class SendGroupsCommand extends Command
         $emailsRemaining = GroupEmailModel::where('group_email_id', '=', $group->group_email_id)
             ->where('status', '=', 'pending-sending')
             ->count();
+
         if ($emailsRemaining==0)
         {
             $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_SENT);
@@ -476,6 +480,8 @@ class SendGroupsCommand extends Command
         else
         {
             $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_PENDING_SENDING);
+            $this->stdout('Group has been marked as pending-sending!');
+
         }
 
         $this->stdout("", false);
@@ -497,7 +503,7 @@ class SendGroupsCommand extends Command
 
             $group->compliance = GroupEmailComplianceModel::find($group->group_email_id);
 
-            if(empty($group->compliance))
+            if (empty($group->compliance))
             {
                 $this->stdout('Missing compliance entry in table...');
                 continue;
@@ -529,14 +535,17 @@ class SendGroupsCommand extends Command
                 $this->stdout('Setting '.$in_review_count.' emails to in-review...');
 
                 // Update emails to in-review status
-                GroupEmailModel::where('group_email_id','=',$group->group_email_id)->where('status','=','pending-sending')->orderBy('email_id', 'asc')->limit($in_review_count)
+                GroupEmailModel::where('group_email_id', '=', $group->group_email_id)
+                    ->where('status', '=', 'pending-sending')
+                    ->orderBy('email_id', 'asc')
+                    ->limit($in_review_count)
                     ->update(['status' => GroupEmailGroupsModel::STATUS_IN_REVIEW]);
 
             }
             elseif ($group->compliance->compliance_status=='approved')
             {
                 // Update emails to pending-sending status if this Group is no longer under review
-                GroupEmailModel::where('group_email_id','=', $group->group_email_id)->where('status','=','in-review')
+                GroupEmailModel::where('group_email_id', '=', $group->group_email_id)->where('status', '=', 'in-review')
                     ->update(['status' => GroupEmailGroupsModel::STATUS_PENDING_SENDING]);
             }
         }
@@ -624,7 +633,12 @@ class SendGroupsCommand extends Command
             ->where('group_email_id', '=', $this->_group->group_email_id)
             ->join('mw_customer AS c', 'c.customer_id', '=', 'mw_group_email_groups.customer_id')
             ->get();
-        return $customer[0]['status'];
+
+        if(!empty($customer))
+        {
+            return $customer[0]['status'];
+        }
+        return false;
 
     }
 
@@ -701,16 +715,24 @@ class SendGroupsCommand extends Command
     }
 
     protected function groupIsFinished($group)
-        {
+    {
 
-            $count = GroupEmailModel::where('status', '=', 'sent')
-                ->where('group_email_id', '=', $group->group_email_id)
-                ->count();
+        $count = GroupEmailModel::where('status', '=', 'sent')
+            ->where('group_email_id', '=', $group->group_email_id)
+            ->count();
 
-            return $count;
-        }
+        return $count;
+    }
 
+    protected function countEmails($group_email_id)
+    {
 
+        $count = GroupEmailModel::where('status', '=', 'pending-sending')
+            ->where('group_email_id', '=', $group_email_id)
+            ->count();
+
+        return $count;
+    }
 
     /**
      * @param $email
@@ -778,12 +800,42 @@ class SendGroupsCommand extends Command
 
     /**
      * @param $mail
+     * @param $status
      */
-    protected function updateGroupEmailStatus($mail)
+    protected function updateGroupEmailStatus($mail, $status = GroupEmailGroupsModel::STATUS_SENT)
     {
 
         GroupEmailModel::where('email_uid', $mail['email_uid'])
-            ->update(['status' => GroupEmailGroupsModel::STATUS_SENT]);
+            ->update(['status' => $status]);
+    }
+
+    protected function checkImpressionWise($email)
+    {
+
+        $this->stdout('Checking email via ImpressionWise');
+
+        $client = new Client();
+
+        $res = $client->request('POST', 'http://post.impressionwise.com/fastfeed.aspx?code=D39002&pwd=M4k3Th&email='.$email['from_email']);
+
+        $this->stdout('ImpressionWise status code '.$res->getStatusCode());
+
+        parse_str($res->getBody(), $get_array);
+
+        $this->stdout('ImpressionWise body '.$get_array['result']);
+
+        if($get_array['result']=='CERTDOM' OR $get_array['result']== 'CERTINT')
+        {
+            return true;
+        }
+
+        if($get_array['result']=='RETRY')
+        {
+            $this->updateGroupEmailStatus($email, GroupEmailGroupsModel::STATUS_PENDING_SENDING);
+        }
+
+        return false;
+
     }
 
     /**
@@ -921,6 +973,12 @@ class SendGroupsCommand extends Command
         foreach ($emails as $index => $email)
         {
 
+            if(!$this->checkImpressionWise($email))
+            {
+                $this->stdout('Failed impressionWise Check');
+                continue;
+            }
+
             $this->stdout("", false);
             $this->stdout(sprintf("%s - %d/%d - group %d", $email['to_email'], ($index+1), $emailsCount,
                 $group->group_email_id));
@@ -929,10 +987,12 @@ class SendGroupsCommand extends Command
             $mail->addCustomHeader('X-Mw-Customer-Id', $group->customer_id);
             $mail->addCustomHeader('X-Mw-Email-Uid', $email['email_uid']);
 
+            $mail->addReplyTo($email['from_email'], $email['from_name']);
+            $mail->addAddress($email['to_email'], $email['to_name']);
             $mail->setFrom($email['from_email'], $email['from_name']);
+
             $mail->Subject = $email['subject'];
             $mail->MsgHTML($email['body']);
-            $mail->addAddress($email['to_email'], $email['to_name']);
             $mail->send();
 
             $this->logGroupEmailDelivery($email['email_uid']);
@@ -941,6 +1001,7 @@ class SendGroupsCommand extends Command
 
             $mail->clearAddresses();
             $mail->clearAttachments();
+            $mail->clearCustomHeaders();
 
         }
 

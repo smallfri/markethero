@@ -41,7 +41,6 @@
                             <tbody>
 
                             @foreach($groups AS $row)
-
                                 <tr>
                                     <td><a href="group-emails?id=<?php echo $row['group_email_id']?>"><?php echo $row['group_email_id']?></a></td>
                                     <td>{!! $row['group_email_uid'] !!}</td>
