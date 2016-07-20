@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Redirect;
 //use Laracasts\Flash\Flash;
 use App\Forms\SignInForm;
-use App\User;
+use App\Models\ser;
 use Illuminate\Http\Request;
 use View;
 use DB;

@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Transformers\BounceServerTransformer;
 use App\Http\Controllers\PasswordsController;
-use App\BounceServer;
-use App\User;
+use App\Models\BounceServer;
+use App\Models\User;
 use App\Http\Requests;
 use Zend\Http\Response;
 

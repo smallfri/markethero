@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\BlacklistModel;
-use App\CampaignAbuseModel;
-use App\GroupEmailAbuseModel;
-use App\SubscriberModel;
+use App\Models\BlacklistModel;
+use App\Models\CampaignAbuseModel;
+use App\Models\GroupEmailAbuseModel;
+use App\Models\SubscriberModel;
 use App\Http\Requests;
-use App\Spam;
+use App\Models\Spam;
 use Zend\Http\Response;
-use App\Logger;
+use App\Models\Logger;
 
 class GroupEmailAbuseController extends ApiController
 {

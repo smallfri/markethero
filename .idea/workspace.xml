@@ -2,10 +2,134 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c9b7ec24-babb-4088-b4f3-f3a6cadded3c" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/d3pl0yMHAPI.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/_prep.sh" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/AbuseController.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/ApiController.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/Auth/AuthController.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/Auth/PasswordController.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/BlacklistController.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/BounceController.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/BounceServerController.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/BounceServerCustomerController.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/BounceServersController.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/CampaignController.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/Controller.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/CustomerController.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/CustomersController.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/DashboardController.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/DeliveryServerController.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/FieldsController.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/GroupEmailAbuseController.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/GroupEmailsController.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/GroupEmailsGroupController.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/ListController.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/ListSubscribersController.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/LogsController.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/ManageGroupController.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/PagesController.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/PasswordsController.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/SegmentConditionController.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/SegmentController.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/SessionsController.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/TransactionalEmailsController.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/UnsubscribeController.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/UsersController.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/d3pl0yMW.php" afterPath="$PROJECT_DIR$/d3pl0y.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/BlacklistModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/BlacklistModel.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/Bounce.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/Bounce.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/BounceServer.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/BounceServer.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/CampaignAbuseModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/CampaignAbuseModel.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/CampaignModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/CampaignModel.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/CampaignOptionsModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/CampaignOptionsModel.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/CampaignOptionsRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/CampaignOptionsRepository.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/CampaignRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/CampaignRepository.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/CampaignTemplateModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/CampaignTemplateModel.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/CampaignTemplateRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/CampaignTemplateRepository.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/ComplianceAverageModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/ComplianceAverageModel.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/ComplianceAverageRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/ComplianceAverageRepository.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/ComplianceScoreModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/ComplianceScoreModel.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/ComplianceScoreRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/ComplianceScoreRepository.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/Country.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/Country.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/CountryRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/CountryRepository.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/Customer.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/Customer.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/CustomerRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/CustomerRepository.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/DeliveryLogModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/DeliveryLogModel.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/DeliveryServerModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/DeliveryServerModel.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/Field.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/Field.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/FieldRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/FieldRepository.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/GroupAbuseModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/GroupAbuseModel.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/GroupControlsModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/GroupControlsModel.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/GroupEmailAbuseModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/GroupEmailAbuseModel.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/GroupEmailComplianceLevelsModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/GroupEmailComplianceLevelsModel.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/GroupEmailComplianceModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/GroupEmailComplianceModel.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/GroupEmailComplianceModelRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/GroupEmailComplianceModelRepository.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/GroupEmailGroupsModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/GroupEmailGroupsModel.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/GroupEmailGroupsModelRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/GroupEmailGroupsModelRepository.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/GroupEmailLogModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/GroupEmailLogModel.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/GroupEmailModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/GroupEmailModel.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/GroupEmailModelRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/GroupEmailModelRepository.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/ListFieldValueModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/ListFieldValueModel.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/ListFieldValueRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/ListFieldValueRepository.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/Lists.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/Lists.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/ListsCompany.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/ListsCompany.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/ListsCompanyRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/ListsCompanyRepository.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/ListsCustomerNotification.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/ListsCustomerNotification.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/ListsCustomerNotificationRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/ListsCustomerNotificationRepository.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/ListsDefaults.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/ListsDefaults.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/ListsDefaultsRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/ListsDefaultsRepository.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/ListsRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/ListsRepository.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/ListsSubscriber.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/ListsSubscriber.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/ListsSubscriberRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/ListsSubscriberRepository.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/LogEntry.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/LogEntry.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/Logger.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/Logger.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/SMTPServer.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/SMTPServer.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/Segment.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/Segment.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/SegmentCondition.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/SegmentCondition.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/SegmentConditionRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/SegmentConditionRepository.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/SegmentRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/SegmentRepository.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/SubscriberModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/SubscriberModel.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/SubscriberModelRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/SubscriberModelRepository.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/TraceLog.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/TraceLog.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/TraceLogModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/TraceLogModel.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/TransactionalEmailModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/TransactionalEmailModel.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/UnsubscribeModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/UnsubscribeModel.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/UnsubscribeModelRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/UnsubscribeModelRepository.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/User.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/User.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/UserRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/UserRepository.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/Zone.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/Zone.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/ZoneRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/ZoneRepository.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/d3pl0yMHAPI.php" afterPath="$PROJECT_DIR$/d3pl0yMHAPI.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Console/Kernel.php" afterPath="$PROJECT_DIR$/mhapi/app/Console/Kernel.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/AbuseController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/AbuseController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/Auth/AuthController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/Auth/AuthController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/BlacklistController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/BlacklistController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServerController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServerController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServerCustomerController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServerCustomerController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServersController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServersController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/CampaignController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/CampaignController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/CustomerController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/CustomerController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/CustomersController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/CustomersController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/DashboardController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/DashboardController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/DeliveryServerController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/DeliveryServerController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/FieldsController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/FieldsController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailAbuseController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailAbuseController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsGroupController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsGroupController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/ListController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/ListController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/ListSubscribersController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/ListSubscribersController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/LogsController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/LogsController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/ManageGroupController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/ManageGroupController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/SegmentConditionController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/SegmentConditionController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/SegmentController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/SegmentController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/SessionsController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/SessionsController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/UnsubscribeController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/UnsubscribeController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/UsersController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/UsersController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Providers/AuthServiceProvider.php" afterPath="$PROJECT_DIR$/mhapi/app/Providers/AuthServiceProvider.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/config/auth.php" afterPath="$PROJECT_DIR$/mhapi/config/auth.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/config/services.php" afterPath="$PROJECT_DIR$/mhapi/config/services.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/database/factories/ModelFactory.php" afterPath="$PROJECT_DIR$/mhapi/database/factories/ModelFactory.php" />
     </list>
     <ignored path="MarketHero.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -27,21 +151,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="450">
-      <file leaf-file-name="SendGroupsCommand.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mhapi/app/Console/Commands/SendGroupsCommand.php">
+      <file leaf-file-name="EloquentUserProvider.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mhapi/vendor/laravel/framework/src/Illuminate/Auth/EloquentUserProvider.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-12.423077">
-              <caret line="36" column="40" selection-start-line="36" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
+            <state vertical-scroll-proportion="-13.076923">
+              <caret line="127" column="0" selection-start-line="127" selection-start-column="0" selection-end-line="127" selection-end-column="0" />
               <folding>
-                <element signature="e#6#85#0#PHP" expanded="true" />
-                <element signature="e#121#144#0#PHP" expanded="true" />
+                <element signature="e#35#62#0#PHP" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Inspire.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mhapi/app/Console/Commands/Inspire.php">
+      <file leaf-file-name="ApiController.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/ApiController.php">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="-0.0">
               <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -50,21 +173,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="d3pl0yMW.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/d3pl0yMW.php">
+      <file leaf-file-name="AuthServiceProvider.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mhapi/app/Providers/AuthServiceProvider.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-28.576923">
-              <caret line="206" column="36" selection-start-line="206" selection-start-column="36" selection-end-line="206" selection-end-column="36" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="d3pl0yMHAPI.php" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/d3pl0yMHAPI.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.24895222">
-              <caret line="88" column="5" selection-start-line="88" selection-start-column="5" selection-end-line="88" selection-end-column="5" />
+            <state vertical-scroll-proportion="-9.153846">
+              <caret line="15" column="19" selection-start-line="15" selection-start-column="19" selection-end-line="15" selection-end-column="19" />
               <folding />
             </state>
           </provider>
@@ -74,44 +187,46 @@
         <entry file="file://$PROJECT_DIR$/mhapi/app/Console/Kernel.php">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="-10.461538">
-              <caret line="17" column="36" selection-start-line="17" selection-start-column="36" selection-end-line="17" selection-end-column="36" />
+              <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="routes.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mhapi/app/Http/routes.php">
+      <file leaf-file-name="GroupEmailsGroupController.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsGroupController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-4.1076922">
-              <caret line="20" column="81" selection-start-line="20" selection-start-column="61" selection-end-line="20" selection-end-column="81" />
-              <folding />
+            <state vertical-scroll-proportion="-1.9615384">
+              <caret line="8" column="14" selection-start-line="8" selection-start-column="14" selection-end-line="8" selection-end-column="14" />
+              <folding>
+                <element signature="e#119#150#0#PHP" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.blade.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mhapi/resources/views/dashboard/groups/index.blade.php">
+      <file leaf-file-name="AbuseController.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/AbuseController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-23.346153">
-              <caret line="43" column="0" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
+            <state vertical-scroll-proportion="-0.6923077">
+              <caret line="8" column="22" selection-start-line="8" selection-start-column="21" selection-end-line="8" selection-end-column="22" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.blade.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mhapi/resources/views/dashboard/index.blade.php">
+      <file leaf-file-name="AuthController.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/mhapi/app.new/Http/Controllers/Auth/AuthController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-5.8846154">
-              <caret line="15" column="44" selection-start-line="15" selection-start-column="44" selection-end-line="15" selection-end-column="83" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="dasboard.js.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mhapi/resources/views/dashboard/dasboard.js.php">
+      <file leaf-file-name="Logger.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mhapi/app/Models/Logger.php">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="-0.0">
               <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -120,12 +235,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GroupEmailGroupsModel.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mhapi/app/GroupEmailGroupsModel.php">
+      <file leaf-file-name="LogEntry.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mhapi/app/Models/LogEntry.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-9.153846">
-              <caret line="14" column="24" selection-start-line="14" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+            <state vertical-scroll-proportion="-0.0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="User.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mhapi/app/Models/User.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-2.6153846">
+              <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+              <folding>
+                <element signature="e#30#66#0#PHP" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -138,57 +265,57 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/mhapi/app/Console/SendGroupsController.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/Console/Commands/SendGroupsController.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/CronJobs/SendGroupsController.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/GroupEmailLogModel.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/GroupEmailModel.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/GroupEmailModelRepository.php" />
-        <option value="$PROJECT_DIR$/mhapi/vendor/laravel/framework/src/Illuminate/Mail/TransportManager.php" />
-        <option value="$PROJECT_DIR$/mhapi/config/queue.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/Jobs/SendGroupEmail.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/Providers/AppServiceProvider.php" />
-        <option value="$PROJECT_DIR$/mhapi/config/database.php" />
-        <option value="$PROJECT_DIR$/mhapi/vendor/swiftmailer/swiftmailer/lib/classes/Swift/Plugins/AntiFloodPlugin.php" />
-        <option value="$PROJECT_DIR$/mhapi/vendor/phpmailer/phpmailer/class.phpmailer.php" />
-        <option value="$PROJECT_DIR$/mhapi/.env" />
-        <option value="$PROJECT_DIR$/mhapi/config/mail.php" />
-        <option value="$PROJECT_DIR$/apps/common/components/mailer/MailerSwiftMailer.php" />
-        <option value="$PROJECT_DIR$/mhapi/vendor/swiftmailer/swiftmailer/lib/classes/Swift/Transport/Esmtp/Auth/LoginAuthenticator.php" />
-        <option value="$PROJECT_DIR$/apps/common/models/GroupBounceLog.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceController.php" />
-        <option value="$PROJECT_DIR$/apps/common/models/EmailBlacklist.php" />
-        <option value="$PROJECT_DIR$/apps/console/commands/GroupsBounceHandlerCommand.php" />
-        <option value="$PROJECT_DIR$/apps/common/models/GroupEmailBounceLog.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/ComplianceScoreRepository.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/ComplianceAverageRepository.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/ComplianceScoreModel.php" />
-        <option value="$PROJECT_DIR$/mhapi/migrations/00100_create_transactional_email_groups.sql" />
-        <option value="$PROJECT_DIR$/mhapi/app/Helpers/helpers.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/ComplianceAverageModel.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/Console/Commands/AvgComplianceScoreCommand.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/GroupEmailComplianceLevelsModel.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsController.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/CustomerController.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/Helpers/PasswordHasher.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/Helpers/PasswordHasherMH.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/Helpers/PasswordHashMH.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/Helpers/Helpers.php" />
-        <option value="$PROJECT_DIR$/apps/common/models/TransactionalEmail.php" />
-        <option value="$PROJECT_DIR$/apps/console/commands/SendTransactionalEmailsCommand.php" />
-        <option value="$PROJECT_DIR$/mhapi/composer.json" />
-        <option value="$PROJECT_DIR$/mhapi/app/GroupControlsModel.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/Console/Commands/SendGroupsCommand.php" />
-        <option value="$PROJECT_DIR$/mhapi/resources/views/dashboard/groups/controls.blade.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/GroupEmailGroupsModel.php" />
-        <option value="$PROJECT_DIR$/mhapi/resources/views/dashboard/groups/index.blade.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/Http/routes.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/DashboardController.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/ListsRepository.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/ListsSubscriber.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/ListsSubscriberRepository.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/LogEntry.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Logger.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/SMTPServer.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Segment.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/SegmentCondition.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/SegmentConditionRepository.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/SegmentRepository.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/SubscriberModel.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/SubscriberModelRepository.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/TraceLog.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Models/CampaignTemplateRepository.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Models/BlacklistModel.php" />
         <option value="$PROJECT_DIR$/d3pl0y.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/Console/Commands/Deploy.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/Console/Kernel.php" />
         <option value="$PROJECT_DIR$/d3pl0yMW.php" />
-        <option value="$PROJECT_DIR$/d3pl0yMHAPI.php" />
+        <option value="$PROJECT_DIR$/_prep.sh" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/AbuseController.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/BlacklistController.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceController.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServerController.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServerCustomerController.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServersController.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/CampaignController.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/CustomerController.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/CustomersController.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/DashboardController.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/DeliveryServerController.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/FieldsController.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailAbuseController.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsController.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/ListController.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/ListSubscribersController.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/LogsController.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/ManageGroupController.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/SegmentConditionController.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/SegmentController.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/SessionsController.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/UnsubscribeController.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/UsersController.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsGroupController.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/Auth/AuthController.php" />
+        <option value="$PROJECT_DIR$/mhapi/config/services.php" />
+        <option value="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/Auth/AuthController.php" />
+        <option value="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/BounceServerCustomerController.php" />
+        <option value="$PROJECT_DIR$/mhapi/database/factories/ModelFactory.php" />
+        <option value="$PROJECT_DIR$/mhapi/vendor/laravel/framework/src/Illuminate/Auth/EloquentUserProvider.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Providers/AuthServiceProvider.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Console/Kernel.php" />
+        <option value="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/AbuseController.php" />
       </list>
     </option>
   </component>
@@ -278,11 +405,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
+              <option name="myItemId" value="vendor" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -300,15 +423,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dashboard" />
+              <option name="myItemId" value="app.new" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -326,19 +441,11 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
+              <option name="myItemId" value="app.new" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dashboard" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="groups" />
+              <option name="myItemId" value="Http" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -356,7 +463,45 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
+              <option name="myItemId" value="app.new" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Http" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Controllers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mhapi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app.new" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Http" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Controllers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Auth" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -436,117 +581,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="mhapi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Helpers" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MarketHero" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MarketHero" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mhapi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Console" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MarketHero" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MarketHero" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mhapi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Console" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Commands" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MarketHero" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MarketHero" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="apps" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MarketHero" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MarketHero" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="apps" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="common" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MarketHero" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MarketHero" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="apps" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="common" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="models" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -587,13 +622,14 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/mhapi/app.new/Http/Controllers" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/mhapi/app" />
       <recent name="$PROJECT_DIR$/apps/common/models" />
       <recent name="$PROJECT_DIR$/mhapi/app/Http/Controllers/CronJobs" />
-      <recent name="$PROJECT_DIR$/mhapi/app/Http/Controllers" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/mhapi/app/Models" />
       <recent name="$PROJECT_DIR$/mhapi/app/Console/Commands" />
       <recent name="$PROJECT_DIR$/mhapi/app/Console" />
       <recent name="$PROJECT_DIR$/mhapi/resources/views/logs" />
@@ -754,29 +790,215 @@
           <option name="timeStamp" value="28" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="29" />
+      <option name="time" value="31" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Models/BlacklistModel.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.32125986">
+          <caret line="24" column="17" selection-start-line="24" selection-start-column="17" selection-end-line="24" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider editor-type-id="MarkdownPreviewEditor">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-3.8857143">
+          <caret line="8" column="28" selection-start-line="8" selection-start-column="28" selection-end-line="8" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/d3pl0y.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-17.0">
+          <caret line="26" column="43" selection-start-line="26" selection-start-column="43" selection-end-line="26" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/content-page.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/d3pl0yMW.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.66019416">
+          <caret line="4" column="23" selection-start-line="4" selection-start-column="23" selection-end-line="4" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/d3pl0yMHAPI.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-2.6153846">
+          <caret line="4" column="24" selection-start-line="4" selection-start-column="24" selection-end-line="4" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_prep.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.5135136">
+          <caret line="12" column="34" selection-start-line="12" selection-start-column="34" selection-end-line="12" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/BlacklistController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.769231">
+          <caret line="9" column="15" selection-start-line="9" selection-start-column="15" selection-end-line="9" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.576923">
+          <caret line="7" column="15" selection-start-line="7" selection-start-column="15" selection-end-line="7" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServerController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-3.2692308">
+          <caret line="5" column="15" selection-start-line="5" selection-start-column="15" selection-end-line="5" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServerCustomerController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.576923">
+          <caret line="7" column="15" selection-start-line="7" selection-start-column="15" selection-end-line="7" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServersController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-3.1538463">
+          <caret line="5" column="15" selection-start-line="5" selection-start-column="15" selection-end-line="5" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/CampaignController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.9029126">
+          <caret line="15" column="15" selection-start-line="15" selection-start-column="15" selection-end-line="15" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/Controller.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#40#85#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/CustomerController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-3.9230769">
+          <caret line="6" column="15" selection-start-line="6" selection-start-column="15" selection-end-line="6" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/CustomersController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-3.9230769">
+          <caret line="6" column="15" selection-start-line="6" selection-start-column="15" selection-end-line="6" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/DashboardController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.3980583">
+          <caret line="18" column="31" selection-start-line="18" selection-start-column="31" selection-end-line="18" selection-end-column="31" />
+          <folding>
+            <marker date="1469015584000" expanded="true" signature="1089:1254" placeholder="select DATE(..." />
+            <marker date="1469015584000" expanded="true" signature="1089:1287" placeholder="select DATE(..." />
+            <marker date="1469015584000" expanded="true" signature="1379:1992" placeholder="SELECT DATE(..." />
+            <marker date="1469015584000" expanded="true" signature="1420:1992" placeholder="select DATE(..." />
+            <marker date="1469015584000" expanded="true" signature="3966:4152" placeholder="select DATE(..." />
+            <marker date="1469015584000" expanded="true" signature="4246:4833" placeholder="SELECT DATE(..." />
+            <marker date="1469015584000" expanded="true" signature="6888:7079" placeholder="select DATE(..." />
+            <marker date="1469015584000" expanded="true" signature="7136:7866" placeholder="select DATE(..." />
+            <marker date="1469015584000" expanded="true" signature="7181:7845" placeholder="SELECT DATE(..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/DeliveryServerController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-3.2692308">
+          <caret line="5" column="15" selection-start-line="5" selection-start-column="15" selection-end-line="5" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/FieldsController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.5631068">
+          <caret line="19" column="15" selection-start-line="19" selection-start-column="15" selection-end-line="19" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailAbuseController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.6504854">
+          <caret line="10" column="23" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/ListController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-3.2032967">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state vertical-scroll-proportion="-0.8252427">
+          <caret line="10" column="23" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/ListSubscribersController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.9029126">
+          <caret line="15" column="15" selection-start-line="11" selection-start-column="0" selection-end-line="15" selection-end-column="31" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/LogsController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state vertical-scroll-proportion="-4.576923">
+          <caret line="12" column="15" selection-start-line="12" selection-start-column="15" selection-end-line="12" selection-end-column="15" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/ManageGroupController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.4010989">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state vertical-scroll-proportion="-4.576923">
+          <caret line="12" column="15" selection-start-line="12" selection-start-column="15" selection-end-line="12" selection-end-column="15" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -784,13 +1006,23 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/UnsubscribeController.php">
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/SegmentController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.07716536">
+          <caret line="11" column="15" selection-start-line="11" selection-start-column="15" selection-end-line="11" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/SegmentConditionController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.035205364">
+          <caret line="12" column="21" selection-start-line="12" selection-start-column="21" selection-end-line="12" selection-end-column="21" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -798,295 +1030,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/customer/controllers/AccountController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.121664">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/backend/controllers/CustomersController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.9073783">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/UsersController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-22.884615">
-          <caret line="40" column="8" selection-start-line="40" selection-start-column="8" selection-end-line="45" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/CustomerController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-18.961538">
-          <caret line="88" column="36" selection-start-line="88" selection-start-column="36" selection-end-line="88" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/ThirdParty/EmailOneApi/Http/Client.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="51.692307">
-          <caret line="18" column="6" selection-start-line="18" selection-start-column="6" selection-end-line="18" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Customer.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/ThirdParty/EmailOneApi/Endpoint/Customers.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-26.153847">
-          <caret line="46" column="47" selection-start-line="46" selection-start-column="47" selection-end-line="46" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/api/controllers/CustomersController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-21.538462">
-          <caret line="115" column="28" selection-start-line="115" selection-start-column="28" selection-end-line="115" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/common/framework/yiilite.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.19309261">
-          <caret line="7888" column="37" selection-start-line="7686" selection-start-column="20" selection-end-line="7888" selection-end-column="37" />
-          <folding>
-            <marker date="1466976534000" expanded="true" signature="263130:263207" placeholder="CREATE TABLE..${$this-&gt;quoteTableName($table)}..." />
-            <marker date="1466976534000" expanded="true" signature="263467:263478" placeholder="DROP TABLE $..." />
-            <marker date="1466976534000" expanded="true" signature="263679:263776" placeholder="ALTER TABLE ${$this-&gt;quoteTableName($table)}..." />
-            <marker date="1466976534000" expanded="true" signature="263872:263934" placeholder="ALTER TABLE ${$this-&gt;quoteTableName($table)}..." />
-            <marker date="1466976534000" expanded="true" signature="264038:264145" placeholder="ALTER TABLE ${$this-&gt;quoteTableName($table)}..." />
-            <marker date="1466976534000" expanded="true" signature="264248:264391" placeholder="ALTER TABLE ${$this-&gt;quoteTableName($table)}..." />
-            <marker date="1466976534000" expanded="true" signature="264904:265138" placeholder="ALTER TABLE ${$this-&gt;quoteTableName($table)}..." />
-            <marker date="1466976534000" expanded="true" signature="265324:265390" placeholder="ALTER TABLE ${$this-&gt;quoteTableName($table)}..." />
-            <marker date="1466976534000" expanded="true" signature="266291:266445" placeholder="ALTER TABLE ${$this-&gt;quoteTableName($table)}..." />
-            <marker date="1466976534000" expanded="true" signature="266510:266576" placeholder="ALTER TABLE ${$this-&gt;quoteTableName($table)}..." />
-            <marker date="1466976534000" expanded="true" signature="267435:267475" placeholder="SELECT MAX(`..${{$table-&gt;rawName}..." />
-            <marker date="1466976534000" expanded="true" signature="267633:267700" placeholder="UPDATE sqlit..." />
-            <marker date="1466976534000" expanded="true" signature="267967:268044" placeholder="SELECT DISTI..sqlite_master..." />
-            <marker date="1466976534000" expanded="true" signature="270106:270166" placeholder="ALTER TABLE ${$this-&gt;quoteTableName($table)}..." />
-            <marker date="1466976534000" expanded="true" signature="270258:270270" placeholder="DELETE FROM ..." />
-            <marker date="1466976534000" expanded="true" signature="288820:288965" placeholder="INSERT INTO ${$this-&gt;_connection-&gt;quoteTableName($table)}..." />
-            <marker date="1466976534000" expanded="true" signature="289789:289801" placeholder="DELETE FROM ..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/DeliveryServerModel.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.65384614">
-          <caret line="6" column="25" selection-start-line="6" selection-start-column="6" selection-end-line="6" selection-end-column="25" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/common/models/DeliveryServerSmtp.php">
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/SessionsController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/common/models/CampaignUrl.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/common/models/DeliveryServer-new.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-9.434066">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/common/framework/collections/CAttributeCollection.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.521978">
-          <caret line="30" column="6" selection-start-line="30" selection-start-column="6" selection-end-line="30" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/common/components/utils/PasswordHasher.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-17.653847">
-          <caret line="27" column="5" selection-start-line="27" selection-start-column="5" selection-end-line="27" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/common/vendors/Openwall/PasswordHash.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.1538463">
-          <caret line="197" column="36" selection-start-line="0" selection-start-column="0" selection-end-line="255" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/backend/controllers/Delivery_serversController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6493927">
-          <caret line="114" column="99" selection-start-line="114" selection-start-column="99" selection-end-line="114" selection-end-column="99" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/customer/controllers/Delivery_serversController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.3230767">
-          <caret line="110" column="68" selection-start-line="110" selection-start-column="60" selection-end-line="110" selection-end-column="68" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/common/components/db/behaviors/DeliveryServerPaswordHandlerBehavior.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-10.461538">
-          <caret line="16" column="4" selection-start-line="16" selection-start-column="4" selection-end-line="18" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/vendor/phpseclib/phpseclib/phpseclib/Crypt/Base.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-22.538462">
-          <caret line="990" column="13" selection-start-line="990" selection-start-column="13" selection-end-line="990" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/vendor/phpseclib/phpseclib/phpseclib/Crypt/AES.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/console/config/main.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/common/models/DeliveryServer.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="98" column="21" selection-start-line="98" selection-start-column="10" selection-end-line="98" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/common/models/TransactionalEmail.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="160" column="5" selection-start-line="160" selection-start-column="5" selection-end-line="160" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/composer.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/composer.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.26771653">
-          <caret line="20" column="35" selection-start-line="20" selection-start-column="35" selection-end-line="20" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/console/commands/SendTransactionalEmailsCommand.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5582677">
-          <caret line="48" column="11" selection-start-line="48" selection-start-column="11" selection-end-line="48" selection-end-column="11" />
-          <folding>
-            <marker date="1468503797000" expanded="true" signature="2065:2197" placeholder="DELETE FROM ..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Helpers/Helpers.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8527559">
-          <caret line="81" column="10" selection-start-line="81" selection-start-column="10" selection-end-line="81" selection-end-column="10" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/GroupControlsModel.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.2543307">
-          <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/resources/views/dashboard/groups/controls.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-21.384615">
-          <caret line="45" column="30" selection-start-line="45" selection-start-column="30" selection-end-line="45" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/common/models/GroupEmailBounceLog.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/GroupEmailGroupsModel.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-9.153846">
-          <caret line="14" column="24" selection-start-line="14" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/resources/views/dashboard/dasboard.js.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/resources/views/dashboard/groups/index.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-23.346153">
-          <caret line="43" column="0" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/resources/views/dashboard/index.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.8846154">
-          <caret line="15" column="44" selection-start-line="15" selection-start-column="44" selection-end-line="15" selection-end-column="83" />
+        <state vertical-scroll-proportion="0.080314964">
+          <caret line="6" column="15" selection-start-line="6" selection-start-column="15" selection-end-line="6" selection-end-column="15" />
           <folding />
         </state>
       </provider>
@@ -1099,36 +1050,104 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/routes.php">
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/UnsubscribeController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.1076922">
-          <caret line="20" column="81" selection-start-line="20" selection-start-column="61" selection-end-line="20" selection-end-column="81" />
+        <state vertical-scroll-proportion="0.13385826">
+          <caret line="10" column="15" selection-start-line="10" selection-start-column="15" selection-end-line="10" selection-end-column="15" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/DashboardController.php">
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/UsersController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.44354182">
-          <caret line="410" column="0" selection-start-line="410" selection-start-column="0" selection-end-line="410" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.06692913">
+          <caret line="10" column="15" selection-start-line="10" selection-start-column="15" selection-end-line="10" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.06692913">
+          <caret line="10" column="15" selection-start-line="10" selection-start-column="15" selection-end-line="10" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/Auth/AuthController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-2.6153846">
+          <caret line="4" column="19" selection-start-line="4" selection-start-column="19" selection-end-line="4" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/vendor/composer/autoload_classmap.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5141732">
+          <caret line="122" column="36" selection-start-line="122" selection-start-column="36" selection-end-line="122" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/vendor/composer/ClassLoader.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="83.01538">
+          <caret line="61" column="28" selection-start-line="61" selection-start-column="24" selection-end-line="61" selection-end-column="28" />
           <folding>
-            <marker date="1468943484000" expanded="true" signature="991:1156" placeholder="select DATE(..." />
-            <marker date="1468943484000" expanded="true" signature="991:1189" placeholder="select DATE(..." />
-            <marker date="1468943484000" expanded="true" signature="1281:1894" placeholder="SELECT DATE(..." />
-            <marker date="1468943484000" expanded="true" signature="1322:1894" placeholder="select DATE(..." />
-            <marker date="1468943484000" expanded="true" signature="3868:4054" placeholder="select DATE(..." />
-            <marker date="1468943484000" expanded="true" signature="4148:4735" placeholder="SELECT DATE(..." />
-            <marker date="1468943484000" expanded="true" signature="6790:6981" placeholder="select DATE(..." />
-            <marker date="1468943484000" expanded="true" signature="7038:7768" placeholder="select DATE(..." />
-            <marker date="1468943484000" expanded="true" signature="7083:7747" placeholder="SELECT DATE(..." />
+            <element signature="e#7#267#0#PHP" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Console/Commands/AvgComplianceScoreCommand.php">
+    <entry file="file://$PROJECT_DIR$/mhapi/config/services.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.8846154">
+          <caret line="9" column="22" selection-start-line="9" selection-start-column="19" selection-end-line="9" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/database/factories/ModelFactory.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-2.6153846">
+          <caret line="13" column="17" selection-start-line="13" selection-start-column="17" selection-end-line="13" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Models/User.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-2.6153846">
+          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+          <folding>
+            <element signature="e#30#66#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/vendor/laravel/framework/src/Illuminate/Auth/EloquentUserProvider.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-13.076923">
+          <caret line="127" column="0" selection-start-line="127" selection-start-column="0" selection-end-line="127" selection-end-column="0" />
+          <folding>
+            <element signature="e#35#62#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/ApiController.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Providers/AuthServiceProvider.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-9.153846">
+          <caret line="15" column="19" selection-start-line="15" selection-start-column="19" selection-end-line="15" selection-end-column="19" />
           <folding />
         </state>
       </provider>
@@ -1136,23 +1155,12 @@
     <entry file="file://$PROJECT_DIR$/mhapi/app/Console/Kernel.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-10.461538">
-          <caret line="17" column="36" selection-start-line="17" selection-start-column="36" selection-end-line="17" selection-end-column="36" />
+          <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Console/Commands/SendGroupsCommand.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-12.423077">
-          <caret line="36" column="40" selection-start-line="36" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
-          <folding>
-            <element signature="e#6#85#0#PHP" expanded="true" />
-            <element signature="e#121#144#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Console/Commands/Inspire.php">
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Models/LogEntry.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -1160,18 +1168,36 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/d3pl0yMW.php">
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Models/Logger.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-28.576923">
-          <caret line="206" column="36" selection-start-line="206" selection-start-column="36" selection-end-line="206" selection-end-column="36" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/d3pl0yMHAPI.php">
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsGroupController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.24895222">
-          <caret line="88" column="5" selection-start-line="88" selection-start-column="5" selection-end-line="88" selection-end-column="5" />
+        <state vertical-scroll-proportion="-1.9615384">
+          <caret line="8" column="14" selection-start-line="8" selection-start-column="14" selection-end-line="8" selection-end-column="14" />
+          <folding>
+            <element signature="e#119#150#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/AbuseController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.6923077">
+          <caret line="8" column="22" selection-start-line="8" selection-start-column="21" selection-end-line="8" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app.new/Http/Controllers/Auth/AuthController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>

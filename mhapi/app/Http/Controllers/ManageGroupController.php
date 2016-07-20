@@ -8,9 +8,9 @@
 
 namespace App\Http\Controllers;
 
-use App\GroupEmailGroupsModel;
-use App\GroupEmailComplianceModel;
-use App\GroupEmailModel;
+use App\Models\GroupEmailGroupsModel;
+use App\Models\GroupEmailComplianceModel;
+use App\Models\GroupEmailModel;
 
 class ManageGroupController extends ApiController
 {

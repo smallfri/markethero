@@ -6,22 +6,22 @@
  * Time: 7:35 AM
  */
 
-namespace App\Http\Controllers;
+namespace App\Models\Http\Controllers;
 
-use App\Bounce;
-use App\CampaignAbuseModel;
-use App\CampaignModel;
-use App\Customer;
-use App\DeliveryLogModel;
-use App\GroupAbuseModel;
-use App\GroupControlsModel;
-use App\GroupEmailGroupsModel;
-use App\GroupEmailModel;
-use App\Lists;
-use App\Segment;
+use App\Models\Bounce;
+use App\Models\CampaignAbuseModel;
+use App\Models\CampaignModel;
+use App\Models\Customer;
+use App\Models\DeliveryLogModel;
+use App\Models\GroupAbuseModel;
+use App\Models\GroupControlsModel;
+use App\Models\GroupEmailGroupsModel;
+use App\Models\GroupEmailModel;
+use App\Models\Lists;
+use App\Models\Segment;
 use Illuminate\Http\Request;
-use App\TransactionalEmailModel;
-use App\User;
+use App\Models\TransactionalEmailModel;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 

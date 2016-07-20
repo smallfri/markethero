@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\EmailOne\Transformers\CustomerTransformer;
 
-use App\Customer;
+use App\Models\Customer;
 use App\Http\Requests;
 use Zend\Http\Response;
 

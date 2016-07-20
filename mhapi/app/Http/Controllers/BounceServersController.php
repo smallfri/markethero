@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Transformers\BounceServerTransformer;
-use App\BounceServer;
+use App\Models\BounceServer;
 use App\Http\Requests;
 use Zend\Http\Response;
 

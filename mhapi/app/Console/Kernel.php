@@ -15,7 +15,6 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         'App\Console\Commands\SendGroupsCommand',
         'App\Console\Commands\AvgComplianceScoreCommand',
-        'App\Console\Commands\Deploy',
     ];
 
     /**

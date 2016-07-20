@@ -8,13 +8,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Country;
-use App\Customer;
-use App\Lists;
-use App\ListsCompany;
-use App\ListsDefaults;
-use App\ListsCustomerNotification;
-use App\Zone;
+use App\Models\Country;
+use App\Models\Customer;
+use App\Models\Lists;
+use App\Models\ListsCompany;
+use App\Models\ListsDefaults;
+use App\Models\ListsCustomerNotification;
+use App\Models\Zone;
 use Illuminate\Support\Facades\URL;
 
 class ListController extends ApiController

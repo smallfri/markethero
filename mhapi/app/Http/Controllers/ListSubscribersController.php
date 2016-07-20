@@ -9,11 +9,11 @@
 namespace App\Http\Controllers;
 
 
-use App\ListFieldValueModel;
-use App\Lists;
-use App\SubscriberModel;
-use App\Field;
-use App\ListsSubscriber;
+use App\Models\ListFieldValueModel;
+use App\Models\Lists;
+use App\Models\SubscriberModel;
+use App\Models\Field;
+use App\Models\ListsSubscriber;
 
 class ListSubscribersController extends ApiController
 {

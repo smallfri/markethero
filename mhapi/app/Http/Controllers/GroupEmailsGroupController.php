@@ -8,10 +8,10 @@
 
 namespace App\Http\Controllers;
 
-use App\GroupEmailModel;
-use App\Logger;
-use App\GroupEmailGroupsModel;
-use App\GroupEmailComplianceModel;
+use App\Models\GroupEmailModel;
+use App\Models\Logger;
+use App\Models\GroupEmailGroupsModel;
+use App\Models\GroupEmailComplianceModel;
 use Faker\Provider\zh_TW\DateTime;
 
 class GroupEmailsGroupController extends ApiController

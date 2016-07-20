@@ -8,7 +8,7 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
+use App\Models\User;
 
 class UsersController extends ApiController
 {

@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\BlacklistModel;
-use App\SubscriberModel;
+use App\Models\BlacklistModel;
+use App\Models\SubscriberModel;
 use App\Http\Requests;
-use App\Spam;
-use App\UnsubscribeModel;
+use App\Models\Spam;
+use App\Models\UnsubscribeModel;
 use Zend\Http\Response;
-use App\Logger;
+use App\Models\Logger;
 
 class UnsubscribeController extends ApiController
 {

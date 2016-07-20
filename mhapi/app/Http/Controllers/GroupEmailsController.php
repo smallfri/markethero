@@ -8,7 +8,7 @@
 
 namespace App\Http\Controllers;
 
-use App\GroupEmailModel;
+use App\Models\GroupEmailModel;
 
 class GroupEmailsController extends ApiController
 {

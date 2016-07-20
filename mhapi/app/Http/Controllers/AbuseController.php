@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\BlacklistModel;
-use App\CampaignAbuseModel;
-use App\SubscriberModel;
+use App\Models\BlacklistModel;
+use App\Models\CampaignAbuseModel;
+use App\Models\SubscriberModel;
 use App\Http\Requests;
-use App\Spam;
+//use App\Models\Spamgit add
 use Zend\Http\Response;
-use App\Logger;
+use App\Models\Logger;
 
 class AbuseController extends ApiController
 {

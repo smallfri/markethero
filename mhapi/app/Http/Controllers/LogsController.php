@@ -8,9 +8,9 @@
 
 namespace App\Http\Controllers;
 
-use App\TraceLog;
+use App\Models\TraceLog;
 use Illuminate\Support\Facades\Input;
-use App\Logger;
+use App\Models\Logger;
 
 class LogsController extends Controller
 {

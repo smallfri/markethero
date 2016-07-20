@@ -6,14 +6,14 @@
  * Time: 11:08 AM
  */
 
-namespace App\Http\Controllers;
+namespace App\Models\Http\Controllers;
 
 
-use App\CampaignModel;
-use App\CampaignOptionsModel;
-use App\CampaignTemplateModel;
-use App\Lists;
-use App\Segment;
+use App\Models\CampaignModel;
+use App\Models\CampaignOptionsModel;
+use App\Models\CampaignTemplateModel;
+use App\Models\Lists;
+use App\Models\Segment;
 
 class CampaignController extends ApiController
 {

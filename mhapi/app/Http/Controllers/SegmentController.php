@@ -8,8 +8,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Segment;
-use App\SegmentCondition;
+use App\Models\Segment;
+use App\Models\SegmentCondition;
 
 class SegmentController extends ApiController
 {

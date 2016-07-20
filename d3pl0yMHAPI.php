@@ -1,10 +1,8 @@
 <?php
 
 $pw = 'd0i7';
-$opts = getopt('p:');
 
-
-DEFINE('APPPATH','mhapi');
+DEFINE('APPPATH','mhapi/');
 //echo APPPATH.'controllers.new';
 //exit;
 error_reporting(E_ALL);
@@ -23,7 +21,7 @@ function get_deploy_folders()
     $blacklist = array('.', '..', 'assets', 'config', 'database', 'lang', 'start', 'storage', 'tests', 'filters.php', 'api', 'extensions', 'cgi_bin');
     while (false !== ($file = readdir($handle))) {
         if (!in_array($file, $blacklist)) {
-//                echo "$file<br />\n";
+//                echo "$file<br /><br/>";
             if(preg_match("/\.new$/",$file))
             {
                 $file = str_replace('.new','',$file);
@@ -32,7 +30,7 @@ function get_deploy_folders()
         }
     }
     closedir($handle);
-    echo "FOUND folders!!!";
+    echo "FOUND folders!!!<br/>";
     print_r($deploy_folders);
     return;
 }
@@ -42,7 +40,7 @@ function deploy()
     global $pw;
 	global $path;
     global $deploy_folders;
-    echo "Deploying...\n\n";
+    echo "Deploying...<br/><br/>";
 
     $saved_last = FALSE;
 
@@ -73,23 +71,23 @@ function deploy()
                 // deploy new
                 rename(APPPATH.$directory.'.new',APPPATH.$directory);
 
-                echo " - deploying new $directory!\n";
+                echo " - deploying new $directory!<br/>";
             }
         }
-        echo "\n\n### ## # !!!DEPLOYED!!! # ## ###\n\n";
+        echo "<br/><br/>### ## # !!!DEPLOYED!!! # ## ###<br/><br/>";
 
-//        echo "\n\nSanity Check: <a href=\"admin/load_models\" target=\"_blank\">Test Models</a>";
+//        echo "<br/><br/>Sanity Check: <a href=\"admin/load_models\" target=\"_blank\">Test Models</a>";
 
-        echo "Emergency Rollback command: php -f d3pl0y.php p=d0i7 a=yes.rollback\n";
+        echo "Emergency Rollback command: php -f d3pl0y.php p=d0i7 a=yes.rollback<br/>";
 
-//        echo "\n\n<a href=\"d3pl0y.php?p=$pw\">Home!</a>";
+//        echo "<br/><br/><a href=\"d3pl0y.php?p=$pw\">Home!</a>";
 
     }
     else
     {
-        echo " - NO NEW FILES!\n";
+        echo " - NO NEW FILES!<br/>";
     }
-//    echo "\n\n\n=======================================================\n\n";
+//    echo "<br/><br/><br/>=======================================================<br/><br/>";
 
 //    exit;
 }
@@ -114,7 +112,7 @@ function get_timestamp()
     $blacklist = array('.', '..', 'assets', 'config', 'database', 'lang', 'start', 'storage', 'tests', 'filters.php');
     while (false !== ($file = readdir($handle))) {
         if (!in_array($file, $blacklist)) {
-//                echo "$file<br />\n";
+//                echo "$file<br /><br/>";
             $parts = explode('.',$file);
             if(isset($parts[1]) AND $parts[1] == 'last')
             {
@@ -135,12 +133,12 @@ function rollback()
 {
     global $pw;
     global $deploy_folders;
-    echo "Rolling back...\n\n";
+    echo "Rolling back...<br/><br/>";
 //        $handle = opendir(APPPATH);
 //        $blacklist = array('.', '..', 'migrations', 'libraries', 'cache', 'helpers', 'errors', 'third_party', 'hooks', 'plugins', 'core', 'config', 'logs', 'language', 'index.html', '.htaccess', 'rating.php');
 //        while (false !== ($file = readdir($handle))) {
 //            if (!in_array($file, $blacklist)) {
-//                echo "$file<br />\n";
+//                echo "$file<br /><br/>";
 //                $parts = explode('.',$file);
 //                if(isset($parts[1]) AND $parts[1] == 'last')
 //                {
@@ -163,7 +161,7 @@ function rollback()
         {
             if(file_exists(APPPATH.$timestamp.'.last.'.$directory))
             {
-                echo "Rolling back ".$timestamp.'.last.'.$directory."\n";
+                echo "Rolling back ".$timestamp.'.last.'.$directory."<br/>";
                 // save bad ones
                 rename(APPPATH.$directory, APPPATH.$directory.'.bad');
                 // bring back last ones
@@ -171,28 +169,28 @@ function rollback()
             }
         }
 
-        echo "\n\n### ## # !!!ROLLED BACK!!! # ## ###\n\n";
+        echo "<br/><br/>### ## # !!!ROLLED BACK!!! # ## ###<br/><br/>";
 
     }
     else
     {
-        echo "Nothing to Roll Back!\n";
+        echo "Nothing to Roll Back!<br/>";
     }
 
-//    echo "\n\n\nUNDO: <a href=\"d3pl0y.php?a=deploy&p=$pw\">Deploy!</a>";
+//    echo "<br/><br/><br/>UNDO: <a href=\"d3pl0y.php?a=deploy&p=$pw\">Deploy!</a>";
 
-//    echo "\n\n<a href=\"d3pl0y.php?p=$pw\">Home!</a>";
+//    echo "<br/><br/><a href=\"d3pl0y.php?p=$pw\">Home!</a>";
 
 //    exit;
 }
 
 function show_files($files)
 {
-    echo count($files)." folders:\n";
+    echo count($files)." folders:<br/>";
     $i = 0;
     foreach( $files AS $file)
     {
-        echo "  #".++$i.") $file\n";
+        echo "  #".++$i.") $file<br/>";
     }
 }
 
@@ -208,38 +206,37 @@ function show_rollback($pw)
     }
     else
     {
-        echo "Are you sure you want to roll back? Use: php -f d3pl0y.php p=d0i7 a=yes.rollback\n\n";
+        echo "Are you sure you want to roll back? Use: php -f d3pl0y.php p=d0i7 a=yes.rollback<br/><br/>";
 
-        echo "You will be rolling back code from [$timestamp] ";
+        echo "You will be rolling back code from [$timestamp]<br/><br/> ";
         show_files($deploy_folders);
     }
-    echo "=======================================================\n\n";
+    echo "=======================================================<br/><br/>";
 
 }
 
 function show_deploy($pw)
 {
-    echo "=======================================================\n";
+    echo "=======================================================<br/>";
     global $deploy_folders;
     $deploy_folders = array();
 //        echo "deploy!";
     get_deploy_folders();
     if(count($deploy_folders) == 0)
     {
-        echo "Nothing to deploy.";
+        echo "Nothing to deploy.<br/><br/>";
     }
     else
     {
-        echo "Are you sure you want to deploy? Use: php -f d3pl0y.php p=d0i7 a=yes.deploy\n\n";
-        echo "You will be deploying ";
+        echo "Are you sure you want to deploy? Use: php -f d3pl0y.php p=d0i7 a=yes.deploy<br/><br/>";
+        echo "You will be deploying <br/><br/>";
         show_files($deploy_folders);
     }
-    echo "=======================================================\n";
+    echo "=======================================================<br/>";
 
 }
 
-print_r($opts);
-if(isset($opts['p']) && $opts['p'] == $pw)
+if(isset($_GET['p']) && $_GET['p'] == $pw)
 {
     $host = 'Unknown';
     if( isset($_SERVER['HOST']) )
@@ -250,7 +247,7 @@ if(isset($opts['p']) && $opts['p'] == $pw)
     {
         $host = $_SERVER['HOSTNAME'];
     }
-    echo "\nWORKING on: {$host} ...\n";
+    echo "<br/>WORKING on: {$host} ...<br/>";
 
     if(isset($_GET['a']))
     {
@@ -279,7 +276,7 @@ if(isset($opts['p']) && $opts['p'] == $pw)
         show_rollback($pw);
 
 //        echo "Sanity Check: <a href=\"admin/load_models\" target=\"_blank\">Test Models</a>";
-        echo "\n";
+        echo "<br/>";
     }
 }
 else

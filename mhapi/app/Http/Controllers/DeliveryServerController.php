@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\EmailOne\Transformers\CustomerTransformer;
-use App\SMTPServer;
+use App\Models\SMTPServer;
 use App\Http\Requests;
 use Zend\Http\Response;
 
