@@ -2,7 +2,7 @@
 
 namespace App\Helpers;
 
-use App\BounceServer;
+use App\Models\BounceServer;
 
 class Helpers
 {
@@ -81,7 +81,7 @@ class Helpers
 
     static function findBounceServerSenderEmail($bounce_server_id)
     {
-        $bounceServer = BounceServer::find($bounce_server_id);
+        $bounceServer = \App\Models\BounceServer::find($bounce_server_id);
         return $bounceServer->email;
     }
 }

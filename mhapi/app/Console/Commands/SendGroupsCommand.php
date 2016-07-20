@@ -9,15 +9,15 @@
 namespace App\Console\Commands;
 
 
-use App\BlacklistModel;
-use App\BounceServer;
-use App\DeliveryServerModel;
-use App\GroupControlsModel;
-use App\GroupEmailComplianceLevelsModel;
-use App\GroupEmailComplianceModel;
-use App\GroupEmailGroupsModel;
-use App\GroupEmailLogModel;
-use App\GroupEmailModel;
+use App\Models\BlacklistModel;
+use App\Models\BounceServer;
+use App\Models\DeliveryServerModel;
+use App\Models\GroupControlsModel;
+use App\Models\GroupEmailComplianceLevelsModel;
+use App\Models\GroupEmailComplianceModel;
+use App\Models\GroupEmailGroupsModel;
+use App\Models\GroupEmailLogModel;
+use App\Models\GroupEmailModel;
 use App\Helpers\Helpers;
 use DB;
 use GuzzleHttp\Client;
@@ -620,9 +620,23 @@ class SendGroupsCommand extends Command
     protected function getOptions()
     {
 
-        $options = GroupControlsModel::find(1);
+        $options = new \stdClass();
 
-        return (object)$options;
+               $options->id = 1;
+               $options->emails_at_once = 100;
+               $options->emails_per_minute = 200;
+               $options->change_server_at = 1000;
+               $options->compliance_limit = 50000;
+               $options->memory_limit = 3000;
+               $options->compliance_abuse_range = .01;
+               $options->compliance_unsub_range = .01;
+               $options->compliance_bounce_range = .01;
+               $options->groups_in_parallel = 5;
+               $options->group_emails_in_parallel = 10;
+
+//        $options = GroupControlsModel::find(1);
+
+        return $options;
 
     }
 
@@ -824,7 +838,9 @@ class SendGroupsCommand extends Command
 
         $this->stdout('ImpressionWise body '.$get_array['result']);
 
-        if($get_array['result']=='CERTDOM' OR $get_array['result']== 'CERTINT')
+        $canSend = ['CERTDOM', 'CERTINT', 'KEY', 'QUARANTINE', 'NETPROTECT'];
+
+        if(in_array($get_array['result'], $canSend))
         {
             return true;
         }
@@ -973,11 +989,11 @@ class SendGroupsCommand extends Command
         foreach ($emails as $index => $email)
         {
 
-            if(!$this->checkImpressionWise($email))
-            {
-                $this->stdout('Failed impressionWise Check');
-                continue;
-            }
+//            if(!$this->checkImpressionWise($email))
+//            {
+//                $this->stdout('Failed impressionWise Check');
+//                continue;
+//            }
 
             $this->stdout("", false);
             $this->stdout(sprintf("%s - %d/%d - group %d", $email['to_email'], ($index+1), $emailsCount,
@@ -988,8 +1004,8 @@ class SendGroupsCommand extends Command
             $mail->addCustomHeader('X-Mw-Email-Uid', $email['email_uid']);
 
             $mail->addReplyTo($email['from_email'], $email['from_name']);
-            $mail->addAddress($email['to_email'], $email['to_name']);
             $mail->setFrom($email['from_email'], $email['from_name']);
+            $mail->addAddress($email['to_email'], $email['to_name']);
 
             $mail->Subject = $email['subject'];
             $mail->MsgHTML($email['body']);
