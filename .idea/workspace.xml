@@ -2,134 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c9b7ec24-babb-4088-b4f3-f3a6cadded3c" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/_prep.sh" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/AbuseController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/ApiController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/Auth/AuthController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/Auth/PasswordController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/BlacklistController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/BounceController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/BounceServerController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/BounceServerCustomerController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/BounceServersController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/CampaignController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/Controller.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/CustomerController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/CustomersController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/DashboardController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/DeliveryServerController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/FieldsController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/GroupEmailAbuseController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/GroupEmailsController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/GroupEmailsGroupController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/ListController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/ListSubscribersController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/LogsController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/ManageGroupController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/PagesController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/PasswordsController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/SegmentConditionController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/SegmentController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/SessionsController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/TransactionalEmailsController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/UnsubscribeController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/UsersController.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/d3pl0yMW.php" afterPath="$PROJECT_DIR$/d3pl0y.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/BlacklistModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/BlacklistModel.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/Bounce.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/Bounce.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/BounceServer.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/BounceServer.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/CampaignAbuseModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/CampaignAbuseModel.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/CampaignModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/CampaignModel.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/CampaignOptionsModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/CampaignOptionsModel.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/CampaignOptionsRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/CampaignOptionsRepository.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/CampaignRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/CampaignRepository.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/CampaignTemplateModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/CampaignTemplateModel.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/CampaignTemplateRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/CampaignTemplateRepository.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/ComplianceAverageModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/ComplianceAverageModel.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/ComplianceAverageRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/ComplianceAverageRepository.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/ComplianceScoreModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/ComplianceScoreModel.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/ComplianceScoreRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/ComplianceScoreRepository.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/Country.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/Country.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/CountryRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/CountryRepository.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/Customer.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/Customer.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/CustomerRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/CustomerRepository.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/DeliveryLogModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/DeliveryLogModel.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/DeliveryServerModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/DeliveryServerModel.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/Field.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/Field.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/FieldRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/FieldRepository.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/GroupAbuseModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/GroupAbuseModel.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/GroupControlsModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/GroupControlsModel.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/GroupEmailAbuseModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/GroupEmailAbuseModel.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/GroupEmailComplianceLevelsModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/GroupEmailComplianceLevelsModel.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/GroupEmailComplianceModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/GroupEmailComplianceModel.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/GroupEmailComplianceModelRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/GroupEmailComplianceModelRepository.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/GroupEmailGroupsModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/GroupEmailGroupsModel.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/GroupEmailGroupsModelRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/GroupEmailGroupsModelRepository.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/GroupEmailLogModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/GroupEmailLogModel.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/GroupEmailModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/GroupEmailModel.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/GroupEmailModelRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/GroupEmailModelRepository.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/ListFieldValueModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/ListFieldValueModel.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/ListFieldValueRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/ListFieldValueRepository.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/Lists.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/Lists.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/ListsCompany.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/ListsCompany.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/ListsCompanyRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/ListsCompanyRepository.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/ListsCustomerNotification.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/ListsCustomerNotification.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/ListsCustomerNotificationRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/ListsCustomerNotificationRepository.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/ListsDefaults.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/ListsDefaults.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/ListsDefaultsRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/ListsDefaultsRepository.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/ListsRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/ListsRepository.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/ListsSubscriber.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/ListsSubscriber.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/ListsSubscriberRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/ListsSubscriberRepository.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/LogEntry.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/LogEntry.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/Logger.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/Logger.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/SMTPServer.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/SMTPServer.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/Segment.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/Segment.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/SegmentCondition.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/SegmentCondition.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/SegmentConditionRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/SegmentConditionRepository.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/SegmentRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/SegmentRepository.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/SubscriberModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/SubscriberModel.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/SubscriberModelRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/SubscriberModelRepository.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/TraceLog.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/TraceLog.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/TraceLogModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/TraceLogModel.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/TransactionalEmailModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/TransactionalEmailModel.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/UnsubscribeModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/UnsubscribeModel.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/UnsubscribeModelRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/UnsubscribeModelRepository.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/User.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/User.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/UserRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/UserRepository.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/Zone.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/Zone.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mhapi/app/ZoneRepository.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/ZoneRepository.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/d3pl0yMHAPI.php" afterPath="$PROJECT_DIR$/d3pl0yMHAPI.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Console/Kernel.php" afterPath="$PROJECT_DIR$/mhapi/app/Console/Kernel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/AbuseController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/AbuseController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/Auth/AuthController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/Auth/AuthController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/BlacklistController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/BlacklistController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServerController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServerController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServerCustomerController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServerCustomerController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServersController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServersController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/CampaignController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/CampaignController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/CustomerController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/CustomerController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/CustomersController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/CustomersController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/DashboardController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/DashboardController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/DeliveryServerController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/DeliveryServerController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/FieldsController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/FieldsController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailAbuseController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailAbuseController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsGroupController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsGroupController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/ListController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/ListController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/ListSubscribersController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/ListSubscribersController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/LogsController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/LogsController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/ManageGroupController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/ManageGroupController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/SegmentConditionController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/SegmentConditionController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/SegmentController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/SegmentController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/SessionsController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/SessionsController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/UnsubscribeController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/UnsubscribeController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/UsersController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/UsersController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Providers/AuthServiceProvider.php" afterPath="$PROJECT_DIR$/mhapi/app/Providers/AuthServiceProvider.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/config/auth.php" afterPath="$PROJECT_DIR$/mhapi/config/auth.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/config/services.php" afterPath="$PROJECT_DIR$/mhapi/config/services.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/database/factories/ModelFactory.php" afterPath="$PROJECT_DIR$/mhapi/database/factories/ModelFactory.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Models/GroupEmailModel.php" afterPath="$PROJECT_DIR$/mhapi/app/Models/GroupEmailModel.php" />
     </list>
     <ignored path="MarketHero.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -193,66 +68,43 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GroupEmailsGroupController.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsGroupController.php">
+      <file leaf-file-name="DashboardController.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/DashboardController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-1.9615384">
-              <caret line="8" column="14" selection-start-line="8" selection-start-column="14" selection-end-line="8" selection-end-column="14" />
+            <state vertical-scroll-proportion="0.5829904">
+              <caret line="329" column="0" selection-start-line="329" selection-start-column="0" selection-end-line="329" selection-end-column="0" />
               <folding>
-                <element signature="e#119#150#0#PHP" expanded="true" />
+                <element signature="e#120#144#0#PHP" expanded="true" />
+                <marker date="1469020241000" expanded="true" signature="882:1047" placeholder="select DATE(..." />
+                <marker date="1469020241000" expanded="true" signature="882:1080" placeholder="select DATE(..." />
+                <marker date="1469020241000" expanded="true" signature="1172:1785" placeholder="SELECT DATE(..." />
+                <marker date="1469020241000" expanded="true" signature="1213:1785" placeholder="select DATE(..." />
+                <marker date="1469020241000" expanded="true" signature="3759:3945" placeholder="select DATE(..." />
+                <marker date="1469020241000" expanded="true" signature="4039:4626" placeholder="SELECT DATE(..." />
+                <marker date="1469020241000" expanded="true" signature="6681:6872" placeholder="select DATE(..." />
+                <marker date="1469020241000" expanded="true" signature="6929:7659" placeholder="select DATE(..." />
+                <marker date="1469020241000" expanded="true" signature="6974:7638" placeholder="SELECT DATE(..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AbuseController.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/AbuseController.php">
+      <file leaf-file-name="GroupEmailModel.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mhapi/app/Models/GroupEmailModel.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.6923077">
-              <caret line="8" column="22" selection-start-line="8" selection-start-column="21" selection-end-line="8" selection-end-column="22" />
+            <state vertical-scroll-proportion="-7.1923075">
+              <caret line="16" column="38" selection-start-line="16" selection-start-column="38" selection-end-line="16" selection-end-column="38" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AuthController.php" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/mhapi/app.new/Http/Controllers/Auth/AuthController.php">
+      <file leaf-file-name="GroupEmailLogModel.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mhapi/app/Models/GroupEmailLogModel.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state vertical-scroll-proportion="-9.153846">
+              <caret line="14" column="6" selection-start-line="0" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Logger.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mhapi/app/Models/Logger.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="LogEntry.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mhapi/app/Models/LogEntry.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="User.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mhapi/app/Models/User.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-2.6153846">
-              <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-              <folding>
-                <element signature="e#30#66#0#PHP" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -265,9 +117,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/mhapi/app/ListsRepository.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/ListsSubscriber.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/ListsSubscriberRepository.php" />
         <option value="$PROJECT_DIR$/mhapi/app/LogEntry.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Logger.php" />
         <option value="$PROJECT_DIR$/mhapi/app/SMTPServer.php" />
@@ -283,7 +132,6 @@
         <option value="$PROJECT_DIR$/d3pl0y.php" />
         <option value="$PROJECT_DIR$/d3pl0yMW.php" />
         <option value="$PROJECT_DIR$/_prep.sh" />
-        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/AbuseController.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/BlacklistController.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceController.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/BounceServerController.php" />
@@ -292,7 +140,6 @@
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/CampaignController.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/CustomerController.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/CustomersController.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/DashboardController.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/DeliveryServerController.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/FieldsController.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailAbuseController.php" />
@@ -316,6 +163,11 @@
         <option value="$PROJECT_DIR$/mhapi/app/Providers/AuthServiceProvider.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Console/Kernel.php" />
         <option value="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/AbuseController.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/AbuseController.php" />
+        <option value="$PROJECT_DIR$/apps/common/models/GroupEmail.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Models/GroupEmailsModel.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Models/GroupEmailModel.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/DashboardController.php" />
       </list>
     </option>
   </component>
@@ -405,103 +257,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="vendor" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MarketHero" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MarketHero" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mhapi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app.new" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MarketHero" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MarketHero" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mhapi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app.new" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Http" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MarketHero" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MarketHero" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mhapi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app.new" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Http" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Controllers" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MarketHero" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MarketHero" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mhapi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app.new" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Http" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Controllers" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Auth" />
+              <option name="myItemId" value="app" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -520,6 +276,10 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Models" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -568,6 +328,28 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="Controllers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mhapi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Console" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -582,6 +364,46 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="apps" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apps" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="common" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apps" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="common" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="models" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -684,14 +506,14 @@
     <editor active="true" />
     <layout>
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2068" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2068" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26766917" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.45090908" sideWeight="0.50213677" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15589081" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32330826" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18890555" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3344086" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.40676692" sideWeight="0.49786323" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.40676692" sideWeight="0.49786323" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
@@ -795,33 +617,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Models/BlacklistModel.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.32125986">
-          <caret line="24" column="17" selection-start-line="24" selection-start-column="17" selection-end-line="24" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider editor-type-id="MarkdownPreviewEditor">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-3.8857143">
-          <caret line="8" column="28" selection-start-line="8" selection-start-column="28" selection-end-line="8" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/d3pl0y.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-17.0">
-          <caret line="26" column="43" selection-start-line="26" selection-start-column="43" selection-end-line="26" selection-end-column="43" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/apps/content-page.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -925,24 +720,6 @@
         <state vertical-scroll-proportion="-3.9230769">
           <caret line="6" column="15" selection-start-line="6" selection-start-column="15" selection-end-line="6" selection-end-column="15" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/DashboardController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.3980583">
-          <caret line="18" column="31" selection-start-line="18" selection-start-column="31" selection-end-line="18" selection-end-column="31" />
-          <folding>
-            <marker date="1469015584000" expanded="true" signature="1089:1254" placeholder="select DATE(..." />
-            <marker date="1469015584000" expanded="true" signature="1089:1287" placeholder="select DATE(..." />
-            <marker date="1469015584000" expanded="true" signature="1379:1992" placeholder="SELECT DATE(..." />
-            <marker date="1469015584000" expanded="true" signature="1420:1992" placeholder="select DATE(..." />
-            <marker date="1469015584000" expanded="true" signature="3966:4152" placeholder="select DATE(..." />
-            <marker date="1469015584000" expanded="true" signature="4246:4833" placeholder="SELECT DATE(..." />
-            <marker date="1469015584000" expanded="true" signature="6888:7079" placeholder="select DATE(..." />
-            <marker date="1469015584000" expanded="true" signature="7136:7866" placeholder="select DATE(..." />
-            <marker date="1469015584000" expanded="true" signature="7181:7845" placeholder="SELECT DATE(..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1136,26 +913,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/ApiController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mhapi/app/Providers/AuthServiceProvider.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-9.153846">
           <caret line="15" column="19" selection-start-line="15" selection-start-column="19" selection-end-line="15" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Console/Kernel.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-10.461538">
-          <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1176,29 +937,110 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsGroupController.php">
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/ApiController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.9615384">
-          <caret line="8" column="14" selection-start-line="8" selection-start-column="14" selection-end-line="8" selection-end-column="14" />
-          <folding>
-            <element signature="e#119#150#0#PHP" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/AbuseController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.6923077">
-          <caret line="8" column="22" selection-start-line="8" selection-start-column="21" selection-end-line="8" selection-end-column="22" />
+        <state vertical-scroll-proportion="0.18655692">
+          <caret line="8" column="28" selection-start-line="8" selection-start-column="28" selection-end-line="8" selection-end-column="28" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app.new/Http/Controllers/Auth/AuthController.php">
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsGroupController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.06995885">
+          <caret line="8" column="14" selection-start-line="8" selection-start-column="14" selection-end-line="8" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Console/Kernel.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-10.461538">
+          <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Models/TransactionalEmailModel.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.1399177">
+          <caret line="6" column="6" selection-start-line="6" selection-start-column="6" selection-end-line="6" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/common/models/GroupEmail.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.11659808">
+          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Models/GroupEmailGroupsModel.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-3.9230769">
+          <caret line="6" column="6" selection-start-line="6" selection-start-column="6" selection-end-line="6" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Models/GroupEmailComplianceModelRepository.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Models/GroupEmailModelRepository.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Models/GroupEmailLogModel.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-9.153846">
+          <caret line="14" column="6" selection-start-line="0" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Models/GroupEmailModel.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-7.1923075">
+          <caret line="16" column="38" selection-start-line="16" selection-start-column="38" selection-end-line="16" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/DashboardController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5829904">
+          <caret line="329" column="0" selection-start-line="329" selection-start-column="0" selection-end-line="329" selection-end-column="0" />
+          <folding>
+            <element signature="e#120#144#0#PHP" expanded="true" />
+            <marker date="1469020241000" expanded="true" signature="882:1047" placeholder="select DATE(..." />
+            <marker date="1469020241000" expanded="true" signature="882:1080" placeholder="select DATE(..." />
+            <marker date="1469020241000" expanded="true" signature="1172:1785" placeholder="SELECT DATE(..." />
+            <marker date="1469020241000" expanded="true" signature="1213:1785" placeholder="select DATE(..." />
+            <marker date="1469020241000" expanded="true" signature="3759:3945" placeholder="select DATE(..." />
+            <marker date="1469020241000" expanded="true" signature="4039:4626" placeholder="SELECT DATE(..." />
+            <marker date="1469020241000" expanded="true" signature="6681:6872" placeholder="select DATE(..." />
+            <marker date="1469020241000" expanded="true" signature="6929:7659" placeholder="select DATE(..." />
+            <marker date="1469020241000" expanded="true" signature="6974:7638" placeholder="SELECT DATE(..." />
+          </folding>
         </state>
       </provider>
     </entry>

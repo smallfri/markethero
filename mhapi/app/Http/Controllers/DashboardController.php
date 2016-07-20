@@ -6,19 +6,12 @@
  * Time: 7:35 AM
  */
 
-namespace App\Models\Http\Controllers;
+namespace App\Http\Controllers;
 
-use App\Models\Bounce;
-use App\Models\CampaignAbuseModel;
-use App\Models\CampaignModel;
 use App\Models\Customer;
-use App\Models\DeliveryLogModel;
-use App\Models\GroupAbuseModel;
 use App\Models\GroupControlsModel;
 use App\Models\GroupEmailGroupsModel;
 use App\Models\GroupEmailModel;
-use App\Models\Lists;
-use App\Models\Segment;
 use Illuminate\Http\Request;
 use App\Models\TransactionalEmailModel;
 use App\Models\User;
@@ -34,7 +27,6 @@ class DashboardController extends ApiController
 
     public function index()
     {
-
         /*
          * This gathers delivery stats for 2 weeks starting today
          */
@@ -315,11 +307,9 @@ class DashboardController extends ApiController
         }
         $abuse_stats = rtrim($a_stats, ",");
 
-
-        $emails_monthly = GroupEmailModel::select('email_uid', 'date_added', DB::raw('count(1) AS count'))
+        $emails_monthly = GroupEmailModel::select('email_id', 'date_added', DB::raw('count(1) AS count'))
             ->groupBy(DB::raw('MONTH(date_added)'))
             ->get();
-
 
         $monthly_emails = null;
         foreach ($emails_monthly as $month)
@@ -333,9 +323,10 @@ class DashboardController extends ApiController
         /*
          *  Get counts
          */
+
         $groups = GroupEmailGroupsModel::all()->count();
         $transactionals = TransactionalEmailModel::all()->count();
-        $group_emails_count = GroupEmailModel::all()->count();
+        $group_emails_count = GroupEmailModel::where('email_id','>',1)->count();
         $customer_count = Customer::all()->count();
 
         $data = [
