@@ -197,15 +197,15 @@ class SendTransactionalEmailCommand extends Command
 
             if (!$mail->send())
             {
-                $this->updateTransactionalEmail($email, 'unsent');
+                $this->updateTransactionalEmail($email['email_uid'], 'unsent');
                 $this->logTransactionalEmailDelivery($email['email_id'], $mail->ErrorInfo);
-                $this->stdout('ERROR Sending transactional Emails to '.$email['to_email'].'!');
+                $this->stdout('ERROR Sending transactional Email to '.$email['to_email'].'!');
                 $this->stdout('ERROR '.$mail->ErrorInfo.'!');
             }
             else
             {
-                $this->updateTransactionalEmail($email, 'sent');
-                $this->stdout('Sent transactional Emails to '.$email['to_email'].'!');
+                $this->updateTransactionalEmail($email['email_uid'], 'sent');
+                $this->stdout('Sent transactional Email to '.$email['to_email'].'!');
             }
 
             $mail->clearAddresses();
@@ -231,9 +231,9 @@ class SendTransactionalEmailCommand extends Command
 
     public function updateTransactionalEmail($emailId, $status)
     {
-       TransactionalEmailModel::where('email_id', $emailId)
+       TransactionalEmailModel::where('email_uid', $emailId)
             ->update(['status' => $status]);
-        TransactionalEmailModel::where('email_id', '=', $emailId)->increment('retries');
+        TransactionalEmailModel::where('email_uid', '=', $emailId)->increment('retries');
 
     }
 
