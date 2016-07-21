@@ -622,17 +622,17 @@ class SendGroupsCommand extends Command
 
         $options = new \stdClass();
 
-               $options->id = 1;
-               $options->emails_at_once = 100;
-               $options->emails_per_minute = 200;
-               $options->change_server_at = 1000;
-               $options->compliance_limit = 50000;
-               $options->memory_limit = 3000;
-               $options->compliance_abuse_range = .01;
-               $options->compliance_unsub_range = .01;
-               $options->compliance_bounce_range = .01;
-               $options->groups_in_parallel = 5;
-               $options->group_emails_in_parallel = 10;
+        $options->id = 1;
+        $options->emails_at_once = 100;
+        $options->emails_per_minute = 200;
+        $options->change_server_at = 1000;
+        $options->compliance_limit = 50000;
+        $options->memory_limit = 3000;
+        $options->compliance_abuse_range = .01;
+        $options->compliance_unsub_range = .01;
+        $options->compliance_bounce_range = .01;
+        $options->groups_in_parallel = 5;
+        $options->group_emails_in_parallel = 10;
 
 //        $options = GroupControlsModel::find(1);
 
@@ -648,7 +648,7 @@ class SendGroupsCommand extends Command
             ->join('mw_customer AS c', 'c.customer_id', '=', 'mw_group_email_groups.customer_id')
             ->get();
 
-        if(!empty($customer))
+        if (!empty($customer))
         {
             return $customer[0]['status'];
         }
@@ -656,12 +656,12 @@ class SendGroupsCommand extends Command
 
     }
 
-    public function logGroupEmailDelivery($emailId)
+    public function logGroupEmailDelivery($emailId, $message = 'OK')
     {
 
         GroupEmailLogModel::insert([
             'email_uid' => $emailId,
-            'message' => 'OK',
+            'message' => $message,
             'date_added' => new \DateTime()
         ]);
         return;
@@ -830,7 +830,8 @@ class SendGroupsCommand extends Command
 
         $client = new Client();
 
-        $res = $client->request('POST', 'http://post.impressionwise.com/fastfeed.aspx?code=D39002&pwd=M4k3Th&email='.$email['from_email']);
+        $res = $client->request('POST',
+            'http://post.impressionwise.com/fastfeed.aspx?code=D39002&pwd=M4k3Th&email='.$email['from_email']);
 
         $this->stdout('ImpressionWise status code '.$res->getStatusCode());
 
@@ -840,12 +841,12 @@ class SendGroupsCommand extends Command
 
         $canSend = ['CERTDOM', 'CERTINT', 'KEY', 'QUARANTINE', 'NETPROTECT'];
 
-        if(in_array($get_array['result'], $canSend))
+        if (in_array($get_array['result'], $canSend))
         {
             return true;
         }
 
-        if($get_array['result']=='RETRY')
+        if ($get_array['result']=='RETRY')
         {
             $this->updateGroupEmailStatus($email, GroupEmailGroupsModel::STATUS_PENDING_SENDING);
         }
@@ -989,12 +990,6 @@ class SendGroupsCommand extends Command
         foreach ($emails as $index => $email)
         {
 
-//            if(!$this->checkImpressionWise($email))
-//            {
-//                $this->stdout('Failed impressionWise Check');
-//                continue;
-//            }
-
             $this->stdout("", false);
             $this->stdout(sprintf("%s - %d/%d - group %d", $email['to_email'], ($index+1), $emailsCount,
                 $group->group_email_id));
@@ -1009,9 +1004,18 @@ class SendGroupsCommand extends Command
 
             $mail->Subject = $email['subject'];
             $mail->MsgHTML($email['body']);
-            $mail->send();
 
-            $this->logGroupEmailDelivery($email['email_uid']);
+            if (!$mail->send())
+            {
+                $this->logGroupEmailDelivery($email['email_uid'], $mail->ErrorInfo);
+                $this->stdout('ERROR Sending transactional Emails to '.$email['to_email'].'!');
+                $this->stdout('ERROR '.$mail->ErrorInfo.'!');
+            }
+            else
+            {
+                $this->logGroupEmailDelivery($email['email_uid'], 'OK');
+                $this->stdout('Sent transactional Emails to '.$email['to_email'].'!');
+            }
 
             $this->updateGroupEmailStatus($email);
 

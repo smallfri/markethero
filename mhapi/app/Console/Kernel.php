@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         'App\Console\Commands\SendGroupsCommand',
+        'App\Console\Commands\SendTransactionalEmailCommand',
         'App\Console\Commands\AvgComplianceScoreCommand',
     ];
 
@@ -26,6 +27,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
          $schedule->command('send-groups')->cron('* * * * *');
+         $schedule->command('send-transactiona')->cron('2 * * * *');
          $schedule->command('compliance:average')->cron('0 0 * * *');
     }
 }
