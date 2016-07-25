@@ -188,16 +188,18 @@ class SendGroupsCommand extends Command
 
             $now = strtotime('+10 minutes');
 
+            print_r($group['date_added']);
+
             if ($emails==0&&$group['date_added']<$now)
             {
                 $this->stdout('No emails found to be ready for sending, setting group status '.$group['group_email_id'].' to pending-sending.');
                 $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_PENDING_SENDING);
             }
-            else
-            {
-                $this->stdout('No emails found, setting group status '.$group['group_email_id'].' to sent.');
-                $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_SENT);
-            }
+//            else
+//            {
+//                $this->stdout('No emails found, setting group status '.$group['group_email_id'].' to sent.');
+//                $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_SENT);
+//            }
 
         }
 
@@ -276,6 +278,8 @@ class SendGroupsCommand extends Command
         $group = GroupEmailGroupsModel::find($groupId);
 
         $this->_group = $group;
+
+        print_r($group);
 
         if (empty($group)||!in_array($group->status, $statuses))
         {

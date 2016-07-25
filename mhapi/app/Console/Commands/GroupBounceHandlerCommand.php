@@ -90,7 +90,6 @@ class GroupBounceHandlerCommand extends Command
 
 
                 $results = $bounceHandler->getResults();
-
                 if (empty($results))
                 {
                     $this->_server = BounceServer::find((int)$this->_server->server_id);
@@ -107,33 +106,28 @@ class GroupBounceHandlerCommand extends Command
                 }
                 foreach ($results as $result)
                 {
-                    foreach ($result['originalEmailHeadersArray'] as $key => $value)
-                    {
-                        unset($result['originalEmailHeadersArray'][$key]);
-                        $result['originalEmailHeadersArray'][strtoupper($key)] = $value;
-                    }
-
                     if (!isset(
-                        $result['originalEmailHeadersArray']['X-MW-CUSTOMER-ID'],
-                        $result['originalEmailHeadersArray']['X-MW-EMAIL-UID'],
-                        $result['originalEmailHeadersArray']['TO']
+                        $result['originalEmailHeadersArray']['X-Mw-Group-Id'],
+                        $result['originalEmailHeadersArray']['X-Mw-Email-Uid'],
+                        $result['originalEmailHeadersArray']['To']
                     )
                     )
-                    {
+                    {                        print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
+
                         continue;
                     }
 
-                    $groupId = trim($result['originalEmailHeadersArray']['X-MW-GROUP-ID']);
-                    $customerId = trim($result['originalEmailHeadersArray']['X-MW-CUSTOMER-ID']);
-                    $emailId = trim($result['originalEmailHeadersArray']['X-MW-EMAIL-UID']);
-                    $email = trim($result['originalEmailHeadersArray']['TO']);
+                    $groupId = trim($result['originalEmailHeadersArray']['X-Mw-Group-Id']);
+                    $customerId = trim($result['originalEmailHeadersArray']['X-Mw-Customer-Id']);
+                    $emailId = trim($result['originalEmailHeadersArray']['X-Mw-Email-Uid']);
+                    $email = trim($result['originalEmailHeadersArray']['To']);
 
                     $bounceLog = new GroupEmailBounceLogModel();
                     $bounceLog->group_id = $groupId;
                     $bounceLog->email_uid = $emailId;
                     $bounceLog->customer_id = $customerId;
                     $bounceLog->email = $email;
-                    $bounceLog->message = trim($result['originalEmailHeadersArray']['DIAGNOSTIC-CODE']);
+                    $bounceLog->message = trim($result['originalEmailHeadersArray']['Diagnostic-Code']);
                     $bounceLog->bounce_type
                         = $result['bounceType']==\BounceHandler::BOUNCE_HARD?GroupEmailBounceLogModel::BOUNCE_HARD:GroupEmailBounceLogModel::BOUNCE_SOFT;
                     $bounceLog->save();
@@ -147,11 +141,10 @@ class GroupBounceHandlerCommand extends Command
                         $blacklist = new BlacklistModel();
                         $blacklist->email_id = $emailId;
                         $blacklist->email = $matches[0][0];
-                        $blacklist->reason = trim($result['originalEmailHeadersArray']['DIAGNOSTIC-CODE']);
-                        $blacklist->save(false);
+                        $blacklist->reason = trim($result['originalEmailHeadersArray']['Diagnostic-Code']);
+                        $blacklist->save();
 
                     }
-
 
                     echo 'Saved';
 

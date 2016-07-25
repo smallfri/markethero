@@ -17,19 +17,19 @@ class GroupEmailBounceLogModel extends Authenticatable
 
     const BOUNCE_HARD = 'hard';
 
-    public $customer_id;
-
-    public $group_id;
-
-    public $email_uid;
-
-    public $email;
-
-    public $message;
-
-    public $bounce_type;
-
-    public $processed;
+//    public $customer_id;
+//
+//    public $group_id;
+//
+//    public $email_uid;
+//
+//    public $email;
+//
+//    public $message;
+//
+//    public $bounce_type;
+//
+//    public $processed;
 
     /**
      * The attributes that are mass assignable.
