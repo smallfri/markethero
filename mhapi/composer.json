@@ -10,7 +10,8 @@
         "codeception/codeception": "*",
         "laravelcollective/html": "~5.0",
         "phpmailer/phpmailer": "^5.2",
-        "guzzlehttp/guzzle": "~6.0"
+        "guzzlehttp/guzzle": "~6.0",
+        "simplesoftwareio/simple-sms": "3.0.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

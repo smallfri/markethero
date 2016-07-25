@@ -21,6 +21,7 @@ use App\Models\GroupEmailModel;
 use App\Helpers\Helpers;
 use App\Models\TransactionalEmailLogModel;
 use App\Models\TransactionalEmailModel;
+use App\Models\TransactionalEmailOptionsModel;
 use DB;
 use GuzzleHttp\Client;
 use Illuminate\Console\Command;
@@ -150,11 +151,25 @@ class SendTransactionalEmailCommand extends Command
             return 1;
         }
 
+        $limit = 100;
+
+        $options = TransactionalEmailOptionsModel::find(1);
+
         $emails = TransactionalEmailModel::where('status', '=', 'unsent')
             ->where('retries', '<', 3)
+            ->limit($limit)
+            ->offset($options->offset)
             ->get();
 
+        if (count($emails) < 1)
+        {
+            TransactionalEmailOptionsModel::where('id','=',1)->update(['offset' => 0]);
+            return;
+        }
+
         $this->stdout('Getting ready to send transactional Emails!');
+
+        TransactionalEmailOptionsModel::where('id', '=', 1)->update(['offset' => $limit+$options->offset]);
 
         $this->sendByPHPMailer2($emails, $server);
 
@@ -182,9 +197,16 @@ class SendTransactionalEmailCommand extends Command
 
         foreach ($emails as $index => $email)
         {
+            if ($this->isBlacklisted($email['to_email'], $email['customer_id']))
+            {
+                $this->stdout('Email '.$email['to_email'].' is blacklisted for this customer id!');
+                $this->updateTransactionalEmail($email['email_uid'], 'sent');
+                continue;
+            }
 
-            $mail->addCustomHeader('X-Mw-Customer-Id', $email->customer_id);
+            $mail->addCustomHeader('X-Mw-Customer-Id', $email['customer_id']);
             $mail->addCustomHeader('X-Mw-Email-Uid', $email['email_uid']);
+            $mail->addCustomHeader('X-Mw-Group-Id',0);
 
             $mail->addReplyTo($email['from_email'], $email['from_name']);
             $mail->setFrom($email['from_email'], $email['from_name']);
@@ -206,6 +228,7 @@ class SendTransactionalEmailCommand extends Command
             {
                 $this->updateTransactionalEmail($email['email_uid'], 'sent');
                 $this->stdout('Sent transactional Email to '.$email['to_email'].'!');
+                $this->logTransactionalEmailDelivery($email['email_id'], 'OK');
             }
 
             $mail->clearAddresses();
@@ -220,6 +243,7 @@ class SendTransactionalEmailCommand extends Command
 
     public function logTransactionalEmailDelivery($emailId, $message = 'OK')
     {
+
         TransactionalEmailLogModel::insert([
             'email_id' => $emailId,
             'message' => $message,
@@ -231,32 +255,45 @@ class SendTransactionalEmailCommand extends Command
 
     public function updateTransactionalEmail($emailId, $status)
     {
-       TransactionalEmailModel::where('email_uid', $emailId)
+
+        TransactionalEmailModel::where('email_uid', $emailId)
             ->update(['status' => $status]);
         TransactionalEmailModel::where('email_uid', '=', $emailId)->increment('retries');
 
     }
 
+    protected function isBlacklisted($email, $customerId)
+    {
+
+        $blacklist = BlacklistModel::where('email', '=', $email)->where('customer_id', '=', $customerId)->first();
+
+        if (!empty($blacklist))
+        {
+            return true;
+        }
+        return false;
+    }
+
     protected function stdout($message, $timer = true, $separator = "\n")
-       {
+    {
 
-           if (!$this->verbose)
-           {
-               return;
-           }
+        if (!$this->verbose)
+        {
+            return;
+        }
 
-           $out = '';
-           if ($timer)
-           {
-               $out .= '['.date('Y-m-d H:i:s').'] - ';
-           }
-           $out .= $message;
-           if ($separator)
-           {
-               $out .= $separator;
-           }
+        $out = '';
+        if ($timer)
+        {
+            $out .= '['.date('Y-m-d H:i:s').'] - ';
+        }
+        $out .= $message;
+        if ($separator)
+        {
+            $out .= $separator;
+        }
 
-           echo $out;
-       }
+        echo $out;
+    }
 
 }

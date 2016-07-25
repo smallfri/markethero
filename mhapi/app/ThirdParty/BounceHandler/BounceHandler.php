@@ -1,4 +1,4 @@
-<?php //if ( ! defined('MW_PATH')) exit('No direct script access allowed');
+<?php
 
 /**
  * BounceHandler
@@ -480,6 +480,8 @@ class BounceHandler
             if ($this->deleteMessages || $this->deleteAllMessages) {
                 imap_expunge($this->_connection);
             }
+            $errs = imap_errors();
+
             @imap_close($this->_connection);
         }
     }

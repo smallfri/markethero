@@ -8,11 +8,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\GroupEmailModel;
 use App\Models\Logger;
 use App\Models\GroupEmailGroupsModel;
 use App\Models\GroupEmailComplianceModel;
-use Faker\Provider\zh_TW\DateTime;
+use Illuminate\Support\Facades\Mail;
 
 class GroupEmailsGroupController extends ApiController
 {
@@ -26,8 +25,6 @@ class GroupEmailsGroupController extends ApiController
 
     public function store()
     {
-
-
         $data = json_decode(file_get_contents('php://input'), true);
 
         Logger::addProgress('(Group) Create '.print_r($data, true),
@@ -88,9 +85,7 @@ class GroupEmailsGroupController extends ApiController
         Logger::addProgress('(Group) Created '.print_r($GroupEmailGroups, true),
             '(Group) Created');
 
-        $headers = 'FROM: support@licneseengine.com';
-
-        mail('8436552621@vtext.com','New Group Created',$GroupEmailGroups->group_email_id,$headers);
+        $this->sendMail($GroupEmailGroups);
 
 
         return $this->respond(['group' => $GroupEmailGroups->group_email_id]);
@@ -111,7 +106,13 @@ class GroupEmailsGroupController extends ApiController
 
     }
 
-    public function sendMail()
-    {}
+    public function sendMail($group)
+    {
+
+        \SMS::send('New group created'.$group->group_email_id, null, function($sms) {
+            $sms->to('8436552621', 'verizonwireless');
+        });
+
+    }
 
 }

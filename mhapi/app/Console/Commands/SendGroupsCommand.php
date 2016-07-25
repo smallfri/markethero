@@ -186,18 +186,17 @@ class SendGroupsCommand extends Command
 
             $emails = $this->countEmails($group['group_email_id']);
 
-            if ($emails==0)
+            $now = strtotime('+10 minutes');
+
+            if ($emails==0&&$group['date_added']<$now)
             {
-                if ($this->groupIsFinished($group)>0)
-                {
-                    $this->stdout('No emails found, setting group status '.$group['group_email_id'].' to sent.');
-                    $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_SENT);
-                }
-                else
-                {
-                    $this->stdout('No emails found to be ready for sending, setting group status '.$group['group_email_id'].' to pending-sending.');
-                    $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_PENDING_SENDING);
-                }
+                $this->stdout('No emails found to be ready for sending, setting group status '.$group['group_email_id'].' to pending-sending.');
+                $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_PENDING_SENDING);
+            }
+            else
+            {
+                $this->stdout('No emails found, setting group status '.$group['group_email_id'].' to sent.');
+                $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_SENT);
             }
 
         }
@@ -430,7 +429,7 @@ class SendGroupsCommand extends Command
             {
                 if (strpos($part, $chr)===0||strrpos($part, $chr)===0)
                 {
-                    $this->addToBlacklist($email);
+                    $this->addToBlacklist($email, $group->customer_id);
 
                     $containsNotAllowedEmailChars = true;
                     break;
@@ -751,15 +750,28 @@ class SendGroupsCommand extends Command
     /**
      * @param $email
      */
-    protected function addToBlacklist($email)
+    protected function addToBlacklist($email, $customerId)
     {
 
         $blackList = new BlacklistModel();
 
         $blackList->email_id = $email['primaryKey'];
         $blackList->reason = 'Invalid email address format!';
+        $blackList->customer_id = $customerId;
         $blackList->date_added = new \DateTime();
         $blackList->Save();
+    }
+
+    protected function isBlacklisted($email, $customerId)
+    {
+
+        $blacklist = BlacklistModel::where('email', '=', $email)->where('customer_id', '=', $customerId)->first();
+
+        if (!empty($blacklist))
+        {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -990,6 +1002,14 @@ class SendGroupsCommand extends Command
         foreach ($emails as $index => $email)
         {
 
+            if ($this->isBlacklisted($email['to_email'], $email['customer_id']))
+            {
+                $this->stdout('Email '.$email['to_email'].' is blacklisted for this customer id!');
+                $this->updateGroupEmailStatus($email['email_uid'], 'sent');
+                continue;
+
+            }
+
             $this->stdout("", false);
             $this->stdout(sprintf("%s - %d/%d - group %d", $email['to_email'], ($index+1), $emailsCount,
                 $group->group_email_id));
@@ -1008,13 +1028,13 @@ class SendGroupsCommand extends Command
             if (!$mail->send())
             {
                 $this->logGroupEmailDelivery($email['email_uid'], $mail->ErrorInfo);
-                $this->stdout('ERROR Sending transactional Emails to '.$email['to_email'].'!');
+                $this->stdout('ERROR Sending group email to '.$email['to_email'].'!');
                 $this->stdout('ERROR '.$mail->ErrorInfo.'!');
             }
             else
             {
                 $this->logGroupEmailDelivery($email['email_uid'], 'OK');
-                $this->stdout('Sent transactional Emails to '.$email['to_email'].'!');
+                $this->stdout('Sent group email  to '.$email['to_email'].'!');
             }
 
             $this->updateGroupEmailStatus($email);

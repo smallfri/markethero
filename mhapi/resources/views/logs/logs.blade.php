@@ -50,19 +50,19 @@
 
                             <?php
                             $style = "";
-                            if($log->level>=\App\Logger::CRITICAL OR $log->execution>5)
+                            if($log->level>=\App\Models\Logger::CRITICAL OR $log->execution>5)
                             {
                                 $style = "background:#ff7f7f;";
                             }
                             else
                             {
-                                if($log->level>=\App\Logger::ERROR OR $log->execution>3)
+                                if($log->level>=\App\Models\Logger::ERROR OR $log->execution>3)
                                 {
                                     $style = "background:#ffb2b2;";
                                 }
                                 else
                                 {
-                                    if($log->level>=\App\Logger::ERROR OR $log->execution>1)
+                                    if($log->level>=\App\Models\Logger::ERROR OR $log->execution>1)
                                     {
                                         $style = "background:#ffe5e5;";
                                     }
@@ -81,7 +81,7 @@
                                     {!!$log->execution!!}
                                 </td>
                                 <td style="{!!$style!!}">
-                                    {!!\App\Logger::getLevelName($log->level)!!}
+                                    {!!\App\Models\Logger::getLevelName($log->level)!!}
                                 </td>
                                 <td style="{!!$style!!}">
                                     <a href="logs/viewLog/{!!$log->id!!}" target="_blank">{!!$log->title!!} (#{!!$log->id!!})</a>

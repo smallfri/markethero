@@ -35,24 +35,28 @@ BEGIN
 
   CREATE TABLE `mw_group_email_options` (
     `id` int(11) NOT NULL,
-    `groups_at_once` int(11) DEFAULT NULL,
     `emails_at_once` int(11) DEFAULT NULL,
     `emails_per_minute` int(11) DEFAULT NULL,
+    `groups_in_parallel` int(11) DEFAULT NULL,
+    `group_emails_in_parallel` int(11) DEFAULT NULL,
     `change_server_at` int(11) DEFAULT NULL,
     `compliance_limit` int(11) DEFAULT NULL,
-    `memory_limit` int(11) DEFAULT NULL,
+    `memory_limit` int(45) DEFAULT NULL,
     `compliance_abuse_range` float(9,3) DEFAULT NULL,
     `compliance_unsub_range` float(9,3) DEFAULT NULL,
     `compliance_bounce_range` float(9,3) DEFAULT NULL,
-    `groups_in_parallel` int(11) DEFAULT NULL,
-    `batches_in_parallel` int(11) DEFAULT NULL,
     PRIMARY KEY (`id`)
   ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-    INSERT INTO `mw_group_email_options`
-    (`id`, `groups_at_once`, `emails_at_once`, `emails_per_minute`, `change_server_at`, `compliance_limit`, `memory_limit`, `compliance_abuse_range`, `compliance_unsub_range`, `compliance_bounce_range`, `groups_in_parallel`,`batches_in_parallel`)
-    VALUES
-    (1, 25, 25, 2, 0, 3000, .1, .1, .1, 25, 1);
+  LOCK TABLES `mw_group_email_options` WRITE;
+  /*!40000 ALTER TABLE `mw_group_email_options` DISABLE KEYS */;
+
+  INSERT INTO `mw_group_email_options` (`id`, `emails_at_once`, `emails_per_minute`, `groups_in_parallel`, `group_emails_in_parallel`, `change_server_at`, `compliance_limit`, `memory_limit`, `compliance_abuse_range`, `compliance_unsub_range`, `compliance_bounce_range`)
+  VALUES
+  	(1,100,200,5,10,1000,50000,3000,0.100,0.100,0.100);
+
+  /*!40000 ALTER TABLE `mw_group_email_options` ENABLE KEYS */;
+  UNLOCK TABLES;
 
  CREATE TABLE `mw_group_email_groups` (
    `group_email_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -154,11 +158,11 @@ BEGIN
 
   CREATE TABLE `mw_group_email_log` (
     `log_id` bigint(20) NOT NULL AUTO_INCREMENT,
-    `email_id` bigint(20) NOT NULL,
+    `email_uid` VARCHAR (45) NOT NULL,
     `message` text NOT NULL,
     `date_added` datetime NOT NULL,
     PRIMARY KEY (`log_id`),
-    CONSTRAINT `mw_group_email_log_ibfk_2` FOREIGN KEY (`email_id`) REFERENCES `mw_group_email` (`email_id`)
+    CONSTRAINT `mw_group_email_log_ibfk_2` FOREIGN KEY (`email_uid`) REFERENCES `mw_group_email` (`email_uid`)
   ) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8;
 
  CREATE TABLE `mw_group_email_bounce_log` (
@@ -214,28 +218,11 @@ CREATE TABLE `mw_group_email_compliance_average` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
 
-CREATE TABLE `mw_group_email_status` (
-  `email_id` bigint(20) NOT NULL,
-  `group_email_id` int(11) DEFAULT NULL,
-  `status` varchar(19) DEFAULT NULL,
-  `dated_added` datetime DEFAULT NULL,
-  `last_updated` datetime DEFAULT NULL,
-  PRIMARY KEY (`email_id`),
-  KEY `group_email_id` (`group_email_id`),
-  CONSTRAINT `mw_group_email_status_ibfk_1` FOREIGN KEY (`group_email_id`) REFERENCES `mw_group_email` (`group_email_id`),
-  CONSTRAINT `mw_group_email_status_ibfk_2` FOREIGN KEY (`email_id`) REFERENCES `mw_group_email` (`email_id`)
+CREATE TABLE `mw_transactional_email_options` (
+  `id` int(11) NOT NULL,
+  `offset` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-CREATE TABLE `mw_group_email_batches` (
-  `group_batch_id` int(11) NOT NULL AUTO_INCREMENT,
-  `group_email_id` int(11) DEFAULT NULL,
-  `status` varchar(45) DEFAULT NULL,
-  `date_started` datetime DEFAULT NULL,
-  `date_finished` datetime DEFAULT NULL,
-  `date_added` datetime DEFAULT NULL,
-  `emails_sent` int(11) DEFAULT NULL,
-  PRIMARY KEY (`group_batch_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=latin1;
 
 END
 $$
