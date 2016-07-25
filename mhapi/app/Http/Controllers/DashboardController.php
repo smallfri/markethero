@@ -326,8 +326,32 @@ class DashboardController extends ApiController
 
         $groups = GroupEmailGroupsModel::all()->count();
         $transactionals = TransactionalEmailModel::all()->count();
-        $group_emails_count = GroupEmailModel::where('email_id','>',1)->count();
+        $group_emails_count = GroupEmailModel::where('email_id', '>', 1)->count();
         $customer_count = Customer::all()->count();
+
+        $pendingGroups = GroupEmailGroupsModel::where('status', '=', 'pending-sending')
+            ->orWhere('status', '=', 'processing')
+            ->get();
+
+        $pending = [];
+
+        if (!empty($pendingGroups))
+        {
+            foreach ($pendingGroups as $group)
+            {
+                $pending[$group->group_email_id] = [];
+                $pending[$group->group_email_id]['group_email_id'] =$group->group_email_id;
+                $pending[$group->group_email_id]['customer_id'] = $group->customer_id;
+                $pending[$group->group_email_id]['countPending'] = GroupEmailModel::where('group_email_id', '=', $group->group_email_id)
+                    ->where('status', '=', 'pending-sending')
+                    ->count();
+                $pending[$group->group_email_id]['countSent'] = GroupEmailModel::where('group_email_id', '=', $group->group_email_id)
+                    ->where('status', '=', 'sent')
+                    ->count();
+            }
+
+        }
+
 
         $data = [
             'delivery_stats' => $delivery_stats,
@@ -338,6 +362,7 @@ class DashboardController extends ApiController
             'monthly_emails' => $monthly_emails,
             'group_emails_count' => $group_emails_count,
             'customer_count' => $customer_count,
+            'pending' => $pending
 
         ];
 

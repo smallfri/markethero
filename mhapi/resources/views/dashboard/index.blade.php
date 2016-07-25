@@ -20,7 +20,7 @@
             google.charts.setOnLoadCallback(drawChart);
             google.charts.setOnLoadCallback(drawChart2);
             google.charts.setOnLoadCallback(drawChart3);
-                        google.charts.setOnLoadCallback(drawChart4);
+            google.charts.setOnLoadCallback(drawChart4);
             function drawChart() {
                 var data = new google.visualization.DataTable();
                 data.addColumn('string', 'Day');
@@ -118,7 +118,6 @@
             }
 
         </script>
-
         <div class="row">
             <div class="col-sm-2 col-xs-6">
                 <a class="quick-button" href="customers" target="_blank">
@@ -156,6 +155,46 @@
             </div><!--/col-->
 
         </div>
+        <hr>
+        <div class="row-fluid sortable">
+            <div class="box span12">
+                <div class="box-header" data-original-title>
+                    <h2><i class="icon-user"></i><span class="break"></span>Pending Groups</h2>
+                    <div class="box-icon">
+                        <a href="#" class="btn-setting"><i class="icon-wrench"></i></a>
+                        <a href="#" class="btn-minimize"><i class="icon-chevron-up"></i></a>
+                        <a href="#" class="btn-close"><i class="icon-remove"></i></a>
+                    </div>
+                </div>
+                <div class="box-content">
+                    <table class="table table-striped table-bordered bootstrap-datatable datatable">
+                        <thead>
+                        <tr>
+                            <th>Customer ID</th>
+                            <th>Group Email ID</th>
+                            <th>Pending</th>
+                            <th>Sent</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($pending as $item)
+
+                            <tr>
+                                <td>{!! $item['customer_id'] !!}</td>
+                                <td>{!! $item['group_email_id'] !!}</td>
+                                <td>{!! $item['countPending'] !!}</td>
+                                <td>{!! $item['countSent'] !!}</td>
+                            </tr>
+
+                        @endforeach
+
+                        </tbody>
+                    </table>
+                </div>
+            </div><!--/span-->
+
+        </div><!--/row-->
+
         <hr>
         <div class="row">
             <div class="col-md-4 col-sm-6">
