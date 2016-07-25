@@ -8,7 +8,7 @@ use App\Models\SubscriberModel;
 use App\Http\Requests;
 //use App\Models\Spamgit add
 use Zend\Http\Response;
-use App\Models\Logger;
+use App\Logger;
 
 class AbuseController extends ApiController
 {

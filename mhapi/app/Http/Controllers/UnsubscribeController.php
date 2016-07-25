@@ -8,7 +8,7 @@ use App\Http\Requests;
 use App\Models\Spam;
 use App\Models\UnsubscribeModel;
 use Zend\Http\Response;
-use App\Models\Logger;
+use App\Logger;
 
 class UnsubscribeController extends ApiController
 {

@@ -10,7 +10,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TraceLog;
 use Illuminate\Support\Facades\Input;
-use App\Models\Logger;
+use App\Logger;
 
 class LogsController extends Controller
 {

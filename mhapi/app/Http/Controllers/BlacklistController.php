@@ -7,7 +7,7 @@ use App\Models\SubscriberModel;
 use App\Http\Requests;
 use App\Models\Spam;
 use Zend\Http\Response;
-use App\Models\Logger;
+use App\Logger;
 
 class BlacklistController extends ApiController
 {

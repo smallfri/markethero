@@ -8,7 +8,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Logger;
+use App\Logger;
 use App\Models\GroupEmailGroupsModel;
 use App\Models\GroupEmailComplianceModel;
 use Illuminate\Support\Facades\Mail;

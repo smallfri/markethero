@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Bounce;
 use App\Http\Requests;
 use Zend\Http\Response;
-use App\Models\Logger;
+use App\Logger;
 class BounceController extends ApiController
 {
 
