@@ -136,7 +136,7 @@ BEGIN
     KEY `compliance_level_type_id` (`compliance_level_type_id`),
     KEY `compliance_approval_user_id` (`compliance_approval_user_id`),
     CONSTRAINT `mw_group_email_compliance_ibfk_3` FOREIGN KEY (`group_email_id`) REFERENCES `mw_group_email_groups` (`group_email_id`),
-    CONSTRAINT `mw_group_email_compliance_ibfk_1` FOREIGN KEY (`compliance_level_type_id`) REFERENCES `mw_compliance_levels` (`id`),
+    CONSTRAINT `mw_group_email_compliance_ibfk_1` FOREIGN KEY (`compliance_level_type_id`) REFERENCES `mw_compliance_levels` (`compliance_level_id`),
     CONSTRAINT `mw_group_email_compliance_ibfk_2` FOREIGN KEY (`compliance_approval_user_id`) REFERENCES `mw_user` (`user_id`)
   ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

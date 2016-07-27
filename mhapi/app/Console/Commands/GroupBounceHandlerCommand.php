@@ -112,8 +112,7 @@ class GroupBounceHandlerCommand extends Command
                         $result['originalEmailHeadersArray']['To']
                     )
                     )
-                    {                        print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
-
+                    {
                         continue;
                     }
 

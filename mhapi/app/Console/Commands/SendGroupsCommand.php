@@ -9,6 +9,7 @@
 namespace App\Console\Commands;
 
 
+use App\Logger;
 use App\Models\BlacklistModel;
 use App\Models\BounceServer;
 use App\Models\DeliveryServerModel;
@@ -273,6 +274,9 @@ class SendGroupsCommand extends Command
         {
             $this->stdout(sprintf("The Group with ID: %d is not ready for processing.", $groupId));
             $this->updateGroupStatus($groupId, GroupEmailGroupsModel::STATUS_SENT);
+
+            Logger::addProgress(sprintf("The Group with ID: %d is not ready for processing.", $groupId),'Group Not Ready');
+
             return 1;
         }
         $options = $this->getOptions();
@@ -282,6 +286,9 @@ class SendGroupsCommand extends Command
             $this->updateGroupStatus($this->primaryKey, GroupEmailGroupsModel::STATUS_PAUSED);
 
             $this->stdout("This customer is inactive!");
+
+            Logger::addProgress('This customer is inactive '.$this->_group->customer_id,'Group Not Ready');
+
             return 1;
         }
 
@@ -291,6 +298,9 @@ class SendGroupsCommand extends Command
         if (empty($server))
         {
             $this->stdout('Cannot find a valid server to send the group email, aborting until a delivery server is available!');
+
+            Logger::addError('Cannot find a valid server ', 'No Server Found');
+
             return 1;
         }
 
@@ -773,6 +783,9 @@ class SendGroupsCommand extends Command
         $blackList->customer_id = $customerId;
         $blackList->date_added = new \DateTime();
         $blackList->Save();
+
+        Logger::addProgress('This email has been blacklisted '.$email['primaryKey'] ,'Email Blacklisted');
+
     }
 
     protected function isBlacklisted($email, $customerId)
