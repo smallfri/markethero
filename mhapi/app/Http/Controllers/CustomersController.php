@@ -7,6 +7,8 @@ use App\EmailOne\Transformers\CustomerTransformer;
 use App\Models\Customer;
 use App\Http\Requests;
 use Zend\Http\Response;
+use Illuminate\Http\Request;
+
 
 /**
  * Class CustomerController
@@ -44,4 +46,26 @@ class CustomersController extends ApiController
         return $this->respond(['customers' => $Customers]);
 
     }
+
+    public function edit($customerId, Request $request)
+    {
+
+        $Customer = Customer::find($customerId);
+
+        if(isset($_POST))
+        {
+            $Customer->first_name = $request->input('first_name');
+            $Customer->last_name = $request->input('last_name');
+            $Customer->email = $request->input('email');
+            $Customer->status = $request->input('status');
+            $Customer->save();
+        }
+        $Customer = Customer::find($customerId);
+
+        $data = ['customer'=>$Customer];
+
+        return view('dashboard.customers.edit', $data);
+
+    }
+
 }

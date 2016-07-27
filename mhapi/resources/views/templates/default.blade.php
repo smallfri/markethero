@@ -314,10 +314,11 @@
 			<div class="col-sm-2 main-menu-span">
 				<div class="sidebar-nav nav-collapse collapse navbar-collapse">
 					<ul class="nav nav-tabs nav-stacked main-menu">
-						<li><a href="dashboard"><i class="fa fa-home icon"></i><span class="hidden-sm"> Dashboard</span></a></li>
-						<li><a href="controls"><i class="fa fa-cogs icon"></i><span class="hidden-sm"> Controls</span></a></li>
-						<li><a href="trace-logs"><i class="fa fa-pencil icon"></i><span class="hidden-sm"> API Logs</span></a></li>
-						<li><a href="application-logs"><i class="fa fa-pencil icon"></i><span class="hidden-sm"> Application Logs</span></a></li>
+						<li><a href="/mhapi/dashboard"><i class="fa fa-home icon"></i><span class="hidden-sm"> Dashboard</span></a></li>
+						<li><a href="/mhapi/controls"><i class="fa fa-cogs icon"></i><span class="hidden-sm"> Controls</span></a></li>
+						<li><a href="/mhapi/servers"><i class="fa fa-bars icon"></i><span class="hidden-sm"> Servers</span></a></li>
+						<li><a href="/mhapi/trace-logs"><i class="fa fa-pencil icon"></i><span class="hidden-sm"> API Logs</span></a></li>
+						<li><a href="/mhapi/application-logs"><i class="fa fa-pencil icon"></i><span class="hidden-sm"> Application Logs</span></a></li>
 						{{--<li><a href="ui.html"><i class="fa fa-eye"></i><span class="hidden-sm"> UI Features</span></a></li>--}}
 						{{--<li><a href="forms.html"><i class="fa fa-edit"></i><span class="hidden-sm"> Forms</span></a></li>--}}
 						{{--<li><a href="charts.html"><i class="fa fa-bar-chart-o"></i><span class="hidden-sm"> Charts</span></a></li>--}}

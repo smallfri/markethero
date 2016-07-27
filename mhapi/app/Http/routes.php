@@ -24,6 +24,9 @@ Route::resource('customers', 'DashboardController@customers');
 Route::resource('viewLog', 'LogsController@viewLog');
 Route::resource('trace-logs', 'LogsController@index');
 Route::resource('application-logs', 'LogsController@applicationLog');
+Route::resource('customer/{customer_id}/edit', 'CustomersController@edit');
+Route::get('servers', 'DashboardController@servers');
+Route::resource('servers/{server_id}/edit', 'DashboardController@editServer');
 
 
 

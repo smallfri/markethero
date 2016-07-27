@@ -18,90 +18,72 @@ class ManageGroupController extends ApiController
     function __construct()
     {
 
+    }
+
+    public function approve($group_email_id)
+    {
+
+        $GroupEmailGroups = GroupEmailGroupsModel::find($group_email_id);
+        $GroupEmailGroups->status = 'pending-sending';
+        $GroupEmailGroups->save();
+
+        $GroupEmailCompliance = GroupEmailComplianceModel::find($group_email_id);
+        $GroupEmailCompliance->compliance_status = 'approved';
+        $GroupEmailCompliance->last_updated = new \DateTime();
+        $GroupEmailCompliance->save();
+
+        return redirect('groups');
 
     }
 
-//    public function approve($group_email_id)
-//    {
-//        $results = GroupEmailComplianceModel::where('group_email_id', $group_email_id)->update(['compliance_status'=>'approved']);
-//
-//        if($results)
-//        {
-//
-//        }
-//
-//        return redirect('groups');
-//
-//    }
+    public function pause($group_email_id)
+    {
 
-    public function approve($group_email_id)
-       {
+        $GroupEmailGroups = GroupEmailGroupsModel::find($group_email_id);
+        $GroupEmailGroups->status = 'paused';
+        $GroupEmailGroups->save();
 
-           $GroupEmailGroups = GroupEmailGroupsModel::find($group_email_id);
-           $GroupEmailGroups->status = 'pending-sending';
-           $GroupEmailGroups->save();
+        $GroupEmailCompliance = GroupEmailComplianceModel::find($group_email_id);
+        $GroupEmailCompliance->compliance_status = 'paused';
+        $GroupEmailCompliance->last_updated = new \DateTime();
+        $GroupEmailCompliance->save();
 
-           $GroupEmailCompliance = GroupEmailComplianceModel::find($group_email_id);
-           $GroupEmailCompliance->compliance_status = 'approved';
-           $GroupEmailCompliance->last_updated = new \DateTime();
-           $GroupEmailCompliance->save();
+        return redirect('groups');
 
-           return redirect('groups');
+    }
 
+    public function resume($group_email_id)
+    {
 
-       }
+        $GroupEmailGroups = GroupEmailGroupsModel::find($group_email_id);
+        $GroupEmailGroups->status = 'pending-sending';
+        $GroupEmailGroups->save();
 
-       public function pause($group_email_id)
-       {
+        $GroupEmailCompliance = GroupEmailComplianceModel::find($group_email_id);
+        $GroupEmailCompliance->compliance_status = 'approved';
+        $GroupEmailCompliance->last_updated = new \DateTime();
+        $GroupEmailCompliance->save();
 
-           $GroupEmailGroups = GroupEmailGroupsModel::find($group_email_id);
-           $GroupEmailGroups->status = 'paused';
-           $GroupEmailGroups->save();
+        return redirect('groups');
 
-           $GroupEmailCompliance = GroupEmailComplianceModel::find($group_email_id);
-           $GroupEmailCompliance->compliance_status = 'paused';
-           $GroupEmailCompliance->last_updated = new \DateTime();
-           $GroupEmailCompliance->save();
+    }
 
-           return redirect('groups');
+    public function setAsSent($group_email_id)
+    {
 
+        $GroupEmailGroups = GroupEmailGroupsModel::find($group_email_id);
+        $GroupEmailGroups->status = 'sent';
+        $GroupEmailGroups->save();
 
-       }
+        $GroupEmailCompliance = GroupEmailComplianceModel::find($group_email_id);
+        $GroupEmailCompliance->compliance_status = 'sent';
+        $GroupEmailCompliance->last_updated = new \DateTime();
+        $GroupEmailCompliance->save();
 
-       public function resume($group_email_id)
-       {
+        GroupEmailModel::where('group_email_id', '=', $group_email_id)->update(['status' => 'sent']);
 
-           $GroupEmailGroups = GroupEmailGroupsModel::find($group_email_id);
-           $GroupEmailGroups->status = 'pending-sending';
-           $GroupEmailGroups->save();
+        return redirect('groups');
 
-           $GroupEmailCompliance = GroupEmailComplianceModel::find($group_email_id);
-           $GroupEmailCompliance->compliance_status = 'approved';
-           $GroupEmailCompliance->last_updated = new \DateTime();
-           $GroupEmailCompliance->save();
-
-           return redirect('groups');
-
-
-       }
-
-       public function setAsSent($group_email_id)
-       {
-
-           $GroupEmailGroups = GroupEmailGroupsModel::find($group_email_id);
-           $GroupEmailGroups->status = 'sent';
-           $GroupEmailGroups->save();
-
-           $GroupEmailCompliance = GroupEmailComplianceModel::find($group_email_id);
-           $GroupEmailCompliance->compliance_status = 'sent';
-           $GroupEmailCompliance->last_updated = new \DateTime();
-           $GroupEmailCompliance->save();
-
-           GroupEmailModel::where('group_email_id', '=', $group_email_id)->update(['status'=> 'sent']);
-
-           return redirect('groups');
-
-
-       }
+    }
 
 }

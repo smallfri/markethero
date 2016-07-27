@@ -33,7 +33,6 @@
                                 <th>To Email</th>
                                 <th>From Email</th>
                                 <th>Subject</th>
-                                <th>Retries</th>
                                 <th>Status</th>
                                 <th>Log Message</th>
                                 <th>Date Updated</th>
@@ -50,7 +49,6 @@
                                     <td>{!! $row['to_email'] !!}</td>
                                     <td>{!! $row['from_email'] !!}</td>
                                     <td>{!! $row['subject'] !!}</td>
-                                    <td>{!! $row['retries'] !!}</td>
                                     <td>{!! $row['status'] !!}</td>
                                     <td>{!! $row['message'] !!}</td>
                                     <td>{!! $row['last_updated'] !!}</td>

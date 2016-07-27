@@ -120,7 +120,7 @@
         </script>
         <div class="row">
             <div class="col-sm-2 col-xs-6">
-                <a class="quick-button" href="customers" target="_blank">
+                <a class="quick-button" href="customers" >
                     <i class="fa fa-users"></i>
 
                     <p>Customers</p>
@@ -128,7 +128,7 @@
                 </a>
             </div><!--/col-->
             <div class="col-sm-2 col-xs-6">
-                <a class="quick-button" href="groups" target="_blank">
+                <a class="quick-button" href="groups" >
                     <i class="fa fa-user"></i>
 
                     <p>Groups</p>
@@ -136,7 +136,7 @@
                 </a>
             </div><!--/col-->
             <div class="col-sm-2 col-xs-6">
-                <a class="quick-button" href="group-emails" target="_blank">
+                <a class="quick-button" href="group-emails" >
                     <i class="fa fa-envelope"></i>
 
                     <p>Group Emails</p>
@@ -145,7 +145,7 @@
             </div><!--/col-->
 
             <div class="col-sm-2 col-xs-6">
-                <a class="quick-button" href="transactional-emails" target="_blank">
+                <a class="quick-button" href="transactional-emails" >
                     <i class="fa  fa-envelope"></i>
 
                     <p>Transactional Emails</p>

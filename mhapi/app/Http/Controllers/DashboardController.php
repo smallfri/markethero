@@ -9,6 +9,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\DeliveryServerModel;
 use App\Models\GroupControlsModel;
 use App\Models\GroupEmailGroupsModel;
 use App\Models\GroupEmailModel;
@@ -27,6 +28,7 @@ class DashboardController extends ApiController
 
     public function index()
     {
+
         /*
          * This gathers delivery stats for 2 weeks starting today
          */
@@ -341,12 +343,14 @@ class DashboardController extends ApiController
             foreach ($pendingGroups as $group)
             {
                 $pending[$group->group_email_id] = [];
-                $pending[$group->group_email_id]['group_email_id'] =$group->group_email_id;
+                $pending[$group->group_email_id]['group_email_id'] = $group->group_email_id;
                 $pending[$group->group_email_id]['customer_id'] = $group->customer_id;
-                $pending[$group->group_email_id]['countPending'] = GroupEmailModel::where('group_email_id', '=', $group->group_email_id)
+                $pending[$group->group_email_id]['countPending'] = GroupEmailModel::where('group_email_id', '=',
+                    $group->group_email_id)
                     ->where('status', '=', 'pending-sending')
                     ->count();
-                $pending[$group->group_email_id]['countSent'] = GroupEmailModel::where('group_email_id', '=', $group->group_email_id)
+                $pending[$group->group_email_id]['countSent'] = GroupEmailModel::where('group_email_id', '=',
+                    $group->group_email_id)
                     ->where('status', '=', 'sent')
                     ->count();
             }
@@ -488,6 +492,54 @@ class DashboardController extends ApiController
         return view('dashboard.groups.controls', $data);
 
     }
+
+    public function servers()
+    {
+        $Servers = DeliveryServerModel::all();
+
+        $data= ['servers'=>$Servers];
+
+        return view('dashboard.servers.index', $data);
+    }
+
+    public function editserver($serverId, Request $request)
+    {
+        $Server = DeliveryServerModel::find($serverId);
+
+        if(isset($_POST))
+                   {
+                       $Server->bounce_server_id = $request->input('bounce_server_id');
+                       $Server->name = $request->input('name');
+                       $Server->hostname = $request->input('hostname');
+                       $Server->use_for = $request->input('use_for');
+                       $Server->save();
+                   }
+//dd($Server);
+                $data= ['server'=>$Server];
+
+                return view('dashboard.servers.edit', $data);
+    }
+
+
+    public function edit($customerId, Request $request)
+        {
+
+            $Customer = Customer::find($customerId);
+
+            if(isset($_POST))
+            {
+                $Customer->first_name = $request->input('first_name');
+                $Customer->last_name = $request->input('last_name');
+                $Customer->email = $request->input('email');
+                $Customer->status = $request->input('status');
+                $Customer->save();
+            }
+
+            $data = ['customer'=>$Customer];
+
+            return view('dashboard.customers.edit', $data);
+
+        }
 
     public function store()
     {

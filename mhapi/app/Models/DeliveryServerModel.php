@@ -112,7 +112,7 @@ class DeliveryServerModel extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'customer_id', 'group_email_uid'
+        'bounce_server_id', 'name', 'hostname', 'use_for'
 
     ];
 

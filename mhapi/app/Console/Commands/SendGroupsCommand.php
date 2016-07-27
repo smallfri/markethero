@@ -858,7 +858,7 @@ class SendGroupsCommand extends Command
     {
 
         GroupEmailModel::where('email_uid', $mail['email_uid'])
-            ->update(['status' => $status]);
+            ->update(['status' => $status, 'last_updated'=> new \DateTime()]);
     }
 
     protected function checkImpressionWise($email)
