@@ -29,12 +29,12 @@
                             <thead>
                             <tr>
                                 <th>Group ID</th>
-                                <th>Group UID</th>
                                 <th>Customer ID</th>
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Status</th>
-                                <th>Date Added</th>
+                                <th>Started</th>
+                                <th>Finished</th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -43,12 +43,12 @@
                             @foreach($groups AS $row)
                                 <tr>
                                     <td><a href="group-emails?id=<?php echo $row['group_email_id']?>"><?php echo $row['group_email_id']?></a></td>
-                                    <td>{!! $row['group_email_uid'] !!}</td>
-                                    <td>{!! $row['customer_id'] !!}</td>
-                                    <td>{!! $row['first_name'].' '.$row['last_name'] !!}</td>
-                                    <td>{!! $row['email'] !!}</td>
-                                    <td>{!! $row['status'] !!}</td>
-                                    <td>{!! $row['date_added'] !!}</td>
+                                    <td>{!!$row['customer_id']!!}</td>
+                                    <td>{!!$row['first_name'].' '.$row['last_name']!!}</td>
+                                    <td>{!!$row['email']!!}</td>
+                                    <td>{!!$row['status']!!}</td>
+                                    <td>{!!$row['started_at']!!}</td>
+                                    <td>{!!$row['finished_at']!!}</td>
                                     <td style="text-align: center">
                                         <a href="v1/groups/<?php echo $row['group_email_id'];?>/approve" class="btn btn-success" style="vertical-align: middle"><i class="fa fa-check"></i></a>
                                         <a href="v1/groups/<?php echo $row['group_email_id'];?>/pause" class="btn btn-warning" style="vertical-align: middle"><i class="fa fa-pause"></i></a>

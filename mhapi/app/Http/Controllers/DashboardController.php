@@ -222,16 +222,16 @@ class DashboardController extends ApiController
             = DB::select(DB::raw('select DATE(date_added) AS date_added,COUNT(report_id) AS count from `mw_group_email_abuse_report` where `date_added` between "'.$this_week1.'" and "'.$this_week2.'" GROUP BY DATE(date_added)'));
         $lastWeek
             = DB::select(DB::raw('
-                                            SELECT
-                                              DATE(date_added) AS date_added,
-                                              COUNT(report_id) AS count
-                                            FROM
-                                              `mw_group_email_abuse_report`
-                                            WHERE
-                                              date_added >= curdate() - INTERVAL DAYOFWEEK(curdate())+6 DAY
-                                            AND
-                                              date_added < curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY
-                                            GROUP BY DATE(date_added)
+                        SELECT
+                          DATE(date_added) AS date_added,
+                          COUNT(report_id) AS count
+                        FROM
+                          `mw_group_email_abuse_report`
+                        WHERE
+                          date_added >= curdate() - INTERVAL DAYOFWEEK(curdate())+6 DAY
+                        AND
+                          date_added < curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY
+                        GROUP BY DATE(date_added)
                     '));
 
         $last_week = [];
@@ -331,6 +331,7 @@ class DashboardController extends ApiController
 
         $pendingGroups = GroupEmailGroupsModel::where('status', '=', 'pending-sending')
             ->orWhere('status', '=', 'processing')
+            ->take(50)
             ->get();
 
         $pending = [];
@@ -390,6 +391,7 @@ class DashboardController extends ApiController
             'mw_group_email_groups.*')
             ->Join('mw_customer', 'mw_customer.customer_id', '=', 'mw_group_email_groups.customer_id')
             ->orderBy('mw_group_email_groups.group_email_id', 'desc')
+            ->take(50)
             ->get();
 
         $data = [

@@ -87,10 +87,8 @@ class SendGroupsCommand extends Command
         }
 
         register_shutdown_function(array($this, '_restoreStates'));
-//          Yii::app()->attachEventHandler('onError', array($this, '_restoreStates'));
-//          Yii::app()->attachEventHandler('onException', array($this, '_restoreStates'));
 
-        // if more than 1 hour then something is def. wrong?
+      // if more than 1 hour then something is def. wrong?
         ini_set('max_execution_time', 3600);
         set_time_limit(3600);
     }
@@ -301,6 +299,7 @@ class SendGroupsCommand extends Command
         // put proper status
         $group = GroupEmailGroupsModel::find($this->_group->group_email_id);
         $group->status = GroupEmailGroupsModel::STATUS_PROCESSING;
+        $group->started_at = new \DateTime;
         $group->save();
         // find the subscribers limit
         $limit = (int)$options->emails_at_once;
@@ -481,6 +480,8 @@ class SendGroupsCommand extends Command
         $this->stdout(sprintf('Done processing %d emails!', count($emails)));
 
         $this->stdout('Done processing the group '.$group->group_email_id);
+
+        $this->updateGroupEndTime($group->group_email_id, new \DateTime());
 
         $this->stdout('Start '.$start.' / End '.date('Y-m-d H:i:s'));
 
@@ -698,6 +699,24 @@ class SendGroupsCommand extends Command
 
         GroupEmailGroupsModel::where('group_email_id', $id)
             ->update(['status' => $status]);
+
+        return;
+    }
+
+    protected function updateGroupStartTime($id, $startTime)
+    {
+
+        GroupEmailGroupsModel::where('group_email_id', $id)
+            ->update(['started_at' => $startTime]);
+
+        return;
+    }
+
+    protected function updateGroupEndTime($id, $endTime)
+    {
+
+        GroupEmailGroupsModel::where('group_email_id', $id)
+            ->update(['finished_at' => $endTime]);
 
         return;
     }
