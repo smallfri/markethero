@@ -7,7 +7,7 @@ $I->amHttpAuthenticated('russell@smallfri.com','KjV9g2JcyFGAHng');
 $data =  <<<END
 {
   "body": "This is only a test. you will be informed later. ",
-  "customer_id": 1,
+  "customer_id": 11,
   "from_email": "russell@smallfri.com",
   "from_name": "Bob",
   "plain_text": "test",

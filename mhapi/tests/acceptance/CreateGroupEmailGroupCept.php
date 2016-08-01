@@ -6,7 +6,7 @@ $I->wantTo('Create a Group');
 $I->amHttpAuthenticated('russell@smallfri.com','KjV9g2JcyFGAHng');
 $data =  <<<END
  {
-   "customer_id": 1
+   "customer_id": 11
  }
 END;
 

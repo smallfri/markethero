@@ -61,12 +61,21 @@ class CustomerController extends ApiController
 
         $uid = uniqid();
 
+        $customer= Customer::where('email', '=', $data['customer']['email'])->get();
+//dd($customer);
+        if(!empty($customer[0]))
+        {
+            return $this->respond(['customer' => ['customer_uid' => $customer[0]['customer_uid']]]);
+        }
+
+
         $customer = new Customer();
         $customer->customer_uid = $uid;
         $customer->first_name = $data['customer']['first_name'];
         $customer->email = $data['customer']['email'];
         $customer->password = bcrypt($data['customer']['confirm_password']);
         $customer->date_added = new \DateTime();
+        $customer->status = 'active';
         $customer->save();
 
         if($customer)

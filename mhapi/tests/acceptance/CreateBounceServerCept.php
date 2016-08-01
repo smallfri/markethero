@@ -6,7 +6,7 @@ $I->wantTo('Create a bounce server');
 $I->amHttpAuthenticated('russell@smallfri.com','KjV9g2JcyFGAHng');
 $data =  <<<END
 {
-  "customer_id": 1,
+  "customer_id": 11,
   "delete_all_messages": "no",
   "disable_authenticator": "",
   "email": "russell@smallfri.com",
@@ -23,7 +23,7 @@ $data =  <<<END
 }
 END;
 
-$I->sendPOST('/v1/bounce-servers',$data);
+$I->sendPOST('/v1/bounce-server',$data);
 
 $I->seeResponseIsJson();
 

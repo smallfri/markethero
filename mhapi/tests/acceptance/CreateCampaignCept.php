@@ -1,6 +1,6 @@
 <?php 
 $I = new AcceptanceTester($scenario);
-
+return;
 $I->wantTo('Create a campaign');
 
 $I->amHttpAuthenticated('russell@smallfri.com','KjV9g2JcyFGAHng');

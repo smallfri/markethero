@@ -9,6 +9,4 @@ $I->sendGET('/v1/blacklist');
 
 $I->seeResponseIsJson();
 
-$I->seeResponseContainsJson([ 'error' => 'No Blacklists found.',
-  'status_code' => 400,
-]);
+$I->seeResponseContainsJson(['success']);

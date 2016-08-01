@@ -6,7 +6,7 @@ $I->wantTo('Get bounce server by customer id.');
 
 $I->amHttpAuthenticated('russell@smallfri.com','KjV9g2JcyFGAHng');
 
-$I->sendGET('/v1/bounce-server/203');
+$I->sendGET('/v1/bounce-server/11');
 
 $I->seeResponseIsJson();
 

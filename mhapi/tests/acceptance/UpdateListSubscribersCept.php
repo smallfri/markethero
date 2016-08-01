@@ -1,6 +1,6 @@
 <?php 
 $I = new AcceptanceTester($scenario);
-
+return;
 $I->wantTo('Update a subscriber.');
 
 $I->amHttpAuthenticated('russell@smallfri.com','KjV9g2JcyFGAHng');

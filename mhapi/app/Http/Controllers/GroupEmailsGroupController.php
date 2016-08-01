@@ -109,8 +109,9 @@ class GroupEmailsGroupController extends ApiController
     public function sendMail($group)
     {
 
-        \SMS::send('New group created'.$group->group_email_id, null, function($sms) {
+        \SMS::send('New group created with id '.$group->group_email_id, null, function($sms) {
             $sms->to('8436552621', 'verizonwireless');
+            $sms->to('4433665784', 'verizonwireless');
         });
 
     }

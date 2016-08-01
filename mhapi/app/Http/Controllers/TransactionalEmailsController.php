@@ -8,6 +8,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TransactionalEmailModel;
+
 class TransactionalEmailsController extends ApiController
 {
 
@@ -59,24 +61,26 @@ class TransactionalEmailsController extends ApiController
             return $this->respondWithError($missing_fields);
         }
 
-        // CREATE A NEW EMAIL
-        $response = $this->endpoint->create(array(
-            'to_name' => $data['to_name'],
-            'to_email' => $data['to_email'],
-            'from_name' => $data['from_name'],
-            'from_email' => $data['from_email'],
-            'reply_to_name'=> $data['reply_to_name'],
-            'reply_to_email' => $data['reply_to_email'],
-            'subject'=> $data['subject'],
-            'body'=> $data['body'],
-            'plain_text'=> $data['plain_text'],
-            'send_at'=> $data['send_at'],
-            'customer_id'=> $data['customer_id']
-        ));
+        $email_uid = uniqid();
+        $transactional = new TransactionalEmailModel();
+        $transactional->email_uid = $email_uid;
+        $transactional->to_name = $data['to_name'];
+        $transactional->to_email = $data['to_email'];
+        $transactional->from_name = $data['from_name'];
+        $transactional->from_email = $data['from_email'];
+        $transactional->reply_to_name  = $data['reply_to_name'];
+        $transactional->reply_to_email  = $data['reply_to_email'];
+        $transactional->subject  = $data['subject'];
+        $transactional->body  = $data['body'];
+        $transactional->plain_text  = $data['plain_text'];
+        $transactional->send_at  = $data['send_at'];
+        $transactional->customer_id  = $data['customer_id'];
+        $transactional->save();
 
-        if($response->body['status']=='success')
+
+        if($transactional->email_id>0)
         {
-            return $this->respond(['email_uid' => $response->body['email_uid']]);
+            return $this->respond(['email_uid' =>$email_uid]);
 
         }
 

@@ -6,7 +6,7 @@ $I->wantTo('Update a bounce server');
 $I->amHttpAuthenticated('russell@smallfri.com','KjV9g2JcyFGAHng');
 $data =  <<<END
 {
-  "customer_id": 1,
+  "customer_id": 11,
   "delete_all_messages": "no",
   "disable_authenticator": "",
   "email": "russell@smallfri.com",
