@@ -28,7 +28,7 @@ class PasswordsController
         {
             if(!class_exists('Crypt_'.$class, false))
             {
-                require_once '../apps/common/vendors/PHPSecLib/Crypt/'.$class.'.php';
+                require_once(__DIR__.'/../../ThirdParty/PHPSecLib/Crypt/'.$class.'.php');
             }
         }
         $this->_cipher = new \Crypt_AES();

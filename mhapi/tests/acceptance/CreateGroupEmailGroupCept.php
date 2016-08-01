@@ -1,6 +1,5 @@
 <?php 
 $I = new AcceptanceTester($scenario);
-
 $I->wantTo('Create a Group');
 
 $I->amHttpAuthenticated('russell@smallfri.com','KjV9g2JcyFGAHng');
