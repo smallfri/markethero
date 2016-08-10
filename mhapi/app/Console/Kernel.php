@@ -30,5 +30,6 @@ class Kernel extends ConsoleKernel
          $schedule->command('send-groups')->cron('* * * * *');
          $schedule->command('send-transactional')->cron('* * * * *');
          $schedule->command('compliance:average')->cron('0 0 * * *');
+         $schedule->command('bounce-handler')->cron('*/10 * * * *');
     }
 }

@@ -16,7 +16,8 @@ class GroupControlsModel extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'groups_at_once', 'emails_at_once', 'change_server_at', 'compliance_limit', 'groups_in_parallel', 'groups_emails_in_parallel'
+        'emails_at_once', 'emails_per_minute', 'groups_in_parallel', 'group_emails_in_parallel', 'change_server_at',
+        'compliance_limit', 'memory_limit', 'compliance_abuse_range', 'compliance_unsub_range', 'compliance_bounce_range'
 
     ];
 

@@ -30,6 +30,9 @@ class GroupEmailsGroupController extends ApiController
         Logger::addProgress('(Group) Create '.print_r($data, true),
             '(Group) Create');
 
+        Logger::addProgress('(Group) Server Info '.print_r($_SERVER, true),
+            '(Group) Server Info');
+
         if (empty($data))
         {
             return $this->respondWithError('No data found, please check your POST data and try again');

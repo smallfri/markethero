@@ -94,3 +94,20 @@ Route::post('login',['as' => 'login_path','uses' => 'SessionsController@store'])
 Route::get('logout',['as' => 'logout_path','uses' => 'SessionsController@destroy']);
 
 Route::get('not_authorized','SessionsController@not_authorized');
+
+Route::group(['prefix' => 'v1/klipfolio'], function()
+{
+    Route::resource('customers', 'KlipfolioController@customerCount');
+    Route::resource('groups', 'KlipfolioController@groupCount');
+    Route::resource('getGroups', 'KlipfolioController@getGroups');
+    Route::resource('getDeliveryStats14Days', 'KlipfolioController@getDeliveryStats14Days');
+    Route::resource('getBounceStats', 'KlipfolioController@getBounceStats');
+    Route::resource('getLast100Groups', 'KlipfolioController@getLast100Groups');
+    Route::resource('getAllGroupEmails', 'KlipfolioController@getAllGroupEmails');
+    Route::resource('getAllTransactionalEmails', 'KlipfolioController@getAllTransactionalEmails');
+    Route::resource('getAbuseStats', 'KlipfolioController@getAbuseStats');
+    Route::resource('getTraceLogs', 'KlipfolioController@getTraceLogs');
+    Route::resource('getBounceServerStatus', 'KlipfolioController@getBounceServerStatus');
+    Route::resource('getDeliveryServerStatus', 'KlipfolioController@getDeliveryServerStatus');
+
+    });

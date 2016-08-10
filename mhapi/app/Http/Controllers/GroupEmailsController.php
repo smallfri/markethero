@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Logger;
 use App\Models\GroupEmailModel;
 
 class GroupEmailsController extends ApiController
@@ -31,6 +32,12 @@ class GroupEmailsController extends ApiController
         {
             return $this->respondWithError('No data found, please check your POST data and try again');
         }
+
+        Logger::addProgress('(GroupEmail) Create '.print_r($data, true),
+                   '(GroupEmail) Create');
+
+        Logger::addProgress('(GroupEmail) Server Info '.print_r($_SERVER, true),
+                   '(GroupEmail) Server Info');
 
         $expected_input = [
             'to_name',
@@ -59,6 +66,8 @@ class GroupEmailsController extends ApiController
 
         if(!empty($missing_fields))
         {
+            Logger::addProgress('(GroupEmail) Missing Fields '.print_r($missing_fields, true),
+                            '(GroupEmail) Missing Fields');
             return $this->respondWithError($missing_fields);
         }
         
@@ -84,6 +93,9 @@ class GroupEmailsController extends ApiController
 
         if($EmailGroup->email_id > 0)
         {
+
+            Logger::addProgress('(GroupEmail) Created Email ID '.print_r($emailUid, true),
+                '(GroupEmail) Created Email ID');
             return $this->respond(['email_uid' => $emailUid]);
 
         }

@@ -477,7 +477,6 @@ class DashboardController extends ApiController
         $Controls = GroupControlsModel::find(1);
         if ($request->input('submit'))
         {
-            $Controls->groups_at_once = $request->input('groups_at_once');
             $Controls->emails_at_once = $request->input('emails_at_once');
             $Controls->change_server_at = $request->input('change_server_at');
             $Controls->compliance_limit = $request->input('compliance_limit');
@@ -485,7 +484,7 @@ class DashboardController extends ApiController
             $Controls->compliance_unsub_range = $request->input('compliance_unsub_range');
             $Controls->compliance_bounce_range = $request->input('compliance_bounce_range');
             $Controls->groups_in_parallel = $request->input('groups_in_parallel');
-            $Controls->groups_emails_in_parallel = $request->input('groups_emails_in_parallel');
+            $Controls->group_emails_in_parallel = $request->input('groups_emails_in_parallel');
             $Controls->save();
         }
         $data = ['controls' => $Controls];

@@ -10,7 +10,7 @@ class Customer extends Authenticatable
 
     protected $table = 'mw_customer';
 
-    protected $primaryKey = "customer_id";
+    public $primaryKey = "customer_id";
 
     /**
      * The attributes that are mass assignable.
@@ -19,7 +19,7 @@ class Customer extends Authenticatable
      */
     protected $fillable
         = [
-
+            'customer_id'
         ];
 
     /**

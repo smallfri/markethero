@@ -47,6 +47,20 @@ class CustomersController extends ApiController
 
     }
 
+    public function show()
+        {
+
+            $count = Customer::all()->count();
+
+            if(empty($count))
+            {
+                return $this->respondWithError('No Customers found.');
+            }
+
+            return $this->respond(['count' => $count]);
+
+        }
+
     public function edit($customerId, Request $request)
     {
 
