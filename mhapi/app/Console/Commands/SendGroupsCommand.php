@@ -587,8 +587,9 @@ class SendGroupsCommand extends Command
      * 1. Group the subscribers by domain
      * 2. Sort them so that we don't send to same domain two times in a row.
      */
-    protected function sortEmails($emails)
+    protected function sortEmails(array &$emails)
     {
+
 
         $emailsCount = count($emails);
         $_emails = array();
@@ -618,7 +619,6 @@ class SendGroupsCommand extends Command
                 {
                     $emails[] = $sub;
                     unset($_emails[$domainName][$index]);
-                    break;
                 }
             }
             $emailsCount--;
