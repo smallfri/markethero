@@ -32,9 +32,8 @@ class GroupBounceHandlerCommand extends Command
 
         $this->stdout('Starting...');
 
-        Logger::addProgress('(Bounce Handler) Starting', '(Bounce Handler) Starting');
-
         $this->process();
+
     }
 
     protected function process()
@@ -47,8 +46,6 @@ class GroupBounceHandlerCommand extends Command
         if (empty($servers))
         {
             $this->stdout('No bounce server found');
-
-            Logger::addProgress('(Bounce Handler) No Servers Found', '(Bounce Handler) No servers found.');
 
             return;
         }
@@ -64,7 +61,6 @@ class GroupBounceHandlerCommand extends Command
 
         try
         {
-            Logger::addProgress('(Bounce Handler) Trying to connect', '(Bounce Handler) Trying to connect');
 
             foreach ($serversIds as $serverId)
             {
@@ -101,8 +97,6 @@ class GroupBounceHandlerCommand extends Command
                     $this->_server = BounceServer::find((int)$this->_server->server_id);
                     if (empty($this->_server))
                     {
-                        Logger::addProgress('(Bounce Handler) Empty $this->server', '(Bounce Handler) Empty $this->server');
-
                         continue;
                     }
                     if ($this->_server->status==BounceServer::STATUS_CRON_RUNNING)
@@ -127,23 +121,31 @@ class GroupBounceHandlerCommand extends Command
 
                     $this->fixArrayKey($result['originalEmailHeadersArray']);
 
+//                    print_r($result['originalEmailHeadersArray']['X-Mw-Group-Id']);
+
                     $groupId = trim($result['originalEmailHeadersArray']['X-Mw-Group-Id']);
                     $customerId = trim($result['originalEmailHeadersArray']['X-Mw-Customer-Id']);
                     $emailId = trim($result['originalEmailHeadersArray']['X-Mw-Email-Uid']);
                     $email = trim($result['originalEmailHeadersArray']['To']);
 
-                    Logger::addProgress('(Bounce Handler) Original Email Headers '.print_r($result['originalEmailHeadersArray']), '(Bounce Handler) Original Email Headers');
+                    $code = 'unknown';
+                    if(isset($result['originalEmailHeadersArray']['Diagnostic-Code']))
+                    {
+                        $code = trim($result['originalEmailHeadersArray']['Diagnostic-Code']);
+                    }
 
                     $bounceLog = new GroupEmailBounceLogModel();
                     $bounceLog->group_id = $groupId;
                     $bounceLog->email_uid = $emailId;
                     $bounceLog->customer_id = $customerId;
                     $bounceLog->email = $email;
-                    $bounceLog->message = trim($result['originalEmailHeadersArray']['Diagnostic-Code']);
+                    $bounceLog->message = $code;
                     $bounceLog->bounce_type
                         = $result['bounceType']==\BounceHandler::BOUNCE_HARD?GroupEmailBounceLogModel::BOUNCE_HARD:GroupEmailBounceLogModel::BOUNCE_SOFT;
                     $bounceLog->date_added = new DateTime();
                     $bounceLog->save();
+
+//                    echo 'Saved';
 
                     if ($result['bounceType'])
                     {
@@ -158,13 +160,13 @@ class GroupBounceHandlerCommand extends Command
                             $blacklist = new BlacklistModel();
                             $blacklist->email_id = $emailId;
                             $blacklist->email = $matches[0][0];
-                            $blacklist->reason = trim($result['originalEmailHeadersArray']['Diagnostic-Code']);
+                            $blacklist->reason = $code;
                             $blacklist->save();
                         }
 
-                    }
+//                        echo 'Bounce Type Saved';
 
-                    Logger::addProgress('(Bounce Handler) Saved', '(Bounce Handler) Saved');
+                    }
 
                 }
 
@@ -172,7 +174,6 @@ class GroupBounceHandlerCommand extends Command
 
                 if (empty($this->_server))
                 {
-                    Logger::addProgress('(Bounce Handler) Empty $this->server', '(Bounce Handler) Empty $this->server');
                     continue;
                 }
 
@@ -189,12 +190,8 @@ class GroupBounceHandlerCommand extends Command
             }
         } catch (Exception $e)
         {
-            Logger::addProgress('(Bounce Handler) Exception '.$e, '(Bounce Handler) Exception');
-
             if (!empty($this->_server))
             {
-                Logger::addProgress('(Bounce Handler) Empty $this->server', '(Bounce Handler) Empty $this->server');
-
                 $this->_server = BounceServer::find((int)$this->_server->server_id);
                 if (!empty($this->_server)&&$this->_server->status==BounceServer::STATUS_CRON_RUNNING)
                 {

@@ -75,8 +75,8 @@ class KlipfolioController extends ApiController
     public function getGroups()
     {
 
-        $pendingGroups = GroupEmailGroupsModel::where('status', '=', 'pending-sending')
-            ->orWhere('status', '=', 'processing')
+        $pendingGroups = GroupEmailGroupsModel::join('mw_customer as c','c.customer_id', '=', 'mw_group_email_groups.customer_id')->where('mw_group_email_groups.status', '=', 'pending-sending')
+            ->orWhere('mw_group_email_groups.status', '=', 'processing')
             ->take(50)
             ->get();
 
@@ -88,7 +88,7 @@ class KlipfolioController extends ApiController
             {
                 $pending[$group->group_email_id] = [];
                 $pending[$group->group_email_id]['group_email_id'] = $group->group_email_id;
-                $pending[$group->group_email_id]['customer_id'] = $group->customer_id;
+                $pending[$group->group_email_id]['customer'] = $group->first_name.' '.$group->last_name;
                 $pending[$group->group_email_id]['countPending'] = GroupEmailModel::where('group_email_id', '=',
                     $group->group_email_id)
                     ->where('status', '=', 'pending-sending')

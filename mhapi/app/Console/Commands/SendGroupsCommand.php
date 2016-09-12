@@ -89,7 +89,7 @@ class SendGroupsCommand extends Command
 
         register_shutdown_function(array($this, '_restoreStates'));
 
-      // if more than 1 hour then something is def. wrong?
+        // if more than 1 hour then something is def. wrong?
         ini_set('max_execution_time', 3600);
         set_time_limit(3600);
     }
@@ -158,7 +158,7 @@ class SendGroupsCommand extends Command
 
         //handle compliance
 
-        $this->complianceHandler($groups);
+//        $this->complianceHandler($groups);
 
         $this->stdout(sprintf("Loading %d groups, starting with offset %d...", $limit, (int)$this->groups_offset));
 
@@ -287,7 +287,7 @@ class SendGroupsCommand extends Command
 
             $this->stdout("This customer is inactive!");
 
-            Logger::addProgress('This customer is inactive '.$this->_group->customer_id,'Group Not Ready');
+            Logger::addProgress('This customer is inactive '.$this->_group->customer_id, 'Group Not Ready');
 
             return 1;
         }
@@ -309,8 +309,13 @@ class SendGroupsCommand extends Command
         // put proper status
         $group = GroupEmailGroupsModel::find($this->_group->group_email_id);
         $group->status = GroupEmailGroupsModel::STATUS_PROCESSING;
-        $group->started_at = new \DateTime;
+
+        if ($group->started_at==null)
+        {
+            $group->started_at = new \DateTime;
+        }
         $group->save();
+
         // find the subscribers limit
         $limit = (int)$options->emails_at_once;
 
@@ -628,7 +633,7 @@ class SendGroupsCommand extends Command
 
         $options->id = 1;
         $options->emails_at_once = 100;
-        $options->emails_per_minute = 200;
+//        $options->emails_per_minute = 200;
         $options->change_server_at = 1000;
         $options->compliance_limit = 50000;
         $options->memory_limit = 3000;
@@ -636,7 +641,7 @@ class SendGroupsCommand extends Command
         $options->compliance_unsub_range = .01;
         $options->compliance_bounce_range = .01;
         $options->groups_in_parallel = 5;
-        $options->group_emails_in_parallel = 10;
+        $options->group_emails_in_parallel = 15;
 
 //        $options = GroupControlsModel::find(1);
 
@@ -747,7 +752,10 @@ class SendGroupsCommand extends Command
             ->get()
             ->toArray();
 
+//            $emails
+//                = DB::select(DB::raw('SELECT * FROM mw_group_email WHERE status = "pending-sending" AND group_email_id = '.$group->group_email_id.' LIMIT '.$limit.' OFFSET '.$offset));
         return $emails;
+
     }
 
     protected function groupIsFinished($group)
@@ -784,7 +792,7 @@ class SendGroupsCommand extends Command
         $blackList->date_added = new \DateTime();
         $blackList->Save();
 
-        Logger::addProgress('This email has been blacklisted '.$email['primaryKey'] ,'Email Blacklisted');
+        Logger::addProgress('This email has been blacklisted '.$email['primaryKey'], 'Email Blacklisted');
 
     }
 
@@ -858,7 +866,7 @@ class SendGroupsCommand extends Command
     {
 
         GroupEmailModel::where('email_uid', $mail['email_uid'])
-            ->update(['status' => $status, 'last_updated'=> new \DateTime()]);
+            ->update(['status' => $status, 'last_updated' => new \DateTime()]);
     }
 
     protected function checkImpressionWise($email)
@@ -1073,6 +1081,63 @@ class SendGroupsCommand extends Command
 
         $mail->SmtpClose();
 
+    }
+
+    public function sendByPHPMailer3($emails, $emailsCount, $group, $server)
+    {
+
+        $mail = new \PHPMailer;
+
+        $mail->isSMTP();
+
+        $mail->SMTPAuth = true;
+
+        $mail->SMTPKeepAlive = true; // SMTP connection will not close after each email sent, reduces SMTP overhead
+
+        $mail->SMTPSecure = "tls";
+        $mail->Host = $server[0]['hostname'];
+        $mail->Port = 2525;
+        $mail->Username = $server[0]['username'];
+        $mail->Password = base64_decode($server[0]['password']);
+        $mail->Sender = Helpers::findBounceServerSenderEmail($server[0]['bounce_server_id']);
+
+        foreach ($emails as $index => $email)
+        {
+            $this->stdout("", false);
+            $this->stdout(sprintf("%s - %d/%d - group %d", $email['to_email'], ($index+1), $emailsCount,
+                $group->group_email_id));
+
+            $mail->addCustomHeader('X-Mw-Group-Id', $group->group_email_id);
+            $mail->addCustomHeader('X-Mw-Customer-Id', $group->customer_id);
+            $mail->addCustomHeader('X-Mw-Email-Uid', $email['email_uid']);
+
+            $mail->addReplyTo($email['from_email'], $email['from_name']);
+            $mail->setFrom($email['from_email'], $email['from_name']);
+            $mail->addAddress($email['to_email'], $email['to_name']);
+
+            $mail->Subject = $email['subject'];
+            $mail->MsgHTML($email['body']);
+            $mail->AltBody = $email['email'];
+
+            if (!$mail->send())
+            {
+                $this->logGroupEmailDelivery($email['email_uid'], $mail->ErrorInfo);
+                $this->stdout('ERROR Sending group email to '.$email['to_email'].'!');
+                $this->stdout('ERROR '.$mail->ErrorInfo.'!');
+            }
+            else
+            {
+                $this->logGroupEmailDelivery($email['email_uid'], 'OK');
+                $this->stdout('Sent group email  to '.$email['to_email'].'!');
+            }
+
+            $this->updateGroupEmailStatus($email);
+            // Clear all addresses and attachments for next loop
+            $mail->clearAddresses();
+            $mail->clearAttachments();
+            $mail->clearCustomHeaders();
+
+        }
     }
 
 }

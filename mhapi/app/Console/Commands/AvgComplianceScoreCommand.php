@@ -8,9 +8,8 @@
 
 namespace App\Console\Commands;
 
-
-use App\ComplianceAverageModel;
-use App\ComplianceScoreModel;
+use App\Models\ComplianceAverageModel;
+use App\Models\ComplianceScoreModel;
 use DB;
 use App\Helpers\Helpers;
 use Illuminate\Console\Command;

@@ -133,6 +133,7 @@ class SendTransactionalEmailCommand extends Command
 
     public function handle()
     {
+        $this->stdout('Starting transactional Emails!');
 
         $result = $this->process();
 
