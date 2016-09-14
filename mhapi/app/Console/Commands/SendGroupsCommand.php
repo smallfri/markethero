@@ -11,9 +11,9 @@ namespace App\Console\Commands;
 
 use App\Logger;
 use App\Models\BlacklistModel;
-use App\Models\BounceServer;
+//use App\Models\BounceServer;
 use App\Models\DeliveryServerModel;
-use App\Models\GroupControlsModel;
+//use App\Models\GroupControlsModel;
 use App\Models\GroupEmailComplianceLevelsModel;
 use App\Models\GroupEmailComplianceModel;
 use App\Models\GroupEmailGroupsModel;
@@ -24,10 +24,14 @@ use DB;
 use GuzzleHttp\Client;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
-use phpseclib\Crypt\AES;
+//use phpseclib\Crypt\AES;
 use Swift_Plugins_AntiFloodPlugin;
 
 
+/**
+ * Class SendGroupsCommand
+ * @package App\Console\Commands
+ */
 class SendGroupsCommand extends Command
 {
 
@@ -58,22 +62,9 @@ class SendGroupsCommand extends Command
     // from where to start
     public $groups_offset = 0;
 
-    // whether this should be verbose and output to console
-    public $verbose = 1;
-
-    // since 1.3.5.9 - whether we should send in parallel using pcntl, if available
-    // this is a temporary flag that should be removed in future versions
-    public $use_pcntl = false;
-
-    // since 1.3.5.9 - if parallel sending, how many campaigns at same time
-    // this is a temporary flag that should be removed in future versions
-    public $campaigns_in_parallel = 1;
-
-    // since 1.3.5.9 -  if parallel sending, how many subscriber batches at same time
-    // this is a temporary flag that should be removed in future versions
-    public $subscriber_batches_in_parallel = 3;
-
     public $options;
+
+    public $verbose = 1;
 
     public function init()
     {
@@ -130,17 +121,23 @@ class SendGroupsCommand extends Command
     public function handle()
     {
 
+        // call process function to begin processing groups
         $result = $this->process();
 
         return $result;
     }
 
+    /*
+     * This method pulls groups that are in the status sending or pending-sending. It then calls sendCampaignStep0.
+     * It also runs the compliance check.
+     *
+     */
     protected function process()
     {
 
         $options = $this->getOptions();
 
-        $statuses = array(GroupEmailGroupsModel::STATUS_SENDING, GroupEmailGroupsModel::STATUS_PENDING_SENDING);
+        $statuses = array(GroupEmailGroupsModel::STATUS_PROCESSING, GroupEmailGroupsModel::STATUS_PENDING_SENDING);
         $types = array(GroupEmailGroupsModel::TYPE_REGULAR, GroupEmailGroupsModel::TYPE_AUTORESPONDER);
         $limit = (int)$options->groups_in_parallel;
 
@@ -158,7 +155,7 @@ class SendGroupsCommand extends Command
 
         //handle compliance
 
-//        $this->complianceHandler($groups);
+        $this->complianceHandler($groups);
 
         $this->stdout(sprintf("Loading %d groups, starting with offset %d...", $limit, (int)$this->groups_offset));
 
@@ -183,13 +180,13 @@ class SendGroupsCommand extends Command
         {
 
             $emails = $this->countEmails($group['group_email_id']);
-
-            if ($emails==0&&strtotime($group['date_added'])<strtotime('+10 minutes'))
-            {
-                $this->stdout('No emails found to be ready for sending, setting group status '.$group['group_email_id'].' to pending-sending.');
-                $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_PENDING_SENDING);
-                continue;
-            }
+//
+//            if ($emails==0&&strtotime($group['date_added'])<strtotime('+10 minutes'))
+//            {
+//                $this->stdout('No emails found to be ready for sending, setting group status '.$group['group_email_id'].' to pending-sending.');
+//                $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_PENDING_SENDING);
+//                continue;
+//            }
             $groupIds[] = $group['group_email_id'];
 
         }
@@ -198,6 +195,11 @@ class SendGroupsCommand extends Command
         return 0;
     }
 
+    /*
+     * This method begins the forking process of the groups. It will array_chunk the groups, the size is determined
+     * by the getGroupsInParallel call. The last step is to call sendCampaignStep1 to fork the group emails.
+     *
+     */
     protected function sendCampaignStep0(array $groupIds = array())
     {
 
@@ -250,6 +252,8 @@ class SendGroupsCommand extends Command
 
         if (!$handled)
         {
+            $this->stdout('Not handled');
+
             foreach ($groupIds as $groupId)
             {
                 $this->sendCampaignStep1($groupId, 0);
@@ -259,23 +263,35 @@ class SendGroupsCommand extends Command
         }
     }
 
+    /*
+     * This method finds the groups that have been forked. It also chooses the delivery server and begins processing
+     * the group.
+     *
+     */
     protected function sendCampaignStep1($groupId, $workerNumber = 0)
     {
 
         $this->stdout(sprintf("Group Worker #%d looking into the Group with ID: %d", $workerNumber, $groupId));
 
-        $statuses = array(GroupEmailGroupsModel::STATUS_SENDING, GroupEmailGroupsModel::STATUS_PENDING_SENDING);
+        $statuses = array(
+            GroupEmailGroupsModel::STATUS_SENDING,
+            GroupEmailGroupsModel::STATUS_PENDING_SENDING,
+            GroupEmailGroupsModel::STATUS_COMPLIANCE_REVIEW
+        );
 
         $group = GroupEmailGroupsModel::find($groupId);
 
         $this->_group = $group;
 
+        print_r($group);
+
         if (empty($group)||!in_array($group->status, $statuses))
         {
-            $this->stdout(sprintf("The Group with ID: %d is not ready for processing.", $groupId));
+            $this->stdout(sprintf("The Group with ID: %d is not ready for processing 2.", $groupId));
             $this->updateGroupStatus($groupId, GroupEmailGroupsModel::STATUS_SENT);
 
-            Logger::addProgress(sprintf("The Group with ID: %d is not ready for processing.", $groupId),'Group Not Ready');
+            Logger::addProgress(sprintf("The Group with ID: %d is not ready for processing.", $groupId),
+                'Group Not Ready');
 
             return 1;
         }
@@ -329,6 +345,11 @@ class SendGroupsCommand extends Command
         ));
     }
 
+    /*
+     * This method forks the groups into batches determinded by the call to getEmailBatchesInParallel. And calls
+     * sendCampaignStep3.
+     *
+     */
     protected function sendCampaignStep2(array $params = array())
     {
 
@@ -393,6 +414,11 @@ class SendGroupsCommand extends Command
         return 0;
     }
 
+    /*
+     * This method sends the batches from the previous step. It also handles some email clean up and email sorting and
+     * directly calls the sendEmail method.
+     */
+
     protected function sendCampaignStep3(array $params = array())
     {
 
@@ -411,51 +437,53 @@ class SendGroupsCommand extends Command
 
         $emails = $this->findEmailsForSending($group, $limit, $offset);
 
+        $this->stdout(sprintf('Found %s emails for this batch', count($emails)));
+
         $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_PROCESSING);
 
         $this->stdout(sprintf("This emails worker(#%d) will process %d emails for this group...", $workerNumber,
             count($emails)));
 
         // run some cleanup on subscribers
-        $notAllowedEmailChars = array('-', '_');
-        $emailsQueue = array();
-
-        $this->stdout("Running email cleanup...");
-
-        foreach ($emails as $index => $email)
-        {
-            if (isset($emailsQueue[$email['email_id']]))
-            {
-                unset($emails[$index]);
-                continue;
-            }
-
-            $containsNotAllowedEmailChars = false;
-            $part = explode('@', $email['to_email']);
-            $part = $part[0];
-            foreach ($notAllowedEmailChars as $chr)
-            {
-                if (strpos($part, $chr)===0||strrpos($part, $chr)===0)
-                {
-                    $this->addToBlacklist($email, $group->customer_id);
-
-                    $containsNotAllowedEmailChars = true;
-                    break;
-                }
-            }
-
-            if ($containsNotAllowedEmailChars)
-            {
-                unset($email[$index]);
-                continue;
-            }
-
-            $emailsQueue[$email['email_id']] = true;
-        }
-        unset($emailsQueue);
-
-        // reset the keys
-        $emails = array_values((array)$emails);
+//        $notAllowedEmailChars = array('-', '_');
+//        $emailsQueue = array();
+//
+//        $this->stdout("Running email cleanup...");
+//
+//        foreach ($emails as $index => $email)
+//        {
+//            if (isset($emailsQueue[$email['email_id']]))
+//            {
+//                unset($emails[$index]);
+//                continue;
+//            }
+//
+//            $containsNotAllowedEmailChars = false;
+//            $part = explode('@', $email['to_email']);
+//            $part = $part[0];
+//            foreach ($notAllowedEmailChars as $chr)
+//            {
+//                if (strpos($part, $chr)===0||strrpos($part, $chr)===0)
+//                {
+//                    $this->addToBlacklist($email, $group->customer_id);
+//
+//                    $containsNotAllowedEmailChars = true;
+//                    break;
+//                }
+//            }
+//
+//            if ($containsNotAllowedEmailChars)
+//            {
+//                unset($email[$index]);
+//                continue;
+//            }
+//
+//            $emailsQueue[$email['email_id']] = true;
+//        }
+//        unset($emailsQueue);
+//
+//        // reset the keys
+//        $emails = array_values((array)$emails);
 
         $emailsCount = count($emails);
 
@@ -473,13 +501,13 @@ class SendGroupsCommand extends Command
 
         $start = date('Y-m-d H:i:s');
 
-        $this->sendByPHPMailer2($emails, $emailsCount, $group, $server);
+        $this->sendByPHPMailer3($emails, $emailsCount, $group, $server);
 
         $emailsRemaining = GroupEmailModel::where('group_email_id', '=', $group->group_email_id)
             ->where('status', '=', 'pending-sending')
             ->count();
 
-        if ($emailsRemaining==0)
+        if ($emailsRemaining==0 && $this->getEmailsInReview($group) == 0)
         {
             $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_SENT);
             $this->stdout('Group has been marked as sent!');
@@ -501,6 +529,11 @@ class SendGroupsCommand extends Command
         $this->stdout('Start '.$start.' / End '.date('Y-m-d H:i:s'));
 
     }
+
+    /*
+     * This method handles compliance, it will send a number of emails determined by the options, and place the
+     * remainder in-review status until the group has been approved.
+     */
 
     protected function complianceHandler($groups)
     {
@@ -633,15 +666,13 @@ class SendGroupsCommand extends Command
 
         $options->id = 1;
         $options->emails_at_once = 100;
-//        $options->emails_per_minute = 200;
         $options->change_server_at = 1000;
-        $options->compliance_limit = 50000;
-        $options->memory_limit = 3000;
+        $options->compliance_limit = 2;
         $options->compliance_abuse_range = .01;
         $options->compliance_unsub_range = .01;
         $options->compliance_bounce_range = .01;
         $options->groups_in_parallel = 5;
-        $options->group_emails_in_parallel = 15;
+        $options->group_emails_in_parallel = 50;
 
 //        $options = GroupControlsModel::find(1);
 
@@ -752,10 +783,22 @@ class SendGroupsCommand extends Command
             ->get()
             ->toArray();
 
-//            $emails
-//                = DB::select(DB::raw('SELECT * FROM mw_group_email WHERE status = "pending-sending" AND group_email_id = '.$group->group_email_id.' LIMIT '.$limit.' OFFSET '.$offset));
         return $emails;
 
+    }
+
+    protected function getEmailsInReview($group)
+    {
+
+        $emailsInReview = GroupEmailModel::where('status', '=', 'in-review')
+            ->where('group_email_id', '=', $group->group_email_id)
+            ->count();
+
+        if ($emailsInReview>1)
+        {
+            return $emailsInReview;
+        }
+        return 0;
     }
 
     protected function groupIsFinished($group)
@@ -1027,7 +1070,7 @@ class SendGroupsCommand extends Command
         $mail->CharSet = "utf-8";
         $mail->SMTPAuth = true;
         $mail->SMTPSecure = "tls";
-        $mail->Host = $server[0]['hostname'];
+        $mail->Host = gethostbyname($server[0]['hostname']);
         $mail->Port = 2525;
         $mail->Username = $server[0]['username'];
         $mail->Password = base64_decode($server[0]['password']);
@@ -1036,13 +1079,13 @@ class SendGroupsCommand extends Command
         foreach ($emails as $index => $email)
         {
 
-            if ($this->isBlacklisted($email['to_email'], $email['customer_id']))
-            {
-                $this->stdout('Email '.$email['to_email'].' is blacklisted for this customer id!');
-                $this->updateGroupEmailStatus($email['email_uid'], 'sent');
-                continue;
-
-            }
+//            if ($this->isBlacklisted($email['to_email'], $email['customer_id']))
+//            {
+//                $this->stdout('Email '.$email['to_email'].' is blacklisted for this customer id!');
+//                $this->updateGroupEmailStatus($email['email_uid'], 'sent');
+//                continue;
+//
+//            }
 
             $this->stdout("", false);
             $this->stdout(sprintf("%s - %d/%d - group %d", $email['to_email'], ($index+1), $emailsCount,
@@ -1058,16 +1101,17 @@ class SendGroupsCommand extends Command
 
             $mail->Subject = $email['subject'];
             $mail->MsgHTML($email['body']);
+            $mail->AltBody = $email['plain_text'];
 
             if (!$mail->send())
             {
-                $this->logGroupEmailDelivery($email['email_uid'], $mail->ErrorInfo);
+//                $this->logGroupEmailDelivery($email['email_uid'], $mail->ErrorInfo);
                 $this->stdout('ERROR Sending group email to '.$email['to_email'].'!');
                 $this->stdout('ERROR '.$mail->ErrorInfo.'!');
             }
             else
             {
-                $this->logGroupEmailDelivery($email['email_uid'], 'OK');
+//                $this->logGroupEmailDelivery($email['email_uid'], 'OK');
                 $this->stdout('Sent group email  to '.$email['to_email'].'!');
             }
 
@@ -1095,7 +1139,7 @@ class SendGroupsCommand extends Command
         $mail->SMTPKeepAlive = true; // SMTP connection will not close after each email sent, reduces SMTP overhead
 
         $mail->SMTPSecure = "tls";
-        $mail->Host = $server[0]['hostname'];
+        $mail->Host = gethostbyname($server[0]['hostname']);
         $mail->Port = 2525;
         $mail->Username = $server[0]['username'];
         $mail->Password = base64_decode($server[0]['password']);
@@ -1117,7 +1161,7 @@ class SendGroupsCommand extends Command
 
             $mail->Subject = $email['subject'];
             $mail->MsgHTML($email['body']);
-            $mail->AltBody = $email['email'];
+            $mail->AltBody = $email['plain_text'];
 
             if (!$mail->send())
             {

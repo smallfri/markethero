@@ -108,7 +108,7 @@ class KlipfolioController extends ApiController
     {
 
         $Groups = DB::select(DB::raw('SELECT
-        	count(ge.email_id) AS count, ge.group_email_id, g.started_at, g.finished_at, g.group_email_id, g.status, c.customer_id, c.email, c.first_name, c.last_name
+        	count(ge.email_id) AS count, ge.group_email_id, MIN(ge.last_updated) AS min, MAX(ge.last_updated) AS max, g.group_email_id, g.status, c.customer_id, c.email, c.first_name, c.last_name
         FROM
         	mw_group_email_groups AS g
         LEFT JOIN
