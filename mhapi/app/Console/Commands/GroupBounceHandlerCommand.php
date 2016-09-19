@@ -129,7 +129,7 @@ class GroupBounceHandlerCommand extends Command
                     $email = trim($result['originalEmailHeadersArray']['To']);
 
                     $code = 'unknown';
-                    if(isset($result['originalEmailHeadersArray']['Diagnostic-Code']))
+                    if (isset($result['originalEmailHeadersArray']['Diagnostic-Code']))
                     {
                         $code = trim($result['originalEmailHeadersArray']['Diagnostic-Code']);
                     }
@@ -153,18 +153,30 @@ class GroupBounceHandlerCommand extends Command
 
                         preg_match_all($pattern, $email, $matches);
 
-                        $blacklist = BlacklistModel::where('email', '=', $matches[0][0])->get();
-
-                        if (empty($blacklist))
+                        if (!empty($matches[0][0]))
                         {
-                            $blacklist = new BlacklistModel();
-                            $blacklist->email_id = $emailId;
-                            $blacklist->email = $matches[0][0];
-                            $blacklist->reason = $code;
-                            $blacklist->save();
-                        }
+                            $blacklist = BlacklistModel::where('email', '=', $matches[0][0])->get();
 
-//                        echo 'Bounce Type Saved';
+                            if (empty($blacklist))
+                            {
+                                $blacklist = new BlacklistModel();
+                                $blacklist->email_id = $emailId;
+                                $blacklist->email = $matches[0][0];
+                                $blacklist->reason = $code;
+                                $blacklist->save();
+                            }
+
+                            echo 'Bounce Type Saved';
+
+                            if (strpos($code, 'SpamCop'>1))
+                            {
+                                \SMS::send('SpamCop Detected '.$groupId, null, function ($sms)
+                                {
+                                    $sms->to('8436552621', 'verizonwireless');
+//                                    $sms->to('4433665784', 'verizonwireless');
+                                });
+                            }
+                        }
 
                     }
 

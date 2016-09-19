@@ -17,6 +17,8 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\SendTransactionalEmailCommand',
         'App\Console\Commands\AvgComplianceScoreCommand',
         'App\Console\Commands\GroupBounceHandlerCommand',
+        'App\Console\Commands\GroupsComplianceHandlerCommand',
+        'App\Console\Commands\SendForgottenGroupsCommand',
     ];
 
     /**
@@ -27,9 +29,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-         $schedule->command('send-groups')->cron('* * * * *');
-         $schedule->command('send-transactional')->cron('* * * * *');
+         $schedule->command('send-groups')->everyMinute();
+         $schedule->command('send-forgotten-groups')->everyFiveMinutes();
          $schedule->command('compliance:average')->cron('0 0 * * *');
+         $schedule->command('compliance:check')->everyMinute();
          $schedule->command('bounce-handler')->cron('*/10 * * * *');
     }
 }

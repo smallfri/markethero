@@ -155,7 +155,7 @@ class SendGroupsCommand extends Command
 
         //handle compliance
 
-        $this->complianceHandler($groups);
+//        $this->complianceHandler($groups);
 
         $this->stdout(sprintf("Loading %d groups, starting with offset %d...", $limit, (int)$this->groups_offset));
 
@@ -276,14 +276,12 @@ class SendGroupsCommand extends Command
         $statuses = array(
             GroupEmailGroupsModel::STATUS_SENDING,
             GroupEmailGroupsModel::STATUS_PENDING_SENDING,
-            GroupEmailGroupsModel::STATUS_COMPLIANCE_REVIEW
+            GroupEmailGroupsModel::STATUS_IN_COMPLIANCE_REVIEW
         );
 
         $group = GroupEmailGroupsModel::find($groupId);
 
         $this->_group = $group;
-
-        print_r($group);
 
         if (empty($group)||!in_array($group->status, $statuses))
         {
@@ -507,16 +505,20 @@ class SendGroupsCommand extends Command
             ->where('status', '=', 'pending-sending')
             ->count();
 
-        if ($emailsRemaining==0 && $this->getEmailsInReview($group) == 0)
+        if ($emailsRemaining==0 && !$this->getEmailsInReview($group) > 0)
         {
             $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_SENT);
             $this->stdout('Group has been marked as sent!');
+        }
+        elseif ($this->getEmailsInReview($group) > 0)
+        {
+            $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_IN_COMPLIANCE_REVIEW);
+            $this->stdout('Group has been marked as in in-compliance!');
         }
         else
         {
             $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_PENDING_SENDING);
             $this->stdout('Group has been marked as pending-sending!');
-
         }
 
         $this->stdout("", false);
@@ -667,7 +669,7 @@ class SendGroupsCommand extends Command
         $options->id = 1;
         $options->emails_at_once = 100;
         $options->change_server_at = 1000;
-        $options->compliance_limit = 2;
+        $options->compliance_limit = 50000;
         $options->compliance_abuse_range = .01;
         $options->compliance_unsub_range = .01;
         $options->compliance_bounce_range = .01;

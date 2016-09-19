@@ -9,6 +9,7 @@ use App\Models\BounceServer;
 use App\Models\Customer;
 use App\Http\Requests;
 use App\Models\DeliveryServerModel;
+use App\Models\GroupEmailBounceLogModel;
 use App\Models\GroupEmailGroupsModel;
 use App\Models\TraceLog;
 use App\Models\TransactionalEmailModel;
@@ -129,9 +130,28 @@ class KlipfolioController extends ApiController
     {
 
         $Emails = GroupEmailModel::select('mw_group_email.email_id', 'mw_group_email.customer_id',
-            'mw_group_email.group_email_id', 'mw_group_email.from_email', 'mw_group_email.subject', 'log.message')
-            ->leftJoin('mw_group_email_log AS log', 'log.email_uid', '=', 'mw_group_email.email_uid')
+            'mw_group_email.group_email_id', 'mw_group_email.from_email', 'mw_group_email.subject')
             ->orderBy('group_email_id', 'desc')
+            ->groupBy('group_email_id')
+            ->get();
+
+        return $this->respond(['stats' => $Emails]);
+
+    }
+
+    public function getSpamReports()
+    {
+
+        $Emails = GroupEmailBounceLogModel::select(
+            'mw_group_email_bounce_log.customer_id',
+            'mw_group_email_bounce_log.group_id',
+            'mw_group_email_bounce_log.message',
+            'mw_group_email_bounce_log.bounce_type',
+            'mw_group_email_bounce_log.date_added',
+            'mw_group_email_bounce_log.email_uid'
+        )
+            ->orderBy('mw_group_email_bounce_log.group_id', 'desc')
+            ->take(1000)
             ->get();
 
         return $this->respond(['stats' => $Emails]);

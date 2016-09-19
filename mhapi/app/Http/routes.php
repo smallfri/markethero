@@ -109,5 +109,5 @@ Route::group(['prefix' => 'v1/klipfolio'], function()
     Route::resource('getTraceLogs', 'KlipfolioController@getTraceLogs');
     Route::resource('getBounceServerStatus', 'KlipfolioController@getBounceServerStatus');
     Route::resource('getDeliveryServerStatus', 'KlipfolioController@getDeliveryServerStatus');
-
-    });
+    Route::resource('getSpamReports', 'KlipfolioController@getSpamReports');
+});

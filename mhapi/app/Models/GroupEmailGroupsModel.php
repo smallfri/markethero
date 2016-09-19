@@ -15,6 +15,10 @@ class GroupEmailGroupsModel extends Authenticatable
 
     protected $last_offset;
 
+    const STATUS_APPROVED = 'approved';
+
+    const STATUS_MANUAL_REVIEW = 'manual-review';
+
     const STATUS_DRAFT = 'draft';
 
     const STATUS_PENDING_SENDING = 'pending-sending';
@@ -24,6 +28,8 @@ class GroupEmailGroupsModel extends Authenticatable
     const STATUS_IN_REVIEW = 'in-review';
 
     const STATUS_COMPLIANCE_REVIEW = 'compliance-review';
+
+    const STATUS_IN_COMPLIANCE_REVIEW = 'in-compliance';
 
     const STATUS_SENT = 'sent';
 
@@ -52,7 +58,7 @@ class GroupEmailGroupsModel extends Authenticatable
         = [
             'customer_id',
             'group_email_uid',
-            'status'
+            'compliance_status'
 
         ];
 

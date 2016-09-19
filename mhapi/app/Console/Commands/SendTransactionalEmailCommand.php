@@ -176,7 +176,7 @@ class SendTransactionalEmailCommand extends Command
 
         $this->stdout('Cleaning up old transactional Emails!');
 
-        TransactionalEmailModel::raw('DELETE FROM mw_transactional_email WHERE `status` = "unsent" AND send_at < NOW() AND date_added < DATE_SUB(NOW(), INTERVAL 1 MONTH)');
+//        TransactionalEmailModel::raw('DELETE FROM mw_transactional_email WHERE `status` = "unsent" AND send_at < NOW() AND date_added < DATE_SUB(NOW(), INTERVAL 1 MONTH)');
 
     }
 
