@@ -16,3 +16,12 @@ define('MW_APP_NAME', 'frontend');
 
 // and start an instance of it.
 require_once(dirname(__FILE__) . '/apps/init.php');
+
+
+/*
+$config['version'] = '1.0.0';
+/*
+
+===========================================================================
+v 1.0.0                                                         09/20/2016
+ - Initial Release to Production
