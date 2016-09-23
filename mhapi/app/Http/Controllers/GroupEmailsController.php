@@ -8,12 +8,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendEmail;
 use App\Logger;
 use App\Models\GroupEmailModel;
 
 class GroupEmailsController extends ApiController
 {
-
     private $endpoint;
 
     function __construct()
@@ -90,6 +90,9 @@ class GroupEmailsController extends ApiController
         $EmailGroup->date_added = new \Datetime;
         $EmailGroup->max_retries =5;
         $EmailGroup->save();
+
+        $job =  new SendEmail($EmailGroup);
+        $this->dispatch($job);
 
         if($EmailGroup->email_id > 0)
         {

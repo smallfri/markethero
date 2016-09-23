@@ -51,11 +51,11 @@ return [
 
         'sqs' => [
             'driver' => 'sqs',
-            'key'    => 'your-public-key',
-            'secret' => 'your-secret-key',
-            'prefix' => 'https://sqs.us-east-1.amazonaws.com/your-account-id',
-            'queue'  => 'your-queue-name',
-            'region' => 'us-east-1',
+            'key'    => 'AKIAJJL4Q5R6CEQBV5CQ',
+            'secret' => 'XvK0uBzFzIE0ZU/D9SHQ2RlgF7H59DF/v4Wnspu5',
+//            'prefix' => 'https://sqs.us-west-2.amazonaws.com/774064829364/markethereo',
+            'queue'  => 'https://sqs.us-west-2.amazonaws.com/774064829364/markethero',
+            'region' => 'us-west-2',
         ],
 
         'redis' => [
