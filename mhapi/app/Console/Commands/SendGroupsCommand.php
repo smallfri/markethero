@@ -176,12 +176,10 @@ class SendGroupsCommand extends Command
         return $result;
     }
 
-    /*
+    /**
      * This method pulls groups that are in the status sending or pending-sending. It then calls sendCampaignStep0.
      * It also runs the compliance check.
      *
-     */
-    /**
      * @return int
      */
     protected function process()
@@ -247,12 +245,10 @@ class SendGroupsCommand extends Command
         return 0;
     }
 
-    /*
+    /**
      * This method begins the forking process of the groups. It will array_chunk the groups, the size is determined
      * by the getGroupsInParallel call. The last step is to call sendCampaignStep1 to fork the group emails.
      *
-     */
-    /**
      * @param array $groupIds
      */
     protected function sendCampaignStep0(array $groupIds = array())
@@ -318,12 +314,10 @@ class SendGroupsCommand extends Command
         }
     }
 
-    /*
+    /**
      * This method finds the groups that have been forked. It also chooses the delivery server and begins processing
      * the group.
      *
-     */
-    /**
      * @param $groupId
      * @param int $workerNumber
      * @return int
@@ -474,12 +468,10 @@ class SendGroupsCommand extends Command
         return 0;
     }
 
-    /*
+    /**
      * This method sends the batches from the previous step. It also handles some email clean up and email sorting and
      * directly calls the sendEmail method.
-     */
-
-    /**
+     *
      * @param array $params
      */
     protected function sendCampaignStep3(array $params = array())
@@ -556,12 +548,11 @@ class SendGroupsCommand extends Command
 
     }
 
-    /*
-     * This method handles compliance, it will send a number of emails determined by the options, and place the
-     * remainder in-review status until the group has been approved.
-     */
 
     /**
+     * This method handles compliance, it will send a number of emails determined by the options, and place the
+     * remainder in-review status until the group has been approved.
+     *
      * @param $groups
      */
     protected function complianceHandler($groups)
@@ -695,6 +686,7 @@ class SendGroupsCommand extends Command
 
     /**
      * This method returns the options and settings from the db.
+     *
      * @return \stdClass
      */
     protected function getOptions()
@@ -723,6 +715,8 @@ class SendGroupsCommand extends Command
     }
 
     /**
+     * Returns the status of a customer by id.
+     *
      * @return bool
      */
     protected function getCustomerStatus()
@@ -742,6 +736,7 @@ class SendGroupsCommand extends Command
     }
 
     /**
+     * Logs the delivery of an email by email id.
      * @param $emailId
      * @param string $message
      */
@@ -758,6 +753,7 @@ class SendGroupsCommand extends Command
     }
 
     /**
+     * This determines if we can use Proccess Control.
      * @return bool
      */
     protected function getCanUsePcntl()
@@ -772,6 +768,7 @@ class SendGroupsCommand extends Command
     }
 
     /**
+     * This returns the number of groups to run in parallel.
      * @return mixed
      */
     protected function getGroupsInParallel()
@@ -785,6 +782,8 @@ class SendGroupsCommand extends Command
     }
 
     /**
+     * This returns the number of email batches to create.
+     *
      * @return mixed
      */
     protected function getEmailBatchesInParallel()
@@ -799,6 +798,8 @@ class SendGroupsCommand extends Command
     }
 
     /**
+     * Updates the group status by id and status.
+     *
      * @param $id
      * @param $status
      */
@@ -812,6 +813,7 @@ class SendGroupsCommand extends Command
     }
 
     /**
+     * Updates the started_at column with the time the group started processing.
      * @param $id
      * @param $startTime
      */
@@ -825,6 +827,9 @@ class SendGroupsCommand extends Command
     }
 
     /**
+     * Updates the group finished_at column with the time the group has finished
+     * processing.
+     *
      * @param $id
      * @param $endTime
      */
@@ -838,6 +843,9 @@ class SendGroupsCommand extends Command
     }
 
     /**
+     * This is the method responsible for finding emails that are ready for sending
+     * when group batch is processed.
+     *
      * @param $group
      * @param $limit
      * @param $offset
@@ -872,6 +880,8 @@ class SendGroupsCommand extends Command
     }
 
     /**
+     * Retrieves emails that are in "in-review" status
+     *
      * @param $group
      * @return int
      */
@@ -890,6 +900,8 @@ class SendGroupsCommand extends Command
     }
 
     /**
+     * Checks to see if the group status is sent.
+     *
      * @param $group
      * @return mixed
      */
@@ -904,6 +916,8 @@ class SendGroupsCommand extends Command
     }
 
     /**
+     * Counts emails in the status "pending-sending"
+     *
      * @param $group_email_id
      * @return mixed
      */
@@ -918,7 +932,10 @@ class SendGroupsCommand extends Command
     }
 
     /**
+     * Adds an email to the blacklist by customer id and email id
+     *
      * @param $email
+     * @param $customerId
      */
     protected function addToBlacklist($email, $customerId)
     {
@@ -936,6 +953,8 @@ class SendGroupsCommand extends Command
     }
 
     /**
+     * Checks for an email on the blacklist
+     *
      * @param $email
      * @param $customerId
      * @return bool
