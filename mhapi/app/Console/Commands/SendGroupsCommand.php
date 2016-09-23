@@ -26,6 +26,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 //use phpseclib\Crypt\AES;
 use Swift_Plugins_AntiFloodPlugin;
+use Symfony\Component\Yaml\Yaml;
 
 
 /**
@@ -845,8 +846,22 @@ class SendGroupsCommand extends Command
     protected function findEmailsForSending($group, $limit, $offset)
     {
 
+        //Server is set to UTC + 10 minutes???
+        $date = new \DateTime(date('Y-m-d H:i:s'), new \DateTimeZone('Etc/UTC'));
+
+        //Set user timezone to EST for the time being
+        $date->setTimezone(new \DateTimeZone('EST'));
+
+        //fix the 10 minute difference
+        $date->sub(new \DateInterval('PT10M'));
+
+        $now = $date->format('Y-m-d H:i:s');
+
+        $this->stdout('Now: '.$now);
+
         $emails = GroupEmailModel::where('status', '=', 'pending-sending')
             ->where('group_email_id', '=', $group->group_email_id)
+            ->where('send_at', '<', $now)
             ->take($limit)
             ->skip($offset)
             ->get()
