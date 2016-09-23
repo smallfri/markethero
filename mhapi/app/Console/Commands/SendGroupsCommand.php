@@ -30,6 +30,9 @@ use Symfony\Component\Yaml\Yaml;
 
 
 /**
+ * This class is called by a cron job in Kernel.php. It takes a number of groups at once and creates
+ * batches of emails for those groups, and then sends them.
+ *
  * Class SendGroupsCommand
  * @package App\Console\Commands
  */
