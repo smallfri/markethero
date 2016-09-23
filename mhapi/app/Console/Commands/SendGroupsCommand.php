@@ -35,37 +35,76 @@ use Swift_Plugins_AntiFloodPlugin;
 class SendGroupsCommand extends Command
 {
 
+    /**
+     * @var
+     */
     protected $_cipher;
 
+    /**
+     * @var
+     */
     protected $_plainTextPassword;
 
+    /**
+     * @var string
+     */
     protected $signature = 'send-groups';
 
+    /**
+     * @var string
+     */
     protected $description = 'Sends Group Emails';
 
+    /**
+     * @var
+     */
     protected $_group;
 
     // flag
+    /**
+     * @var bool
+     */
     protected $_restoreStates = true;
 
     // flag
+    /**
+     * @var bool
+     */
     protected $_improperShutDown = false;
 
     // global command arguments
 
     // what type of campaigns this command is sending
+    /**
+     * @var
+     */
     public $groups_type;
 
     // how many campaigns to process at once
+    /**
+     * @var int
+     */
     public $groups_limit = 0;
 
     // from where to start
+    /**
+     * @var int
+     */
     public $groups_offset = 0;
 
+    /**
+     * @var
+     */
     public $options;
 
+    /**
+     * @var int
+     */
     public $verbose = 1;
 
+    /**
+     *
+     */
     public function init()
     {
 
@@ -85,6 +124,9 @@ class SendGroupsCommand extends Command
         set_time_limit(3600);
     }
 
+    /**
+     * @param $signalNumber
+     */
     public function _handleExternalSignal($signalNumber)
     {
 
@@ -93,6 +135,9 @@ class SendGroupsCommand extends Command
         exit;
     }
 
+    /**
+     * @param null $event
+     */
     public function _restoreStates($event = null)
     {
 
@@ -118,6 +163,9 @@ class SendGroupsCommand extends Command
         }
     }
 
+    /**
+     * @return int
+     */
     public function handle()
     {
 
@@ -131,6 +179,9 @@ class SendGroupsCommand extends Command
      * This method pulls groups that are in the status sending or pending-sending. It then calls sendCampaignStep0.
      * It also runs the compliance check.
      *
+     */
+    /**
+     * @return int
      */
     protected function process()
     {
@@ -200,6 +251,9 @@ class SendGroupsCommand extends Command
      * by the getGroupsInParallel call. The last step is to call sendCampaignStep1 to fork the group emails.
      *
      */
+    /**
+     * @param array $groupIds
+     */
     protected function sendCampaignStep0(array $groupIds = array())
     {
 
@@ -267,6 +321,11 @@ class SendGroupsCommand extends Command
      * This method finds the groups that have been forked. It also chooses the delivery server and begins processing
      * the group.
      *
+     */
+    /**
+     * @param $groupId
+     * @param int $workerNumber
+     * @return int
      */
     protected function sendCampaignStep1($groupId, $workerNumber = 0)
     {
@@ -343,10 +402,12 @@ class SendGroupsCommand extends Command
         ));
     }
 
-    /*
-     * This method forks the groups into batches determinded by the call to getEmailBatchesInParallel. And calls
+    /**
+     * This method forks the groups into batches determined by the call to getEmailBatchesInParallel. And calls
      * sendCampaignStep3.
      *
+     * @param array $params
+     * @return int
      */
     protected function sendCampaignStep2(array $params = array())
     {
@@ -417,6 +478,9 @@ class SendGroupsCommand extends Command
      * directly calls the sendEmail method.
      */
 
+    /**
+     * @param array $params
+     */
     protected function sendCampaignStep3(array $params = array())
     {
 
@@ -441,47 +505,6 @@ class SendGroupsCommand extends Command
 
         $this->stdout(sprintf("This emails worker(#%d) will process %d emails for this group...", $workerNumber,
             count($emails)));
-
-        // run some cleanup on subscribers
-//        $notAllowedEmailChars = array('-', '_');
-//        $emailsQueue = array();
-//
-//        $this->stdout("Running email cleanup...");
-//
-//        foreach ($emails as $index => $email)
-//        {
-//            if (isset($emailsQueue[$email['email_id']]))
-//            {
-//                unset($emails[$index]);
-//                continue;
-//            }
-//
-//            $containsNotAllowedEmailChars = false;
-//            $part = explode('@', $email['to_email']);
-//            $part = $part[0];
-//            foreach ($notAllowedEmailChars as $chr)
-//            {
-//                if (strpos($part, $chr)===0||strrpos($part, $chr)===0)
-//                {
-//                    $this->addToBlacklist($email, $group->customer_id);
-//
-//                    $containsNotAllowedEmailChars = true;
-//                    break;
-//                }
-//            }
-//
-//            if ($containsNotAllowedEmailChars)
-//            {
-//                unset($email[$index]);
-//                continue;
-//            }
-//
-//            $emailsQueue[$email['email_id']] = true;
-//        }
-//        unset($emailsQueue);
-//
-//        // reset the keys
-//        $emails = array_values((array)$emails);
 
         $emailsCount = count($emails);
 
@@ -537,6 +560,9 @@ class SendGroupsCommand extends Command
      * remainder in-review status until the group has been approved.
      */
 
+    /**
+     * @param $groups
+     */
     protected function complianceHandler($groups)
     {
 
@@ -595,6 +621,11 @@ class SendGroupsCommand extends Command
         }
     }
 
+    /**
+     * @param $message
+     * @param bool|true $timer
+     * @param string $separator
+     */
     protected function stdout($message, $timer = true, $separator = "\n")
     {
 
@@ -661,15 +692,23 @@ class SendGroupsCommand extends Command
         return $emails;
     }
 
+    /**
+     * This method returns the options and settings from the db.
+     * @return \stdClass
+     */
     protected function getOptions()
     {
 
         $options = new \stdClass();
 
+        /**
+         * temporarily not using db so I can quickly make changes.
+         */
+        $options->scrub = 1;
         $options->id = 1;
         $options->emails_at_once = 100;
         $options->change_server_at = 1000;
-        $options->compliance_limit = 50000;
+        $options->compliance_limit = 2000;
         $options->compliance_abuse_range = .01;
         $options->compliance_unsub_range = .01;
         $options->compliance_bounce_range = .01;
@@ -682,6 +721,9 @@ class SendGroupsCommand extends Command
 
     }
 
+    /**
+     * @return bool
+     */
     protected function getCustomerStatus()
     {
 
@@ -698,6 +740,10 @@ class SendGroupsCommand extends Command
 
     }
 
+    /**
+     * @param $emailId
+     * @param string $message
+     */
     public function logGroupEmailDelivery($emailId, $message = 'OK')
     {
 
@@ -710,6 +756,9 @@ class SendGroupsCommand extends Command
 
     }
 
+    /**
+     * @return bool
+     */
     protected function getCanUsePcntl()
     {
 
@@ -721,6 +770,9 @@ class SendGroupsCommand extends Command
         return true;
     }
 
+    /**
+     * @return mixed
+     */
     protected function getGroupsInParallel()
     {
 
@@ -731,6 +783,9 @@ class SendGroupsCommand extends Command
         return $options->groups_in_parallel;
     }
 
+    /**
+     * @return mixed
+     */
     protected function getEmailBatchesInParallel()
     {
 
@@ -742,6 +797,10 @@ class SendGroupsCommand extends Command
         return $options->group_emails_in_parallel;
     }
 
+    /**
+     * @param $id
+     * @param $status
+     */
     protected function updateGroupStatus($id, $status)
     {
 
@@ -751,6 +810,10 @@ class SendGroupsCommand extends Command
         return;
     }
 
+    /**
+     * @param $id
+     * @param $startTime
+     */
     protected function updateGroupStartTime($id, $startTime)
     {
 
@@ -760,6 +823,10 @@ class SendGroupsCommand extends Command
         return;
     }
 
+    /**
+     * @param $id
+     * @param $endTime
+     */
     protected function updateGroupEndTime($id, $endTime)
     {
 
@@ -789,6 +856,10 @@ class SendGroupsCommand extends Command
 
     }
 
+    /**
+     * @param $group
+     * @return int
+     */
     protected function getEmailsInReview($group)
     {
 
@@ -803,6 +874,10 @@ class SendGroupsCommand extends Command
         return 0;
     }
 
+    /**
+     * @param $group
+     * @return mixed
+     */
     protected function groupIsFinished($group)
     {
 
@@ -813,6 +888,10 @@ class SendGroupsCommand extends Command
         return $count;
     }
 
+    /**
+     * @param $group_email_id
+     * @return mixed
+     */
     protected function countEmails($group_email_id)
     {
 
@@ -841,6 +920,11 @@ class SendGroupsCommand extends Command
 
     }
 
+    /**
+     * @param $email
+     * @param $customerId
+     * @return bool
+     */
     protected function isBlacklisted($email, $customerId)
     {
 
@@ -904,16 +988,24 @@ class SendGroupsCommand extends Command
     }
 
     /**
+     * This method updates the status of group emails
+     *
      * @param $mail
      * @param $status
      */
-    protected function updateGroupEmailStatus($mail, $status = GroupEmailGroupsModel::STATUS_SENT)
+    protected function updateGroupEmailStatus($mail, $status)
     {
 
         GroupEmailModel::where('email_uid', $mail['email_uid'])
             ->update(['status' => $status, 'last_updated' => new \DateTime()]);
     }
 
+    /**
+     * This method calls Impressionwise.com and checks for a valid email
+     *
+     * @param $email
+     * @return bool
+     */
     protected function checkImpressionWise($email)
     {
 
@@ -922,7 +1014,7 @@ class SendGroupsCommand extends Command
         $client = new Client();
 
         $res = $client->request('POST',
-            'http://post.impressionwise.com/fastfeed.aspx?code=D39002&pwd=M4k3Th&email='.$email['from_email']);
+            'http://post.impressionwise.com/fastfeed.aspx?code=D39002&pwd=M4k3Th&email='.$email['to_email']);
 
         $this->stdout('ImpressionWise status code '.$res->getStatusCode());
 
@@ -930,16 +1022,17 @@ class SendGroupsCommand extends Command
 
         $this->stdout('ImpressionWise body '.$get_array['result']);
 
-        $canSend = ['CERTDOM', 'CERTINT', 'KEY', 'QUARANTINE', 'NETPROTECT'];
+        $canSend = ['CERTDOM', 'CERTINT'];
 
         if (in_array($get_array['result'], $canSend))
         {
+            $this->stdout('Impressionwise passed');
             return true;
         }
-
-        if ($get_array['result']=='RETRY')
+        else
         {
-            $this->updateGroupEmailStatus($email, GroupEmailGroupsModel::STATUS_PENDING_SENDING);
+            $this->stdout('Impressionwise blocked');
+            $this->updateGroupEmailStatus($email, GroupEmailGroupsModel::STATUS_BLOCKED);
         }
 
         return false;
@@ -947,6 +1040,7 @@ class SendGroupsCommand extends Command
     }
 
     /**
+     * This method is a test for sending using swiftmailer. It was slower than phpmailer
      * @param $emailsCount
      * @param $emails
      * @param $group
@@ -987,7 +1081,7 @@ class SendGroupsCommand extends Command
 
                 $this->logGroupEmailDelivery($mail['email_uid']);
 
-                $this->updateGroupEmailStatus($mail);
+                $this->updateGroupEmailStatus($mail, GroupEmailGroupsModel::STATUS_SENT);
 
             }
 
@@ -1007,130 +1101,85 @@ class SendGroupsCommand extends Command
         }
     }
 
+//    protected function sendByPHPMailer2($emails, $emailsCount, $group, $server)
+//    {
+//
+//        $mail = New \PHPMailer();
+//        $mail->SMTPKeepAlive = true;
+//
+//        $mail->isSMTP();
+//        $mail->CharSet = "utf-8";
+//        $mail->SMTPAuth = true;
+//        $mail->SMTPSecure = "tls";
+//        $mail->Host = gethostbyname($server[0]['hostname']);
+//        $mail->Port = 2525;
+//        $mail->Username = $server[0]['username'];
+//        $mail->Password = base64_decode($server[0]['password']);
+//        $mail->Sender = Helpers::findBounceServerSenderEmail($server[0]['bounce_server_id']);
+//
+//        foreach ($emails as $index => $email)
+//        {
+//
+////            if ($this->isBlacklisted($email['to_email'], $email['customer_id']))
+////            {
+////                $this->stdout('Email '.$email['to_email'].' is blacklisted for this customer id!');
+////                $this->updateGroupEmailStatus($email['email_uid'], 'sent');
+////                continue;
+////
+////            }
+//
+//            $this->stdout("", false);
+//            $this->stdout(sprintf("%s - %d/%d - group %d", $email['to_email'], ($index+1), $emailsCount,
+//                $group->group_email_id));
+//
+//            $mail->addCustomHeader('X-Mw-Group-Id', $group->group_email_id);
+//            $mail->addCustomHeader('X-Mw-Customer-Id', $group->customer_id);
+//            $mail->addCustomHeader('X-Mw-Email-Uid', $email['email_uid']);
+//
+//            $mail->addReplyTo($email['from_email'], $email['from_name']);
+//            $mail->setFrom($email['from_email'], $email['from_name']);
+//            $mail->addAddress($email['to_email'], $email['to_name']);
+//
+//            $mail->Subject = $email['subject'];
+//            $mail->MsgHTML($email['body']);
+//            $mail->AltBody = $email['plain_text'];
+//
+//            if (!$mail->send())
+//            {
+////                $this->logGroupEmailDelivery($email['email_uid'], $mail->ErrorInfo);
+//                $this->stdout('ERROR Sending group email to '.$email['to_email'].'!');
+//                $this->stdout('ERROR '.$mail->ErrorInfo.'!');
+//            }
+//            else
+//            {
+////                $this->logGroupEmailDelivery($email['email_uid'], 'OK');
+//                $this->stdout('Sent group email  to '.$email['to_email'].'!');
+//            }
+//
+//            $this->updateGroupEmailStatus($email);
+//
+//            $mail->clearAddresses();
+//            $mail->clearAttachments();
+//            $mail->clearCustomHeaders();
+//
+//        }
+//
+//        $mail->SmtpClose();
+//
+//    }
+
     /**
+     * This method sends mail via PHPMailer after a number of groups and batches are created
+     *
      * @param $emails
      * @param $emailsCount
      * @param $group
+     * @param $server
      */
-    protected function sendByPHPMailer($emails, $emailsCount, $group)
-    {
-
-        $mail = New \PHPMailer();
-        $mail->isSMTP();
-        $mail->SMTPKeepAlive = true;
-
-        foreach ($emails as $index => $email)
-        {
-
-            $this->stdout("", false);
-            $this->stdout(sprintf("%s - %d/%d - group %d", $email['to_email'], ($index+1), $emailsCount,
-                $group->group_email_id));
-
-            $email['group_email_uid'] = $group->group_email_uid;
-            $email['customer_id'] = $group->customer_id;
-
-            try
-            {
-                $mail->isSMTP();
-                $mail->CharSet = "utf-8";
-                $mail->SMTPAuth = true;
-                $mail->SMTPSecure = "tls";
-                $mail->Host = "markethero.smtp.com";
-                $mail->Port = 2525;
-                $mail->Username = "chuck@markethero.io";
-                $mail->Password = "market-hero";
-                $mail->setFrom("russell@smallfri.com", "Firstnameeoooo Lastname");
-                $mail->Subject = "Test";
-                $mail->MsgHTML($email['body']);
-                $mail->addAddress($email['to_email'], $email['to_name']);
-                $mail->send();
-
-                $this->logGroupEmailDelivery($email['email_uid']);
-
-                $this->updateGroupEmailStatus($email);
-
-            } catch (\phpmailerException $e)
-            {
-                dd($e);
-            } catch (\Exception $e)
-            {
-                dd($e);
-            }
-
-        }
-
-        $mail->SmtpClose();
-    }
-
-    protected function sendByPHPMailer2($emails, $emailsCount, $group, $server)
-    {
-
-        $mail = New \PHPMailer();
-        $mail->SMTPKeepAlive = true;
-
-        $mail->isSMTP();
-        $mail->CharSet = "utf-8";
-        $mail->SMTPAuth = true;
-        $mail->SMTPSecure = "tls";
-        $mail->Host = gethostbyname($server[0]['hostname']);
-        $mail->Port = 2525;
-        $mail->Username = $server[0]['username'];
-        $mail->Password = base64_decode($server[0]['password']);
-        $mail->Sender = Helpers::findBounceServerSenderEmail($server[0]['bounce_server_id']);
-
-        foreach ($emails as $index => $email)
-        {
-
-//            if ($this->isBlacklisted($email['to_email'], $email['customer_id']))
-//            {
-//                $this->stdout('Email '.$email['to_email'].' is blacklisted for this customer id!');
-//                $this->updateGroupEmailStatus($email['email_uid'], 'sent');
-//                continue;
-//
-//            }
-
-            $this->stdout("", false);
-            $this->stdout(sprintf("%s - %d/%d - group %d", $email['to_email'], ($index+1), $emailsCount,
-                $group->group_email_id));
-
-            $mail->addCustomHeader('X-Mw-Group-Id', $group->group_email_id);
-            $mail->addCustomHeader('X-Mw-Customer-Id', $group->customer_id);
-            $mail->addCustomHeader('X-Mw-Email-Uid', $email['email_uid']);
-
-            $mail->addReplyTo($email['from_email'], $email['from_name']);
-            $mail->setFrom($email['from_email'], $email['from_name']);
-            $mail->addAddress($email['to_email'], $email['to_name']);
-
-            $mail->Subject = $email['subject'];
-            $mail->MsgHTML($email['body']);
-            $mail->AltBody = $email['plain_text'];
-
-            if (!$mail->send())
-            {
-//                $this->logGroupEmailDelivery($email['email_uid'], $mail->ErrorInfo);
-                $this->stdout('ERROR Sending group email to '.$email['to_email'].'!');
-                $this->stdout('ERROR '.$mail->ErrorInfo.'!');
-            }
-            else
-            {
-//                $this->logGroupEmailDelivery($email['email_uid'], 'OK');
-                $this->stdout('Sent group email  to '.$email['to_email'].'!');
-            }
-
-            $this->updateGroupEmailStatus($email);
-
-            $mail->clearAddresses();
-            $mail->clearAttachments();
-            $mail->clearCustomHeaders();
-
-        }
-
-        $mail->SmtpClose();
-
-    }
-
     public function sendByPHPMailer3($emails, $emailsCount, $group, $server)
     {
+
+
 
         $mail = new \PHPMailer;
 
@@ -1149,6 +1198,13 @@ class SendGroupsCommand extends Command
 
         foreach ($emails as $index => $email)
         {
+            $options = $this->getOptions();
+
+            if ($options->scrub)
+            {
+                $this->checkImpressionWise($email);
+            }
+
             $this->stdout("", false);
             $this->stdout(sprintf("%s - %d/%d - group %d", $email['to_email'], ($index+1), $emailsCount,
                 $group->group_email_id));
@@ -1177,7 +1233,7 @@ class SendGroupsCommand extends Command
                 $this->stdout('Sent group email  to '.$email['to_email'].'!');
             }
 
-            $this->updateGroupEmailStatus($email);
+            $this->updateGroupEmailStatus($email, GroupEmailGroupsModel::STATUS_SENT);
             // Clear all addresses and attachments for next loop
             $mail->clearAddresses();
             $mail->clearAttachments();
