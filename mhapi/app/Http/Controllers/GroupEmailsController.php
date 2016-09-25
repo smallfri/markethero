@@ -8,12 +8,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendEmail;
 use App\Logger;
+use App\Models\GroupEmailGroupsModel;
 use App\Models\GroupEmailModel;
 
 class GroupEmailsController extends ApiController
 {
-
     private $endpoint;
 
     function __construct()
@@ -86,10 +87,13 @@ class GroupEmailsController extends ApiController
         $EmailGroup->send_at = $data['send_at'];
         $EmailGroup->customer_id = $data['customer_id'];
         $EmailGroup->group_email_id = $data['group_id'];
-        $EmailGroup->status = 'pending-sending';
+        $EmailGroup->status = GroupEmailGroupsModel::STATUS_QUEUED;
         $EmailGroup->date_added = new \Datetime;
         $EmailGroup->max_retries =5;
         $EmailGroup->save();
+
+        $job =  new SendEmail($EmailGroup);
+        $this->dispatch($job);
 
         if($EmailGroup->email_id > 0)
         {
