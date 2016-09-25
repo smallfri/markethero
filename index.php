@@ -30,3 +30,7 @@ v 1.0.0                                                         09/20/2016
 v 1.0.1                                                         09/23/2016
  - ADDED impressionwise integration so that it can be toggled on and off.
  - ADDED timezone check when sending messages, converting to EST
+
+===========================================================================
+v 1.1.0                                                         09/25/2016
+ - ADDED queues
