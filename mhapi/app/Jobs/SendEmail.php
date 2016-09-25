@@ -4,7 +4,9 @@ namespace App\Jobs;
 
 use App\Helpers\Helpers;
 use App\Jobs\Job;
+use App\Logger;
 use App\Models\DeliveryServerModel;
+use App\Models\GroupEmailGroupsModel;
 use App\Models\GroupEmailModel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -23,32 +25,44 @@ class SendEmail extends Job implements ShouldQueue
 
     protected $EmailGroup;
 
+    /**
+     * SendEmail constructor.
+     * @param GroupEmailModel $EmailGroup
+     */
     public function __construct(GroupEmailModel $EmailGroup)
     {
 
-//        print_r($EmailGroup);
-//        echo "here";exit;
         $this->EmailGroup = $EmailGroup;
     }
 
     /**
      * Execute the job.
      *
-     * @param GroupEmailModel $EmailGroup
+     * @return void
      */
-    public function handle(GroupEmailModel $EmailGroup)
+    public function handle()
     {
 
-//        $this->sendByPHPMailer();
-
         $data = $this->EmailGroup;
+        $this->sendByPHPMailer($data);
+    }
+
+    /**
+     * @param $data
+     * @return void
+     *
+     */
+    public function sendByPHPMailer($data)
+    {
+
         $server = DeliveryServerModel::where('status', '=', 'active')
             ->where('use_for', '=', DeliveryServerModel::USE_FOR_ALL)
             ->get();
 
         if (empty($server))
         {
-            return 1;
+            $this->updateGroupEmailStatus($data, GroupEmailGroupsModel::STATUS_PENDING_SENDING);
+            return;
         }
 
         try
@@ -79,24 +93,15 @@ class SendEmail extends Job implements ShouldQueue
             $mail->Subject = $data['subject'];
             $mail->MsgHTML($data['body']);
 
-
-            //        $this->stdout('Sending transactional Emails to '.$data['to_email'].'!');
-
             if (!$mail->send())
             {
-                echo "not sent";
-                //                $this->updateTransactionalEmail($data['email_uid'], 'unsent');
-                //                $this->logTransactionalEmailDelivery($data['email_id'], $mail->ErrorInfo);
-                //            $this->stdout('ERROR Sending transactional Email to '.$data['to_email'].'!');
-                //            $this->stdout('ERROR '.$mail->ErrorInfo.'!');
+                $this->updateGroupEmailStatus($data, GroupEmailGroupsModel::STATUS_FAILED_SEND);
+                Logger::addProgress('(SendEmailFromQueue) Failed for Email ID '.print_r($data['email_uid'], true),
+                    '(SendEmailFromQueue) Failed for Email ID');
             }
             else
             {
-                //            echo $data['to_email'];
-
-                //                $this->updateTransactionalEmail($data['email_uid'], 'sent');
-                //                $this->stdout('Sent transactional Email to '.$data['to_email'].'!');
-                //                $this->logTransactionalEmailDelivery($data['email_id'], 'OK');
+                $this->updateGroupEmailStatus($data, GroupEmailGroupsModel::STATUS_SENT);
             }
 
             $mail->clearAddresses();
@@ -109,78 +114,21 @@ class SendEmail extends Job implements ShouldQueue
 
         } catch (\Exception $e)
         {
-            echo $e;
+            $this->updateGroupEmailStatus($data, GroupEmailGroupsModel::STATUS_FAILED_ERROR);
+            Logger::addProgress('(SendEmailFromQueue) Failed for Email ID '.print_r($data['email_uid'].' Error:'.print_r($e),
+                    true),
+                '(SendEmailFromQueue) Failed for Email ID');
         }
-
-//
-
-
     }
 
-    protected function sendByPHPMailer()
+    /**
+     * @param $mail
+     * @param $status
+     */
+    protected function updateGroupEmailStatus($mail, $status)
     {
 
-        $data = $this->EmailGroup;
-        $server = DeliveryServerModel::where('status', '=', 'active')
-            ->where('use_for', '=', DeliveryServerModel::USE_FOR_ALL)
-            ->get();
-
-        if (empty($server))
-        {
-            return 1;
-        }
-
-        $mail = New \PHPMailer();
-        $mail->SMTPKeepAlive = true;
-
-        $mail->isSMTP();
-        $mail->CharSet = "utf-8";
-        $mail->SMTPAuth = true;
-        $mail->SMTPSecure = "tls";
-        $mail->Host = $server[0]['hostname'];
-        $mail->Port = 2525;
-        $mail->Username = $server[0]['username'];
-        $mail->Password = base64_decode($server[0]['password']);
-        $mail->Sender = Helpers::findBounceServerSenderEmail($server[0]['bounce_server_id']);
-
-
-        $mail->addCustomHeader('X-Mw-Customer-Id', $data['customer_id']);
-        $mail->addCustomHeader('X-Mw-Email-Uid', $data['email_uid']);
-        $mail->addCustomHeader('X-Mw-Group-Id', $data['group_email_id']);
-
-        $mail->addReplyTo($data['from_email'], $data['from_name']);
-        $mail->setFrom($data['from_email'], $data['from_name']);
-        $mail->addAddress($data['to_email'], $data['to_name']);
-
-        $mail->Subject = $data['subject'];
-        $mail->MsgHTML($data['body']);
-
-
-        //        $this->stdout('Sending transactional Emails to '.$data['to_email'].'!');
-
-        if (!$mail->send())
-        {
-            echo "not sent";
-//                $this->updateTransactionalEmail($data['email_uid'], 'unsent');
-//                $this->logTransactionalEmailDelivery($data['email_id'], $mail->ErrorInfo);
-            //            $this->stdout('ERROR Sending transactional Email to '.$data['to_email'].'!');
-            //            $this->stdout('ERROR '.$mail->ErrorInfo.'!');
-        }
-        else
-        {
-            echo $data['to_email'];
-
-//                $this->updateTransactionalEmail($data['email_uid'], 'sent');
-//                $this->stdout('Sent transactional Email to '.$data['to_email'].'!');
-//                $this->logTransactionalEmailDelivery($data['email_id'], 'OK');
-        }
-
-        $mail->clearAddresses();
-        $mail->clearAttachments();
-        $mail->clearCustomHeaders();
-
-
-        $mail->SmtpClose();
-
+        GroupEmailModel::where('email_uid', $mail['email_uid'])
+            ->update(['status' => $status, 'last_updated' => new \DateTime()]);
     }
 }

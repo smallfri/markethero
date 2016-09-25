@@ -31,6 +31,10 @@ class GroupEmailGroupsModel extends Authenticatable
 
     const STATUS_IN_COMPLIANCE_REVIEW = 'in-compliance';
 
+    const STATUS_FAILED_SEND = 'failed';
+
+    const STATUS_FAILED_ERROR = 'error';
+
     const STATUS_SENT = 'sent';
 
     const STATUS_PROCESSING = 'processing';
@@ -40,6 +44,8 @@ class GroupEmailGroupsModel extends Authenticatable
     const STATUS_PENDING_DELETE = 'pending-delete';
 
     const STATUS_BLOCKED = 'blocked';
+
+    const STATUS_QUEUED = 'queued';
 
     const TYPE_REGULAR = 'regular';
 
