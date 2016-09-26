@@ -65,6 +65,19 @@ class SendEmail extends Job implements ShouldQueue
             return;
         }
 
+        //Server is set to UTC + 10 minutes???
+        $date = new \DateTime(date('Y-m-d H:i:s'), new \DateTimeZone('Etc/UTC'));
+
+        //Set user timezone to EST for the time being
+        $date->setTimezone(new \DateTimeZone('EST'));
+
+        //fix the 10 minute difference
+        $date->sub(new \DateInterval('PT10M'));
+
+        $now = $date->format('Y-m-d H:i:s');
+
+
+
         try
         {
 
@@ -93,6 +106,17 @@ class SendEmail extends Job implements ShouldQueue
             $mail->Subject = $data['subject'];
             $mail->MsgHTML($data['body']);
 
+            /*
+             * If its not time to send, set email to pending sending and set group to pending-sending. The cron
+             * will pick these up at a later time.
+             */
+            if ($data['send_at']>$now)
+            {
+                $this->updateGroupEmailStatus($data, GroupEmailGroupsModel::STATUS_PENDING_SENDING);
+                $this->updateGroupStatus($data['group_email_id'], GroupEmailGroupsModel::STATUS_PENDING_SENDING);
+            }
+
+            // Send mail
             if (!$mail->send())
             {
                 $this->updateGroupEmailStatus($data, GroupEmailGroupsModel::STATUS_FAILED_SEND);
@@ -110,7 +134,7 @@ class SendEmail extends Job implements ShouldQueue
 
             $this->delete();
 
-            return \Response::json(['type' => 'success'], 200);
+//            return \Response::json(['type' => 'success'], 200);
 
         } catch (\Exception $e)
         {
@@ -131,4 +155,19 @@ class SendEmail extends Job implements ShouldQueue
         GroupEmailModel::where('email_uid', $mail['email_uid'])
             ->update(['status' => $status, 'last_updated' => new \DateTime()]);
     }
+
+    /**
+         * Updates the group status by id and status.
+         *
+         * @param $id
+         * @param $status
+         */
+        protected function updateGroupStatus($id, $status)
+        {
+
+            GroupEmailGroupsModel::where('group_email_id', $id)
+                ->update(['status' => $status]);
+
+            return;
+        }
 }
