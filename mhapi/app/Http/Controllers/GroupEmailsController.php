@@ -73,7 +73,7 @@ class GroupEmailsController extends ApiController
         }
         
         $emailUid = uniqid();
-        $EmailGroup = new GroupEmailModel();
+        $EmailGroup = new \stdClass();
         $EmailGroup->email_uid = $emailUid;
         $EmailGroup->to_name = $data['to_name'];
         $EmailGroup->to_email = $data['to_email'];
@@ -87,16 +87,14 @@ class GroupEmailsController extends ApiController
         $EmailGroup->send_at = $data['send_at'];
         $EmailGroup->customer_id = $data['customer_id'];
         $EmailGroup->group_email_id = $data['group_id'];
-//        $EmailGroup->status = GroupEmailGroupsModel::STATUS_QUEUED;
-        $EmailGroup->status = GroupEmailGroupsModel::STATUS_PENDING_SENDING;
-        $EmailGroup->date_added = new \Datetime;
+        $EmailGroup->status = GroupEmailGroupsModel::STATUS_QUEUED;
+        $EmailGroup->date_added = new \DateTime();
         $EmailGroup->max_retries =5;
-        $EmailGroup->save();
 
-//        $job =  new SendEmail($EmailGroup);
-//        $this->dispatch($job);
+        $job =  new SendEmail(serialize($EmailGroup));
+        $this->dispatch($job);
 
-        if($EmailGroup->email_id > 0)
+        if($EmailGroup->email_uid > 0)
         {
 
             Logger::addProgress('(GroupEmail) Created Email ID '.print_r($emailUid, true),
