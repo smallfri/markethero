@@ -61,6 +61,9 @@ class SendEmail extends Job implements ShouldQueue
             return;
         }
 
+        /*
+         * Save email
+         */
         $Email = new GroupEmailModel();
         $Email->email_uid = $data->email_uid;
         $Email->to_name = $data->to_name;
@@ -107,10 +110,12 @@ class SendEmail extends Job implements ShouldQueue
 
             if (!$mail->send())
             {
+                // save status failed if mail did not send
                 $Email->status = 'failed';
             }
             else
             {
+                // save status sent if mail DID send
                 $Email->status = 'sent';
             }
 
@@ -120,6 +125,7 @@ class SendEmail extends Job implements ShouldQueue
 
         } catch (\Exception $e)
         {
+            // save status error if try/catch returns error
             $Email->status = 'error';
         }
 
