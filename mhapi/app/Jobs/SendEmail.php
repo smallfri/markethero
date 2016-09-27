@@ -3,8 +3,6 @@
 namespace App\Jobs;
 
 use App\Helpers\Helpers;
-use App\Jobs\Job;
-use App\Logger;
 use App\Models\DeliveryServerModel;
 use App\Models\GroupEmailGroupsModel;
 use App\Models\GroupEmailModel;
@@ -23,16 +21,15 @@ class SendEmail extends Job implements ShouldQueue
      * @return void
      */
 
-    protected $EmailGroup;
+    public $data;
 
     /**
      * SendEmail constructor.
-     * @param GroupEmailModel $EmailGroup
+     * @param $data
      */
-    public function __construct($EmailGroup)
+    public function __construct($data)
     {
-
-        $this->EmailGroup = $EmailGroup;
+        $this->data = $data;
     }
 
     /**
@@ -43,8 +40,7 @@ class SendEmail extends Job implements ShouldQueue
     public function handle()
     {
 
-        $data = unserialize($this->EmailGroup);
-       $this->sendByPHPMailer($data);
+        $this->sendByPHPMailer($this->data);
     }
 
     /**
@@ -65,16 +61,22 @@ class SendEmail extends Job implements ShouldQueue
             return;
         }
 
-        //Server is set to UTC + 10 minutes???
-        $date = new \DateTime(date('Y-m-d H:i:s'), new \DateTimeZone('Etc/UTC'));
-
-        //Set user timezone to EST for the time being
-        $date->setTimezone(new \DateTimeZone('EST'));
-
-        //fix the 10 minute difference
-        $date->sub(new \DateInterval('PT10M'));
-
-        $now = $date->format('Y-m-d H:i:s');
+        $Email = new GroupEmailModel();
+        $Email->email_uid = $data->email_uid;
+        $Email->to_name = $data->to_name;
+        $Email->to_email = $data->to_email;
+        $Email->from_name = $data->from_name;
+        $Email->from_email = $data->from_email;
+        $Email->reply_to_name = $data->reply_to_name;
+        $Email->reply_to_email = $data->reply_to_email;
+        $Email->subject = $data->subject;
+        $Email->body = $data->body;
+        $Email->plain_text = $data->plain_text;
+        $Email->send_at = $data->send_at;
+        $Email->customer_id = $data->customer_id;
+        $Email->group_email_id = $data->group_email_id;
+        $Email->date_added = $Email->last_updated  = new \DateTime();
+        $Email->max_retries = 5;
 
         try
         {
@@ -92,81 +94,38 @@ class SendEmail extends Job implements ShouldQueue
             $mail->Password = base64_decode($server[0]['password']);
             $mail->Sender = Helpers::findBounceServerSenderEmail($server[0]['bounce_server_id']);
 
-
             $mail->addCustomHeader('X-Mw-Customer-Id', $data->customer_id);
             $mail->addCustomHeader('X-Mw-Email-Uid', $data->email_uid);
             $mail->addCustomHeader('X-Mw-Group-Id', $data->group_email_id);
 
             $mail->addReplyTo($data->from_email, $data->from_name);
             $mail->setFrom($data->from_email, $data->from_name);
-            $mail->addAddress($data->to_email,  $data->to_name);
+            $mail->addAddress($data->to_email, $data->to_name);
 
             $mail->Subject = $data->subject;
             $mail->MsgHTML($data->body);
 
-            /*
-             * If its not time to send, set email to pending sending and set group to pending-sending. The cron
-             * will pick these up at a later time.
-             */
-            if ($data->send_at>$now)
-            {
-//                $this->updateGroupEmailStatus($data, GroupEmailGroupsModel::STATUS_PENDING_SENDING);
-//                $this->updateGroupStatus($data['group_email_id'], GroupEmailGroupsModel::STATUS_PENDING_SENDING);
-            }
-
-            // Send mail
             if (!$mail->send())
             {
-//                $this->updateGroupEmailStatus($data, GroupEmailGroupsModel::STATUS_FAILED_SEND);
-//                Logger::addProgress('(SendEmailFromQueue) Failed for Email ID '.print_r($data['email_uid'], true),
-//                    '(SendEmailFromQueue) Failed for Email ID');
+                $Email->status = 'failed';
             }
             else
             {
-//                $this->updateGroupEmailStatus($data, GroupEmailGroupsModel::STATUS_SENT);
+                $Email->status = 'sent';
             }
 
             $mail->clearAddresses();
             $mail->clearAttachments();
             $mail->clearCustomHeaders();
 
-            $this->delete();
-
-//            return \Response::json(['type' => 'success'], 200);
-
         } catch (\Exception $e)
         {
-            print_r($e, true);
-//            $this->updateGroupEmailStatus($data, GroupEmailGroupsModel::STATUS_FAILED_ERROR);
-            Logger::addProgress('(SendEmailFromQueue) Failed for Email ID '.print_r($data->email_uid.' Error:'.print_r($e),
-                    true),
-                '(SendEmailFromQueue) Failed for Email ID');
+            $Email->status = 'error';
         }
+
+        $Email->save();
+
+        $this->delete();
     }
 
-    /**
-     * @param $mail
-     * @param $status
-     */
-    protected function updateGroupEmailStatus($mail, $status)
-    {
-
-        GroupEmailModel::where('email_uid', $mail->email_uid)
-            ->update(['status' => $status, 'last_updated' => new \DateTime()]);
-    }
-
-    /**
-         * Updates the group status by id and status.
-         *
-         * @param $id
-         * @param $status
-         */
-        protected function updateGroupStatus($id, $status)
-        {
-
-            GroupEmailGroupsModel::where('group_email_id', $id)
-                ->update(['status' => $status]);
-
-            return;
-        }
 }
