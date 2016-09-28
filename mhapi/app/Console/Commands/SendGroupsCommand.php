@@ -14,6 +14,7 @@ use App\Models\BlacklistModel;
 //use App\Models\BounceServer;
 use App\Models\DeliveryServerModel;
 //use App\Models\GroupControlsModel;
+use App\Models\GroupControlsModel;
 use App\Models\GroupEmailComplianceLevelsModel;
 use App\Models\GroupEmailComplianceModel;
 use App\Models\GroupEmailGroupsModel;
@@ -695,23 +696,23 @@ class SendGroupsCommand extends Command
     protected function getOptions()
     {
 
-        $options = new \stdClass();
+//        $options = new \stdClass();
+//
+//        /**
+//         * temporarily not using db so I can quickly make changes.
+//         */
+//        $options->scrub = 1;
+//        $options->id = 1;
+//        $options->emails_at_once = 100;
+//        $options->change_server_at = 1000;
+//        $options->compliance_limit = 2000;
+//        $options->compliance_abuse_range = .01;
+//        $options->compliance_unsub_range = .01;
+//        $options->compliance_bounce_range = .01;
+//        $options->groups_in_parallel = 5;
+//        $options->group_emails_in_parallel = 50;
 
-        /**
-         * temporarily not using db so I can quickly make changes.
-         */
-        $options->scrub = 1;
-        $options->id = 1;
-        $options->emails_at_once = 100;
-        $options->change_server_at = 1000;
-        $options->compliance_limit = 2000;
-        $options->compliance_abuse_range = .01;
-        $options->compliance_unsub_range = .01;
-        $options->compliance_bounce_range = .01;
-        $options->groups_in_parallel = 5;
-        $options->group_emails_in_parallel = 50;
-
-//        $options = GroupControlsModel::find(1);
+        $options = GroupControlsModel::find(1);
 
         return $options;
 
