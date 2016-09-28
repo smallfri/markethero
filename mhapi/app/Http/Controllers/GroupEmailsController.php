@@ -16,12 +16,12 @@ use App\Models\GroupEmailModel;
 class GroupEmailsController extends ApiController
 {
 
-    private $endpoint;
+    private $use_queues;
+
 
     function __construct()
     {
-
-        $this->endpoint = new \EmailOneApi_Endpoint_TransactionalEmails();
+        $this->use_queues == true;
         $this->middleware('auth.basic');
 
     }
@@ -89,7 +89,7 @@ class GroupEmailsController extends ApiController
          * if send_at is less than now, we are going to queue the emails, otherwise we will insert into db and mark
          * as pending-sending.
          */
-        if ($data['send_at']<$now)
+        if ($data['send_at']<$now && $this->use_queues == true)
         {
             //create class to queue
             $emailUid = uniqid();

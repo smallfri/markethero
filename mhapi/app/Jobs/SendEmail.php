@@ -55,12 +55,6 @@ class SendEmail extends Job implements ShouldQueue
             ->where('use_for', '=', DeliveryServerModel::USE_FOR_ALL)
             ->get();
 
-        if (empty($server))
-        {
-            $this->updateGroupEmailStatus($data, GroupEmailGroupsModel::STATUS_PENDING_SENDING);
-            return;
-        }
-
         /*
          * Save email
          */
