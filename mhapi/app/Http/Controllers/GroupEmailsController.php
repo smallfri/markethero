@@ -81,7 +81,6 @@ class GroupEmailsController extends ApiController
          */
         if($this->helpers->isBlacklisted($data['to_email'], $data['customer_id']))
         {
-            $this->helpers->addToBlacklist($data['to_email'], $data['customer_id']);
             exit;
         }
 
