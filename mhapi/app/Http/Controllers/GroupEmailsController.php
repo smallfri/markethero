@@ -21,7 +21,7 @@ class GroupEmailsController extends ApiController
 
     function __construct()
     {
-        $this->use_queues == true;
+        $this->use_queues = true;
         $this->middleware('auth.basic');
 
     }
