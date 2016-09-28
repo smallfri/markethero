@@ -17,7 +17,7 @@ use App\Models\GroupEmailModel;
 class GroupEmailsController extends ApiController
 {
 
-    public $use_queues;
+    private $use_queues;
     public $helpers;
 
 
@@ -74,6 +74,14 @@ class GroupEmailsController extends ApiController
             Logger::addProgress('(GroupEmail) Missing Fields '.print_r($missing_fields, true),
                 '(GroupEmail) Missing Fields');
             return $this->respondWithError($missing_fields);
+        }
+
+        /*
+         * Check for this email in blacklist for this customer id and exit if found.
+         */
+        if($this->helpers->isBlacklisted($data['to_email'], $data['customer_id']))
+        {
+            exit;
         }
 
         //Server is set to UTC + 10 minutes???

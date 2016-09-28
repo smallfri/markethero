@@ -38,3 +38,8 @@ v 1.1.1                                                         09/26/2016
 ===========================================================================
 v 1.2.1                                                         09/27/2016
  - UPDATED queues to write to db AFTER send
+===========================================================================
+v 1.2.2                                                         09/28/2016
+ - ADDED toggle for queues
+ - ADDED leads count to group email controller
+ - ADDED blacklist handling to GroupEmailsController

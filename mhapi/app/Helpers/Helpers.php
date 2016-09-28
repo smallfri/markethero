@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 
+use App\Logger;
+use App\Models\BlacklistModel;
 use App\Models\BounceServer;
 use App\Models\GroupControlsModel;
 use App\Models\GroupEmailComplianceModel;
@@ -111,5 +113,45 @@ class Helpers
         }
 
         return false;
+    }
+
+    /**
+     * Checks for an email on the blacklist
+     *
+     * @param $email
+     * @param $customerId
+     * @return bool
+     */
+    public function isBlacklisted($email, $customerId)
+    {
+
+        $blacklist = BlacklistModel::where('email', '=', $email)->where('customer_id', '=', $customerId)->first();
+
+        if (!empty($blacklist))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Adds an email to the blacklist by customer id and email id
+     *
+     * @param $email
+     * @param $customerId
+     */
+    public function addToBlacklist($email, $customerId)
+    {
+
+        $blackList = new BlacklistModel();
+
+        $blackList->email_id = $email['primaryKey'];
+        $blackList->reason = 'Invalid email address format!';
+        $blackList->customer_id = $customerId;
+        $blackList->date_added = new \DateTime();
+        $blackList->Save();
+
+        Logger::addProgress('This email has been blacklisted '.$email['primaryKey'], 'Email Blacklisted');
+
     }
 }

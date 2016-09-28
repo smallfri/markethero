@@ -66,6 +66,10 @@ class GroupEmailsGroupController extends ApiController
         $GroupEmailGroups = new GroupEmailGroupsModel();
         $GroupEmailGroups->group_email_uid = $list_uid;
         $GroupEmailGroups->customer_id = $data['customer_id'];
+        if(isset($data['leads_count']))
+        {
+            $GroupEmailGroups->leads_count = $data['leads_count'];
+        }
         $GroupEmailGroups->status = 'pending-sending';
         $GroupEmailGroups->date_added = new \DateTime();
         $GroupEmailGroups->save();
