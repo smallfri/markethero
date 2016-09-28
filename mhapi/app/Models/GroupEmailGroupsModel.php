@@ -64,7 +64,8 @@ class GroupEmailGroupsModel extends Authenticatable
         = [
             'customer_id',
             'group_email_uid',
-            'compliance_status'
+            'compliance_status',
+            'leads_count'
 
         ];
 
