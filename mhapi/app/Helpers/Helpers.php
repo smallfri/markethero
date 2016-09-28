@@ -3,6 +3,8 @@
 namespace App\Helpers;
 
 use App\Models\BounceServer;
+use App\Models\GroupControlsModel;
+use App\Models\GroupEmailComplianceModel;
 
 class Helpers
 {
@@ -83,5 +85,31 @@ class Helpers
     {
         $bounceServer = \App\Models\BounceServer::find($bounce_server_id);
         return $bounceServer->email;
+    }
+
+    /**
+     * This method returns the options and settings from the db.
+     *
+     * @return \stdClass
+     */
+    public function getOptions()
+    {
+
+        $options = GroupControlsModel::find(1);
+
+        return $options;
+
+    }
+
+    function checkComplianceStatus($group_email_id)
+    {
+        $compliance = GroupEmailComplianceModel::find($group_email_id);
+
+        if($compliance->compliance_status == 'in-review')
+        {
+            return true;
+        }
+
+        return false;
     }
 }

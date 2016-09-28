@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helpers;
 use App\Jobs\SendEmail;
 use App\Logger;
 use App\Models\GroupEmailGroupsModel;
@@ -16,11 +17,13 @@ use App\Models\GroupEmailModel;
 class GroupEmailsController extends ApiController
 {
 
-    private $use_queues;
+    public $use_queues;
+    public $helpers;
 
 
     function __construct()
     {
+        $this->helpers = new Helpers();
         $this->use_queues = true;
         $this->middleware('auth.basic');
     }
@@ -83,6 +86,21 @@ class GroupEmailsController extends ApiController
         $date->sub(new \DateInterval('PT10M'));
 
         $now = $date->format('Y-m-d H:i:s');
+
+        /*
+         * Check options
+         */
+
+//        $options = $this->helpers->getOptions();
+
+        /*
+         * We need to check if the group is in compliance and handle accordingly
+         */
+
+//        if($this->helpers->checkComplianceStatus($data['group_id']) == true)
+//        {
+//
+//        }
 
         /*
          * if send_at is less than now, we are going to queue the emails, otherwise we will insert into db and mark
