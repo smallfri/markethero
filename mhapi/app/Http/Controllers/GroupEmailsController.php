@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helpers;
 use App\Jobs\SendEmail;
 use App\Logger;
 use App\Models\GroupEmailGroupsModel;
@@ -17,10 +18,12 @@ class GroupEmailsController extends ApiController
 {
 
     private $use_queues;
+    public $helpers;
 
 
     function __construct()
     {
+        $this->helpers = new Helpers();
         $this->use_queues = false;
         $this->middleware('auth.basic');
     }
@@ -71,6 +74,15 @@ class GroupEmailsController extends ApiController
             Logger::addProgress('(GroupEmail) Missing Fields '.print_r($missing_fields, true),
                 '(GroupEmail) Missing Fields');
             return $this->respondWithError($missing_fields);
+        }
+
+        /*
+         * Check blacklist
+         */
+        if($this->helpers->isBlacklisted($data['to_email'], $data['customer_id']))
+        {
+            $this->helpers->addToBlacklist($data['to_email'], $data['customer_id']);
+            exit;
         }
 
         //Server is set to UTC + 10 minutes???
