@@ -23,7 +23,6 @@ class GroupEmailsController extends ApiController
     {
         $this->use_queues = true;
         $this->middleware('auth.basic');
-
     }
 
     public function store()
