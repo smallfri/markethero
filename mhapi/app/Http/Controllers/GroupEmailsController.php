@@ -77,7 +77,7 @@ class GroupEmailsController extends ApiController
         }
 
         /*
-         * Check blacklist
+         * Check for this email in blacklist for this customer id and exit if found.
          */
         if($this->helpers->isBlacklisted($data['to_email'], $data['customer_id']))
         {
