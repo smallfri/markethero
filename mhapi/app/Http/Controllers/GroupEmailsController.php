@@ -77,11 +77,11 @@ class GroupEmailsController extends ApiController
         }
 
         /*
-         * Check for this email in blacklist for this customer id and exit if found.
-         */
-        if($this->helpers->isBlacklisted($data['to_email'], $data['customer_id']))
+                 * Check for this email in blacklist for this customer id and exit if found.
+                 */
+        if ($this->helpers->isBlacklisted($data['to_email'], $data['customer_id']))
         {
-            exit;
+            return $this->respondWithError('This email was found on the blacklist and was not emailed');
         }
 
         //Server is set to UTC + 10 minutes???
