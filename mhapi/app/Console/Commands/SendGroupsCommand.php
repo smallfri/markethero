@@ -107,6 +107,8 @@ class SendGroupsCommand extends Command
      */
     public $verbose = 1;
 
+    public $helpers;
+
     /**
      *
      */
@@ -127,6 +129,8 @@ class SendGroupsCommand extends Command
         // if more than 1 hour then something is def. wrong?
         ini_set('max_execution_time', 3600);
         set_time_limit(3600);
+
+        $this->helpers= new Helpers();
     }
 
     /**
@@ -209,7 +213,7 @@ class SendGroupsCommand extends Command
 
         //handle compliance
 
-//        $this->complianceHandler($groups);
+//        $this->helpers->complianceHandler($groups);
 
         $this->stdout(sprintf("Loading %d groups, starting with offset %d...", $limit, (int)$this->groups_offset));
 
@@ -559,63 +563,66 @@ class SendGroupsCommand extends Command
      *
      * @param $groups
      */
-    protected function complianceHandler($groups)
-    {
 
-        foreach ($groups AS $group)
-        {
+    //moved to helpers
 
-            $this->stdout('Starting Compliance Handler');
-
-            $group->compliance = GroupEmailComplianceModel::find($group->group_email_id);
-
-            if (empty($group->compliance))
-            {
-                $this->stdout('Missing compliance entry in table...');
-                continue;
-            }
-
-            $group->compliance->compliance_levels
-                = GroupEmailComplianceLevelsModel::find($group->compliance->compliance_level_type_id);
-
-            $count = GroupEmailModel::where('group_email_id', '=', $group->group_email_id)->count();
-
-            $options = $this->getOptions();
-
-            if ($group->compliance->compliance_status=='in-review' AND $count>=$options->compliance_limit)
-            {
-
-                $this->stdout('This Group is in Compliance Review...');
-
-                $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_COMPLIANCE_REVIEW);
-
-                // Set emails to be sent = threshold X count
-                $emailsToBeSent = ceil($count*$group->compliance->compliance_levels->threshold);
-
-                $this->stdout('There are '.$emailsToBeSent.' emails to be sent...');
-
-
-                // Determine how many emails should be set to in-review status
-                $in_review_count = $count-$emailsToBeSent;
-
-                $this->stdout('Setting '.$in_review_count.' emails to in-review...');
-
-                // Update emails to in-review status
-                GroupEmailModel::where('group_email_id', '=', $group->group_email_id)
-                    ->where('status', '=', 'pending-sending')
-                    ->orderBy('email_id', 'asc')
-                    ->limit($in_review_count)
-                    ->update(['status' => GroupEmailGroupsModel::STATUS_IN_REVIEW]);
-
-            }
-            elseif ($group->compliance->compliance_status=='approved')
-            {
-                // Update emails to pending-sending status if this Group is no longer under review
-                GroupEmailModel::where('group_email_id', '=', $group->group_email_id)->where('status', '=', 'in-review')
-                    ->update(['status' => GroupEmailGroupsModel::STATUS_PENDING_SENDING]);
-            }
-        }
-    }
+//    protected function complianceHandler($groups)
+//    {
+//
+//        foreach ($groups AS $group)
+//        {
+//
+//            $this->stdout('Starting Compliance Handler');
+//
+//            $group->compliance = GroupEmailComplianceModel::find($group->group_email_id);
+//
+//            if (empty($group->compliance))
+//            {
+//                $this->stdout('Missing compliance entry in table...');
+//                continue;
+//            }
+//
+//            $group->compliance->compliance_levels
+//                = GroupEmailComplianceLevelsModel::find($group->compliance->compliance_level_type_id);
+//
+//            $count = GroupEmailModel::where('group_email_id', '=', $group->group_email_id)->count();
+//
+//            $options = $this->getOptions();
+//
+//            if ($group->compliance->compliance_status=='in-review' AND $count>=$options->compliance_limit)
+//            {
+//
+//                $this->stdout('This Group is in Compliance Review...');
+//
+//                $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_COMPLIANCE_REVIEW);
+//
+//                // Set emails to be sent = threshold X count
+//                $emailsToBeSent = ceil($count*$group->compliance->compliance_levels->threshold);
+//
+//                $this->stdout('There are '.$emailsToBeSent.' emails to be sent...');
+//
+//
+//                // Determine how many emails should be set to in-review status
+//                $in_review_count = $count-$emailsToBeSent;
+//
+//                $this->stdout('Setting '.$in_review_count.' emails to in-review...');
+//
+//                // Update emails to in-review status
+//                GroupEmailModel::where('group_email_id', '=', $group->group_email_id)
+//                    ->where('status', '=', 'pending-sending')
+//                    ->orderBy('email_id', 'asc')
+//                    ->limit($in_review_count)
+//                    ->update(['status' => GroupEmailGroupsModel::STATUS_IN_REVIEW]);
+//
+//            }
+//            elseif ($group->compliance->compliance_status=='approved')
+//            {
+//                // Update emails to pending-sending status if this Group is no longer under review
+//                GroupEmailModel::where('group_email_id', '=', $group->group_email_id)->where('status', '=', 'in-review')
+//                    ->update(['status' => GroupEmailGroupsModel::STATUS_PENDING_SENDING]);
+//            }
+//        }
+//    }
 
     /**
      * @param $message

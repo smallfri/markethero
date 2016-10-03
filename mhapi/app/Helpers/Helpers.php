@@ -6,7 +6,10 @@ use App\Logger;
 use App\Models\BlacklistModel;
 use App\Models\BounceServer;
 use App\Models\GroupControlsModel;
+use App\Models\GroupEmailComplianceLevelsModel;
 use App\Models\GroupEmailComplianceModel;
+use App\Models\GroupEmailGroupsModel;
+use App\Models\GroupEmailModel;
 
 class Helpers
 {
@@ -76,6 +79,7 @@ class Helpers
 
     static function mapToClass($args)
     {
+
         if (isset($args[0]))
         {
             return (object)$args[0];
@@ -85,6 +89,7 @@ class Helpers
 
     static function findBounceServerSenderEmail($bounce_server_id)
     {
+
         $bounceServer = \App\Models\BounceServer::find($bounce_server_id);
         return $bounceServer->email;
     }
@@ -105,14 +110,35 @@ class Helpers
 
     function checkComplianceStatus($group_email_id)
     {
-        $compliance = GroupEmailComplianceModel::find($group_email_id);
 
-        if($compliance->compliance_status == 'in-review')
+        $compliance = GroupEmailComplianceModel::find($group_email_id);
+        if ($compliance['compliance_status']=='in-review')
         {
-            return true;
+            return $compliance['compliance_level_type_id'];
         }
 
         return false;
+    }
+
+    function getLeadsCount($group_email_id)
+    {
+
+        $compliance = GroupEmailComplianceModel::find($group_email_id);
+
+        if (!empty($compliance))
+        {
+            $compliance->leads_count;
+        }
+
+        return false;
+    }
+
+    function countSent($group_email_id)
+    {
+
+        $count = GroupEmailModel::where('group_email_id', '=', $group_email_id)->where('status','=','sent')->count();
+
+            return $count;
     }
 
     /**
@@ -153,5 +179,75 @@ class Helpers
 
         Logger::addProgress('This email has been blacklisted '.$email['primaryKey'], 'Email Blacklisted');
 
+    }
+
+    /**
+     * This method handles compliance, it will send a number of emails determined by the options, and place the
+     * remainder in-review status until the group has been approved.
+     *
+     * @param $groups
+     */
+    protected function complianceHandler($groups)
+    {
+
+        foreach ($groups AS $group)
+        {
+
+            $group->compliance = GroupEmailComplianceModel::find($group->group_email_id);
+
+            if (empty($group->compliance))
+            {
+                continue;
+            }
+
+            $group->compliance->compliance_levels
+                = GroupEmailComplianceLevelsModel::find($group->compliance->compliance_level_type_id);
+
+            $count = GroupEmailModel::where('group_email_id', '=', $group->group_email_id)->count();
+
+            $options = $this->getOptions();
+
+            if ($group->compliance->compliance_status=='in-review' AND $count>=$options->compliance_limit)
+            {
+
+                $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_COMPLIANCE_REVIEW);
+
+                // Set emails to be sent = threshold X count
+                $emailsToBeSent = ceil($count*$group->compliance->compliance_levels->threshold);
+
+
+                // Determine how many emails should be set to in-review status
+                $in_review_count = $count-$emailsToBeSent;
+
+                // Update emails to in-review status
+                GroupEmailModel::where('group_email_id', '=', $group->group_email_id)
+                    ->where('status', '=', 'pending-sending')
+                    ->orderBy('email_id', 'asc')
+                    ->limit($in_review_count)
+                    ->update(['status' => GroupEmailGroupsModel::STATUS_IN_REVIEW]);
+
+            }
+            elseif ($group->compliance->compliance_status=='approved')
+            {
+                // Update emails to pending-sending status if this Group is no longer under review
+                GroupEmailModel::where('group_email_id', '=', $group->group_email_id)->where('status', '=', 'in-review')
+                    ->update(['status' => GroupEmailGroupsModel::STATUS_PENDING_SENDING]);
+            }
+        }
+    }
+
+    /**
+     * Updates the group status by id and status.
+     *
+     * @param $id
+     * @param $status
+     */
+    public function updateGroupStatus($id, $status)
+    {
+
+        GroupEmailGroupsModel::where('group_email_id', $id)
+            ->update(['status' => $status]);
+
+        return;
     }
 }

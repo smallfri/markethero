@@ -43,3 +43,6 @@ v 1.2.2                                                         09/28/2016
  - ADDED toggle for queues
  - ADDED leads count to group email controller
  - ADDED blacklist handling to GroupEmailsController
+===========================================================================
+v 1.2.3                                                         09/29/2016
+ - Update number of queue workers, sent 32k in 1:14 w 40 queue workers

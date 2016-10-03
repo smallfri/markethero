@@ -11,6 +11,7 @@ namespace App\Http\Controllers;
 use App\Helpers\Helpers;
 use App\Jobs\SendEmail;
 use App\Logger;
+use App\Models\GroupEmailComplianceLevelsModel;
 use App\Models\GroupEmailGroupsModel;
 use App\Models\GroupEmailModel;
 
@@ -18,6 +19,7 @@ class GroupEmailsController extends ApiController
 {
 
     private $use_queues;
+    private $use_compliance;
     public $helpers;
 
 
@@ -25,6 +27,7 @@ class GroupEmailsController extends ApiController
     {
         $this->helpers = new Helpers();
         $this->use_queues = true;
+        $this->use_compliance = false;
         $this->middleware('auth.basic');
     }
 
@@ -77,9 +80,9 @@ class GroupEmailsController extends ApiController
         }
 
         /*
-         * Check for this email in blacklist for this customer id and exit if found.
-         */
-        if($this->helpers->isBlacklisted($data['to_email'], $data['customer_id']))
+                 * Check for this email in blacklist for this customer id and exit if found.
+                 */
+        if ($this->helpers->isBlacklisted($data['to_email'], $data['customer_id']))
         {
             return $this->respondWithError('This email was found on the blacklist and was not emailed');
         }
@@ -95,26 +98,49 @@ class GroupEmailsController extends ApiController
 
         $now = $date->format('Y-m-d H:i:s');
 
-        /*
-         * Check options
-         */
-
-//        $options = $this->helpers->getOptions();
+        $useQueues = $this->use_queues;
+        $compliance = false;
 
         /*
-         * We need to check if the group is in compliance and handle accordingly
+         * compliance handler
          */
+        if ($this->use_compliance)
+        {
+            //check options
+            $options = $this->helpers->getOptions();
 
-//        if($this->helpers->checkComplianceStatus($data['group_id']) == true)
-//        {
-//
-//        }
+
+            // count number of emails that have already been sent for this group
+            $countSent = $this->helpers->countSent($data['group_id']);
+
+            // get the compliance status id
+            $threshold = $this->helpers->checkComplianceStatus($data['group_id']);
+
+            // get the compliance %
+            $sendPercent = GroupEmailComplianceLevelsModel::find($threshold);
+
+            // get the leads count
+            $Group = GroupEmailGroupsModel::find($data['group_id']);
+
+            // determine the % of the group we should send immediatly
+            $sendAmount = $sendPercent['threshold']*$Group['leads_count'];
+
+            // if the number sent is greater than the compliance limit, set use queues to false
+            if ($countSent>$options->compliance_limit&&$countSent>$sendAmount)
+            {
+                $useQueues = false;
+                $compliance = true;
+
+                $this->helpers->updateGroupStatus($data['group_id'], GroupEmailGroupsModel::STATUS_IN_REVIEW);
+
+            }
+        }
 
         /*
          * if send_at is less than now, we are going to queue the emails, otherwise we will insert into db and mark
          * as pending-sending.
          */
-        if ($data['send_at']<$now && $this->use_queues == true)
+        if ($data['send_at'] < $now && $useQueues == true)
         {
             //create class to queue
             $emailUid = uniqid();
@@ -156,7 +182,14 @@ class GroupEmailsController extends ApiController
             $Email->send_at = $data['send_at'];
             $Email->customer_id = $data['customer_id'];
             $Email->group_email_id = $data['group_id'];
-            $Email->status = GroupEmailGroupsModel::STATUS_PENDING_SENDING;
+            if($compliance)
+            {
+                $Email->status = GroupEmailGroupsModel::STATUS_IN_REVIEW;
+            }
+            else
+            {
+                $Email->status = GroupEmailGroupsModel::STATUS_PENDING_SENDING;
+            }
             $Email->date_added = new \DateTime();
             $Email->max_retries = 5;
             $Email->save();
