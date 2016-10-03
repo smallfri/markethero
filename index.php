@@ -46,3 +46,6 @@ v 1.2.2                                                         09/28/2016
 ===========================================================================
 v 1.2.3                                                         09/29/2016
  - Update number of queue workers, sent 32k in 1:14 w 40 queue workers
+===========================================================================
+v 1.2.4                                                         10/03/2016
+ - Updated GroupEmailsController to use compliance check
