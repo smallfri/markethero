@@ -136,6 +136,7 @@ class GroupEmailsController extends ApiController
             }
         }
 
+        $emailUid = uniqid('',true);
         /*
          * if send_at is less than now, we are going to queue the emails, otherwise we will insert into db and mark
          * as pending-sending.
@@ -143,7 +144,7 @@ class GroupEmailsController extends ApiController
         if ($data['send_at'] < $now && $useQueues == true)
         {
             //create class to queue
-            $emailUid = uniqid();
+
             $EmailGroup = new \stdClass();
             $EmailGroup->email_uid = $emailUid;
             $EmailGroup->to_name = $data['to_name'];
@@ -167,7 +168,6 @@ class GroupEmailsController extends ApiController
         }
         else
         {
-            $emailUid = uniqid();
             $Email = new GroupEmailModel();
             $Email->email_uid = $emailUid;
             $Email->to_name = $data['to_name'];

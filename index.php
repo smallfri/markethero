@@ -22,7 +22,12 @@ require_once(dirname(__FILE__) . '/apps/init.php');
 $config['version'] = '1.0.0';
 /*
 
-
+==========================================================================
+v 1.2.5                                                         10/11/2016
+- Updated queue names
+- ADDED db queue
+- FIXED issue with sms queue
+- UPDATED unique id to 23 characters
 ==========================================================================
 v 1.2.4                                                         10/03/2016
 - Updated GroupEmailsController to use compliance check
