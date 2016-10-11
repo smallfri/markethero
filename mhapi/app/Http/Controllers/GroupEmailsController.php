@@ -80,8 +80,8 @@ class GroupEmailsController extends ApiController
         }
 
         /*
-                 * Check for this email in blacklist for this customer id and exit if found.
-                 */
+         * Check for this email in blacklist for this customer id and exit if found.
+         */
         if ($this->helpers->isBlacklisted($data['to_email'], $data['customer_id']))
         {
             return $this->respondWithError('This email was found on the blacklist and was not emailed');
@@ -162,7 +162,7 @@ class GroupEmailsController extends ApiController
             $EmailGroup->date_added = new \DateTime();
             $EmailGroup->max_retries = 5;
 
-            $job = new SendEmail($EmailGroup);
+            $job = (new SendEmail($EmailGroup))->onConnection('mail-queue');
             $this->dispatch($job);
         }
         else
