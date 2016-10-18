@@ -24,6 +24,9 @@ $config['version'] = '1.0.0';
 
 ==========================================================================
 v 1.2.5                                                         10/11/2016
+- Updated not to use send_at because its being handled in the main app
+==========================================================================
+v 1.2.5                                                         10/11/2016
 - Updated queue names
 - ADDED db queue
 - FIXED issue with sms queue

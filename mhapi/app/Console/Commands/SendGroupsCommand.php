@@ -880,7 +880,6 @@ class SendGroupsCommand extends Command
 
         $emails = GroupEmailModel::where('status', '=', 'pending-sending')
             ->where('group_email_id', '=', $group->group_email_id)
-            ->where('send_at', '<', $now)
             ->take($limit)
             ->skip($offset)
             ->get()
