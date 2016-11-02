@@ -9,6 +9,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Helpers;
+use App\Models\Customer;
 use App\Models\DeliveryServerModel;
 use App\Models\TransactionalEmailLogModel;
 use App\Models\TransactionalEmailModel;
@@ -46,7 +47,8 @@ class TransactionalEmailsController extends ApiController
             'subject',
             'body',
             'plain_text',
-            'send_at'
+            'send_at',
+            'customer_id'
         ];
 
         $missing_fields = array();
@@ -63,6 +65,13 @@ class TransactionalEmailsController extends ApiController
         if (!empty($missing_fields))
         {
             return $this->respondWithError($missing_fields);
+        }
+
+        $Customer = Customer::find($data['customer_id']);
+
+        if (empty($Customer))
+        {
+            return $this->respondWithError('Customer id does not exist.');
         }
 
         $email_uid = uniqid();

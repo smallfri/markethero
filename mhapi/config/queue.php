@@ -65,6 +65,14 @@ return [
             'region' => 'us-west-2',
         ],
 
+        'qa-mail-queue' => [
+            'driver' => 'sqs',
+            'key' => 'AKIAJJL4Q5R6CEQBV5CQ',
+            'secret' => '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',
+            'queue' => 'https://sqs.us-west-2.amazonaws.com/774064829364/qa-email-queue',
+            'region' => 'us-west-2',
+        ],
+
         'db-queue' => [
             'driver' => 'sqs',
             'key' => 'AKIAJJL4Q5R6CEQBV5CQ',

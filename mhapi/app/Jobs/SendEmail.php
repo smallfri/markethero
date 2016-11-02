@@ -4,7 +4,7 @@ namespace App\Jobs;
 
 use App\Helpers\Helpers;
 use App\Models\DeliveryServerModel;
-use App\Models\GroupEmailGroupsModel;
+use App\Models\GroupEmailBounceLogModel;
 use App\Models\GroupEmailModel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -55,6 +55,15 @@ class SendEmail extends Job implements ShouldQueue
             ->where('use_for', '=', DeliveryServerModel::USE_FOR_ALL)
             ->get();
 
+        /*
+         * Check bounces
+         */
+
+        $Bounce = GroupEmailBounceLogModel::where('email','=',$data->to_email);
+        if(!empty($Bounce))
+        {
+            $this->delete();
+        }
         /*
          * Save email
          */

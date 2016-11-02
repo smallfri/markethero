@@ -21,7 +21,9 @@ require_once(dirname(__FILE__) . '/apps/init.php');
 /*
 $config['version'] = '1.0.0';
 /*
-
+==========================================================================
+v 1.2.6                                                        11/02/2016
+- Updated to require customer_id
 ==========================================================================
 v 1.2.5                                                         10/11/2016
 - Updated not to use send_at because its being handled in the main app

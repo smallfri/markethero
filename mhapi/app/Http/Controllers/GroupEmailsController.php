@@ -11,6 +11,7 @@ namespace App\Http\Controllers;
 use App\Helpers\Helpers;
 use App\Jobs\SendEmail;
 use App\Logger;
+use App\Models\Customer;
 use App\Models\GroupEmailComplianceLevelsModel;
 use App\Models\GroupEmailGroupsModel;
 use App\Models\GroupEmailModel;
@@ -58,7 +59,8 @@ class GroupEmailsController extends ApiController
             'body',
             'plain_text',
             'send_at',
-            'group_id'
+            'group_id',
+            'customer_id'
         ];
 
         $missing_fields = array();
@@ -77,6 +79,13 @@ class GroupEmailsController extends ApiController
             Logger::addProgress('(GroupEmail) Missing Fields '.print_r($missing_fields, true),
                 '(GroupEmail) Missing Fields');
             return $this->respondWithError($missing_fields);
+        }
+
+        $Customer = Customer::find($data['customer_id']);
+
+        if (empty($Customer))
+        {
+            return $this->respondWithError('Customer id does not exist.');
         }
 
         /*
