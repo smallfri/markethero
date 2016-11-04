@@ -119,7 +119,7 @@ class KlipfolioController extends ApiController
         	mw_customer AS c
         ON  c.customer_id = g.customer_id
         GROUP BY
-        	g.group_email_id ORDER BY g.group_email_id DESC LIMIT 100'
+        	g.group_email_id ORDER BY g.group_email_id DESC LIMIT 25'
         ));
 
         return $this->respond(['stats' => $Groups]);
