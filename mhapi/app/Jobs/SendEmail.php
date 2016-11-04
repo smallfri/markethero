@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Helpers\Helpers;
+use App\Logger;
 use App\Models\DeliveryServerModel;
 use App\Models\GroupEmailBounceLogModel;
 use App\Models\GroupEmailModel;
@@ -121,6 +122,8 @@ class SendEmail extends Job implements ShouldQueue
                 // save status sent if mail DID send
                 $Email->status = 'sent';
             }
+            $Email->save();
+       	    $this->delete();
 
             $mail->clearAddresses();
             $mail->clearAttachments();
@@ -130,11 +133,12 @@ class SendEmail extends Job implements ShouldQueue
         {
             // save status error if try/catch returns error
             $Email->status = 'error';
+            $Email->save();
+       		$this->delete();
+
+
         }
 
-        $Email->save();
-
-        $this->delete();
     }
 
 }

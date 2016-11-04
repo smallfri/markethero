@@ -23,7 +23,8 @@ $config['version'] = '1.0.0';
 /*
 ==========================================================================
 v 1.2.6.1                                                       11/02/2016
-- "UPDATED klipfolio controller to only pull back 25 results"
+- UPDATED klipfolio controller to only pull back 25 results
+- Fixed issue with group emails not saving
 ==========================================================================
 v 1.2.6                                                         11/02/2016
 - Updated to require customer_id
