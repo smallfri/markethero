@@ -18,6 +18,8 @@ use App\Models\TransactionalEmailModel;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use GuzzleHttp\Client;
+
 
 class DashboardController extends ApiController
 {
@@ -559,5 +561,37 @@ class DashboardController extends ApiController
             'email' => 'russell@smallfri.com',
             'password' => bcrypt('jack1999'),
         ]);
+    }
+
+    public function test_emails()
+    {
+
+        if(isset($_POST))
+        {
+            $client = new Client;
+            $r = $client->post('http://m-prod.markethero.io/mhapi/v1/create-group-email',
+                [
+                    'auth' => [
+                            'russell@smallfri.com',
+                            'KjV9g2JcyFGAHng'
+                        ],
+                    'json' => [
+                        "body" => $_POST['body'],
+                        "subject" => $_POST['subject'],
+                        "customer_id" => 11,
+                        "from_email" => $_POST['from_email'],
+                        "from_name" => $_POST['from_name'],
+                        "to_name" => $_POST['to_name'],
+                        "to_email" => $_POST['to_email'],
+                        "reply_to_email" => 'bounces@marketherobounce1.com',
+                        "reply_to_name" => 'Test Man',
+                        "group_id" => 39
+                    ]
+                ]);
+
+            print_r($r);
+
+        }
+        return view('dashboard.emails.edit');
     }
 }

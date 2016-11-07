@@ -128,6 +128,10 @@ class GroupBounceHandlerCommand extends Command
                     $emailId = trim($result['originalEmailHeadersArray']['X-Mw-Email-Uid']);
                     $email = trim($result['originalEmailHeadersArray']['To']);
 
+                    preg_match('/<(.*)>/',$email, $matches);
+
+                    $email = $matches[1];
+
                     $code = 'unknown';
                     if (isset($result['originalEmailHeadersArray']['Diagnostic-Code']))
                     {
@@ -167,15 +171,15 @@ class GroupBounceHandlerCommand extends Command
                             }
 
                             echo 'Bounce Type Saved';
-
-                            if (strpos($code, 'SpamCop'>1))
-                            {
-                                \SMS::send('SpamCop Detected '.$groupId, null, function ($sms)
-                                {
-                                    $sms->to('8436552621', 'verizonwireless');
-//                                    $sms->to('4433665784', 'verizonwireless');
-                                });
-                            }
+//
+//                            if (strpos($code, 'SpamCop'>1))
+//                            {
+//                                \SMS::send('SpamCop Detected '.$groupId, null, function ($sms)
+//                                {
+//                                    $sms->to('8436552621', 'verizonwireless');
+////                                    $sms->to('4433665784', 'verizonwireless');
+//                                });
+//                            }
                         }
 
                     }
