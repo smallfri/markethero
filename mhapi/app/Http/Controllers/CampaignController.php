@@ -6,7 +6,7 @@
  * Time: 11:08 AM
  */
 
-namespace App\Models\Http\Controllers;
+namespace App\Http\Controllers;
 
 
 use App\Models\CampaignModel;

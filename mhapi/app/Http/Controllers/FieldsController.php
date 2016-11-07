@@ -6,7 +6,7 @@
  * Time: 9:01 AM
  */
 
-namespace App\Models\Http\Controllers;
+namespace App\Http\Controllers;
 
 use App\Models\Country;
 use App\Models\Customer;
