@@ -20,7 +20,6 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use GuzzleHttp\Client;
 
-
 class DashboardController extends ApiController
 {
 
@@ -496,51 +495,52 @@ class DashboardController extends ApiController
 
     public function servers()
     {
+
         $Servers = DeliveryServerModel::all();
 
-        $data= ['servers'=>$Servers];
+        $data = ['servers' => $Servers];
 
         return view('dashboard.servers.index', $data);
     }
 
     public function editserver($serverId, Request $request)
     {
+
         $Server = DeliveryServerModel::find($serverId);
 
-        if(isset($_POST))
-                   {
-                       $Server->bounce_server_id = $request->input('bounce_server_id');
-                       $Server->name = $request->input('name');
-                       $Server->hostname = $request->input('hostname');
-                       $Server->use_for = $request->input('use_for');
-                       $Server->save();
-                   }
+        if (isset($data))
+        {
+            $Server->bounce_server_id = $request->input('bounce_server_id');
+            $Server->name = $request->input('name');
+            $Server->hostname = $request->input('hostname');
+            $Server->use_for = $request->input('use_for');
+            $Server->save();
+        }
 //dd($Server);
-                $data= ['server'=>$Server];
+        $data = ['server' => $Server];
 
-                return view('dashboard.servers.edit', $data);
+        return view('dashboard.servers.edit', $data);
     }
 
-
     public function edit($customerId, Request $request)
+    {
+
+        $Customer = Customer::find($customerId);
+
+        if (isset($data))
         {
-
-            $Customer = Customer::find($customerId);
-
-            if(isset($_POST))
-            {
-                $Customer->first_name = $request->input('first_name');
-                $Customer->last_name = $request->input('last_name');
-                $Customer->email = $request->input('email');
-                $Customer->status = $request->input('status');
-                $Customer->save();
-            }
-
-            $data = ['customer'=>$Customer];
-
-            return view('dashboard.customers.edit', $data);
-
+            $Customer->first_name = $request->input('first_name');
+            $Customer->last_name = $request->input('last_name');
+            $Customer->email = $request->input('email');
+            $Customer->status = $request->input('status');
+            $Customer->save();
         }
+
+        $data = ['customer' => $Customer];
+
+        return view('dashboard.customers.edit', $data);
+
+    }
 
     public function store()
     {
@@ -566,32 +566,66 @@ class DashboardController extends ApiController
     public function test_emails()
     {
 
-        if(isset($_POST))
-        {
-            $client = new Client;
-            $r = $client->post('http://m-prod.markethero.io/mhapi/v1/create-group-email',
-                [
-                    'auth' => [
-                            'russell@smallfri.com',
-                            'KjV9g2JcyFGAHng'
-                        ],
-                    'json' => [
-                        "body" => $_POST['body'],
-                        "subject" => $_POST['subject'],
-                        "customer_id" => 11,
-                        "from_email" => $_POST['from_email'],
-                        "from_name" => $_POST['from_name'],
-                        "to_name" => $_POST['to_name'],
-                        "to_email" => $_POST['to_email'],
-                        "reply_to_email" => 'bounces@marketherobounce1.com',
-                        "reply_to_name" => 'Test Man',
-                        "group_id" => 39
-                    ]
-                ]);
+        $r = 'none';
 
-            print_r($r);
+
+        $data = ['r' => $r];
+        return view('dashboard.emails.edit', $data);
+    }
+
+    public function send_emails(Request $request)
+    {
+
+        $result = 'none';
+
+        if (empty($request))
+        {
+            return $this->respondWithError('No data found, please check your POST data and try again');
+        }
+
+        if (!empty($request))
+        {
+            $body = [
+                "body" => $request->input('body'),
+                "plain_text" => $request->input('body'),
+                "subject" => $request->input('subject'),
+                "customer_id" => 11,
+                "from_email" => $request->input('from_email'),
+                "from_name" => $request->input('from_name'),
+                "to_name" => $request->input('to_name'),
+                "to_email" => $request->input('to_email'),
+                "reply_to_email" => 'bounces@marketherobounce1.com',
+                "reply_to_name" => 'Test Man',
+                "group_id" => 39,
+                "send_at" => '2016-01-01'
+            ];
+
+            $data_string = json_encode($body);
+            if($request->input('bypass_queue') == 0)
+            {
+                $url = 'http://m-prod.markethero.io/mhapi/v1/create-group-email';
+            }
+            else
+            {
+                $url = 'http://m-prod.markethero.io/mhapi/v1/emails';
+            }
+
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_USERPWD, 'russell@smallfri.com:KjV9g2JcyFGAHng');
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($data_string))
+            );
+
+            $result = curl_exec($ch);
 
         }
-        return view('dashboard.emails.edit');
+
+        $data = ['r' => $result];
+        return view('dashboard.emails.edit', $data);
     }
 }

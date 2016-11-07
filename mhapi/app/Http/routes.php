@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Route;
 | and give it the controller to call when that URI is requested.
 |
 */
+Route::get('email-tester', 'DashboardController@test_emails');
+Route::post('email-tester',['as' => 'email_test_path','uses' => 'DashboardController@send_emails']);
+
 Route::resource('send-groups', 'CronJobs\SendGroupsController');
 Route::resource('dashboard', 'DashboardController');
 Route::resource('logs', 'LogsController');
