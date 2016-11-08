@@ -22,7 +22,18 @@ require_once(dirname(__FILE__) . '/apps/init.php');
 $config['version'] = '1.0.0';
 /*
 ==========================================================================
-v 1.2.6                                                        11/02/2016
+v 1.3                                                           11/07/2016
+- UPDATED for laravel 5.3
+==========================================================================
+v 1.2.6.2                                                       11/07/2016
+- ADDED tester for emails to dashboard contoller
+- ADDED fix for email addresses to bounch handler
+==========================================================================
+v 1.2.6.1                                                       11/02/2016
+- UPDATED klipfolio controller to only pull back 25 results
+- Fixed issue with group emails not saving
+==========================================================================
+v 1.2.6                                                         11/02/2016
 - Updated to require customer_id
 ==========================================================================
 v 1.2.5                                                         10/11/2016

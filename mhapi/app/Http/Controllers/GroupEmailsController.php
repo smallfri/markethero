@@ -172,7 +172,7 @@ class GroupEmailsController extends ApiController
             $EmailGroup->date_added = new \DateTime();
             $EmailGroup->max_retries = 5;
 
-            $job = (new SendEmail($EmailGroup))->onConnection('mail-queue');
+            $job = (new SendEmail($EmailGroup))->onConnection('qa-email-queue');
             $this->dispatch($job);
         }
         else

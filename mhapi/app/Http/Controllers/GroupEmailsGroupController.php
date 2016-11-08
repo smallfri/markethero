@@ -92,7 +92,7 @@ class GroupEmailsGroupController extends ApiController
         Logger::addProgress('(Group) Created '.print_r($GroupEmailGroups, true),
             '(Group) Created');
 
-        $this->sendMail($GroupEmailGroups);
+        //$this->sendMail($GroupEmailGroups);
 
 
         return $this->respond(['group' => $GroupEmailGroups->group_email_id]);

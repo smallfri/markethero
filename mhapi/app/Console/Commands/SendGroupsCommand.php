@@ -209,7 +209,10 @@ class SendGroupsCommand extends Command
             $limit = (int)$this->groups_limit;
         }
 
-        $groups = GroupEmailGroupsModel::whereIn('status', $statuses)->get();
+//        $groups = GroupEmailGroupsModel::whereIn('status', $statuses)->get();
+
+        $sql = 'SELECT * FROM mw_group_email_groups WHERE status = "pending-sending" OR status = "processing"';
+               $groups = DB::select(DB::raw($sql));
 
         //handle compliance
 
@@ -237,7 +240,7 @@ class SendGroupsCommand extends Command
         foreach ($groups as $group)
         {
 
-            $emails = $this->countEmails($group['group_email_id']);
+            $emails = $this->countEmails($group->group_email_id);
 //
 //            if ($emails==0&&strtotime($group['date_added'])<strtotime('+10 minutes'))
 //            {
@@ -245,7 +248,7 @@ class SendGroupsCommand extends Command
 //                $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_PENDING_SENDING);
 //                continue;
 //            }
-            $groupIds[] = $group['group_email_id'];
+            $groupIds[] = $group->group_email_id;
 
         }
 
@@ -341,11 +344,16 @@ class SendGroupsCommand extends Command
             GroupEmailGroupsModel::STATUS_IN_COMPLIANCE_REVIEW
         );
 
-        $group = GroupEmailGroupsModel::find($groupId);
+//        $group = GroupEmailGroupsModel::find($groupId);
 
-        $this->_group = $group;
+        $sql = 'SELECT * FROM mw_group_email_groups WHERE group_email_id = '.$groupId;
+        $group = DB::select(DB::raw($sql));
 
-        if (empty($group)||!in_array($group->status, $statuses))
+//        dd($group);
+
+        $this->_group = $group[0];
+
+        if (empty($group)||!in_array($group[0]->status, $statuses))
         {
             $this->stdout(sprintf("The Group with ID: %d is not ready for processing 2.", $groupId));
             $this->updateGroupStatus($groupId, GroupEmailGroupsModel::STATUS_SENT);
@@ -383,20 +391,31 @@ class SendGroupsCommand extends Command
         $this->stdout('Changing the group status into PROCESSING!');
 
         // put proper status
-        $group = GroupEmailGroupsModel::find($this->_group->group_email_id);
-        $group->status = GroupEmailGroupsModel::STATUS_PROCESSING;
+//        $group = GroupEmailGroupsModel::find($this->_group->group_email_id);
 
-        if ($group->started_at==null)
-        {
-            $group->started_at = new \DateTime;
-        }
-        $group->save();
+        $sql = 'SELECT * FROM mw_group_email_groups WHERE group_email_id = '.$this->_group->group_email_id;
+
+         $group = DB::select(DB::raw($sql));
+
+//        dd($group);
+
+//        $group->status = GroupEmailGroupsModel::STATUS_PROCESSING;
+//
+//        if ($group->started_at==null)
+//        {
+            $started_at = date('Y-M-d H:i:s');
+//        }
+//        $group->save();
+
+//        $sql = 'UPDATE mw_group_email_groups SET status = "'.GroupEmailGroupsModel::STATUS_PROCESSING.'" WHERE group_email_id = '.$this->_group->group_email_id;
+//
+//        DB::select(DB::raw($sql));
 
         // find the subscribers limit
         $limit = (int)$options->emails_at_once;
 
         $this->sendCampaignStep2(array(
-            'group' => $group,
+            'group' => $group[0],
             'server' => $server,
             'limit' => $limit,
             'offset' => 0,
@@ -499,6 +518,8 @@ class SendGroupsCommand extends Command
         $this->stdout('limit '.$limit.' offset '.$offset);
 
         $emails = $this->findEmailsForSending($group, $limit, $offset);
+
+//        dd($emails);
 
         $this->stdout(sprintf('Found %s emails for this batch', count($emails)));
 
@@ -733,14 +754,18 @@ class SendGroupsCommand extends Command
     protected function getCustomerStatus()
     {
 
-        $customer = GroupEmailGroupsModel::select('c.status AS status')
-            ->where('group_email_id', '=', $this->_group->group_email_id)
-            ->join('mw_customer AS c', 'c.customer_id', '=', 'mw_group_email_groups.customer_id')
-            ->get();
+//        $customer = GroupEmailGroupsModel::select('c.status AS status')
+//            ->where('group_email_id', '=', $this->_group->group_email_id)
+//            ->join('mw_customer AS c', 'c.customer_id', '=', 'mw_group_email_groups.customer_id')
+//            ->get();
+
+        $sql = 'select `c`.`status` as `status` from `mw_group_email_groups` inner join `mw_customer` as `c` on `c`.`customer_id` = `mw_group_email_groups`.`customer_id` where `group_email_id` = '.$this->_group->group_email_id;
+
+      $customer =  DB::select(DB::raw($sql));
 
         if (!empty($customer))
         {
-            return $customer[0]['status'];
+            return $customer[0]->status;
         }
         return false;
 
@@ -817,8 +842,12 @@ class SendGroupsCommand extends Command
     protected function updateGroupStatus($id, $status)
     {
 
-        GroupEmailGroupsModel::where('group_email_id', $id)
-            ->update(['status' => $status]);
+//        GroupEmailGroupsModel::where('group_email_id', $id)
+//            ->update(['status' => $status]);
+
+        $sql = 'UPDATE mw_group_email_groups SET status = "'.$status.'" WHERE group_email_id = '.$id;
+
+        DB::select(DB::raw($sql));
 
         return;
     }
@@ -831,8 +860,12 @@ class SendGroupsCommand extends Command
     protected function updateGroupStartTime($id, $startTime)
     {
 
-        GroupEmailGroupsModel::where('group_email_id', $id)
-            ->update(['started_at' => $startTime]);
+//        GroupEmailGroupsModel::where('group_email_id', $id)
+//            ->update(['started_at' => $startTime]);
+
+        $sql = 'UPDATE mw_group_email_groups SET started_at = "'.$startTime.'" WHERE group_email_id = '.$id;
+
+               DB::select(DB::raw($sql));
 
         return;
     }
@@ -847,8 +880,12 @@ class SendGroupsCommand extends Command
     protected function updateGroupEndTime($id, $endTime)
     {
 
-        GroupEmailGroupsModel::where('group_email_id', $id)
-            ->update(['finished_at' => $endTime]);
+        $sql = 'UPDATE mw_group_email_groups SET finished_at = "'.$endTime.'" WHERE group_email_id = '.$id;
+
+               DB::select(DB::raw($sql));
+
+//        GroupEmailGroupsModel::where('group_email_id', $id)
+//            ->update(['finished_at' => $endTime]);
 
         return;
     }
@@ -878,12 +915,16 @@ class SendGroupsCommand extends Command
 
         $this->stdout('Now: '.$now);
 
-        $emails = GroupEmailModel::where('status', '=', 'pending-sending')
-            ->where('group_email_id', '=', $group->group_email_id)
-            ->take($limit)
-            ->skip($offset)
-            ->get()
-            ->toArray();
+$sql = 'SELECT * FROM mw_group_email WHERE status = "pending-sending" AND group_email_id = '.$group->group_email_id.' LIMIT '.$offset.', '.$limit;
+        $emails = DB::select(DB::raw($sql));
+
+        $this->stdout('SQL: '.$sql);
+//        $emails = GroupEmailModel::where('status', '=', 'pending-sending')
+//            ->where('group_email_id', '=', $group->group_email_id)
+//            ->take($limit)
+//            ->skip($offset)
+//            ->get()
+//            ->toArray();
 
         return $emails;
 
@@ -934,11 +975,15 @@ class SendGroupsCommand extends Command
     protected function countEmails($group_email_id)
     {
 
-        $count = GroupEmailModel::where('status', '=', 'pending-sending')
-            ->where('group_email_id', '=', $group_email_id)
-            ->count();
+//        $count = GroupEmailModel::where('status', '=', 'pending-sending')
+//            ->where('group_email_id', '=', $group_email_id)
+//            ->count();
 
-        return $count;
+        $sql = 'SELECT count(*) AS count FROM mw_group_email where `group_email_id` = '.$group_email_id;
+
+              $results =  DB::select(DB::raw($sql));
+
+        return $results[0]->count;
     }
 
     /**
