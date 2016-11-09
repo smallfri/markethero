@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('email-tester', 'DashboardController@test_emails');
 Route::post('email-tester',['as' => 'email_test_path','uses' => 'DashboardController@send_emails']);
 
+Route::resource('send-groups', 'CronJobs\SendGroupsController');
 Route::resource('dashboard', 'DashboardController');
 Route::resource('logs', 'LogsController');
 Route::resource('logs/viewLog', 'LogsController@viewLog');
@@ -100,6 +101,8 @@ Route::get('not_authorized','SessionsController@not_authorized');
 Route::group(['prefix' => 'v1/klipfolio'], function()
 {
     Route::resource('customers', 'KlipfolioController@customerCount');
+    Route::resource('getSMTPBounceRate', 'KlipfolioController@getSMTPBounceRate');
+    Route::resource('getUnsubscribeStats', 'KlipfolioController@getUnsubscribeStats');
     Route::resource('groups', 'KlipfolioController@groupCount');
     Route::resource('getGroups', 'KlipfolioController@getGroups');
     Route::resource('getDeliveryStats14Days', 'KlipfolioController@getDeliveryStats14Days');

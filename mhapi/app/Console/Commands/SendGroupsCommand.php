@@ -307,7 +307,7 @@ class SendGroupsCommand extends Command
                             unset($childs[$key]);
                         }
                     }
-                    sleep(1);
+                    sleep(4);
                 }
             }
         }
@@ -483,7 +483,7 @@ class SendGroupsCommand extends Command
                         unset($childs[$key]);
                     }
                 }
-                sleep(1);
+                sleep(4);
             }
         }
 

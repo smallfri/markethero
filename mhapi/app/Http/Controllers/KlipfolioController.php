@@ -76,7 +76,8 @@ class KlipfolioController extends ApiController
     public function getGroups()
     {
 
-        $pendingGroups = GroupEmailGroupsModel::join('mw_customer as c','c.customer_id', '=', 'mw_group_email_groups.customer_id')->where('mw_group_email_groups.status', '=', 'pending-sending')
+        $pendingGroups = GroupEmailGroupsModel::join('mw_customer as c', 'c.customer_id', '=',
+            'mw_group_email_groups.customer_id')->where('mw_group_email_groups.status', '=', 'pending-sending')
             ->orWhere('mw_group_email_groups.status', '=', 'processing')
             ->take(50)
             ->get();
@@ -165,7 +166,7 @@ class KlipfolioController extends ApiController
         $last_week2 = Carbon::parse('this week + 7 days')->format('Y-m-d');
 
         $lastWeek
-            = DB::select(DB::raw('select DATE(date_added) AS date_added,COUNT(log_id) AS count from `mw_group_email_log` where `date_added` between "'.$last_week1.'" and "'.$last_week2.'" GROUP BY DATE(date_added)'));
+            = DB::select(DB::raw('select DATE(date_added) AS date_added, COUNT(email_id) AS count from `mw_group_email` where `date_added` between "'.$last_week1.'" and "'.$last_week2.'" GROUP BY DATE(date_added)'));
 
         return $this->respond(['stats' => $lastWeek]);
 
@@ -192,6 +193,19 @@ class KlipfolioController extends ApiController
 
         $thisWeek
             = DB::select(DB::raw('select DATE(date_added) AS date_added,COUNT(report_id) AS count from `mw_group_email_abuse_report` where `date_added` between "'.$this_week1.'" and "'.$this_week2.'" GROUP BY DATE(date_added)'));
+
+        return $this->respond(['stats' => $thisWeek]);
+
+    }
+
+    public function getUnsubscribeStats()
+    {
+
+        $this_week1 = Carbon::parse('this week - 14 days')->format('Y-m-d');
+        $this_week2 = Carbon::parse('this week')->format('Y-m-d');
+
+        $thisWeek
+            = DB::select(DB::raw('select DATE(date_added) AS date_added,COUNT(id) AS count from `mw_group_email_unsubscribe` where `date_added` between "'.$this_week1.'" and "'.$this_week2.'" GROUP BY DATE(date_added)'));
 
         return $this->respond(['stats' => $thisWeek]);
 
@@ -248,6 +262,39 @@ class KlipfolioController extends ApiController
         $deliveryServers = DeliveryServerModel::all();
 
         return $this->respond(['deliveryServers' => $deliveryServers]);
+
+    }
+
+    public function getSMTPBounceRate()
+    {
+
+        $this_week1 = Carbon::parse('this week - 14 days')->format('H:i d-m-Y');
+
+        $this_week2 = Carbon::parse('this week')->format('H:i d-m-Y');
+
+
+        $post_fields = [
+            'api_key' => '066b2b41ba4b16d6514adbc3a4cc4d251133e250',
+            'time_start' => $this_week1,
+            'time_end' => $this_week2
+        ];
+
+
+        $url = 'http://rest.smtp.com/v1/account/senders/5017936/statistics/summary.json';
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_fields);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_USERPWD, 'russell@smallfri.com:KjV9g2JcyFGAHng');
+
+        $result = json_decode(curl_exec($ch));
+
+        $stats = [];
+        $stats['bounces'] = $result->summary->bounced_count/$result->summary->delivered_count;
+        $stats['complaints'] = $result->summary->complaints_count/$result->summary->delivered_count;
+
+        return $this->respond([$stats]);
 
     }
 
