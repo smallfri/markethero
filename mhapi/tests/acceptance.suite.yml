@@ -1,4 +1,4 @@
-cd# Codeception Test Suite Configuration
+# Codeception Test Suite Configuration
 #
 # Suite for acceptance tests.
 # Perform tests in browser using the WebDriver or PhpBrowser.

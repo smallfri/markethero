@@ -57,9 +57,20 @@ class SendEmail extends Job implements ShouldQueue
             ->get();
 
         /*
-         * Check bounces
+         * Check for paused customers or groups
          */
 
+        $pause = false;
+        if (!empty($Pause))
+        {
+            if ($Pause->pause_customer==true||$Pause->group_email_id>0)
+            {
+                $pause = true;
+            }
+        }
+        /*
+         * Check bounces
+         */
         $Bounce = GroupEmailBounceLogModel::where('email','=',$data->to_email);
         if(!empty($Bounce))
         {
@@ -112,7 +123,11 @@ class SendEmail extends Job implements ShouldQueue
             $mail->Subject = $data->subject;
             $mail->MsgHTML($data->body);
 
-            if (!$mail->send())
+            if ($pause == true)
+            {
+                $Email->status = 'paused';
+            }
+            elseif (!$mail->send())
             {
                 // save status failed if mail did not send
                 $Email->status = 'failed';

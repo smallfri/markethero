@@ -15,17 +15,20 @@ use App\Models\Customer;
 use App\Models\GroupEmailComplianceLevelsModel;
 use App\Models\GroupEmailGroupsModel;
 use App\Models\GroupEmailModel;
+use App\Models\PauseGroupEmailModel;
 
 class GroupEmailsController extends ApiController
 {
 
     private $use_queues;
-    private $use_compliance;
-    public $helpers;
 
+    private $use_compliance;
+
+    public $helpers;
 
     function __construct()
     {
+
         $this->helpers = new Helpers();
         $this->use_queues = true;
         $this->use_compliance = false;
@@ -145,12 +148,24 @@ class GroupEmailsController extends ApiController
             }
         }
 
-        $emailUid = uniqid('',true);
+        $emailUid = uniqid('', true);
         /*
          * if send_at is less than now, we are going to queue the emails, otherwise we will insert into db and mark
          * as pending-sending.
          */
-        if ($useQueues == true)
+
+        $Pause = PauseGroupEmailModel::where('customer_id', '=', $data['customer_id'])->orWhere('group_email_id', '=', $data['group_id'])->get();
+
+        $pause = false;
+        if (!empty($Pause[0]))
+        {
+            if ($Pause[0]->pause_customer==1||$Pause[0]->group_email_id == $data['group_id'])
+            {
+                $pause = true;
+            }
+        }
+
+        if ($useQueues==true AND $pause==false)
         {
             //create class to queue
 
@@ -191,14 +206,19 @@ class GroupEmailsController extends ApiController
             $Email->send_at = $data['send_at'];
             $Email->customer_id = $data['customer_id'];
             $Email->group_email_id = $data['group_id'];
-            if($compliance)
+            if ($compliance)
             {
                 $Email->status = GroupEmailGroupsModel::STATUS_IN_REVIEW;
+            }
+            elseif ($pause==true)
+            {
+                $Email->status = GroupEmailGroupsModel::STATUS_PAUSED;
             }
             else
             {
                 $Email->status = GroupEmailGroupsModel::STATUS_PENDING_SENDING;
             }
+
             $Email->date_added = new \DateTime();
             $Email->max_retries = 5;
             $Email->save();
