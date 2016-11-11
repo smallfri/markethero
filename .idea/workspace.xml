@@ -2,19 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c9b7ec24-babb-4088-b4f3-f3a6cadded3c" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mhapi/app/Console/Commands/UpdateGroupStatusCommand.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.php" afterPath="$PROJECT_DIR$/index.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Console/Commands/SendGroupsCommand.php" afterPath="$PROJECT_DIR$/mhapi/app/Console/Commands/SendGroupsCommand.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Console/Kernel.php" afterPath="$PROJECT_DIR$/mhapi/app/Console/Kernel.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/DashboardController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/DashboardController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/KlipfolioController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/KlipfolioController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Controllers/UnsubscribeController.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Controllers/UnsubscribeController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/Kernel.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/Kernel.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/app/Http/routes.php" afterPath="$PROJECT_DIR$/mhapi/app/Http/routes.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/index.php" afterPath="$PROJECT_DIR$/mhapi/index.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/public/index.php" afterPath="$PROJECT_DIR$/mhapi/public/index.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mhapi/routes/web.php" afterPath="$PROJECT_DIR$/mhapi/routes/web.php" />
     </list>
     <ignored path="MarketHero.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -43,113 +35,12 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="450">
-      <file leaf-file-name="routes.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mhapi/app/Http/routes.php">
+      <file leaf-file-name="GroupEmailsController.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-44.46154">
-              <caret line="68" column="52" selection-start-line="0" selection-start-column="0" selection-end-line="117" selection-end-column="3" />
+            <state vertical-scroll-proportion="0.3617021">
+              <caret line="152" column="12" selection-start-line="152" selection-start-column="12" selection-end-line="152" selection-end-column="12" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="web.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mhapi/routes/web.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="117" column="3" selection-start-line="117" selection-start-column="3" selection-end-line="117" selection-end-column="3" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="KlipfolioController.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/KlipfolioController.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-44.923077">
-              <caret line="296" column="31" selection-start-line="296" selection-start-column="31" selection-end-line="296" selection-end-column="31" />
-              <folding>
-                <element signature="e#40#90#0#PHP" expanded="true" />
-                <marker date="1478717748000" expanded="true" signature="3112:3602" placeholder="SELECT count..." />
-                <marker date="1478717748000" expanded="true" signature="4941:5119" placeholder="select DATE(..." />
-                <marker date="1478717748000" expanded="true" signature="5437:5623" placeholder="select DATE(..." />
-                <marker date="1478717748000" expanded="true" signature="5932:6123" placeholder="select DATE(..." />
-                <marker date="1478717748000" expanded="true" signature="6438:6621" placeholder="select DATE(..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="license.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/license.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/index.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="13.076923">
-              <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mhapi/public/index.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="33.884617">
-              <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-              <folding>
-                <element signature="e#8#137#0#PHP" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.php" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/mhapi/index.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-2.4227643">
-              <caret line="88" column="0" selection-start-line="88" selection-start-column="0" selection-end-line="88" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="app.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mhapi/bootstrap/app.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-19.73077">
-              <caret line="53" column="0" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Kernel.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Kernel.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-12.538462">
-              <caret line="33" column="10" selection-start-line="33" selection-start-column="10" selection-end-line="33" selection-end-column="10" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RegisterShutdown.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Middleware/RegisterShutdown.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-9.807693">
-              <caret line="15" column="22" selection-start-line="15" selection-start-column="22" selection-end-line="15" selection-end-column="22" />
-              <folding>
-                <element signature="e#7#19#0#PHP" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -193,18 +84,15 @@
         <option value="$PROJECT_DIR$/mhapi/resources/views/dashboard/emails/edit.php" />
         <option value="$PROJECT_DIR$/mhapi/app.new/Http/Controllers/GroupEmailsGroupController.php" />
         <option value="$PROJECT_DIR$/mhapi/resources/views/dashboard/groups/controls.blade.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/DashboardController.php" />
         <option value="$PROJECT_DIR$/mhapi/resources/views/dashboard/emails/edit.blade.php" />
         <option value="/Volumes/Macintosh HD/Users/Russ/Documents/DEV/MarketHero/mhapi/mailone.conf" />
         <option value="$PROJECT_DIR$/mhapi/mailone.conf" />
         <option value="$PROJECT_DIR$/mhapi/config/queue.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsGroupController.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsController.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Console/Commands/SendGroupsCommand.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Console/Kernel.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Console/Commands/UpdateGroupStatusCommand.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/UnsubscribeController.php" />
-        <option value="$PROJECT_DIR$/mhapi/app/Http/routes.php" />
         <option value="$PROJECT_DIR$/mhapi/routes/web.php" />
         <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/KlipfolioController.php" />
         <option value="$PROJECT_DIR$/index.php" />
@@ -213,6 +101,9 @@
         <option value="$PROJECT_DIR$/mhapi/bootstrap/app.php" />
         <option value="$PROJECT_DIR$/mhapi/public/index.php" />
         <option value="$PROJECT_DIR$/mhapi/index.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/DashboardController.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/routes.php" />
+        <option value="$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsController.php" />
       </list>
     </option>
   </component>
@@ -226,9 +117,10 @@
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
+    <option name="x" value="-2560" />
     <option name="y" value="23" />
-    <option name="width" value="1440" />
-    <option name="height" value="873" />
+    <option name="width" value="2560" />
+    <option name="height" value="1417" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -409,6 +301,80 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mhapi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Http" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Controllers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mhapi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Console" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MarketHero" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mhapi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Console" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Commands" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
     </panes>
@@ -502,18 +468,18 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1440" height="873" extended-state="6" />
+    <frame x="-2560" y="23" width="2560" height="1417" extended-state="6" />
     <editor active="false" />
     <layout>
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31231883" sideWeight="0.4954023" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1388" sideWeight="0.4954023" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26766917" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.45090908" sideWeight="0.50213677" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15589081" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32188296" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.6126582" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3344" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5443038" sideWeight="0.49786323" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.6113924" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33405796" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32083958" sideWeight="0.49786323" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.1664" sideWeight="0.5045977" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
@@ -631,7 +597,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -763,22 +728,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/DashboardController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.6153846">
-          <caret line="565" column="31" selection-start-line="565" selection-start-column="20" selection-end-line="565" selection-end-column="31" />
-          <folding>
-            <element signature="e#120#144#0#PHP" expanded="true" />
-            <marker date="1478542280000" expanded="true" signature="942:1140" placeholder="select DATE(..." />
-            <marker date="1478542280000" expanded="true" signature="1232:1845" placeholder="SELECT DATE(..." />
-            <marker date="1478542280000" expanded="true" signature="3819:4005" placeholder="select DATE(..." />
-            <marker date="1478542280000" expanded="true" signature="4099:4686" placeholder="SELECT DATE(..." />
-            <marker date="1478542280000" expanded="true" signature="6741:6932" placeholder="select DATE(..." />
-            <marker date="1478542280000" expanded="true" signature="7014:7498" placeholder="SELECT DATE(..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mhapi/app/Models/GroupEmailGroupsModel.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.080314964">
@@ -802,13 +751,13 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mhapi/readme.md">
+      <provider editor-type-id="MarkdownPreviewEditor">
+        <state />
+      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
-      </provider>
-      <provider editor-type-id="MarkdownPreviewEditor">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mhapi/server.php">
@@ -854,33 +803,6 @@
           <caret line="702" column="26" selection-start-line="702" selection-start-column="26" selection-end-line="702" selection-end-column="26" />
           <folding>
             <element signature="e#121#136#0#PHP" expanded="true" />
-            <marker date="1478696449000" expanded="true" signature="4738:4831" placeholder="SELECT * FRO..mw_group_email_groups..." />
-            <marker date="1478696449000" expanded="true" signature="9048:9107" placeholder="SELECT * FRO..mw_group_email..." />
-            <marker date="1478696449000" expanded="true" signature="9048:9115" placeholder="SELECT * FRO..mw_group_email..." />
-            <marker date="1478696449000" expanded="true" signature="10700:10759" placeholder="SELECT FROM mw_group_email_groups..." />
-            <marker date="1478696449000" expanded="true" signature="10713:10759" placeholder="UPDATE mw_gr..." />
-            <marker date="1478696449000" expanded="true" signature="11090:11133" placeholder="UPDATE mw_gr..." />
-            <marker date="1478696449000" expanded="true" signature="11090:11178" placeholder="UPDATE mw_gr..." />
-            <marker date="1478696449000" expanded="true" signature="11090:11202" placeholder="UPDATE mw_gr..." />
-            <marker date="1478696449000" expanded="true" signature="11090:11233" placeholder="UPDATE mw_gr..." />
-            <marker date="1478696449000" expanded="true" signature="11090:11336" placeholder="UPDATE mw_gr..." />
-            <marker date="1478696449000" expanded="true" signature="11090:11360" placeholder="UPDATE mw_gr..." />
-            <marker date="1478696449000" expanded="true" signature="11633:11836" placeholder="/** * This m..." />
-            <marker date="1478696449000" expanded="true" signature="21854:22032" placeholder="select `c`.`..mw_group_email_groups..." />
-            <marker date="1478696449000" expanded="true" signature="21854:22033" placeholder="select `c`.`..mw_group_email_groups..." />
-            <marker date="1478696449000" expanded="true" signature="23888:23931" placeholder="UPDATE mw_gr..." />
-            <marker date="1478696449000" expanded="true" signature="23888:23942" placeholder="UPDATE mw_gr..." />
-            <marker date="1478696449000" expanded="true" signature="23888:23950" placeholder="UPDATE mw_gr..." />
-            <marker date="1478696449000" expanded="true" signature="23888:23967" placeholder="UPDATE mw_gr..." />
-            <marker date="1478696449000" expanded="true" signature="23888:23968" placeholder="UPDATE mw_gr..." />
-            <marker date="1478696449000" expanded="true" signature="23888:23987" placeholder="UPDATE mw_gr..." />
-            <marker date="1478696449000" expanded="true" signature="23987:24008" placeholder="select(DB::r..." />
-            <marker date="1478696449000" expanded="true" signature="24038:24173" placeholder="/** * Update..." />
-            <marker date="1478696449000" expanded="true" signature="24375:24461" placeholder="UPDATE mw_gr..." />
-            <marker date="1478696449000" expanded="true" signature="24779:24864" placeholder="UPDATE mw_gr..." />
-            <marker date="1478696449000" expanded="true" signature="25779:25908" placeholder="SELECT * FRO..mw_group_email..." />
-            <marker date="1478696449000" expanded="true" signature="27461:27531" placeholder="SELECT count..mw_group_email..." />
-            <marker date="1478696449000" expanded="true" signature="27505:27531" placeholder="select `c`.`..mw_group_email_groups..." />
           </folding>
         </state>
       </provider>
@@ -920,19 +842,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="151" column="11" selection-start-line="151" selection-start-column="11" selection-end-line="151" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/ListController.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="28" column="8" selection-start-line="28" selection-start-column="8" selection-end-line="28" selection-end-column="8" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -940,14 +853,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="115" column="51" selection-start-line="115" selection-start-column="51" selection-end-line="115" selection-end-column="51" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/routes.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-44.46154">
-          <caret line="68" column="52" selection-start-line="0" selection-start-column="0" selection-end-line="117" selection-end-column="3" />
           <folding />
         </state>
       </provider>
@@ -962,15 +867,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/KlipfolioController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-44.923077">
+        <state vertical-scroll-proportion="0.0">
           <caret line="296" column="31" selection-start-line="296" selection-start-column="31" selection-end-line="296" selection-end-column="31" />
           <folding>
             <element signature="e#40#90#0#PHP" expanded="true" />
-            <marker date="1478717748000" expanded="true" signature="3112:3602" placeholder="SELECT count..." />
-            <marker date="1478717748000" expanded="true" signature="4941:5119" placeholder="select DATE(..." />
-            <marker date="1478717748000" expanded="true" signature="5437:5623" placeholder="select DATE(..." />
-            <marker date="1478717748000" expanded="true" signature="5932:6123" placeholder="select DATE(..." />
-            <marker date="1478717748000" expanded="true" signature="6438:6621" placeholder="select DATE(..." />
           </folding>
         </state>
       </provider>
@@ -993,7 +893,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/index.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="13.076923">
+        <state vertical-scroll-proportion="0.0">
           <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
           <folding />
         </state>
@@ -1001,7 +901,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Middleware/RegisterShutdown.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-9.807693">
+        <state vertical-scroll-proportion="0.0">
           <caret line="15" column="22" selection-start-line="15" selection-start-column="22" selection-end-line="15" selection-end-column="22" />
           <folding>
             <element signature="e#7#19#0#PHP" expanded="true" />
@@ -1009,36 +909,66 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Kernel.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-12.538462">
-          <caret line="33" column="10" selection-start-line="33" selection-start-column="10" selection-end-line="33" selection-end-column="10" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mhapi/bootstrap/app.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-19.73077">
-          <caret line="53" column="0" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mhapi/public/index.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="33.884617">
+        <state vertical-scroll-proportion="0.0">
           <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-          <folding>
-            <element signature="e#8#137#0#PHP" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mhapi/index.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.4227643">
-          <caret line="88" column="0" selection-start-line="88" selection-start-column="0" selection-end-line="88" selection-end-column="0" />
+        <state vertical-scroll-proportion="-9.115385">
+          <caret line="36" column="0" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/DashboardController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-19.576923">
+          <caret line="631" column="28" selection-start-line="631" selection-start-column="20" selection-end-line="631" selection-end-column="28" />
+          <folding>
+            <element signature="e#120#144#0#PHP" expanded="true" />
+            <marker date="1478816585000" expanded="true" signature="942:1140" placeholder="select DATE(..." />
+            <marker date="1478816585000" expanded="true" signature="1232:1845" placeholder="SELECT DATE(..." />
+            <marker date="1478816585000" expanded="true" signature="3819:4005" placeholder="select DATE(..." />
+            <marker date="1478816585000" expanded="true" signature="4099:4686" placeholder="SELECT DATE(..." />
+            <marker date="1478816585000" expanded="true" signature="6741:6932" placeholder="select DATE(..." />
+            <marker date="1478816585000" expanded="true" signature="7014:7498" placeholder="SELECT DATE(..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/bootstrap/app.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8392435">
+          <caret line="53" column="0" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/routes.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.20094563">
+          <caret line="17" column="64" selection-start-line="17" selection-start-column="64" selection-end-line="17" selection-end-column="64" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Kernel.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.49763593">
+          <caret line="33" column="10" selection-start-line="33" selection-start-column="10" selection-end-line="33" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mhapi/app/Http/Controllers/GroupEmailsController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3617021">
+          <caret line="152" column="12" selection-start-line="152" selection-start-column="12" selection-end-line="152" selection-end-column="12" />
           <folding />
         </state>
       </provider>
