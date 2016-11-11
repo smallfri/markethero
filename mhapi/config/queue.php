@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'default' => env('QUEUE_DRIVER', 'redis'),
+    'default' => env('QUEUE_DRIVER', 'sqs'),
 
     /*
     |--------------------------------------------------------------------------
@@ -65,7 +65,7 @@ return [
             'region' => 'us-west-2',
         ],
 
-        'qa-mail-queue' => [
+        'qa-email-queue' => [
             'driver' => 'sqs',
             'key' => 'AKIAJJL4Q5R6CEQBV5CQ',
             'secret' => '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',

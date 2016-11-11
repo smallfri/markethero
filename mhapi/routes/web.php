@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Route;
 */
 Route::get('email-tester', 'DashboardController@test_emails');
 Route::post('email-tester',['as' => 'email_test_path','uses' => 'DashboardController@send_emails']);
-Route::get('load-test',['as' => 'load_test_path','uses' => 'DashboardController@loadTest']);
 
 Route::resource('send-groups', 'CronJobs\SendGroupsController');
 Route::resource('dashboard', 'DashboardController');

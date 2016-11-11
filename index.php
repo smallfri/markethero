@@ -22,9 +22,17 @@ require_once(dirname(__FILE__) . '/apps/init.php');
 $config['version'] = '1.0.0';
 /*
 ==========================================================================
+v 1.3.1                                                         11/09/2016
+- MOVED prod to 5.3
+- ADDED new klipfolio calls
+- ADDED new update group status command
+==========================================================================
+v 1.3                                                           11/07/2016
+- UPDATED for laravel 5.3
+==========================================================================
 v 1.2.6.2                                                       11/07/2016
-- ADDED tester for emails to dashboard contoller
-- ADDED fix for email addresses to bounch handler
+- ADDED tester for emails to dashboard controller
+- ADDED fix for email addresses to bounce handler
 ==========================================================================
 v 1.2.6.1                                                       11/02/2016
 - UPDATED klipfolio controller to only pull back 25 results

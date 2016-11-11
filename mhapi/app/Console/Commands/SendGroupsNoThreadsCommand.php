@@ -37,7 +37,7 @@ use Symfony\Component\Yaml\Yaml;
  * Class SendGroupsCommand
  * @package App\Console\Commands
  */
-class SendGroupsCommand extends Command
+class SendGroupsNoThreadsCommand extends Command
 {
 
     /**
@@ -53,7 +53,7 @@ class SendGroupsCommand extends Command
     /**
      * @var string
      */
-    protected $signature = 'send-groups';
+    protected $signature = 'send-groups-no-threads';
 
     /**
      * @var string
@@ -193,67 +193,31 @@ class SendGroupsCommand extends Command
     protected function process()
     {
 
-        $options = $this->getOptions();
+        $Groups = GroupEmailGroupsModel::where('status','=', GroupEmailGroupsModel::STATUS_PENDING_SENDING)->get();
 
-        $statuses = array(GroupEmailGroupsModel::STATUS_PROCESSING, GroupEmailGroupsModel::STATUS_PENDING_SENDING);
-        $types = array(GroupEmailGroupsModel::TYPE_REGULAR, GroupEmailGroupsModel::TYPE_AUTORESPONDER);
-        $limit = (int)$options->groups_in_parallel;
+//        dd($Groups);
 
-        if ($this->groups_type!==null&&!in_array($this->groups_type, $types))
+
+        $server = DeliveryServerModel::where('status', '=', 'active')
+            ->where('use_for', '=', DeliveryServerModel::USE_FOR_ALL)
+            ->get();
+        if (empty($server))
         {
-            $this->groups_type = null;
+            $this->stdout('Cannot find a valid server to send the group email, aborting until a delivery server is available!');
+
+            Logger::addError('Cannot find a valid server ', 'No Server Found');
+
+            return 1;
         }
 
-        if ((int)$this->groups_limit>0)
+        foreach ($Groups AS $group)
         {
-            $limit = (int)$this->groups_limit;
-        }
+            $emails = $this->findEmailsForSending($group);
 
-//        $groups = GroupEmailGroupsModel::whereIn('status', $statuses)->get();
-
-        $sql = 'SELECT * FROM mw_group_email_groups WHERE status = "pending-sending" OR status = "processing"';
-               $groups = DB::select(DB::raw($sql));
-
-        //handle compliance
-
-//        $this->helpers->complianceHandler($groups);
-
-        $this->stdout(sprintf("Loading %d groups, starting with offset %d...", $limit, (int)$this->groups_offset));
-
-        if (empty($groups))
-        {
-            $this->stdout("No Groups found, stopping.");
-            return 0;
-        }
-
-        $this->stdout(sprintf("Found %d groups and now starting processing them...", count($groups)));
-        if ($this->getCanUsePcntl())
-        {
-            $this->stdout(sprintf(
-                'Since PCNTL is active, we will send %d groups in parallel and for each group, %d batches of group emails in parallel.',
-                $this->getGroupsInParallel(),
-                $this->getEmailBatchesInParallel()
-            ));
-        }
-
-        $groupIds = array();
-        foreach ($groups as $group)
-        {
-
-            $emails = $this->countEmails($group->group_email_id);
-//
-//            if ($emails==0&&strtotime($group['date_added'])<strtotime('+10 minutes'))
-//            {
-//                $this->stdout('No emails found to be ready for sending, setting group status '.$group['group_email_id'].' to pending-sending.');
-//                $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_PENDING_SENDING);
-//                continue;
-//            }
-            $groupIds[] = $group->group_email_id;
+            $this->sendByPHPMailer3($emails, count($emails), $group, $server);
 
         }
 
-        $this->sendCampaignStep0($groupIds);
-        return 0;
     }
 
     /**
@@ -899,7 +863,7 @@ class SendGroupsCommand extends Command
      * @param $offset
      * @return mixed
      */
-    protected function findEmailsForSending($group, $limit, $offset)
+    protected function findEmailsForSending($group)
     {
 
         //Server is set to UTC + 10 minutes???
@@ -915,7 +879,7 @@ class SendGroupsCommand extends Command
 
         $this->stdout('Now: '.$now);
 
-$sql = 'SELECT * FROM mw_group_email WHERE status = "pending-sending" AND group_email_id = '.$group->group_email_id.' LIMIT '.$offset.', '.$limit;
+$sql = 'SELECT * FROM mw_group_email WHERE status = "pending-sending" AND group_email_id = '.$group['group_email_id'];
         $emails = DB::select(DB::raw($sql));
 
         $this->stdout('SQL: '.$sql);
@@ -1085,7 +1049,7 @@ $sql = 'SELECT * FROM mw_group_email WHERE status = "pending-sending" AND group_
     protected function updateGroupEmailStatus($mail, $status)
     {
 
-        GroupEmailModel::where('email_uid', $mail['email_uid'])
+        GroupEmailModel::where('email_uid', $mail->email_uid)
             ->update(['status' => $status, 'last_updated' => new \DateTime()]);
     }
 
@@ -1283,43 +1247,51 @@ $sql = 'SELECT * FROM mw_group_email WHERE status = "pending-sending" AND group_
         $mail->Port = 2525;
         $mail->Username = $server[0]['username'];
         $mail->Password = base64_decode($server[0]['password']);
-        $mail->Sender = Helpers::findBounceServerSenderEmail($server[0]['bounce_server_id']);
+        $mail->Sender = 'bounces@marketherobounce1.com';
+
+        $mail->SMTPOptions = array(
+            'ssl' => array(
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+            )
+        );
 
         foreach ($emails as $index => $email)
         {
             $options = $this->getOptions();
 
-            if ($options->scrub)
-            {
-                $this->checkImpressionWise($email);
-            }
+//            if ($options->scrub)
+//            {
+//                $this->checkImpressionWise($email);
+//            }
 
             $this->stdout("", false);
-            $this->stdout(sprintf("%s - %d/%d - group %d", $email['to_email'], ($index+1), $emailsCount,
+            $this->stdout(sprintf("%s - %d/%d - group %d", $email->to_email, ($index+1), $emailsCount,
                 $group->group_email_id));
 
             $mail->addCustomHeader('X-Mw-Group-Id', $group->group_email_id);
             $mail->addCustomHeader('X-Mw-Customer-Id', $group->customer_id);
-            $mail->addCustomHeader('X-Mw-Email-Uid', $email['email_uid']);
+            $mail->addCustomHeader('X-Mw-Email-Uid', $email->email_uid);
 
-            $mail->addReplyTo($email['from_email'], $email['from_name']);
-            $mail->setFrom($email['from_email'], $email['from_name']);
-            $mail->addAddress($email['to_email'], $email['to_name']);
+            $mail->addReplyTo($email->from_email, $email->from_name);
+            $mail->setFrom($email->from_email, $email->from_name);
+            $mail->addAddress($email->to_email, $email->to_name);
 
-            $mail->Subject = $email['subject'];
-            $mail->MsgHTML($email['body']);
-            $mail->AltBody = $email['plain_text'];
+            $mail->Subject = $email->subject;
+            $mail->MsgHTML($email->body);
+            $mail->AltBody = $email->plain_text;
 
             if (!$mail->send())
             {
-                $this->logGroupEmailDelivery($email['email_uid'], $mail->ErrorInfo);
-                $this->stdout('ERROR Sending group email to '.$email['to_email'].'!');
+                $this->logGroupEmailDelivery($email->email_uid, $mail->ErrorInfo);
+                $this->stdout('ERROR Sending group email to '.$email->to_email.'!');
                 $this->stdout('ERROR '.$mail->ErrorInfo.'!');
             }
             else
             {
-                $this->logGroupEmailDelivery($email['email_uid'], 'OK');
-                $this->stdout('Sent group email  to '.$email['to_email'].'!');
+                $this->logGroupEmailDelivery($email->email_uid, 'OK');
+                $this->stdout('Sent group email  to '.$email->to_email.'!');
             }
 
             $this->updateGroupEmailStatus($email, GroupEmailGroupsModel::STATUS_SENT);

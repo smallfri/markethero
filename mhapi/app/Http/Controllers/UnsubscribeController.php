@@ -7,6 +7,7 @@ use App\Models\SubscriberModel;
 use App\Http\Requests;
 use App\Models\Spam;
 use App\Models\UnsubscribeModel;
+use Faker\Provider\DateTime;
 use Zend\Http\Response;
 use App\Logger;
 
@@ -117,6 +118,7 @@ class UnsubscribeController extends ApiController
         $Unsub->email = $data['email'];
         $Unsub->user_agent = $_SERVER['HTTP_USER_AGENT'];
         $Unsub->ip_address = $_SERVER['REMOTE_ADDR'];
+        $Unsub->date_added = new \DateTime();
 
         $Unsub->Save();
 

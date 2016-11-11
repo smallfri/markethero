@@ -628,4 +628,46 @@ class DashboardController extends ApiController
         $data = ['r' => $result];
         return view('dashboard.emails.edit', $data);
     }
+
+    public function loadTest()
+       {
+
+           $result = 'none';
+
+
+               $body = [
+                   "body" => 'Load Test',
+                   "plain_text" => 'Load Test',
+                   "subject" => 'Load Test',
+                   "customer_id" => 11,
+                   "from_email" => 'russell@smallfri.com',
+                   "from_name" => 'Russell',
+                   "to_name" => 'Russell',
+                   "to_email" => 'russell@smallfri.com',
+                   "reply_to_email" => 'bounces@marketherobounce1.com',
+                   "reply_to_name" => 'Test Man',
+                   "group_id" => 39,
+                   "send_at" => '2016-01-01'
+               ];
+
+               $data_string = json_encode($body);
+
+               $url ='http://m-prod.markethero.io/mhapi/v1/create-group-email';
+
+               $ch = curl_init($url);
+               curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+               curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+               curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+               curl_setopt($ch, CURLOPT_USERPWD, 'russell@smallfri.com:KjV9g2JcyFGAHng');
+
+               curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                   'Content-Type: application/json',
+                   'Content-Length: ' . strlen($data_string))
+               );
+
+               $result = curl_exec($ch);
+
+               print_r($result);exit;
+
+       }
 }

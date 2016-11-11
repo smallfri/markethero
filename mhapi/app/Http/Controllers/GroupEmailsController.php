@@ -150,7 +150,7 @@ class GroupEmailsController extends ApiController
          * if send_at is less than now, we are going to queue the emails, otherwise we will insert into db and mark
          * as pending-sending.
          */
-        if ($data['send_at'] < $now && $useQueues == true)
+        if ($useQueues == true)
         {
             //create class to queue
 
