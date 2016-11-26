@@ -20,6 +20,7 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\GroupsComplianceHandlerCommand',
         'App\Console\Commands\SendForgottenGroupsCommand',
         'App\Console\Commands\UpdateGroupStatusCommand',
+        'App\Console\Commands\KafkaConsumerCommand',
     ];
 
     /**
@@ -30,7 +31,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-         $schedule->command('update-group-status')->everyMinute();
+         $schedule->command('update-group-status')->everyFiveMinutes();
+         $schedule->command('kafka-consumer')->everyMinute();
          $schedule->command('send-groups')->everyMinute();
          $schedule->command('send-forgotten-groups')->everyFiveMinutes();
         // $schedule->command('compliance:average')->cron('0 0 * * *');

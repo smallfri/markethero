@@ -9,14 +9,14 @@ class UnsubscribeModel extends Authenticatable
     public $timestamps = false;
 
     protected $table = 'mw_group_email_unsubscribe';
-    public $primaryKey = "id";
+    protected $primaryKey = "id";
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'id'
+
     ];
 
     /**

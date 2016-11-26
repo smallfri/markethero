@@ -2,12 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BlacklistModel;
-use App\Models\SubscriberModel;
 use App\Http\Requests;
-use App\Models\Spam;
 use App\Models\UnsubscribeModel;
-use Faker\Provider\DateTime;
 use Zend\Http\Response;
 use App\Logger;
 
@@ -104,7 +100,7 @@ class UnsubscribeController extends ApiController
 
         $Unsub = UnsubscribeModel::where('email', '=', $data['email'])->get()->toArray();
 
-        if (empty($Unsub[0]))
+        if (empty($Unsub))
         {
             $Unsub = new UnsubscribeModel();
         }
@@ -116,12 +112,9 @@ class UnsubscribeController extends ApiController
         $Unsub->customer_id = $data['customer_id'];
         $Unsub->group_email_id = $data['group_id'];
         $Unsub->email = $data['email'];
-        $Unsub->user_agent = $_SERVER['HTTP_USER_AGENT'];
-        $Unsub->ip_address = $_SERVER['REMOTE_ADDR'];
         $Unsub->date_added = new \DateTime();
 
-        $Unsub->Save();
-
+        $Unsub->save();
 
         Logger::addProgress('(UnsubscribeModel) Added '.print_r($Unsub, true), '(UnsubscribeModel) Added');
 

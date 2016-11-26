@@ -90,49 +90,49 @@ class CustomerController extends ApiController
     /**
      * @return mixed
      */
-    public function store2()
-    {
-
-        $data = json_decode(file_get_contents('php://input'), true);
-
-        $endpoint = new \EmailOneApi_Endpoint_Customers();
-
-        $expected_input = [
-            'confirm_email',
-            'confirm_password',
-            'email',
-            'fake_password',
-            'first_name',
-            'group_id',
-            'last_name',
-        ];
-
-        $missing_fields = array();
-
-        foreach ($expected_input AS $input)
-        {
-            if (!isset($data['customer'][$input]))
-            {
-                $missing_fields[$input] = 'Input field not found.';
-            }
-
-        }
-
-        if (!empty($missing_fields))
-        {
-            return $this->respondWithError($missing_fields);
-        }
-
-        $response = $endpoint->create($data);
-
-        if ($response->body['status']=='error')
-        {
-            $msg = $response->body['error'];
-            return $this->respondWithError($msg);
-        }
-
-        return $this->respond(['customer' => ['customer_uid' => $response->body['customer_uid']]]);
-    }
+//    public function store2()
+//    {
+//
+//        $data = json_decode(file_get_contents('php://input'), true);
+//
+//        $endpoint = new \EmailOneApi_Endpoint_Customers();
+//
+//        $expected_input = [
+//            'confirm_email',
+//            'confirm_password',
+//            'email',
+//            'fake_password',
+//            'first_name',
+//            'group_id',
+//            'last_name',
+//        ];
+//
+//        $missing_fields = array();
+//
+//        foreach ($expected_input AS $input)
+//        {
+//            if (!isset($data['customer'][$input]))
+//            {
+//                $missing_fields[$input] = 'Input field not found.';
+//            }
+//
+//        }
+//
+//        if (!empty($missing_fields))
+//        {
+//            return $this->respondWithError($missing_fields);
+//        }
+//
+//        $response = $endpoint->create($data);
+//
+//        if ($response->body['status']=='error')
+//        {
+//            $msg = $response->body['error'];
+//            return $this->respondWithError($msg);
+//        }
+//
+//        return $this->respond(['customer' => ['customer_uid' => $response->body['customer_uid']]]);
+//    }
 
     /**
      * @param $email
@@ -140,7 +140,6 @@ class CustomerController extends ApiController
      */
     public function show($email)
     {
-
         $Customer = Customer::where('email', '=', $email)->get();
 
         if (empty($Customer[0]))

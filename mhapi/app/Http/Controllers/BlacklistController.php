@@ -82,7 +82,7 @@ class BlacklistController extends ApiController
             Logger::addProgress('(BlackList) Subscriber is already blaclisted '.print_r($email, true),
                 '(BlackList) Subscriber is already blaclisted');
 
-            return $this->respondWithError('Subscriber is already blaclisted.');
+            return $this->respondWithError('Subscriber is already blacklisted.');
         }
 
         $Blacklist = new BlacklistModel();

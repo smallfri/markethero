@@ -110,17 +110,17 @@ class KlipfolioController extends ApiController
     {
 
         $Groups = DB::select(DB::raw('SELECT
-        	count(ge.email_id) AS count, MIN(ge.last_updated) AS min, MAX(ge.last_updated) AS max, g.group_email_id, g.status, c.customer_id, c.email, c.first_name, c.last_name
-        FROM
-        	mw_group_email_groups AS g
-        LEFT JOIN
-        	mw_group_email AS ge
-        ON  ge.group_email_id = g.group_email_id
-        JOIN
-        	mw_customer AS c
-        ON  c.customer_id = g.customer_id
-        GROUP BY
-        	g.group_email_id ORDER BY g.group_email_id DESC LIMIT 25'
+                	count(ge.email_id) AS count, MIN(ge.last_updated) AS min, MAX(ge.last_updated) AS max, TIMEDIFF(MAX(ge.last_updated), MIN(ge.last_updated)) AS elapsed_time, DATE_FORMAT(MIN(ge.last_updated) + INTERVAL count(ge.email_id)/1000 MINUTE, "%Y-%m-%d %H:%i:%s") AS goal_time, g.group_email_id, g.status, c.customer_id, c.email, c.first_name, c.last_name
+                FROM
+                	mw_group_email_groups AS g
+                LEFT JOIN
+                	mw_group_email AS ge
+                ON  ge.group_email_id = g.group_email_id
+                JOIN
+                	mw_customer AS c
+                ON  c.customer_id = g.customer_id
+                GROUP BY
+                	g.group_email_id ORDER BY g.group_email_id DESC LIMIT 25'
         ));
 
         return $this->respond(['stats' => $Groups]);

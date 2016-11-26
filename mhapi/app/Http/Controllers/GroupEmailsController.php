@@ -12,6 +12,7 @@ use App\Helpers\Helpers;
 use App\Jobs\SendEmail;
 use App\Logger;
 use App\Models\Customer;
+use App\Models\GroupEmailBounceLogModel;
 use App\Models\GroupEmailComplianceLevelsModel;
 use App\Models\GroupEmailGroupsModel;
 use App\Models\GroupEmailModel;
@@ -37,8 +38,16 @@ class GroupEmailsController extends ApiController
 
     public function store()
     {
-
         $data = json_decode(file_get_contents('php://input'), true);
+
+//        $Bounce = GroupEmailBounceModel::where('email', '=', $data['to_email'])->first();
+//
+//        if ($Bounce->exists)
+//        {
+//            Logger::addProgress('(SendEmail) BOUNCE Info '.print_r($Bounce, true),
+//                '(SendEmail) BOUNCE Info');
+//            return $this->respondWithError('Email was not created.');
+//        }
 
         if (empty($data))
         {

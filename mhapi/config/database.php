@@ -54,14 +54,16 @@ return [
 
         'mysql' => [
             'driver'    => 'mysql',
-            'host'      => env('DB_HOST', 'localhost'),
-            'database'  => env('DB_DATABASE', 'emailnet_main1'),
+            'host'      => env('DB_HOST', '127.0.0.1'),
+            'database'  => env('DB_DATABASE', 'market_hero'),
             'username'  => env('DB_USERNAME', 'smallfri'),
             'password'  => env('DB_PASSWORD', 'jack1999'),
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
             'strict'    => false,
+            'unix_socket'   => '/Applications/MAMP/tmp/mysql/mysql.sock',
+
         ],
 
         'pgsql' => [

@@ -35,6 +35,12 @@ require __DIR__.'/bootstrap/autoload.php';
 
 $app = require_once __DIR__.'/bootstrap/app.php';
 
+function logger_shutdown()
+{
+	\App\Logger::logEntries();
+}
+
+register_shutdown_function('logger_shutdown');
 
 /*
 |--------------------------------------------------------------------------
