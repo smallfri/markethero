@@ -21,6 +21,7 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\SendForgottenGroupsCommand',
         'App\Console\Commands\UpdateGroupStatusCommand',
         'App\Console\Commands\KafkaConsumerCommand',
+        'App\Console\Commands\KafkaConsumerMultiThreadCommand',
     ];
 
     /**

@@ -4,9 +4,44 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "33b48b0c5fe644ab2120857f800e9383",
-    "content-hash": "59c2df8680de10479595b5e2aecbb36b",
+    "hash": "15d3a2a2eef3d8ee3b46e597e47f5024",
+    "content-hash": "94e472b48db21d253a160d23e395aee4",
     "packages": [
+        {
+            "name": "alfallouji/php_multithread",
+            "version": "0.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/alfallouji/PHP-Multithread.git",
+                "reference": "13b1fcc245a730b4da58b0831fcc31a12f9e369f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/alfallouji/PHP-Multithread/zipball/13b1fcc245a730b4da58b0831fcc31a12f9e369f",
+                "reference": "13b1fcc245a730b4da58b0831fcc31a12f9e369f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "Threading/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Bashar Al-Fallouji",
+                    "email": "alfallouji@gmail.com",
+                    "homepage": "http://bashar.alfallouji.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "iPHP library to handle multi-threading",
+            "time": "2015-04-03 03:49:56"
+        },
         {
             "name": "aws/aws-sdk-php",
             "version": "3.19.26",

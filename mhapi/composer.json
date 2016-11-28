@@ -15,7 +15,8 @@
         "aws/aws-sdk-php":"~3.0",
         "predis/predis": "~1.0",
         "pusher/pusher-php-server": "^2.6",
-        "kwn/php-rdkafka-stubs": "^0.0.5"
+        "kwn/php-rdkafka-stubs": "^0.0.5",
+        "alfallouji/php_multithread": "^0.1.4"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

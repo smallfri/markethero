@@ -14,10 +14,10 @@ $topic = $rk->newTopic("email_one_email_to_be_sent");
 
 
 
-for ($i = 1; $i < 2; $i++) {
+for ($i = 1; $i < 100; $i++) {
     $message = '{
     "reply_to_email":"admin@markethero.io",
-    "to_email":"russell@smallfri.com",
+    "to_email":"smallfriing@gmail.com",
     "from_email":"admin@markethero.io",
     "plain_text":"content",
     "to_name":"esteban@gmail.com",
@@ -35,23 +35,25 @@ for ($i = 1; $i < 2; $i++) {
 
     $message = [
         'reply_to_email' => 'russell@smallfri.com',
-        'to_email' => 'russell@smallfri.com',
+        "to_email"=>"smallfriinc@gmail.com",
         'from_email' => 'russell@smallfri.com',
         'to_name' => 'russell@smallfri.com',
         'reply_to_name' => 'russell@smallfri.com',
         'subject' => 'testing testing testing',
         'send_at' => '2016-11-15 01:38:28',
-        'id' => rand(pow(10, $digits-1), pow(10, $digits)-1),
+        'id' => $i,
         'body' => uniqid(),
         'plain_text' => 'message',
         'customer_id' => 11,
+        'group_id' => 39,
         'from_name' => 'Russell',
 
 
     ];
 
-    $topic->produce(RD_KAFKA_PARTITION_UA, 0, json_encode($message));
-    var_dump( json_encode($message));
+
+        $topic->produce(RD_KAFKA_PARTITION_UA, 0, json_encode($message));
+            var_dump( json_encode($message));
 }
 
 
