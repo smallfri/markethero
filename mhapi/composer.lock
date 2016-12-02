@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "15d3a2a2eef3d8ee3b46e597e47f5024",
-    "content-hash": "94e472b48db21d253a160d23e395aee4",
+    "hash": "2269fefb0d8986e169c85dee59562d5a",
+    "content-hash": "c920d5be9c54c62c1196222455855a60",
     "packages": [
         {
             "name": "alfallouji/php_multithread",
@@ -41,6 +41,40 @@
             ],
             "description": "iPHP library to handle multi-threading",
             "time": "2015-04-03 03:49:56"
+        },
+        {
+            "name": "asyncphp/doorman",
+            "version": "3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/asyncphp/doorman.git",
+                "reference": "144561a38bf9b663b27af606b4562b3a5b6e191c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/asyncphp/doorman/zipball/144561a38bf9b663b27af606b4562b3a5b6e191c",
+                "reference": "144561a38bf9b663b27af606b4562b3a5b6e191c",
+                "shasum": ""
+            },
+            "require": {
+                "jeremeamia/superclosure": "^2.0",
+                "php": ">=5.5.9"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "AsyncPHP\\Doorman\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Child process management",
+            "time": "2015-12-06 21:13:18"
         },
         {
             "name": "aws/aws-sdk-php",
