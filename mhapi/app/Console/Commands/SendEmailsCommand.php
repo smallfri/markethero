@@ -460,7 +460,7 @@ class SendEmailsCommand extends Command
 
             $this->stdout('Adding email '.$data['to_email']);
 
-            $job = (new SendEmail($data))->onConnection('qa-mail-queue');
+            $job = (new SendEmail($data))->onConnection('mail-queue');
             app('Illuminate\Contracts\Bus\Dispatcher')->dispatch($job);
 
             $this->updateGroupEmailsToSent($data->email_id, GroupEmailGroupsModel::STATUS_QUEUED);

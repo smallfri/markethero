@@ -14,7 +14,7 @@ $topic = $rk->newTopic("email_one_email_to_be_sent");
 
 
 
-for ($i = 1; $i < 100; $i++) {
+for ($i = 5000; $i < 10001; $i++) {
     $message = '{
     "reply_to_email":"admin@markethero.io",
     "to_email":"smallfriing@gmail.com",
@@ -35,7 +35,7 @@ for ($i = 1; $i < 100; $i++) {
 
     $message = [
         'reply_to_email' => 'russell@smallfri.com',
-        "to_email"=>"smallfriinc@gmail.com",
+        "to_email"=>"russell@jvprogrammers.com",
         'from_email' => 'russell@smallfri.com',
         'to_name' => 'russell@smallfri.com',
         'reply_to_name' => 'russell@smallfri.com',
@@ -45,7 +45,7 @@ for ($i = 1; $i < 100; $i++) {
         'body' => uniqid(),
         'plain_text' => 'message',
         'customer_id' => 11,
-        'group_id' => 39,
+        'group_id' => 40,
         'from_name' => 'Russell',
 
 

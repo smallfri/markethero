@@ -174,33 +174,33 @@ class GroupEmailsController extends ApiController
             }
         }
 
-        if ($useQueues==true AND $pause==false)
-        {
-            //create class to queue
-
-            $EmailGroup = new \stdClass();
-            $EmailGroup->email_uid = $emailUid;
-            $EmailGroup->to_name = $data['to_name'];
-            $EmailGroup->to_email = $data['to_email'];
-            $EmailGroup->from_name = $data['from_name'];
-            $EmailGroup->from_email = $data['from_email'];
-            $EmailGroup->reply_to_name = $data['reply_to_name'];
-            $EmailGroup->reply_to_email = $data['reply_to_email'];
-            $EmailGroup->subject = $data['subject'];
-            $EmailGroup->body = $data['body'];
-            $EmailGroup->plain_text = $data['plain_text'];
-            $EmailGroup->send_at = $data['send_at'];
-            $EmailGroup->customer_id = $data['customer_id'];
-            $EmailGroup->group_email_id = $data['group_id'];
-            $EmailGroup->status = GroupEmailGroupsModel::STATUS_QUEUED;
-            $EmailGroup->date_added = new \DateTime();
-            $EmailGroup->max_retries = 5;
-
-            $job = (new SendEmail($EmailGroup))->onConnection('mail-queue');
-            $this->dispatch($job);
-        }
-        else
-        {
+//        if ($useQueues==true AND $pause==false)
+//        {
+//            //create class to queue
+//
+//            $EmailGroup = new \stdClass();
+//            $EmailGroup->email_uid = $emailUid;
+//            $EmailGroup->to_name = $data['to_name'];
+//            $EmailGroup->to_email = $data['to_email'];
+//            $EmailGroup->from_name = $data['from_name'];
+//            $EmailGroup->from_email = $data['from_email'];
+//            $EmailGroup->reply_to_name = $data['reply_to_name'];
+//            $EmailGroup->reply_to_email = $data['reply_to_email'];
+//            $EmailGroup->subject = $data['subject'];
+//            $EmailGroup->body = $data['body'];
+//            $EmailGroup->plain_text = $data['plain_text'];
+//            $EmailGroup->send_at = $data['send_at'];
+//            $EmailGroup->customer_id = $data['customer_id'];
+//            $EmailGroup->group_email_id = $data['group_id'];
+//            $EmailGroup->status = GroupEmailGroupsModel::STATUS_QUEUED;
+//            $EmailGroup->date_added = new \DateTime();
+//            $EmailGroup->max_retries = 5;
+//
+//            $job = (new SendEmail($EmailGroup))->onConnection('qa-mail-queue');
+//            $this->dispatch($job);
+//        }
+//        else
+//        {
             $Email = new GroupEmailModel();
             $Email->email_uid = $emailUid;
             $Email->to_name = $data['to_name'];
@@ -231,7 +231,7 @@ class GroupEmailsController extends ApiController
             $Email->date_added = new \DateTime();
             $Email->max_retries = 5;
             $Email->save();
-        }
+//        }
 
         if ($emailUid)
         {
