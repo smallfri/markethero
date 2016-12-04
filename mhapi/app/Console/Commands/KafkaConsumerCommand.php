@@ -131,7 +131,7 @@ class KafkaConsumerCommand extends Command
                         echo "Timed out\n";
                         break;
                     default:
-                        
+
 
                         throw new \Exception($message->errstr(), $message->err);
                         break;
@@ -149,7 +149,17 @@ class KafkaConsumerCommand extends Command
         }
         else
         {
-            $group_id = '';
+            $group_id = 1;
+            DB::reconnect('mysql');
+            $pdo = DB::connection()->getPdo();
+            $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+
+            GroupEmailGroupsModel::where('group_email_id', 1)
+                ->update(['status' => 'pending-sending']);
+
+
+            DB::disconnect('mysql');
+            return;
         }
 
         $email_uid = uniqid('', true);

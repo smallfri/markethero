@@ -48,24 +48,22 @@ class SendTestEmailCommandHandler extends Command
     {
 
 
-
         $data = [
-                'reply_to_email' => 'russell@smallfri.com',
-                "to_email"=>'mhtestemails@smallfriinc.com',
-                'from_email' => 'smallfriinc@gmail.com',
-                'to_name' => 'russell@smallfri.com',
-                'reply_to_name' => 'russell@smallfri.com',
-                'subject' => 'Hourly Test Message',
-                'send_at' => '2016-11-15 01:38:28',
-                'body' => uniqid().' / '.print_r(new DateTime(),true),
-                'plain_text' => 'message',
-                'customer_id' => 11,
-                'group_id' => 1,
-                'from_name' => 'Russell',
+            'reply_to_email' => 'russell@smallfri.com',
+            "to_email" => 'mhtestemails@smallfriinc.com',
+            'from_email' => 'smallfriinc@gmail.com',
+            'to_name' => 'russell@smallfri.com',
+            'reply_to_name' => 'russell@smallfri.com',
+            'subject' => 'Hourly Test Message',
+            'send_at' => '2016-11-15 01:38:28',
+            'body' => uniqid().' / '.print_r(new DateTime(), true),
+            'plain_text' => 'message',
+            'customer_id' => 11,
+            'group_id' => 1,
+            'from_name' => 'Russell',
 
 
-            ];
-
+        ];
 
 
         $this->sendByPHPMailer(json_encode($data));
@@ -76,43 +74,41 @@ class SendTestEmailCommandHandler extends Command
 
     public function sendByPHPMailer($data)
     {
-        $email_uid = uniqid('',true);
 
-            $EmailGroup = new \stdClass();
-                    $EmailGroup->email_uid = $email_uid;
-                    $EmailGroup->to_name = 'email tester';
-                    $EmailGroup->to_email = 'mhtestemails@smallfriinc.com';
-                    $EmailGroup->from_name = 'email tester';
-                    $EmailGroup->from_email = 'russell@smallfri.com';
-                    $EmailGroup->reply_to_name = 'russell';
-                    $EmailGroup->reply_to_email = 'russell@smallfri.com';
-                    $EmailGroup->subject = 'Hourly Test Email';
-                    $EmailGroup->body = 'UniqueID:'.uniqid();
-                    $EmailGroup->plain_text = 'Hourly Test Email';
-                    $EmailGroup->send_at = new \DateTime();
-                    $EmailGroup->customer_id = 11;
-                    $EmailGroup->group_email_id = 1;
-                    $EmailGroup->status = GroupEmailGroupsModel::STATUS_QUEUED;
-                    $EmailGroup->date_added = new \DateTime();
-                    $EmailGroup->max_retries = 5;
+        $email_uid = uniqid('', true);
 
-       $this->stdout('Adding email mhtestemails@smallfriinc.com');
+        $EmailGroup = new \stdClass();
+        $EmailGroup->email_uid = $email_uid;
+        $EmailGroup->to_name = 'email tester';
+        $EmailGroup->to_email = 'mhtestemails@smallfriinc.com';
+        $EmailGroup->from_name = 'email tester';
+        $EmailGroup->from_email = 'russell@smallfri.com';
+        $EmailGroup->reply_to_name = 'russell';
+        $EmailGroup->reply_to_email = 'russell@smallfri.com';
+        $EmailGroup->subject = 'Hourly Test Email';
+        $EmailGroup->body = 'UniqueID:'.uniqid();
+        $EmailGroup->plain_text = 'Hourly Test Email';
+        $EmailGroup->send_at = new \DateTime();
+        $EmailGroup->customer_id = 11;
+        $EmailGroup->group_email_id = 1;
+        $EmailGroup->status = GroupEmailGroupsModel::STATUS_QUEUED;
+        $EmailGroup->date_added = new \DateTime();
+        $EmailGroup->max_retries = 5;
 
-                   $job = (new SendEmail($EmailGroup))->onConnection('mail-queue');
-                   app('Illuminate\Contracts\Bus\Dispatcher')->dispatch($job);
+        $this->stdout('Adding email mhtestemails@smallfriinc.com');
 
-            DB::reconnect('mysql');
-                   $pdo = DB::connection()->getPdo();
-                   $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
-            DB::select(DB::raw('INSERT INTO mw_test_emails SET sent = 1, status = "sent", date_added = now(), email_uid = "'.$email_uid .'"'));
-            DB::disconnect('mysql');
+        $job = (new SendEmail($EmailGroup))->onConnection('mail-queue');
+        app('Illuminate\Contracts\Bus\Dispatcher')->dispatch($job);
 
-
+        DB::reconnect('mysql');
+        $pdo = DB::connection()->getPdo();
+        $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+        DB::select(DB::raw('INSERT INTO mw_test_emails SET sent = 1, status = "sent", date_added = now(), email_uid = "'.$email_uid.'"'));
+        DB::disconnect('mysql');
 
 
         return true;
     }
-
 
     protected function stdout($message, $timer = true, $separator = "\n")
     {
