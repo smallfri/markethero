@@ -43,6 +43,7 @@ class SendEmail extends Job implements ShouldQueue
      */
     public function handle()
     {
+
         print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
 
         $this->sendByPHPMailer($this->data);
@@ -62,13 +63,13 @@ class SendEmail extends Job implements ShouldQueue
         print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
 
         if (property_exists($data, 'group_id'))
-                {
-                    $group_email_id = $data->group_email_id;
-                }
-                else
-                {
-                    $group_email_id = '';
-                }
+        {
+            $group_email_id = $data->group_email_id;
+        }
+        else
+        {
+            $group_email_id = '';
+        }
 
         try
         {

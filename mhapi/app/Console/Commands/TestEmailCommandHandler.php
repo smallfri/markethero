@@ -10,9 +10,10 @@ namespace App\Console\Commands;
 
 use App\Models\BounceServer;
 use App\Models\GroupEmailBounceModel;
-use DateTime;
+use DB;
 use Exception;
 use Illuminate\Console\Command;
+use PDO;
 
 class TestEmailCommandHandler extends Command
 {
@@ -25,134 +26,128 @@ class TestEmailCommandHandler extends Command
 
     public $_server;
 
+    // imap server connection
+    public $conn;
+
+    // inbox storage and inbox message count
+    private $inbox;
+
+    private $msg_cnt;
+
+    // email login credentials
+    private $server = 'mail.smallfriinc.com';
+
+    private $user = 'mhtestemails@smallfriinc.com';
+
+    private $pass = 'yourpassword';
+
+    private $port = 143; // adjust according to server settings
+
     public function handle()
     {
 
         $this->stdout('Starting...');
 
-        $this->process();
+        $servers = BounceServer::find(11);
+
+        $this->_server = $servers['hostname'];
+
+        $this->user = $servers['username'];
+
+        $this->pass = $servers['password'];
+
+        $this->connect();
+
+
+        $this->inbox();
+
+        foreach ($this->inbox AS $row)
+        {
+            preg_match('/UniqueID:(.*)/', $row['body'], $matches);
+
+            if (!empty($matches))
+            {
+                if (array_key_exists(1, $matches))
+                {
+                    DB::reconnect('mysql');
+                    $pdo = DB::connection()->getPdo();
+                    $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+                    DB::select(DB::raw('UPDATE mw_test_emails SET received = 1, status = "received", last_updated = now(), email_uid = "'.$matches[1].'"'));
+                    DB::disconnect('mysql');
+
+                }
+            }
+            imap_delete($this->conn, $row['index']);
+
+        }
 
     }
 
-    protected function process()
+    // close the server connection
+    function close()
     {
 
-        $servers = BounceServer::where('customer_id', '=', 11)->where('status', '=', 'active')->get();
+        $this->inbox = array();
+        $this->msg_cnt = 0;
 
-        require(__DIR__.'/../../ThirdParty/BounceHandler/BounceHandler.php');
+        imap_close($this->conn);
+    }
 
-        if (empty($servers))
+    // open the server connection
+    // the imap_open function parameters will need to be changed for the particular server
+    // these are laid out to connect to a Dreamhost IMAP server
+    function connect()
+    {
+
+        $this->conn = imap_open('{'.$this->server.':143/notls}', $this->user, $this->pass);
+    }
+
+    // move the message to a new folder
+    function move($msg_index, $folder = 'INBOX.Processed')
+    {
+
+        // move on server
+        imap_mail_move($this->conn, $msg_index, $folder);
+        imap_expunge($this->conn);
+
+        // re-read the inbox
+        $this->inbox();
+    }
+
+    // get a specific message (1 = first email, 2 = second email, etc.)
+    function get($msg_index = null)
+    {
+
+        if (count($this->inbox)<=0)
         {
-            $this->stdout('No bounce server found');
-
-            return;
+            return array();
+        }
+        elseif (!is_null($msg_index)&&isset($this->inbox[$msg_index]))
+        {
+            return $this->inbox[$msg_index];
         }
 
-        $serversIds = array();
-        foreach ($servers as $server)
+        return $this->inbox[0];
+    }
+
+    // read the inbox
+    function inbox()
+    {
+
+        $this->msg_cnt = imap_num_msg($this->conn);
+
+        $in = array();
+        for ($i = 1;$i<=$this->msg_cnt;$i++)
         {
-            $serversIds[] = $server->server_id;
-        }
-        unset($servers, $server);
-
-        $processLimit = 500;
-
-        print_r($serversIds);
-
-        try
-        {
-
-            foreach ($serversIds as $serverId)
-            {
-                $this->_server = BounceServer::find((int)$serverId);
-
-                if (empty($this->_server)||$this->_server->status!=BounceServer::STATUS_ACTIVE)
-                {
-                    $this->_server = null;
-                    $this->stdout('null');
-                    continue;
-                }
-                $this->_server->status = BounceServer::STATUS_CRON_RUNNING;
-                $this->_server->save();
-
-                $bounceHandler = new \BounceHandler($this->_server->getConnectionString(), $this->_server->username,
-                    $this->_server->password, array(
-                        'deleteMessages' => true,
-                        'deleteAllMessages' => $this->_server->getDeleteAllMessages(),
-                        'processLimit' => $processLimit,
-                        'searchCharset' => $this->_server->getSearchCharset(),
-                        'imapOpenParams' => $this->_server->getImapOpenParams(),
-
-                    ));
-
-
-
-                $results = $bounceHandler->getResults();
-                if (empty($results))
-                {
-                    $this->_server = BounceServer::find((int)$this->_server->server_id);
-                    if (empty($this->_server))
-                    {
-                        $this->stdout('continue3');
-
-                        continue;
-                    }
-                    if ($this->_server->status==BounceServer::STATUS_CRON_RUNNING)
-                    {
-                        $this->_server->status = BounceServer::STATUS_ACTIVE;
-                        $this->_server->save();
-                    }
-                    $this->stdout('continue2');
-
-                    continue;
-                }
-                foreach ($results as $result)
-                {
-                    if (!isset(
-                        $result['originalEmailHeadersArray']['X-Mw-Test-Id'],
-                        $result['originalEmailHeadersArray']['To']
-                    )
-                    )
-                    {
-                        $this->stdout('continue');
-                        continue;
-                    }
-
-
-                    $this->fixArrayKey($result['originalEmailHeadersArray']);
-
-
-
-                    echo 'Saved '.$result['originalEmailHeadersArray']['X-Mw-Test-Id'];
-
-                }
-
-                $this->_server = BounceServer::find((int)$this->_server->server_id);
-
-                if (empty($this->_server))
-                {
-                    continue;
-                }
-
-                if ($this->_server->status==BounceServer::STATUS_CRON_RUNNING)
-                {
-                    $this->_server->status = BounceServer::STATUS_ACTIVE;
-                    $this->_server->save();
-                }
-
-                // sleep
-                sleep(5);
-
-                // open db connection
-            }
-        } catch (Exception $e)
-        {
-           $this->stdout($e);
+            $in[] = array(
+                'index' => $i,
+                'header' => imap_headerinfo($this->conn, $i),
+                'body' => imap_body($this->conn, $i),
+                'structure' => imap_fetchstructure($this->conn, $i)
+            );
         }
 
-        $this->_server = null;
-
-        return;
+        $this->inbox = $in;
     }
 
     protected function stdout($message, $timer = true, $separator = "\n")
@@ -175,37 +170,6 @@ class TestEmailCommandHandler extends Command
         }
 
         echo $out;
-    }
-
-    function microtime_float()
-    {
-
-        list($usec, $sec) = explode(" ", microtime());
-        return ((float)$usec+(float)$sec);
-    }
-
-    function fixArrayKey(&$arr)
-    {
-
-        $arr = array_combine(
-            array_map(
-                function ($str)
-                {
-
-                    return str_replace(" ", "_", $str);
-                },
-                array_keys($arr)
-            ),
-            array_values($arr)
-        );
-
-        foreach ($arr as $key => $val)
-        {
-            if (is_array($val))
-            {
-                fixArrayKey($arr[$key]);
-            }
-        }
     }
 
 }

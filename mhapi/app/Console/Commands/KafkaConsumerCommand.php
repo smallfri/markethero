@@ -5,19 +5,16 @@
  * Date: 6/29/16
  * Time: 6:39 AM
  */
-
 namespace App\Console\Commands;
 
 use App\Jobs\SendEmail;
-use App\Models\GroupEmailGroupsModel;
 use App\Models\GroupEmailModel;
 use DB;
 use Illuminate\Console\Command;
 use RdKafka\Conf;
 use RdKafka\Consumer;
 use RdKafka\TopicConf;
-use AsyncPHP\Doorman\Manager\SynchronousManager;
-use AsyncPHP\Doorman\Task\CallbackTask;
+
 /**
  * Class SendGroupsCommand
  * @package App\Console\Commands
@@ -25,17 +22,20 @@ use AsyncPHP\Doorman\Task\CallbackTask;
 class KafkaConsumerCommand extends Command
 {
 
-    protected $signature = 'kafka-consumer-one';
+    protected $signature = 'kafka-consumer';
 
     protected $description = 'Gets messages from Kafka';
 
     public $verbose = 1;
 
+    public $message;
+
+    public $Email;
+
     public function handle()
     {
-        print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
 
-//        $result = $this->process();
+        $result = $this->process();
 
 //        return $result;
     }
@@ -49,10 +49,8 @@ class KafkaConsumerCommand extends Command
      */
     public function process(array $params = array())
     {
-        print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
 
-//        $this->runKafka();
-
+        $this->runKafka();
 
     }
 
@@ -117,38 +115,14 @@ class KafkaConsumerCommand extends Command
 
         while (true)
         {
-            $message = $topic->consume(0, 10);
-            print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
+            $message = $this->message = $topic->consume(0, 10);
 
             if (!empty($message))
             {
                 switch ($message->err)
                 {
                     case RD_KAFKA_RESP_ERR_NO_ERROR:
-
-print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
-                        $manager = new SynchronousManager();
-
-                               $task1 = new CallbackTask(function ($message) {
-                                   $this->save(json_decode($message->payload));
-                                   $this->save(json_decode($message->payload));
-                               });
-
-                               $task2 = new CallbackTask(function ($message) {
-                                   $this->loadQueue(json_decode($message->payload));
-                               });
-
-                               $manager->addTask($task1);
-                               $manager->addTask($task2);
-
-                               while ($manager->tick()) {
-                                   usleep(250);
-                               }
-
-                        print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
-
-
-
+                        $this->save(json_decode($this->message->payload));
                         break;
                     case RD_KAFKA_RESP_ERR__PARTITION_EOF:
                         echo "No more messages; will wait for more\n";
@@ -157,7 +131,7 @@ print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
                         echo "Timed out\n";
                         break;
                     default:
-                        print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
+                        
 
                         throw new \Exception($message->errstr(), $message->err);
                         break;
@@ -168,8 +142,6 @@ print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
 
     public function save($data)
     {
-        print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
-
 
         if (property_exists($data, 'group_id'))
         {
@@ -203,6 +175,8 @@ print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
             $Email->status = 'pending-sending';
             $Email->date_added = $Email->last_updated = new \DateTime();
             $Email->save();
+
+            $this->Email = $Email;
         } catch (\Exception $e)
         {
             $this->stdout('['.date('Y-m-d H:i:s').'] Email Not Saved '.$data->id);
@@ -210,35 +184,16 @@ print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
             return false;
         }
 
+        return true;
 
     }
 
-    public function loadQueue($data)
+    public function loadQueue()
     {
 
-        print_r($data);
-
-        $EmailGroup = new \stdClass();
-        $EmailGroup->email_id = $data->email_id;
-        $EmailGroup->email_uid = $data->email_uid;
-        $EmailGroup->to_name = $data->to_name;
-        $EmailGroup->to_email = $data->to_email;
-        $EmailGroup->from_name = $data->from_name;
-        $EmailGroup->from_email = $data->from_email;
-        $EmailGroup->reply_to_name = $data->reply_to_name;
-        $EmailGroup->reply_to_email = $data->reply_to_email;
-        $EmailGroup->subject = $data->subject;
-        $EmailGroup->body = $data->body;
-        $EmailGroup->plain_text = $data->plain_text;
-        $EmailGroup->send_at = $data->send_at;
-        $EmailGroup->customer_id = $data->customer_id;
-        $EmailGroup->group_email_id = $data->group_email_id;
-        $EmailGroup->status = GroupEmailGroupsModel::STATUS_QUEUED;
-        $EmailGroup->date_added = new \DateTime();
-        $EmailGroup->max_retries = 5;
-
-
-        $job = (new SendEmail($EmailGroup))->onConnection('qa-mail-queue');
+        $job = (new SendEmail($this->Email))->onConnection('qa-mail-queue');
         app('Illuminate\Contracts\Bus\Dispatcher')->dispatch($job);
+
+        return true;
     }
 }

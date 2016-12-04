@@ -10,16 +10,19 @@ namespace App\Console\Commands;
 
 
 use App\Helpers\Helpers;
+use App\Jobs\SendEmail;
 use App\Logger;
 use App\Models\BlacklistModel;
 use App\Models\BounceServer;
 use App\Models\DeliveryServerModel;
 use App\Models\GroupEmailBounceLogModel;
 use App\Models\GroupEmailBounceModel;
+use App\Models\GroupEmailGroupsModel;
 use App\Models\GroupEmailModel;
 use DateTime;
 use Illuminate\Console\Command;
 use DB;
+use PDO;
 
 class SendTestEmailCommandHandler extends Command
 {
@@ -44,10 +47,12 @@ class SendTestEmailCommandHandler extends Command
     protected function process()
     {
 
+
+
         $data = [
                 'reply_to_email' => 'russell@smallfri.com',
-                "to_email"=>'bounces@marketherobounce1.com',
-                'from_email' => 'russell@smallfri.com',
+                "to_email"=>'mhtestemails@smallfriinc.com',
+                'from_email' => 'smallfriinc@gmail.com',
                 'to_name' => 'russell@smallfri.com',
                 'reply_to_name' => 'russell@smallfri.com',
                 'subject' => 'Hourly Test Message',
@@ -61,6 +66,8 @@ class SendTestEmailCommandHandler extends Command
 
             ];
 
+
+
         $this->sendByPHPMailer(json_encode($data));
 
 
@@ -69,72 +76,39 @@ class SendTestEmailCommandHandler extends Command
 
     public function sendByPHPMailer($data)
     {
+        $email_uid = uniqid('',true);
 
-$data = json_decode($data);
+            $EmailGroup = new \stdClass();
+                    $EmailGroup->email_uid = $email_uid;
+                    $EmailGroup->to_name = 'email tester';
+                    $EmailGroup->to_email = 'mhtestemails@smallfriinc.com';
+                    $EmailGroup->from_name = 'email tester';
+                    $EmailGroup->from_email = 'russell@smallfri.com';
+                    $EmailGroup->reply_to_name = 'russell';
+                    $EmailGroup->reply_to_email = 'russell@smallfri.com';
+                    $EmailGroup->subject = 'Hourly Test Email';
+                    $EmailGroup->body = 'UniqueID:'.uniqid();
+                    $EmailGroup->plain_text = 'Hourly Test Email';
+                    $EmailGroup->send_at = new \DateTime();
+                    $EmailGroup->customer_id = 11;
+                    $EmailGroup->group_email_id = 1;
+                    $EmailGroup->status = GroupEmailGroupsModel::STATUS_QUEUED;
+                    $EmailGroup->date_added = new \DateTime();
+                    $EmailGroup->max_retries = 5;
 
-        if ($data)
-        {
-            $email_uid = uniqid('', true);
+       $this->stdout('Adding email mhtestemails@smallfriinc.com');
 
-            $server = DeliveryServerModel::where('status', '=', 'active')
-                ->where('use_for', '=', DeliveryServerModel::USE_FOR_ALL)
-                ->get();
+                   $job = (new SendEmail($EmailGroup))->onConnection('mail-queue');
+                   app('Illuminate\Contracts\Bus\Dispatcher')->dispatch($job);
 
-            $this->stdout('['.date('Y-m-d H:i:s').'] Get Server');
-
-
-            try
-            {
-                $this->stdout('['.date('Y-m-d H:i:s').'] Get ready to send mail');
-
-                $mail = New \PHPMailer();
-                $mail->SMTPKeepAlive = true;
-
-                $mail->isSMTP();
-                $mail->CharSet = "utf-8";
-                $mail->SMTPAuth = true;
-                $mail->SMTPSecure = "tls";
-                $mail->Host = $server[0]['hostname'];
-                $mail->Port = 2525;
-                $mail->Username = $server[0]['username'];
-                $mail->Password = base64_decode($server[0]['password']);
-                $mail->Sender = Helpers::findBounceServerSenderEmail($server[0]['bounce_server_id']);
-
-                $mail->addCustomHeader('X-Mw-Test-Id', $email_uid);
-
-                $mail->addReplyTo($data->from_email, $data->from_name);
-                $mail->setFrom($data->from_email, $data->from_name);
-                $mail->addAddress($data->to_email, $data->to_name);
-
-                $mail->Subject = $data->subject;
-                $mail->MsgHTML($data->body);
-
-                if ($mail->send())
-                {
-                    $status = 'sent';
-                }
-                else{
-                    $status = 'failed';
-                }
-
-                $this->stdout('['.date('Y-m-d H:i:s').'] Handled Mail with status '.$status);
+            DB::reconnect('mysql');
+                   $pdo = DB::connection()->getPdo();
+                   $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+            DB::select(DB::raw('INSERT INTO mw_test_emails SET sent = 1, status = "sent", date_added = now(), email_uid = "'.$email_uid .'"'));
+            DB::disconnect('mysql');
 
 
-                $mail->clearAddresses();
-                $mail->clearAttachments();
-                $mail->clearCustomHeaders();
 
-            } catch (\Exception $e)
-            {
-                // save status error if try/catch returns error
-                $status = 'error';
-                $this->stdout($e);
-
-            }
-
-            DB::select(DB::raw('INSERT INTO mw_test_emails SET sent = 1, status = "'.$status.'", date_added = now(), email_uid = "'.$email_uid.'"'));
-
-        }
 
         return true;
     }
