@@ -5,20 +5,14 @@
  * Date: 6/29/16
  * Time: 6:39 AM
  */
-
 namespace App\Console\Commands;
 
-use App\Models\DeliveryServerModel;
-use App\Models\GroupEmailBounceModel;
+use App\Jobs\SendEmail;
 use App\Models\GroupEmailModel;
-use App\Helpers\Helpers;
-use App\Models\PauseGroupEmailModel;
 use DB;
 use Illuminate\Console\Command;
-
 use RdKafka\Conf;
 use RdKafka\Consumer;
-use RdKafka\Producer;
 use RdKafka\TopicConf;
 
 /**
@@ -32,22 +26,68 @@ class KafkaConsumerCommand extends Command
 
     protected $description = 'Gets messages from Kafka';
 
+    public $verbose = 1;
+
+    public $message;
+
+    public $Email;
+
     public function handle()
     {
 
         $result = $this->process();
 
-        return $result;
+//        return $result;
     }
 
+    /**
+     * Main method containing the logic to be executed by the task
+     *
+     * @param $params array Assoc array of params
+     *
+     * @return boolean True upon success, false otherwise
+     */
+    public function process(array $params = array())
+    {
 
-    protected function process()
+        $this->runKafka();
+
+    }
+
+    /**
+     * @param $message
+     * @param bool|true $timer
+     * @param string $separator
+     */
+    protected function stdout($message, $timer = true, $separator = "\n")
+    {
+
+        if (!$this->verbose)
+        {
+            return;
+        }
+
+        $out = '';
+        if ($timer)
+        {
+            $out .= '['.date('Y-m-d H:i:s').'] - ';
+        }
+        $out .= $message;
+        if ($separator)
+        {
+            $out .= $separator;
+        }
+
+        echo $out;
+    }
+
+    protected function runKafka()
     {
 
         $conf = new Conf();
 
         // Set the group id. This is required when storing offsets on the broker
-        $conf->set('group.id', 'myConsumerGroup');
+        $conf->set('group.id', uniqid());
         $conf->set('broker.version.fallback', '0.8.2.1');
 
         $rk = new Consumer($conf);
@@ -59,14 +99,15 @@ class KafkaConsumerCommand extends Command
         // Set the offset store method to 'file'
         $topicConf->set('offset.store.method', 'file');
         $topicConf->set('offset.store.path', sys_get_temp_dir());
+        $topicConf->set('auto.commit.enable', 'false');
 
         // Alternatively, set the offset store method to 'broker'
-//         $topicConf->set('offset.store.method', 'broker');
+        //         $topicConf->set('offset.store.method', 'broker');
 
         // Set where to start consuming messages when there is no initial offset in
         // offset store or the desired offset is out of range.
         // 'smallest': start from the beginning
-        $topicConf->set('auto.offset.reset', 'smallest');
+        $topicConf->set('auto.offset.reset', 'largest');
 
         $topic = $rk->newTopic("email_one_email_to_be_sent", $topicConf);
         // Start consuming partition 0
@@ -74,17 +115,14 @@ class KafkaConsumerCommand extends Command
 
         while (true)
         {
-            $message = $topic->consume(0, 120*10000);
-            print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
+            $message = $this->message = $topic->consume(0, 10);
 
             if (!empty($message))
             {
-                switch ($message->errddd)
+                switch ($message->err)
                 {
                     case RD_KAFKA_RESP_ERR_NO_ERROR:
-                        print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
-                        sleep(1);
-                        $this->sendByPHPMailer(json_decode($message->payload));
+                        $this->save(json_decode($this->message->payload));
                         break;
                     case RD_KAFKA_RESP_ERR__PARTITION_EOF:
                         echo "No more messages; will wait for more\n";
@@ -93,185 +131,69 @@ class KafkaConsumerCommand extends Command
                         echo "Timed out\n";
                         break;
                     default:
+                        
+
                         throw new \Exception($message->errstr(), $message->err);
                         break;
                 }
             }
         }
-
     }
 
-    public function sendByPHPMailer($data)
+    public function save($data)
     {
 
-        print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
-        print_r($data);
-
-        if($data)
+        if (property_exists($data, 'group_id'))
         {
-
-         if(GroupEmailModel::where('mhEmailID', '=', $data->id)->count() > 0)
-         {
-             print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
-
-                       return false;
-         }
+            $group_id = $data->group_id;
+        }
         else
         {
-            print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
+            $group_id = '';
+        }
 
-//            print_r($data);
+        $email_uid = uniqid('', true);
 
-            $server = DeliveryServerModel::where('status', '=', 'active')
-                ->where('use_for', '=', DeliveryServerModel::USE_FOR_ALL)
-                ->get();
-
-            /*
-             * Check for paused customers or groups
-             */
-            $pause = false;
-            if (property_exists($data, 'group_id'))
-            {
-                $Pause = PauseGroupEmailModel::where('group_email_id', '=', $data->group_id)
-                    ->orWhere('customer_id', '=', $data->customer_id)
-                    ->get();
-
-                if (!empty($Pause[0]))
-                {
-                    if ($Pause->pause_customer==true||$Pause->group_id>0)
-                    {
-                        $pause = true;
-                    }
-                }
-            }
-            print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
-
-            /*
-             * Check bounces
-             */
-            if(GroupEmailBounceModel::where('email', '=', $data->to_email)->count() > 0)
-                     {
-                         print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
-
-                                   return false;
-                     }
-
-
-
-            $email_uid = uniqid('', true);
-
-            if (property_exists($data, 'group_id'))
-            {
-                print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
-
-                $group_id = $data->group_id;
-            }
-            else
-            {
-                $group_id = '';
-            }
-            print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
-
-            try
-            {
-                $mail = New \PHPMailer();
-                $mail->SMTPKeepAlive = true;
-
-                $mail->isSMTP();
-                $mail->CharSet = "utf-8";
-                $mail->SMTPAuth = true;
-                $mail->SMTPSecure = "tls";
-                $mail->Host = $server[0]['hostname'];
-                $mail->Port = 2525;
-                $mail->Username = $server[0]['username'];
-                $mail->Password = base64_decode($server[0]['password']);
-                $mail->Sender = Helpers::findBounceServerSenderEmail($server[0]['bounce_server_id']);
-
-                $mail->addCustomHeader('X-Mw-Customer-Id', $data->customer_id);
-                $mail->addCustomHeader('X-Mw-Email-Uid', $email_uid);
-                $mail->addCustomHeader('X-Mw-Group-Id', $group_id);
-
-                $mail->addReplyTo($data->from_email, $data->from_name);
-                $mail->setFrom($data->from_email, $data->from_name);
-                $mail->addAddress($data->to_email, $data->to_name);
-
-                $mail->Subject = $data->subject;
-                $mail->MsgHTML($data->body);
-
-                $status = 'unsent';
-                if ($pause==true)
-                {
-                    $status = 'paused';
-                }
-                elseif ($mail->send())
-                {
-                    $status = 'sent';
-                }
-
-                $mail->clearAddresses();
-                $mail->clearAttachments();
-                $mail->clearCustomHeaders();
-
-            } catch (\Exception $e)
-            {
-                // save status error if try/catch returns error
-                $status = 'error';
-            }
-
-            /*
-             * Save email
-             */
+        try
+        {
             $Email = new GroupEmailModel();
-            $Email->email_uid = $email_uid;
             $Email->mhEmailID = $data->id;
-            $Email->to_name = $data->to_name;
+            $Email->email_uid = $email_uid;
+            $Email->customer_id = $data->customer_id;
+            $Email->group_email_id = $group_id;;
             $Email->to_email = $data->to_email;
-            $Email->from_name = $data->from_name;
+            $Email->to_name = $data->to_name;
             $Email->from_email = $data->from_email;
-            $Email->reply_to_name = $data->reply_to_name;
+            $Email->from_name = $data->from_name;
             $Email->reply_to_email = $data->reply_to_email;
+            $Email->reply_to_name = $data->reply_to_name;
             $Email->subject = $data->subject;
             $Email->body = $data->body;
             $Email->plain_text = $data->plain_text;
-            $Email->send_at = $data->send_at;
-            $Email->customer_id = $data->customer_id;
-            $Email->group_email_id = $group_id;
-            $Email->date_added = $Email->last_updated = new \DateTime();
             $Email->max_retries = 5;
-            $Email->status = $status;
+            $Email->send_at = $data->send_at;
+            $Email->status = 'pending-sending';
+            $Email->date_added = $Email->last_updated = new \DateTime();
             $Email->save();
 
-            if (!empty($Email)&&$status=='sent')
-            {
-                $this->replyToMarketHero($Email);
-            }
+            $this->Email = $Email;
+        } catch (\Exception $e)
+        {
+            $this->stdout('['.date('Y-m-d H:i:s').'] Email Not Saved '.$data->id);
 
+            return false;
         }
-        }
+
+        return true;
+
     }
 
-    public function replyToMarketHero($Email)
+    public function loadQueue()
     {
 
-        $conf = new Conf();
-        $conf->set('security.protocol', 'plaintext');
-        $conf->set('broker.version.fallback', '0.8.2.1');
+        $job = (new SendEmail($this->Email))->onConnection('qa-mail-queue');
+        app('Illuminate\Contracts\Bus\Dispatcher')->dispatch($job);
 
-        $rk = new Producer($conf);
-        $rk->setLogLevel(LOG_DEBUG);
-        $rk->addBrokers("kafka-3.int.markethero.io, kafka-2.int.markethero.io,kafka-1.int.markethero.io");
-
-        $topic = $rk->newTopic("email_one_email_sent");
-        $date = date_create();
-
-        $message = [
-            'mhEmailID' => $Email->mhEmailID,
-            'emailOneEmailID' => $Email->email_uid,
-            'sentDateTime' => date_format($date, 'U')
-        ];
-
-        $topic->produce(RD_KAFKA_PARTITION_UA, 0, json_encode($message));
-//        var_dump(json_encode($message));
+        return true;
     }
-
 }

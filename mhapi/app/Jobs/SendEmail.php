@@ -10,6 +10,8 @@ use App\Models\PauseGroupEmailModel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use RdKafka\Conf;
+use RdKafka\Producer;
 
 class SendEmail extends Job implements ShouldQueue
 {
@@ -42,6 +44,8 @@ class SendEmail extends Job implements ShouldQueue
     public function handle()
     {
 
+        print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
+
         $this->sendByPHPMailer($this->data);
     }
 
@@ -56,49 +60,16 @@ class SendEmail extends Job implements ShouldQueue
         $server = DeliveryServerModel::where('status', '=', 'active')
             ->where('use_for', '=', DeliveryServerModel::USE_FOR_ALL)
             ->get();
+        print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
 
-//        $Bounce = GroupEmailBounceModel::where('email', '=', $data->to_email)->count();
-//
-//        if ($Bounce>0)
-//        {
-//            $this->delete();
-//            exit;
-//        }
-//        /*
-//         * Check for paused customers or groups
-//         */
-//        $pause = false;
-//        $Pause = PauseGroupEmailModel::where('group_email_id', '=', $data->group_id)
-//            ->orWhere('customer_id', '=', $data->customer_id)
-//            ->get();
-//
-//        if (!empty($Pause[0]))
-//        {
-//            if ($Pause->pause_customer==true||$Pause->group_email_id>0)
-//            {
-//                $pause = true;
-//            }
-//        }
-
-        /*
-         * Save email
-         */
-        $Email = new GroupEmailModel();
-        $Email->email_uid = $data->email_uid;
-        $Email->to_name = $data->to_name;
-        $Email->to_email = $data->to_email;
-        $Email->from_name = $data->from_name;
-        $Email->from_email = $data->from_email;
-        $Email->reply_to_name = $data->reply_to_name;
-        $Email->reply_to_email = $data->reply_to_email;
-        $Email->subject = $data->subject;
-        $Email->body = $data->body;
-        $Email->plain_text = $data->plain_text;
-        $Email->send_at = $data->send_at;
-        $Email->customer_id = $data->customer_id;
-        $Email->group_email_id = $data->group_email_id;
-        $Email->date_added = $Email->last_updated = new \DateTime();
-        $Email->max_retries = 5;
+        if (property_exists($data, 'group_id'))
+        {
+            $group_email_id = $data->group_email_id;
+        }
+        else
+        {
+            $group_email_id = '';
+        }
 
         try
         {
@@ -118,7 +89,7 @@ class SendEmail extends Job implements ShouldQueue
 
             $mail->addCustomHeader('X-Mw-Customer-Id', $data->customer_id);
             $mail->addCustomHeader('X-Mw-Email-Uid', $data->email_uid);
-            $mail->addCustomHeader('X-Mw-Group-Id', $data->group_email_id);
+            $mail->addCustomHeader('X-Mw-Group-Id', $group_email_id);
 
             $mail->addReplyTo($data->from_email, $data->from_name);
             $mail->setFrom($data->from_email, $data->from_name);
@@ -130,15 +101,13 @@ class SendEmail extends Job implements ShouldQueue
             if (!$mail->send())
             {
                 // save status failed if mail did not send
-                $Email->status = 'failed';
+                $status = 'failed';
             }
             else
             {
                 // save status sent if mail DID send
-                $Email->status = 'sent';
+                $status = 'sent';
             }
-            $Email->save();
-            $this->delete();
 
             $mail->clearAddresses();
             $mail->clearAttachments();
@@ -147,11 +116,17 @@ class SendEmail extends Job implements ShouldQueue
         } catch (\Exception $e)
         {
             // save status error if try/catch returns error
-            $Email->status = 'error';
-            $Email->save();
-            $this->delete();
+            $status = 'error';
+            print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
 
         }
+        $this->delete();
+
+        print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
+        $update = GroupEmailModel::find($data->email_id);
+        $update->status = $status;
+        $update->last_updated = new \DateTime();
+        $update->save();
 
     }
 
