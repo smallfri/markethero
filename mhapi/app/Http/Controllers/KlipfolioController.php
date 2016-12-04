@@ -10,6 +10,7 @@ use App\Models\Customer;
 use App\Http\Requests;
 use App\Models\DeliveryServerModel;
 use App\Models\GroupEmailBounceLogModel;
+use App\Models\GroupEmailBounceModel;
 use App\Models\GroupEmailGroupsModel;
 use App\Models\TraceLog;
 use App\Models\TransactionalEmailModel;
@@ -143,7 +144,7 @@ class KlipfolioController extends ApiController
     public function getSpamReports()
     {
 
-        $Emails = GroupEmailBounceLogModel::select(
+        $Emails = GroupEmailBounceModel::select(
             'mw_group_email_bounce_log.customer_id',
             'mw_group_email_bounce_log.group_id',
             'mw_group_email_bounce_log.message',
