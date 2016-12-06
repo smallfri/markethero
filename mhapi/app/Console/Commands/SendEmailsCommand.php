@@ -442,23 +442,6 @@ class SendEmailsCommand extends Command
         $this->stdout(sprintf("This emails worker(#%d) will process %d emails for this group...", $workerNumber,
             count($emails)));
 
-        $this->loadQueue($emails);
-
-        if (empty($emails))
-        {
-            $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_SENT);
-        }
-
-        return 0;
-    }
-
-    /*
-     * Helper Methods
-     */
-
-    private function loadQueue($emails)
-    {
-
         foreach ($emails AS $data)
         {
 
@@ -495,6 +478,41 @@ class SendEmailsCommand extends Command
             ->count();
 
         DB::disconnect('mysql');
+
+        if (empty($emails))
+        {
+            $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_SENT);
+        }
+
+        return 0;
+    }
+
+    /*
+     * Helper Methods
+     */
+
+    private function loadQueue($emails)
+    {
+
+        foreach ($emails AS $data)
+        {
+
+            $Email = GroupEmailModel::find($data['email_id']);
+
+            if (!empty($Email)&&$Email->status!='pending-sending')
+            {
+                print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
+                continue;
+            }
+
+            $this->stdout('Adding email '.$data['to_email']);
+
+            $job = (new SendEmail($Email))->onConnection('qa-mail-queue');
+            app('Illuminate\Contracts\Bus\Dispatcher')->dispatch($job);
+
+            $this->updateGroupEmailsToSent($Email->email_id, GroupEmailGroupsModel::STATUS_SENT);
+
+        }
     }
 
     /**
@@ -645,7 +663,14 @@ class SendEmailsCommand extends Command
     protected function getOptions()
     {
 
+        DB::reconnect('mysql');
+        $pdo = DB::connection()->getPdo();
+        $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+
         $Options = GroupControlsModel::find(1);
+
+
+        DB::disconnect('mysql');
 
         $options = json_decode(json_encode($Options));
 

@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Helpers\Helpers;
 use App\Models\DeliveryServerModel;
 use App\Models\GroupEmailBounceModel;
+use App\Models\GroupEmailGroupsModel;
 use App\Models\GroupEmailModel;
 use App\Models\PauseGroupEmailModel;
 use Illuminate\Queue\SerializesModels;
@@ -44,8 +45,6 @@ class SendEmail extends Job implements ShouldQueue
     public function handle()
     {
 
-        print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
-
         $this->sendByPHPMailer($this->data);
     }
 
@@ -60,7 +59,6 @@ class SendEmail extends Job implements ShouldQueue
         $server = DeliveryServerModel::where('status', '=', 'active')
             ->where('use_for', '=', DeliveryServerModel::USE_FOR_ALL)
             ->get();
-        print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
 
         if (property_exists($data, 'group_id'))
         {
@@ -69,6 +67,28 @@ class SendEmail extends Job implements ShouldQueue
         else
         {
             $group_email_id = '';
+        }
+
+        $pause = PauseGroupEmailModel::where('group_email_id', '=', $data->group_email_id)
+            ->orWhere('customer_id', '=', $data->customer_id)
+            ->get();
+
+        if (count($pause))
+        {
+            $pause = $pause[0];
+
+
+            if (!empty($pause))
+            {
+                if ($pause->group_email_id==$data->group_email_id||$pause->pause_customer==1)
+                {
+                    $this->delete();
+
+                    GroupEmailModel::where('email_uid', '=', $data->email_uid)
+                        ->update('status', '=', GroupEmailGroupsModel::STATUS_PAUSED);
+                    return false;
+                }
+            }
         }
 
         try
@@ -117,12 +137,10 @@ class SendEmail extends Job implements ShouldQueue
         {
             // save status error if try/catch returns error
             $status = 'error';
-            print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
 
         }
         $this->delete();
 
-        print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
         $update = GroupEmailModel::find($data->email_id);
         $update->status = $status;
         $update->last_updated = new \DateTime();
