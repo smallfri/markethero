@@ -12,7 +12,7 @@ namespace App\Console\Commands;
 use App\Logger;
 use App\Models\BlacklistModel;
 use App\Models\BounceServer;
-use App\Models\GroupEmailBounceLogModel;
+use App\Models\GroupEmailBounceModel;
 use DateTime;
 use Illuminate\Console\Command;
 
@@ -138,14 +138,14 @@ class GroupBounceHandlerCommand extends Command
                         $code = trim($result['originalEmailHeadersArray']['Diagnostic-Code']);
                     }
 
-                    $bounceLog = new GroupEmailBounceLogModel();
+                    $bounceLog = new GroupEmailBounceModel();
                     $bounceLog->group_id = $groupId;
                     $bounceLog->email_uid = $emailId;
                     $bounceLog->customer_id = $customerId;
                     $bounceLog->email = $email;
                     $bounceLog->message = $code;
                     $bounceLog->bounce_type
-                        = $result['bounceType']==\BounceHandler::BOUNCE_HARD?GroupEmailBounceLogModel::BOUNCE_HARD:GroupEmailBounceLogModel::BOUNCE_SOFT;
+                        = $result['bounceType']==\BounceHandler::BOUNCE_HARD?GroupEmailBounceModel::BOUNCE_HARD:GroupEmailBounceModel::BOUNCE_SOFT;
                     $bounceLog->date_added = new DateTime();
                     $bounceLog->save();
 

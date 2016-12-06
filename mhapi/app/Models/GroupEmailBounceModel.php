@@ -10,6 +10,9 @@ class GroupEmailBounceModel extends Authenticatable
 
     protected $table = 'mw_group_email_bounce_log';
     protected $primaryKey = "log_id";
+
+    const BOUNCE_HARD = 'hard';
+    const BOUNCE_SOFT = 'soft';
     /**
      * The attributes that are mass assignable.
      *

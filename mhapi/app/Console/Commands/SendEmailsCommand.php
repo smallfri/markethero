@@ -164,7 +164,7 @@ class SendEmailsCommand extends Command
     {
 
         // call process function to begin processing groups
-        $rand = rand(2,6);
+        $rand = rand(2, 6);
         sleep($rand);
         $result = $this->process();
 
@@ -442,21 +442,38 @@ class SendEmailsCommand extends Command
         $this->stdout(sprintf("This emails worker(#%d) will process %d emails for this group...", $workerNumber,
             count($emails)));
 
-//        $this->loadQueue($emails);
+        $this->loadQueue($emails);
+
+        if (empty($emails))
+        {
+            $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_SENT);
+        }
+
+        return 0;
+    }
+
+    /*
+     * Helper Methods
+     */
+
+    private function loadQueue($emails)
+    {
 
         foreach ($emails AS $data)
         {
 
             $this->stdout('do stuff here');
 
-//            $count = GroupEmailModel::where('email_uid', '=', $data['email_id'])->where('status','=','queued')->count();
-//
-//            if ($count>0)
-//            {
-//                $this->stdout('Skipping...');
-//
-//                continue;
-//            }
+            $count = GroupEmailModel::where('email_uid', '=', $data['email_id'])
+                ->where('status', '=', 'queued')
+                ->count();
+
+            if ($count>0)
+            {
+                $this->stdout('Skipping...');
+
+                continue;
+            }
 
             $this->stdout('Adding email '.$data['to_email']);
 
@@ -478,41 +495,6 @@ class SendEmailsCommand extends Command
             ->count();
 
         DB::disconnect('mysql');
-
-        if (empty($emails))
-        {
-            $this->updateGroupStatus($group->group_email_id, GroupEmailGroupsModel::STATUS_SENT);
-        }
-
-        return 0;
-    }
-
-    /*
-     * Helper Methods
-     */
-
-    private function loadQueue($emails)
-    {
-
-        foreach ($emails AS $data)
-        {
-
-            $Email = GroupEmailModel::find($data['email_id']);
-
-            if (!empty($Email)&&$Email->status!='pending-sending')
-            {
-                print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
-                continue;
-            }
-
-            $this->stdout('Adding email '.$data['to_email']);
-
-            $job = (new SendEmail($Email))->onConnection('qa-mail-queue');
-            app('Illuminate\Contracts\Bus\Dispatcher')->dispatch($job);
-
-            $this->updateGroupEmailsToSent($Email->email_id, GroupEmailGroupsModel::STATUS_SENT);
-
-        }
     }
 
     /**
@@ -662,6 +644,7 @@ class SendEmailsCommand extends Command
 
     protected function getOptions()
     {
+
         $Options = GroupControlsModel::find(1);
 
         $options = json_decode(json_encode($Options));
@@ -696,6 +679,7 @@ class SendEmailsCommand extends Command
 
     protected function updateGroupEmailsToSent($id, $status)
     {
+
         $now = new \DateTime();
 
         DB::reconnect('mysql');

@@ -83,7 +83,7 @@ class UpdateGroupStatusCommand extends Command
     protected function process()
     {
 
-        $statuses = array(GroupEmailGroupsModel::STATUS_PENDING_SENDING);
+        $statuses = array(GroupEmailGroupsModel::STATUS_SENT);
 
         if ($this->groups_type!==null)
         {
@@ -102,18 +102,16 @@ class UpdateGroupStatusCommand extends Command
 
         foreach($groups AS $group)
         {
-            $maxDateAdded = $this->findMaxDateAdded($group);
+            $unsent = $this->findEmailsUnsent($group);
 
-            $this->stdout(sprintf('Found Max Date Added to be %s.',$maxDateAdded));
+            $this->stdout('Found unsent emails '. $unsent);
 
-            $now = Carbon::now(-.25);
-
-            if($maxDateAdded <= $now)
+            if($unsent>0)
             {
-                $this->stdout('Updating group status to sent.');
-                $this->updateGroupStatus($group['group_email_id'], GroupEmailGroupsModel::STATUS_SENT);
-            }
+                $this->stdout('Updating ');
 
+                $this->updateGroupStatus($group['group_email_id'], 'pending-sending');
+            }
 
         }
     }
