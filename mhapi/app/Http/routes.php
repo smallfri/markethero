@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Route;
 | and give it the controller to call when that URI is requested.
 |
 */
+Route::get('getXMLReport', 'XMLController@get100GroupForXML');
+
 Route::get('email-tester', 'DashboardController@test_emails');
 Route::post('email-tester', ['as' => 'email_test_path', 'uses' => 'DashboardController@send_emails']);
 Route::get('load-test', ['as' => 'load_test_path', 'uses' => 'DashboardController@loadTest']);

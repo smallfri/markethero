@@ -17,7 +17,8 @@
         "pusher/pusher-php-server": "^2.6",
         "kwn/php-rdkafka-stubs": "^0.0.5",
         "alfallouji/php_multithread": "^0.1.4",
-        "asyncphp/doorman": "^3.0"
+        "asyncphp/doorman": "^3.0",
+        "jailtonsc/laravel-response-xml": "^1.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

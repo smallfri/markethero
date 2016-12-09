@@ -64,7 +64,7 @@ class GroupBounceHandlerCommand extends Command
 
             foreach ($serversIds as $serverId)
             {
-                $this->_server = BounceServer::find((int)$serverId);
+                $this->_server = BounceServer::find(2);
 
                 if (empty($this->_server)||$this->_server->status!=BounceServer::STATUS_ACTIVE)
                 {
@@ -94,7 +94,7 @@ class GroupBounceHandlerCommand extends Command
                 $results = $bounceHandler->getResults();
                 if (empty($results))
                 {
-                    $this->_server = BounceServer::find((int)$this->_server->server_id);
+                    $this->_server = BounceServer::find(2);
                     if (empty($this->_server))
                     {
                         continue;
@@ -109,21 +109,30 @@ class GroupBounceHandlerCommand extends Command
                 foreach ($results as $result)
                 {
                     if (!isset(
-                        $result['originalEmailHeadersArray']['X-Mw-Group-Id'],
                         $result['originalEmailHeadersArray']['X-Mw-Email-Uid'],
                         $result['originalEmailHeadersArray']['To']
                     )
                     )
                     {
+                        print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
                         continue;
                     }
+                    print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
 
 
                     $this->fixArrayKey($result['originalEmailHeadersArray']);
 
 //                    print_r($result['originalEmailHeadersArray']['X-Mw-Group-Id']);
 
-                    $groupId = trim($result['originalEmailHeadersArray']['X-Mw-Group-Id']);
+                    $thing = $result['originalEmailHeadersArray'];
+                    if(array_key_exists('X-Mw-Group-Id', $thing ))
+                    {
+                        $groupId = '';
+                    }
+                    else
+                    {
+                        $groupId = trim($result['originalEmailHeadersArray']['X-Mw-Group-Id']);
+                    }
                     $customerId = trim($result['originalEmailHeadersArray']['X-Mw-Customer-Id']);
                     $emailId = trim($result['originalEmailHeadersArray']['X-Mw-Email-Uid']);
                     $email = trim($result['originalEmailHeadersArray']['To']);
@@ -148,6 +157,7 @@ class GroupBounceHandlerCommand extends Command
                         = $result['bounceType']==\BounceHandler::BOUNCE_HARD?GroupEmailBounceModel::BOUNCE_HARD:GroupEmailBounceModel::BOUNCE_SOFT;
                     $bounceLog->date_added = new DateTime();
                     $bounceLog->save();
+                    print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
 
 //                    echo 'Saved';
 

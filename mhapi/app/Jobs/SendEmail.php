@@ -60,7 +60,7 @@ class SendEmail extends Job implements ShouldQueue
             ->where('use_for', '=', DeliveryServerModel::USE_FOR_ALL)
             ->get();
 
-        if (property_exists($data, 'group_id'))
+        if (property_exists($data, 'group_email_id'))
         {
             $group_email_id = $data->group_email_id;
         }
@@ -76,8 +76,7 @@ class SendEmail extends Job implements ShouldQueue
         if (count($pause))
         {
             $pause = $pause[0];
-
-
+            
             if (!empty($pause))
             {
                 if ($pause->group_email_id==$data->group_email_id||$pause->pause_customer==1)
