@@ -6,6 +6,7 @@ use App\EmailOne\Transformers\CustomerTransformer;
 
 use App\Models\Customer;
 use App\Http\Requests;
+use App\Models\StatsModel;
 use Zend\Http\Response;
 
 /**
@@ -76,7 +77,13 @@ class CustomerController extends ApiController
         $customer->password = bcrypt($data['customer']['confirm_password']);
         $customer->date_added = new \DateTime();
         $customer->status = 'active';
+        $customer->pool_group_id = 1;
         $customer->save();
+
+        $stats = new StatsModel();
+        $stats->customer_id = $uid;
+        $stats->email = $data['customer']['email'];
+        $stats->save();
 
         if($customer)
         {

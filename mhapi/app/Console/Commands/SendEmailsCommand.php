@@ -444,12 +444,22 @@ class SendEmailsCommand extends Command
 
         foreach ($emails AS $data)
         {
+//            dd($data);
 
             $this->stdout('do stuff here');
 
-            $count = GroupEmailModel::where('email_uid', '=', $data['email_id'])
-                ->where('status', '=', 'queued')
-                ->count();
+            try{
+                $count = GroupEmailModel::where('email_uid', '=', $data['email_uid'])
+                                                ->where('status', '=', 'queued')
+                                                ->count();
+            } catch(\Exception $e)
+            {
+                print_r($e);
+            }
+
+
+            $this->stdout('count '.$count);
+
 
             if ($count>0)
             {

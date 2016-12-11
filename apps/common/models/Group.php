@@ -450,7 +450,7 @@ class Group extends ActiveRecord
 
             $customer = Yii::app()->db->createCommand()
                         ->select('status')
-                        ->from('mw_customer')
+                        ->from('mw_customer_new')
                         ->where('customer_id=:id', array(':id' => $this->customer_id))
                         ->queryRow();
 

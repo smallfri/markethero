@@ -1147,7 +1147,7 @@ class NewSendBatchescommand extends CConsoleCommand
 
         $customer = Yii::app()->db->createCommand()
             ->select('c.status as status')
-            ->from('mw_customer as c')
+            ->from('mw_customer_new as c')
             ->join('mw_group_email_groups AS geg', 'c.customer_id = geg.customer_id')
             ->where('group_email_id=:id', array(':id' => $this->_batch->group_email_id))
             ->queryRow();

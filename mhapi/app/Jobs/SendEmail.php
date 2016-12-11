@@ -3,16 +3,14 @@
 namespace App\Jobs;
 
 use App\Helpers\Helpers;
+use App\Models\Customer;
 use App\Models\DeliveryServerModel;
-use App\Models\GroupEmailBounceModel;
 use App\Models\GroupEmailGroupsModel;
 use App\Models\GroupEmailModel;
 use App\Models\PauseGroupEmailModel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use RdKafka\Conf;
-use RdKafka\Producer;
 
 class SendEmail extends Job implements ShouldQueue
 {
@@ -56,9 +54,14 @@ class SendEmail extends Job implements ShouldQueue
     public function sendByPHPMailer($data)
     {
 
-        $server = DeliveryServerModel::where('status', '=', 'active')
-            ->where('use_for', '=', DeliveryServerModel::USE_FOR_ALL)
-            ->get();
+        $customer = Customer::find($data->customer_id);
+
+        $server = DeliveryServerModel::find($customer->group_pool_id);
+
+        if(empty($server))
+        {
+            $server = DeliveryServerModel::find(1);
+        }
 
         if (property_exists($data, 'group_email_id'))
         {
@@ -100,11 +103,11 @@ class SendEmail extends Job implements ShouldQueue
             $mail->CharSet = "utf-8";
             $mail->SMTPAuth = true;
             $mail->SMTPSecure = "tls";
-            $mail->Host = $server[0]['hostname'];
+            $mail->Host = $server->hostname;
             $mail->Port = 2525;
-            $mail->Username = $server[0]['username'];
-            $mail->Password = base64_decode($server[0]['password']);
-            $mail->Sender = Helpers::findBounceServerSenderEmail($server[0]['bounce_server_id']);
+            $mail->Username = $server->username;
+            $mail->Password = base64_decode($server->password);
+            $mail->Sender = Helpers::findBounceServerSenderEmail($server->bounce_server_id);
 
             $mail->addCustomHeader('X-Mw-Customer-Id', $data->customer_id);
             $mail->addCustomHeader('X-Mw-Email-Uid', $data->email_uid);

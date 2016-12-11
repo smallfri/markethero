@@ -91,7 +91,7 @@ class SendTestEmailCommandHandler extends Command
         $EmailGroup->send_at = new \DateTime();
         $EmailGroup->customer_id = 11;
         $EmailGroup->group_email_id = 1;
-        $EmailGroup->status = GroupEmailGroupsModel::STATUS_QUEUED;
+        $EmailGroup->status = GroupEmailGroupsModel::STATUS_PENDING_SENDING;
         $EmailGroup->date_added = new \DateTime();
         $EmailGroup->max_retries = 5;
 
