@@ -444,29 +444,31 @@ class SendEmailsCommand extends Command
 
         foreach ($emails AS $data)
         {
-//            dd($data);
 
             $this->stdout('do stuff here');
 
-            try{
-                $count = GroupEmailModel::where('email_uid', '=', $data['email_uid'])
-                                                ->where('status', '=', 'queued')
-                                                ->count();
-            } catch(\Exception $e)
-            {
-                print_r($e);
-            }
-
-
-            $this->stdout('count '.$count);
-
-
-            if ($count>0)
-            {
-                $this->stdout('Skipping...');
-
-                continue;
-            }
+//$count = false;
+//            DB::reconnect('mysql');
+//                   $pdo = DB::connection()->getPdo();
+//                   $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+//print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
+////            $count = GroupEmailModel::where('email_uid', '=', $data['email_uid'])->where('status','=','queued')->count();
+// $sql = 'SELECT count(email_id) FROM mw_group_email WHERE status = "queued" AND email_uid = "'.$data['email_uid'].'"';
+//            print_r($sql);
+//            $count = DB::select(DB::raw($sql));
+//            dd($count);
+//            exit;
+//
+//                   DB::disconnect('mysql');
+//            print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
+//
+//            if ($count)
+//            {
+//                $this->stdout('Skipping...');
+//
+//                continue;
+//            }
+//            print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
 
             $this->stdout('Adding email '.$data['to_email']);
 
