@@ -101,3 +101,4 @@ Route::resource('v1/klipfolio/getTraceLogs', 'KlipfolioController@getTraceLogs')
 Route::resource('v1/klipfolio/getBounceServerStatus', 'KlipfolioController@getBounceServerStatus');
 Route::resource('v1/klipfolio/getDeliveryServerStatus', 'KlipfolioController@getDeliveryServerStatus');
 Route::resource('v1/klipfolio/getSpamReports', 'KlipfolioController@getSpamReports');
+Route::resource('v1/klipfolio/getGodStats', 'KlipfolioController@getGodStats');

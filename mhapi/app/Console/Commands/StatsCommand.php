@@ -8,8 +8,10 @@
 namespace App\Console\Commands;
 
 use App\Models\Customer;
+use App\Models\GroupControlsModel;
 use App\Models\StatsModel;
 use DB;
+use GroupOptions;
 use Illuminate\Console\Command;
 use PDO;
 
@@ -47,63 +49,91 @@ class StatsCommand extends Command
     public function process(array $params = array())
     {
 
-        $sql
-            = '
-    SELECT
-    count(email_id) as send_volume,
-    ge.last_updated AS last_broadcast,
-    ge.group_email_id AS last_broadcast_id,
-    CONCAT(c.first_name, \' \', c.last_name) AS name,
-    c.customer_id as user_id,
-    (SELECT count(clickId) as clicks FROM mw_group_email_clicks WHERE emailOneCustomerId = c.customer_id) AS clicks,
-    (SELECT count(report_id) as complaintes FROM mw_group_email_abuse_report WHERE customer_id = c.customer_id) AS complaints,
-    (SELECT count(id) as unsubscribes FROM mw_group_email_unsubscribe WHERE customer_id  = c.customer_id) AS unsubscribes
-    FROM
-    mw_group_email AS ge
-    JOIN
-    mw_group_email_groups as g
-    ON g.group_email_id = ge.group_email_id
-    JOIN
-    mw_customer AS c
-    ON c.customer_id = ge.customer_id
-    GROUP BY c.customer_id LIMIT 1
-';
-
-
-        $customers = Customer::all();
-
-        foreach($customers AS $customer)
+        DB::table('mw_customer')->orderBy('customer_id')->chunk(100, function ($customers)
         {
-            $sql = '
-                    SELECT
-                        count(ge.email_id) as send_volume,
-                        MAX(ge.last_updated) AS last_broadcast,
-                        MAX(ge.group_email_id) AS last_broadcast_id,
-                        CONCAT(c.first_name, " ", c.last_name) AS name,
-                        c.customer_id as user_id
-                    FROM
-                        mw_group_email AS ge
-                    JOIN
-                        mw_group_email_groups AS g
-                    ON g.group_email_id = ge.group_email_id
-                    JOIN
-                        mw_customer AS c
-                    ON c.customer_id = ge.customer_id
-                    WHERE c.customer_id ='.$customer->customer_id;
 
-            $stats = DB::select(
-                DB::raw(
-                    $sql
-                )
-            );
+            foreach ($customers as $customer)
+            {
+                $sql
+                    = '
+                       SELECT
+                           count(ge.email_id) as send_volume,
+                           MAX(ge.last_updated) AS last_broadcast,
+                           MAX(ge.group_email_id) AS last_broadcast_id
+                       FROM
+                    mw_group_email AS ge
+                       WHERE ge.customer_id = '.$customer->customer_id;
 
-            dd($stats);
-
-//            StatsModel::where('customer_id', $stats)
-//                        ->update(['status' => $status]);
+                $stats = DB::select(
+                    DB::raw(
+                        $sql
+                    )
+                );
+                $stats = $stats[0];
 
 
-        }
+                StatsModel::where('customer_id', $customer->customer_id)
+                    ->update([
+                        'send_volume' => $stats->send_volume,
+                        'last_broadcast' => $stats->last_broadcast,
+                        'last_broadcast_id' => $stats->last_broadcast_id,
+                        'last_updated' => new \DateTime()
+
+                    ]);
+
+            }
+        });
+
+
+
+        DB::table('mw_customer')->orderBy('customer_id')->chunk(100, function ($customers)
+        {
+
+            foreach ($customers as $customer)
+            {
+
+
+                $clicks_sql
+                    = 'SELECT count(clickId) as clicks FROM mw_group_email_clicks WHERE emailOneCustomerId = '.$customer->customer_id;
+                $complaints_sql
+                    = 'SELECT count(report_id) as complaints FROM mw_group_email_abuse_report WHERE customer_id = '.$customer->customer_id;
+                $unsub_sql
+                    = 'SELECT count(id) as unsubscribes FROM mw_group_email_unsubscribe WHERE customer_id  = '.$customer->customer_id;
+
+                $clicks = DB::select(
+                    DB::raw(
+                        $clicks_sql
+                    )
+                );
+
+                $clicks = $clicks[0];
+
+                $complaints = DB::select(
+                    DB::raw(
+                        $complaints_sql
+                    )
+                );
+
+                $complaints = $complaints[0];
+
+                $unsubs = DB::select(
+                    DB::raw(
+                        $unsub_sql
+                    )
+                );
+
+                $unsubs = $unsubs[0];
+
+                StatsModel::where('customer_id', $customer->customer_id)
+                    ->update([
+                        'last_updated' => new \DateTime(),
+                        'clicks' => $clicks->clicks,
+                        'complaints' => $complaints->complaints,
+                        'unsubscribes' => $unsubs->unsubscribes
+                    ]);
+
+            }
+        });
 
     }
 
@@ -112,8 +142,12 @@ class StatsCommand extends Command
      * @param bool|true $timer
      * @param string $separator
      */
-    protected function stdout($message, $timer = true, $separator = "\n")
-    {
+    protected
+    function stdout(
+        $message,
+        $timer = true,
+        $separator = ""
+    ){
 
         if (!$this->verbose)
         {

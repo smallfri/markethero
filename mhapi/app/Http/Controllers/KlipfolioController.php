@@ -12,6 +12,7 @@ use App\Models\DeliveryServerModel;
 use App\Models\GroupEmailBounceLogModel;
 use App\Models\GroupEmailBounceModel;
 use App\Models\GroupEmailGroupsModel;
+use App\Models\StatsModel;
 use App\Models\TraceLog;
 use App\Models\TransactionalEmailModel;
 use Carbon\Carbon;
@@ -297,6 +298,13 @@ class KlipfolioController extends ApiController
 
         return $this->respond([$stats]);
 
+    }
+
+    public function getGodStats()
+    {
+        $stats = StatsModel::select('*')->orderBy('send_volume', 'DESC')->take(100)->get()->toArray();
+
+               return $this->respond(['stats' => $stats]);
     }
 
 }

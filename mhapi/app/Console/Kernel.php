@@ -48,5 +48,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('send-test-email')->everyFiveMinutes();
         $schedule->command('test-email-handler')->everyFiveMinutes();
         $schedule->command('test-email-notifier')->everyTenMinutes();
+        $schedule->command('get-stats')->hourly();
     }
 }

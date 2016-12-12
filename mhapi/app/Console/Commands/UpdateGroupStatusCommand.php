@@ -8,25 +8,11 @@
 
 namespace App\Console\Commands;
 
-
-use App\Logger;
-use App\Models\BlacklistModel;
-//use App\Models\BounceServer;
-use App\Models\DeliveryServerModel;
-//use App\Models\GroupControlsModel;
-use App\Models\GroupEmailComplianceLevelsModel;
-use App\Models\GroupEmailComplianceModel;
 use App\Models\GroupEmailGroupsModel;
-use App\Models\GroupEmailLogModel;
 use App\Models\GroupEmailModel;
-use App\Helpers\Helpers;
-use Carbon\Carbon;
 use DB;
-use GuzzleHttp\Client;
+use PDO;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Mail;
-//use phpseclib\Crypt\AES;
-use Swift_Plugins_AntiFloodPlugin;
 
 
 /**
@@ -70,11 +56,11 @@ class UpdateGroupStatusCommand extends Command
     public function init()
     {
 
-
     }
 
     public function handle()
     {
+
         $result = $this->process();
 
         return $result;
@@ -90,23 +76,34 @@ class UpdateGroupStatusCommand extends Command
             $this->groups_type = null;
         }
 
-        $groups = GroupEmailGroupsModel::whereIn('status', $statuses)->get();
+        $date = new \DateTime;
+               $date->modify('-1 Day');
+               $formatted_date = $date->format('Y-m-d');
 
-        $this->stdout(sprintf('Found %s groups',count($groups)));
 
-        if(empty($groups))
+        DB::reconnect('mysql');
+        $pdo = DB::connection()->getPdo();
+        $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+        $groups = GroupEmailGroupsModel::whereIn('status', $statuses)
+            ->where('date_added', '>=', $formatted_date )
+            ->get();
+        DB::disconnect('mysql');
+
+        $this->stdout(sprintf('Found %s groups', count($groups)));
+
+        if (empty($groups))
         {
             $this->stdout('Found no Groups matching the criteria');
             exit;
         }
 
-        foreach($groups AS $group)
+        foreach ($groups AS $group)
         {
             $unsent = $this->findEmailsUnsent($group);
 
-            $this->stdout('Found unsent emails '. $unsent);
+            $this->stdout('Found unsent emails '.$unsent);
 
-            if($unsent>0)
+            if ($unsent>0)
             {
                 $this->stdout('Updating ');
 
@@ -139,20 +136,30 @@ class UpdateGroupStatusCommand extends Command
     }
 
     protected function findEmailsUnsent($group)
-        {
+    {
 
-            $emails = GroupEmailModel::where('status', '=', 'pending-sending')
-                ->where('group_email_id', '=', $group['group_email_id'])
-                ->count();
 
-            return $emails;
+        DB::reconnect('mysql');
+        $pdo = DB::connection()->getPdo();
+        $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+        $emails = GroupEmailModel::where('status', '=', 'pending-sending')
+            ->where('group_email_id', '=', $group['group_email_id'])
+            ->count();
+        DB::disconnect('mysql');
 
-        }
+        return $emails;
+
+    }
 
     protected function findMaxDateAdded($group)
     {
 
-        $max = DB::select(DB::raw('SELECT MAX(date_added) as date_added FROM mw_group_email WHERE group_email_id = '.$group->group_email_id));
+        DB::reconnect('mysql');
+        $pdo = DB::connection()->getPdo();
+        $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+        $max
+            = DB::select(DB::raw('SELECT MAX(date_added) as date_added FROM mw_group_email WHERE group_email_id = '.$group->group_email_id));
+        DB::disconnect('mysql');
 
         return $max[0]->date_added;
 
@@ -161,12 +168,14 @@ class UpdateGroupStatusCommand extends Command
     protected function updateGroupStatus($id, $status)
     {
 
+        DB::reconnect('mysql');
+        $pdo = DB::connection()->getPdo();
+        $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
         GroupEmailGroupsModel::where('group_email_id', $id)
             ->update(['status' => $status]);
+        DB::disconnect('mysql');
 
         return;
     }
-
-
 
 }
