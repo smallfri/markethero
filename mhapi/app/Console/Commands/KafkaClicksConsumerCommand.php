@@ -136,9 +136,9 @@ class KafkaClicksConsumerCommand extends Command
 
     public function save($data)
     {
-        if (property_exists($data, 'group_id'))
+        if (property_exists($data, 'groupId'))
         {
-            $group_id = $data->group_id;
+            $group_id = $data->groupId;
         }
         else
         {
