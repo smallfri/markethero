@@ -69,7 +69,6 @@ class CustomerController extends ApiController
             return $this->respond(['customer' => ['customer_uid' => $customer[0]['customer_uid']]]);
         }
 
-
         $customer = new Customer();
         $customer->customer_uid = $uid;
         $customer->first_name = $data['customer']['first_name'];
@@ -81,7 +80,8 @@ class CustomerController extends ApiController
         $customer->save();
 
         $stats = new StatsModel();
-        $stats->customer_id = $uid;
+        $stats->customer_id = $customer['customer_id'];
+        $stats->name = $data['customer']['first_name'].' '.$data['customer']['last_name'];
         $stats->email = $data['customer']['email'];
         $stats->save();
 
