@@ -61,7 +61,7 @@ class StatsCommand extends Command
                            MAX(ge.last_updated) AS last_broadcast,
                            MAX(ge.group_email_id) AS last_broadcast_id
                        FROM
-                    mw_group_email AS ge
+                           mw_group_email AS ge
                        WHERE ge.customer_id = '.$customer->customer_id;
 
                 $stats = DB::select(
@@ -71,19 +71,33 @@ class StatsCommand extends Command
                 );
                 $stats = $stats[0];
 
+                $sql
+                    = '
+                       SELECT
+                           pool_group_id
+                       FROM
+                           mw_customer
+                       WHERE customer_id = '.$customer->customer_id;
+
+                $pool = DB::select(
+                    DB::raw(
+                        $sql
+                    )
+                );
+                $pool = $pool[0];
 
                 StatsModel::where('customer_id', $customer->customer_id)
                     ->update([
                         'send_volume' => $stats->send_volume,
                         'last_broadcast' => $stats->last_broadcast,
                         'last_broadcast_id' => $stats->last_broadcast_id,
+                        'pool_group_id' => $pool->pool_group_id,
                         'last_updated' => new \DateTime()
 
                     ]);
 
             }
         });
-
 
 
         DB::table('mw_customer')->orderBy('customer_id')->chunk(100, function ($customers)

@@ -102,3 +102,5 @@ Route::resource('v1/klipfolio/getBounceServerStatus', 'KlipfolioController@getBo
 Route::resource('v1/klipfolio/getDeliveryServerStatus', 'KlipfolioController@getDeliveryServerStatus');
 Route::resource('v1/klipfolio/getSpamReports', 'KlipfolioController@getSpamReports');
 Route::resource('v1/klipfolio/getGodStats', 'KlipfolioController@getGodStats');
+Route::resource('v1/klipfolio/getGodFrame', 'KlipfolioController@getGodFrame');
+Route::resource('v1/klipfolio/moveCustomerToPool', 'KlipfolioController@moveCustomerToPool');

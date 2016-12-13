@@ -302,9 +302,58 @@ class KlipfolioController extends ApiController
 
     public function getGodStats()
     {
-        $stats = StatsModel::select('*')->orderBy('send_volume', 'DESC')->take(100)->get()->toArray();
 
-               return $this->respond(['stats' => $stats]);
+        $stats = DB::table('mw_group_email_stats')
+            ->join('mw_customer', 'mw_customer.customer_id', '=', 'mw_group_email_stats.customer_id')
+            ->orderBy('send_volume', 'DESC')
+            ->take(100)
+            ->get()
+            ->toArray();
+
+        return $this->respond(['stats' => $stats]);
+    }
+
+    public function getGodFrame()
+    {
+
+        $customers = Customer::all();
+
+        $html
+            = '<div style="height:100px"><form action="https://m-prod.markethero.io/mhapi/v1/klipfolio/getGodFrame" method="post"><select name="customer_id">';
+        foreach ($customers AS $customer)
+        {
+            $html .= '<option value="'.$customer->customer_id.'">'.$customer->customer_id.'</option>';
+        }
+
+        $html .= '</select>';
+
+        $html
+            .= <<<END
+        <select name = "pool_group_id">
+        <option value = "1">MarketHero 1 (low)</option>
+        <option value = "2">MarketHero 2 (mid)</option>
+        <option value = "3">MarketHero (high)</option>
+        <input type="submit" value="Move Customer" style="margin-left:5px"><span style="color:white;margin-left:20px">%message%</span></form>
+        </div>
+END;
+
+        if (!empty($_POST))
+        {
+            $customer = $_POST;
+            Customer::where('customer_id', $customer['customer_id'])
+                ->update([
+                        'pool_group_id' => $customer['pool_group_id'],
+                        'last_updated' => new \DateTime()
+                    ]
+                );
+            echo str_replace('%message%', 'Customer Moved', $html);
+        }
+        else
+        {
+            echo str_replace('%message%', '', $html);
+
+        }
+
     }
 
 }
