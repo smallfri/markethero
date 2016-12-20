@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Helpers\Helpers;
+use App\Logger;
 use App\Models\Customer;
 use App\Models\DeliveryServerModel;
 use App\Models\GroupEmailGroupsModel;
@@ -69,7 +70,7 @@ class SendEmail extends Job implements ShouldQueue
         }
         else
         {
-            $group_email_id = '';
+            $group_email_id = 1;
         }
 
         $pause = PauseGroupEmailModel::where('group_email_id', '=', $data->group_email_id)
@@ -112,6 +113,11 @@ class SendEmail extends Job implements ShouldQueue
             $mail->addCustomHeader('X-Mw-Customer-Id', $data->customer_id);
             $mail->addCustomHeader('X-Mw-Email-Uid', $data->email_uid);
             $mail->addCustomHeader('X-Mw-Group-Id', $group_email_id);
+            if ($group_email_id==1)
+            {
+                $mail->addCustomHeader('X-Mw-Transactional-Id', $group_email_id);
+            }
+
 
             $mail->addReplyTo($data->from_email, $data->from_name);
             $mail->setFrom($data->from_email, $data->from_name);
@@ -137,6 +143,7 @@ class SendEmail extends Job implements ShouldQueue
 
         } catch (\Exception $e)
         {
+            print_r($e);
             // save status error if try/catch returns error
             $status = 'error';
 

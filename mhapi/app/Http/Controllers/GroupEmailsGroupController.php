@@ -74,15 +74,22 @@ class GroupEmailsGroupController extends ApiController
         $GroupEmailGroups->date_added = new \DateTime();
         $GroupEmailGroups->save();
 
-        $GroupEmailCompliance = new GroupEmailComplianceModel();
-        $GroupEmailCompliance->group_email_id
-            = $GroupEmailGroups->group_email_id;
+//        try{
+//            $GroupEmailCompliance = new GroupEmailComplianceModel();
+//                   $GroupEmailCompliance->group_email_id
+//                       = $GroupEmailGroups->group_email_id;
+//
+//                   $GroupEmailCompliance->compliance_status = 'in-review';
+//                   $GroupEmailCompliance->compliance_level_type_id = 2;
+//                   $GroupEmailCompliance->date_added = new \DateTime();
+//                   $GroupEmailCompliance->last_updated = new \DateTime();
+//                   $GroupEmailCompliance->save();
+//        }catch (\Exception $e)
+//        {
+//            print_r($e);
+//        }
 
-        $GroupEmailCompliance->compliance_status = 'in-review';
-        $GroupEmailCompliance->compliance_level_type_id = 2;
-        $GroupEmailCompliance->date_added = new \DateTime();
-        $GroupEmailCompliance->last_updated = new \DateTime();
-        $GroupEmailCompliance->save();
+
 
         if ($GroupEmailGroups->group_email_id<1)
         {

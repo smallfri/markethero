@@ -159,7 +159,7 @@ class KafkaConsumerCommand extends Command
 
 
             DB::disconnect('mysql');
-            return;
+//            return;
         }
 
         $email_uid = uniqid('', true);
@@ -167,7 +167,7 @@ class KafkaConsumerCommand extends Command
         try
         {
             $Email = new GroupEmailModel();
-            $Email->mhEmailID = $data->id;
+//            $Email->mhEmailID = $data->id;
             $Email->email_uid = $email_uid;
             $Email->customer_id = $data->customer_id;
             $Email->group_email_id = $group_id;;
