@@ -87,7 +87,9 @@ class KafkaClicksConsumerCommand extends Command
         $conf->set('broker.version.fallback', '0.8.2.1');
 
         $rk = new Consumer($conf);
-        $rk->addBrokers("kafka-3.int.markethero.io, kafka-2.int.markethero.io,kafka-1.int.markethero.io");
+//        $rk->addBrokers("kafka-3.int.markethero.io, kafka-2.int.markethero.io,kafka-1.int.markethero.io"); //QA
+        $rk->addBrokers("zk-1.prod.markethero.io:2181,zk-2.prod.markethero.io:2181,zk-3.prod.markethero.io:2181"); //PROD
+
 
         $topicConf = new TopicConf();
         $topicConf->set('auto.commit.interval.ms', 100);
@@ -162,6 +164,7 @@ class KafkaClicksConsumerCommand extends Command
 
         } catch (\Exception $e)
         {
+            pr($e);
             $this->stdout('['.date('Y-m-d H:i:s').'] Click Not Saved '.$data->emailOneId);
             return false;
         }

@@ -125,13 +125,13 @@ class GroupBounceHandlerCommand extends Command
 //                    print_r($result['originalEmailHeadersArray']['X-Mw-Group-Id']);
 
                     $thing = $result['originalEmailHeadersArray'];
-                    if(array_key_exists('X-Mw-Group-Id', $thing ))
+                    if(array_key_exists('X-Mw-Group-Id', $result['originalEmailHeadersArray']))
                     {
-                        $groupId = '';
+                        $groupId = trim($result['originalEmailHeadersArray']['X-Mw-Group-Id']);
                     }
                     else
                     {
-                        $groupId = trim($result['originalEmailHeadersArray']['X-Mw-Group-Id']);
+                        $groupId = '';
                     }
                     $customerId = trim($result['originalEmailHeadersArray']['X-Mw-Customer-Id']);
                     $emailId = trim($result['originalEmailHeadersArray']['X-Mw-Email-Uid']);

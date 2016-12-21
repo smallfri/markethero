@@ -44,7 +44,8 @@ class Kernel extends ConsoleKernel
 //        $schedule->command('send-forgotten-groups')->everyFiveMinutes();
         // $schedule->command('compliance:average')->cron('0 0 * * *');
         // $schedule->command('compliance:check')->everyMinute();
-        $schedule->command('bounce-handler')->everyFiveMinutes();
+        $schedule->command('bounce-handler')->everyMinute();
+        $schedule->command('kafka-clicks-consumer')->everyFiveMinutes();
         $schedule->command('send-test-email')->everyFiveMinutes();
         $schedule->command('test-email-handler')->everyFiveMinutes();
         $schedule->command('test-email-notifier')->everyTenMinutes();
