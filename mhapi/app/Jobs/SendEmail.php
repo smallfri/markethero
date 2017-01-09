@@ -12,6 +12,8 @@ use App\Models\PauseGroupEmailModel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use RdKafka\Conf;
+use RdKafka\Producer;
 
 class SendEmail extends Job implements ShouldQueue
 {
@@ -59,12 +61,12 @@ class SendEmail extends Job implements ShouldQueue
 
         $server = DeliveryServerModel::find($customer->group_pool_id);
 
-        if(empty($server))
+        if (empty($server))
         {
             $server = DeliveryServerModel::find(1);
         }
 
-        if (property_exists($data, 'group_email_id'))
+        if (isset($data->group_email_id)&&$data->group_email_id>1)
         {
             $group_email_id = $data->group_email_id;
         }
@@ -80,7 +82,7 @@ class SendEmail extends Job implements ShouldQueue
         if (count($pause))
         {
             $pause = $pause[0];
-            
+
             if (!empty($pause))
             {
                 if ($pause->group_email_id==$data->group_email_id||$pause->pause_customer==1)
@@ -118,7 +120,6 @@ class SendEmail extends Job implements ShouldQueue
                 $mail->addCustomHeader('X-Mw-Transactional-Id', $group_email_id);
             }
 
-
             $mail->addReplyTo($data->from_email, $data->from_name);
             $mail->setFrom($data->from_email, $data->from_name);
             $mail->addAddress($data->to_email, $data->to_name);
@@ -150,11 +151,37 @@ class SendEmail extends Job implements ShouldQueue
         }
         $this->delete();
 
+        $this->replyToMarketHero($data);
+
         $update = GroupEmailModel::find($data->email_id);
         $update->status = $status;
         $update->last_updated = new \DateTime();
         $update->save();
 
+    }
+
+    public function replyToMarketHero($Email)
+    {
+
+        $conf = new Conf();
+        $conf->set('security.protocol', 'plaintext');
+        $conf->set('broker.version.fallback', '0.8.2.1');
+
+        $rk = new Producer($conf);
+        $rk->setLogLevel(LOG_DEBUG);
+        $rk->addBrokers("kafka-3.int.markethero.io, kafka-2.int.markethero.io,kafka-1.int.markethero.io");
+
+        $topic = $rk->newTopic("email_one_email_sent");
+        $date = date_create();
+
+        $message = [
+            'mhEmailID' => $Email->mhEmailID,
+            'emailOneEmailID' => $Email->email_uid,
+            'sentDateTime' => date_format($date, 'U')
+        ];
+
+        $topic->produce(RD_KAFKA_PARTITION_UA, 0, json_encode($message));
+        //        var_dump(json_encode($message));
     }
 
 }

@@ -32,7 +32,7 @@ class GroupBounceHandlerCommand extends Command
 
         $this->stdout('Starting...');
 
-        $this->process();
+        $this->processSingleServer();
 
     }
 
@@ -114,32 +114,44 @@ class GroupBounceHandlerCommand extends Command
                     )
                     )
                     {
-                        print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
+//                        print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
                         continue;
                     }
-                    print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
+//                    print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
 
 
                     $this->fixArrayKey($result['originalEmailHeadersArray']);
 
-//                    print_r($result['originalEmailHeadersArray']['X-Mw-Group-Id']);
+//                    $groupId = trim($result['originalEmailHeadersArray']['X-Mw-Group-Id']);
 
-                    $thing = $result['originalEmailHeadersArray'];
-                    if(array_key_exists('X-Mw-Group-Id', $result['originalEmailHeadersArray']))
+                    if (array_key_exists('X-Mw-Group-Id',
+                            $result['originalEmailHeadersArray'])&&$result['originalEmailHeadersArray']['X-Mw-Group-Id']>1
+                    )
                     {
                         $groupId = trim($result['originalEmailHeadersArray']['X-Mw-Group-Id']);
+
                     }
                     else
                     {
-                        $groupId = '';
+                        $groupId = 1;
                     }
+
+
                     $customerId = trim($result['originalEmailHeadersArray']['X-Mw-Customer-Id']);
                     $emailId = trim($result['originalEmailHeadersArray']['X-Mw-Email-Uid']);
                     $email = trim($result['originalEmailHeadersArray']['To']);
 
-                    preg_match('/<(.*)>/',$email, $matches);
+                    preg_match('/<(.*)>/', $email, $matches);
 
-                    $email = $matches[1];
+                    if (!empty($matches[1]))
+                    {
+                        $email = $matches[1];
+                    }
+                    else
+                    {
+                        $email = 'unknown';
+                    }
+
 
                     $code = 'unknown';
                     if (isset($result['originalEmailHeadersArray']['Diagnostic-Code']))
@@ -157,7 +169,7 @@ class GroupBounceHandlerCommand extends Command
                         = $result['bounceType']==\BounceHandler::BOUNCE_HARD?GroupEmailBounceModel::BOUNCE_HARD:GroupEmailBounceModel::BOUNCE_SOFT;
                     $bounceLog->date_added = new DateTime();
                     $bounceLog->save();
-                    print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
+//                    print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
 
 //                    echo 'Saved';
 
@@ -230,6 +242,183 @@ class GroupBounceHandlerCommand extends Command
         $this->_server = null;
 
         return;
+    }
+
+    protected function processSingleServer()
+    {
+
+        require(__DIR__.'/../../ThirdParty/BounceHandler/BounceHandler.php');
+
+        try
+        {
+
+
+            $this->_server = BounceServer::find(2);
+
+            if (empty($this->_server)||$this->_server->status!=BounceServer::STATUS_ACTIVE)
+            {
+                $this->_server = null;
+                return;
+
+            }
+
+            $this->_server->status = BounceServer::STATUS_CRON_RUNNING;
+            $this->_server->save();
+
+            $bounceHandler = new \BounceHandler($this->_server->getConnectionString(), $this->_server->username,
+                $this->_server->password, array(
+                    'deleteMessages' => true,
+                    'deleteAllMessages' => $this->_server->getDeleteAllMessages(),
+                    'processLimit' => 500,
+                    'searchCharset' => $this->_server->getSearchCharset(),
+                    'imapOpenParams' => $this->_server->getImapOpenParams(),
+                    'requiredHeaders' => array(
+                        'X-Mw-Email-Uid',
+                        'X-Mw-Customer-Id'
+                    ),
+                ));
+
+
+            $results = $bounceHandler->getResults();
+
+            if (empty($results))
+            {
+                $this->_server = BounceServer::find(2);
+                if (empty($this->_server))
+                {
+                    return;
+                }
+                if ($this->_server->status==BounceServer::STATUS_CRON_RUNNING)
+                {
+                    $this->_server->status = BounceServer::STATUS_ACTIVE;
+                    $this->_server->save();
+                }
+                return;
+            }
+            foreach ($results as $result)
+            {
+                if (!isset(
+                    $result['originalEmailHeadersArray']['X-Mw-Email-Uid'],
+                    $result['originalEmailHeadersArray']['To']
+                )
+                )
+                {
+                    return;
+                }
+
+
+                $this->fixArrayKey($result['originalEmailHeadersArray']);
+
+                if (array_key_exists('X-Mw-Group-Id',
+                        $result['originalEmailHeadersArray'])&&$result['originalEmailHeadersArray']['X-Mw-Group-Id']>1
+                )
+                {
+                    $groupId = trim($result['originalEmailHeadersArray']['X-Mw-Group-Id']);
+
+                }
+                else
+                {
+                    $groupId = 1;
+                }
+
+
+                $customerId = trim($result['originalEmailHeadersArray']['X-Mw-Customer-Id']);
+                $emailId = trim($result['originalEmailHeadersArray']['X-Mw-Email-Uid']);
+                $email = trim($result['originalEmailHeadersArray']['To']);
+
+                preg_match('/<(.*)>/', $email, $matches);
+
+                if (!empty($matches[1]))
+                {
+                    $email = $matches[1];
+                }
+                else
+                {
+                    $email = 'unknown';
+                }
+
+
+                $code = 'unknown';
+                if (isset($result['originalEmailHeadersArray']['Diagnostic-Code']))
+                {
+                    $code = trim($result['originalEmailHeadersArray']['Diagnostic-Code']);
+                }
+
+                $bounceLog = new GroupEmailBounceModel();
+                $bounceLog->group_id = $groupId;
+                $bounceLog->email_uid = $emailId;
+                $bounceLog->customer_id = $customerId;
+                $bounceLog->email = $email;
+                $bounceLog->message = $code;
+                $bounceLog->bounce_type
+                    = $result['bounceType']==\BounceHandler::BOUNCE_HARD?GroupEmailBounceModel::BOUNCE_HARD:GroupEmailBounceModel::BOUNCE_SOFT;
+                $bounceLog->date_added = new DateTime();
+                $bounceLog->save();
+
+                echo 'Bounce Log Saved';
+
+                if ($result['bounceType'])
+                {
+                    $pattern = '/[A-Za-z0-9_-]+@[A-Za-z0-9_-]+\.([A-Za-z0-9_-][A-Za-z0-9_]+)/';
+
+                    preg_match_all($pattern, $email, $matches);
+
+                    if (!empty($matches[0][0]))
+                    {
+                        $blacklist = BlacklistModel::where('email', '=', $matches[0][0])->get();
+
+                        if (empty($blacklist))
+                        {
+                            $blacklist = new BlacklistModel();
+                            $blacklist->email_id = $emailId;
+                            $blacklist->email = $matches[0][0];
+                            $blacklist->reason = $code;
+                            $blacklist->save();
+                        }
+
+                        echo 'Bounce Type Saved';
+                    }
+
+                }
+
+            }
+
+            $this->_server = BounceServer::find(2);
+
+            if (empty($this->_server))
+            {
+                return;
+            }
+
+            if ($this->_server->status==BounceServer::STATUS_CRON_RUNNING)
+            {
+                $this->_server->status = BounceServer::STATUS_ACTIVE;
+                $this->_server->save();
+            }
+
+            // sleep
+            sleep(5);
+
+            // open db connection
+        } catch (\Exception $e)
+        {
+            print_r($e);
+            if (!empty($this->_server))
+            {
+                $this->_server = BounceServer::find((int)$this->_server->server_id);
+                if (!empty($this->_server)&&$this->_server->status==BounceServer::STATUS_CRON_RUNNING)
+                {
+                    $this->_server->status = BounceServer::STATUS_ACTIVE;
+                    $this->_server->save();
+                }
+            }
+        }
+
+        if ($this->_server->status==BounceServer::STATUS_CRON_RUNNING)
+                    {
+                        $this->_server->status = BounceServer::STATUS_ACTIVE;
+                        $this->_server->save();
+                    }
     }
 
     protected function stdout($message, $timer = true, $separator = "\n")

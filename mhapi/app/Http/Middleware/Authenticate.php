@@ -15,6 +15,11 @@ class Authenticate
      * @param  string|null  $guard
      * @return mixed
      */
+
+    protected $except = [
+            'mhapi/*'
+        ];
+
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->guest()) {

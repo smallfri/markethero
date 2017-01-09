@@ -10,6 +10,7 @@ namespace App\Console\Commands;
 use App\Models\ClicksModel;
 use DB;
 use Illuminate\Console\Command;
+use PDO;
 use RdKafka\Conf;
 use RdKafka\Consumer;
 use RdKafka\TopicConf;
@@ -88,7 +89,7 @@ class KafkaClicksConsumerCommand extends Command
 
         $rk = new Consumer($conf);
 //        $rk->addBrokers("kafka-3.int.markethero.io, kafka-2.int.markethero.io,kafka-1.int.markethero.io"); //QA
-        $rk->addBrokers("zk-1.prod.markethero.io:2181,zk-2.prod.markethero.io:2181,zk-3.prod.markethero.io:2181"); //PROD
+        $rk->addBrokers("zk-1.prod.markethero.io,zk-2.prod.markethero.io,zk-3.prod.markethero.io"); //PROD
 
 
         $topicConf = new TopicConf();
@@ -149,14 +150,19 @@ class KafkaClicksConsumerCommand extends Command
 
         try
         {
+
+            $milliseconds =  $data->clickedDate;
+                        $timestamp = $milliseconds/1000;
+                        $date = date("Y-m-d H:i:s", $timestamp);
+
             $Email = new ClicksModel();
             $Email->clickedIp = $data->clickedIP;
-            $Email->clickedDate = $data->clickedDate;
+            $Email->clickedDate = $date;
             $Email->externalId = $data->externalId;
             $Email->emailOneId = $data->emailOneId;
             $Email->emailOneCustomerId = $data->emailOneCustomerId;
             $Email->groupId = $group_id;
-            $Email->date_added = $Email->last_updated = new \DateTime();
+            $Email->date_added = $Email->last_updated =new \DateTime();
             $Email->save();
 
             $this->stdout('['.date('Y-m-d H:i:s').'] Click Saved '.$data->emailOneId);
@@ -164,7 +170,6 @@ class KafkaClicksConsumerCommand extends Command
 
         } catch (\Exception $e)
         {
-            pr($e);
             $this->stdout('['.date('Y-m-d H:i:s').'] Click Not Saved '.$data->emailOneId);
             return false;
         }

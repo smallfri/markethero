@@ -7,25 +7,25 @@
  */
 namespace App\Console\Commands;
 
-use App\Jobs\SendEmail;
-use App\Models\GroupEmailModel;
+use App\Models\ClicksModel;
+use App\Models\OpensModel;
 use DB;
 use Illuminate\Console\Command;
+use PDO;
 use RdKafka\Conf;
 use RdKafka\Consumer;
-use RdKafka\Producer;
 use RdKafka\TopicConf;
 
 /**
  * Class SendGroupsCommand
  * @package App\Console\Commands
  */
-class KafkaConsumerCommand extends Command
+class KafkaOpensConsumerCommand extends Command
 {
 
-    protected $signature = 'kafka-consumer';
+    protected $signature = 'kafka-opens-consumer';
 
-    protected $description = 'Gets messages from Kafka';
+    protected $description = 'Gets opens from Kafka';
 
     public $verbose = 1;
 
@@ -36,9 +36,7 @@ class KafkaConsumerCommand extends Command
     public function handle()
     {
 
-        $result = $this->process();
-
-//        return $result;
+        $this->process();
     }
 
     /**
@@ -88,11 +86,13 @@ class KafkaConsumerCommand extends Command
         $conf = new Conf();
 
         // Set the group id. This is required when storing offsets on the broker
-        $conf->set('group.id', uniqid());
+        $conf->set('group.id', 'emailOneClickConsumerGroup');
         $conf->set('broker.version.fallback', '0.8.2.1');
 
         $rk = new Consumer($conf);
-        $rk->addBrokers("kafka-3.int.markethero.io, kafka-2.int.markethero.io,kafka-1.int.markethero.io");
+//        $rk->addBrokers("kafka-3.int.markethero.io, kafka-2.int.markethero.io,kafka-1.int.markethero.io"); //QA
+        $rk->addBrokers("zk-1.prod.markethero.io,zk-2.prod.markethero.io,zk-3.prod.markethero.io"); //PROD
+
 
         $topicConf = new TopicConf();
         $topicConf->set('auto.commit.interval.ms', 100);
@@ -110,7 +110,7 @@ class KafkaConsumerCommand extends Command
         // 'smallest': start from the beginning
         $topicConf->set('auto.offset.reset', 'largest');
 
-        $topic = $rk->newTopic("email_one_email_to_be_sent", $topicConf);
+        $topic = $rk->newTopic("email_one_open_email_events", $topicConf);
         // Start consuming partition 0
         $topic->consumeStart(0, RD_KAFKA_OFFSET_STORED);
 
@@ -132,8 +132,6 @@ class KafkaConsumerCommand extends Command
                         echo "Timed out\n";
                         break;
                     default:
-
-
                         throw new \Exception($message->errstr(), $message->err);
                         break;
                 }
@@ -144,59 +142,45 @@ class KafkaConsumerCommand extends Command
     public function save($data)
     {
 
-        if (property_exists($data, 'group_id'))
+        print_r($data);
+
+        if (property_exists($data, 'groupId'))
         {
-            $group_id = $data->group_id;
+            $group_id = $data->groupId;
         }
         else
         {
             $group_id = 1;
-            DB::reconnect('mysql');
-            $pdo = DB::connection()->getPdo();
-            $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
-
-            GroupEmailGroupsModel::where('group_email_id', 1)
-                ->update(['status' => 'pending-sending']);
-            DB::disconnect('mysql');
-//            return;
         }
-
-        $email_uid = uniqid('', true);
 
         try
         {
-            $Email = new GroupEmailModel();
-            $Email->mhEmailID = $data->id;
-            $Email->email_uid = $email_uid;
-            $Email->customer_id = $data->customer_id;
-            $Email->group_email_id = $group_id;;
-            $Email->to_email = $data->to_email;
-            $Email->to_name = $data->to_name;
-            $Email->from_email = $data->from_email;
-            $Email->from_name = $data->from_name;
-            $Email->reply_to_email = $data->reply_to_email;
-            $Email->reply_to_name = $data->reply_to_name;
-            $Email->subject = $data->subject;
-            $Email->body = $data->body;
-            $Email->plain_text = $data->plain_text;
-            $Email->max_retries = 5;
-            $Email->send_at = $data->send_at;
-            $Email->status = 'pending-sending';
+
+            $milliseconds = $data->openDate;
+            $timestamp = $milliseconds/1000;
+            $date = date("Y-m-d H:i:s", $timestamp);
+
+            $Email = new OpensModel();
+            $Email->openIP = $data->openIP;
+            $Email->openDate = $date;
+            $Email->externalId = $data->externalId;
+            $Email->emailOneId = $data->emailOneId;
+            $Email->emailOneCustomerId = $data->emailOneCustomerId;
+            $Email->groupId = $group_id;
             $Email->date_added = $Email->last_updated = new \DateTime();
             $Email->save();
 
-            $this->Email = $Email;
+            print_r($Email);
+
+            $this->stdout('['.date('Y-m-d H:i:s').'] Click Saved '.$data->emailOneId);
 
         } catch (\Exception $e)
         {
-            $this->stdout('['.date('Y-m-d H:i:s').'] Email Not Saved '.$data->id);
-
+            $this->stdout('['.date('Y-m-d H:i:s').'] Click Not Saved '.$data->emailOneId);
             return false;
         }
 
         return true;
 
     }
-
-
 }

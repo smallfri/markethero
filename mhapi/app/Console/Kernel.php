@@ -27,7 +27,9 @@ class Kernel extends ConsoleKernel
             'App\Console\Commands\TestEmailNotifyHandler',
             'App\Console\Commands\KafkaConsumerCommand',
             'App\Console\Commands\KafkaClicksConsumerCommand',
+            'App\Console\Commands\KafkaOpensConsumerCommand',
             'App\Console\Commands\StatsCommand',
+            'App\Console\Commands\MailProcessorCommand',
         ];
 
     /**
@@ -45,7 +47,6 @@ class Kernel extends ConsoleKernel
         // $schedule->command('compliance:average')->cron('0 0 * * *');
         // $schedule->command('compliance:check')->everyMinute();
         $schedule->command('bounce-handler')->everyMinute();
-        $schedule->command('kafka-clicks-consumer')->everyFiveMinutes();
         $schedule->command('send-test-email')->everyFiveMinutes();
         $schedule->command('test-email-handler')->everyFiveMinutes();
         $schedule->command('test-email-notifier')->everyTenMinutes();

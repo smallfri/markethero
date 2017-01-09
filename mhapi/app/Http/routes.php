@@ -104,3 +104,4 @@ Route::resource('v1/klipfolio/getSpamReports', 'KlipfolioController@getSpamRepor
 Route::resource('v1/klipfolio/getGodStats', 'KlipfolioController@getGodStats');
 Route::resource('v1/klipfolio/getGodFrame', 'KlipfolioController@getGodFrame');
 Route::resource('v1/klipfolio/moveCustomerToPool', 'KlipfolioController@moveCustomerToPool');
+Route::resource('v1/klipfolio/bouncesByCustomerId', 'KlipfolioController@bouncesByCustomerId');

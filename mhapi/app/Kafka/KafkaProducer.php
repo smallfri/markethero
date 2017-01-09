@@ -14,32 +14,15 @@ $topic = $rk->newTopic("email_one_email_to_be_sent");
 
 
 
-for ($i = 5000; $i < 10001; $i++) {
-    $message = '{
-    "reply_to_email":"admin@markethero.io",
-    "to_email":"smallfriing@gmail.com",
-    "from_email":"admin@markethero.io",
-    "plain_text":"content",
-    "to_name":"esteban@gmail.com",
-    "reply_to_name":"Admin Admin",
-    "subject":"Subject",
-    "send_at":"2016-11-15 01:38:28",
-    "id":25,
-    "body":"message"
-    "customer_id":11,
-    "from_name":"Admin User"
-    }';
-
-    $digits = 3;
-
+for ($i = 0; $i < 5000; $i++) {
 
     $message = [
         'reply_to_email' => 'russell@smallfri.com',
-        "to_email"=>"russell@jvprogrammers.com",
+        "to_email"=>"testing@russell-hudson.com",
         'from_email' => 'russell@smallfri.com',
         'to_name' => 'russell@smallfri.com',
         'reply_to_name' => 'russell@smallfri.com',
-        'subject' => 'testing testing testing',
+        'subject' => uniqid(),
         'send_at' => '2016-11-15 01:38:28',
         'id' => $i,
         'body' => uniqid(),

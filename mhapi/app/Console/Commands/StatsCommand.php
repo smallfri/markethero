@@ -109,6 +109,10 @@ class StatsCommand extends Command
 
                 $clicks_sql
                     = 'SELECT count(clickId) as clicks FROM mw_group_email_clicks WHERE emailOneCustomerId = '.$customer->customer_id;
+
+                $opnes_sql
+                    = 'SELECT count(openId) as opens FROM mw_group_email_opens WHERE emailOneCustomerId = '.$customer->customer_id;
+
                 $complaints_sql
                     = 'SELECT count(report_id) as complaints FROM mw_group_email_abuse_report WHERE customer_id = '.$customer->customer_id;
                 $unsub_sql
@@ -121,6 +125,14 @@ class StatsCommand extends Command
                 );
 
                 $clicks = $clicks[0];
+
+                $opens = DB::select(
+                    DB::raw(
+                        $opnes_sql
+                    )
+                );
+
+                $opens = $opens[0];
 
                 $complaints = DB::select(
                     DB::raw(
@@ -142,6 +154,7 @@ class StatsCommand extends Command
                     ->update([
                         'last_updated' => new \DateTime(),
                         'clicks' => $clicks->clicks,
+                        'opens' => $opens->opens,
                         'complaints' => $complaints->complaints,
                         'unsubscribes' => $unsubs->unsubscribes
                     ]);
