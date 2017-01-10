@@ -442,17 +442,17 @@ class SendEmailsCommand extends Command
 
             $this->stdout('Adding email '.$data['to_email']);
 
-//            $job = (new SendEmail($data))->onConnection('mail-queue');
-//            app('Illuminate\Contracts\Bus\Dispatcher')->dispatch($job);
+            $job = (new SendEmail($data))->onConnection('mail-queue');
+            app('Illuminate\Contracts\Bus\Dispatcher')->dispatch($job);
+
+            $this->updateGroupEmailsToSent($data->email_id, GroupEmailGroupsModel::STATUS_QUEUED);
+
+
+//            $this->stdout('Sending email '.$data['to_email']);
 //
-//            $this->updateGroupEmailsToSent($data->email_id, GroupEmailGroupsModel::STATUS_QUEUED);
-
-
-            $this->stdout('Sending email '.$data['to_email']);
-
-            $this->sendByPHPMailer(json_decode(json_encode($data)));
-
-            $this->updateGroupEmailsToSent($data->email_id, GroupEmailGroupsModel::STATUS_SENT);
+//            $this->sendByPHPMailer(json_decode(json_encode($data)));
+//
+//            $this->updateGroupEmailsToSent($data->email_id, GroupEmailGroupsModel::STATUS_SENT);
 
         }
 
