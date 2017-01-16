@@ -26,9 +26,12 @@ class Kernel extends ConsoleKernel
             'App\Console\Commands\TestEmailCommandHandler',
             'App\Console\Commands\TestEmailNotifyHandler',
             'App\Console\Commands\KafkaConsumerCommand',
+            'App\Console\Commands\KafkaQueueConsumerCommand',
             'App\Console\Commands\KafkaClicksConsumerCommand',
             'App\Console\Commands\KafkaOpensConsumerCommand',
             'App\Console\Commands\StatsCommand',
+            'App\Console\Commands\RedisQueueSubscriberCommand',
+            'App\Console\Commands\RedisQueuePublishCommand',
         ];
 
     /**
@@ -42,12 +45,12 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('update-group-status')->everyMinute();
         // $schedule->command('kafka-consumer')->everyMinute();
-//        $schedule->command('send-forgotten-groups')->everyFiveMinutes();
+        // $schedule->command('send-forgotten-groups')->everyFiveMinutes();
         // $schedule->command('compliance:average')->cron('0 0 * * *');
         // $schedule->command('compliance:check')->everyMinute();
-        $schedule->command('bounce-handler')->everyMinute();
-        $schedule->command('send-test-email')->everyFiveMinutes();
-        $schedule->command('test-email-handler')->everyFiveMinutes();
+        //$schedule->command('bounce-handler')->everyMinute();
+        //$schedule->command('send-test-email')->everyFiveMinutes();
+        //$schedule->command('test-email-handler')->everyFiveMinutes();
         //$schedule->command('test-email-notifier')->everyTenMinutes();
         $schedule->command('get-stats')->hourly();
     }

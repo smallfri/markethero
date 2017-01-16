@@ -29,6 +29,8 @@ use RdKafka\Producer;
 use RdKafka\TopicConf;
 use Threading\Multiple;
 use Threading\Task\Example;
+use Illuminate\Support\Facades\Redis;
+
 
 /**
  * Class SendGroupsCommand
@@ -442,17 +444,10 @@ class SendEmailsCommand extends Command
 
             $this->stdout('Adding email '.$data['to_email']);
 
-            $job = (new SendEmail($data))->onConnection('mail-queue');
+            $job = (new SendEmail($data))->onConnection('redis')->onQueue('redis-queue');
             app('Illuminate\Contracts\Bus\Dispatcher')->dispatch($job);
 
             $this->updateGroupEmailsToSent($data->email_id, GroupEmailGroupsModel::STATUS_QUEUED);
-
-
-//            $this->stdout('Sending email '.$data['to_email']);
-//
-//            $this->sendByPHPMailer(json_decode(json_encode($data)));
-//
-//            $this->updateGroupEmailsToSent($data->email_id, GroupEmailGroupsModel::STATUS_SENT);
 
         }
 
@@ -606,6 +601,30 @@ class SendEmailsCommand extends Command
 
         $topic->produce(RD_KAFKA_PARTITION_UA, 0, json_encode($message));
         //        var_dump(json_encode($message));
+    }
+
+    public function addToKafkaQueue($Email)
+    {
+
+        $conf = new Conf();
+        $conf->set('security.protocol', 'plaintext');
+        $conf->set('broker.version.fallback', '0.8.2.1');
+
+        $rk = new Producer($conf);
+        $rk->setLogLevel(LOG_DEBUG);
+        $rk->addBrokers("kafka-3.int.markethero.io, kafka-2.int.markethero.io,kafka-1.int.markethero.io");
+
+
+        $topic = $rk->newTopic("email_one_email_queued");
+
+        $topic->produce(RD_KAFKA_PARTITION_UA, 0, $Email);
+
+//        $email = json_decode($Email);
+//        $update = GroupEmailModel::find($email->email_id);
+//               $update->status = GroupEmailGroupsModel::STATUS_QUEUED;
+//               $update->last_updated = new \DateTime();
+//               $update->save();
+
     }
 
 

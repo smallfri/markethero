@@ -47,44 +47,44 @@ return [
     'connections' => [
 
         'sqlite' => [
-            'driver'   => 'sqlite',
+            'driver' => 'sqlite',
             'database' => database_path('database.sqlite'),
-            'prefix'   => '',
+            'prefix' => '',
         ],
 
         'mysql' => [
-            'driver'    => 'mysql',
-            'host'      => env('DB_HOST', '127.0.0.1'),
-            'database'  => env('DB_DATABASE', 'market_hero'),
-            'username'  => env('DB_USERNAME', 'smallfri'),
-            'password'  => env('DB_PASSWORD', 'jack1999'),
-            'charset'   => 'utf8',
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'database' => env('DB_DATABASE', 'market_hero'),
+            'username' => env('DB_USERNAME', 'smallfri'),
+            'password' => env('DB_PASSWORD', 'jack1999'),
+            'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
-            'prefix'    => '',
-            'strict'    => false,
-            'unix_socket'   => '/Applications/MAMP/tmp/mysql/mysql.sock',
+            'prefix' => '',
+            'strict' => false,
+            'unix_socket' => '/Applications/MAMP/tmp/mysql/mysql.sock',
 
         ],
 
         'pgsql' => [
-            'driver'   => 'pgsql',
-            'host'     => env('DB_HOST', 'localhost'),
+            'driver' => 'pgsql',
+            'host' => env('DB_HOST', 'localhost'),
             'database' => env('DB_DATABASE', 'forge'),
             'username' => env('DB_USERNAME', 'forge'),
             'password' => env('DB_PASSWORD', ''),
-            'charset'  => 'utf8',
-            'prefix'   => '',
-            'schema'   => 'public',
+            'charset' => 'utf8',
+            'prefix' => '',
+            'schema' => 'public',
         ],
 
         'sqlsrv' => [
-            'driver'   => 'sqlsrv',
-            'host'     => env('DB_HOST', 'localhost'),
+            'driver' => 'sqlsrv',
+            'host' => env('DB_HOST', 'localhost'),
             'database' => env('DB_DATABASE', 'forge'),
             'username' => env('DB_USERNAME', 'forge'),
             'password' => env('DB_PASSWORD', ''),
-            'charset'  => 'utf8',
-            'prefix'   => '',
+            'charset' => 'utf8',
+            'prefix' => '',
         ],
 
     ],
@@ -115,13 +115,16 @@ return [
 
     'redis' => [
 
+        'client' => 'predis',
+
         'cluster' => false,
 
         'default' => [
-            'host'     => 'redis-1.int.markethero.io',
+            'host' => 'redis-1.int.markethero.io',
             'password' => null,
-            'port'     => 6379,
-            'database' => 2,
+            'port' =>  6379,
+            'database' => 0,
+            'read_write_timeout' => -1
         ],
 
     ],

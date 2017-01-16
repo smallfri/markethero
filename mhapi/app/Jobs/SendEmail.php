@@ -45,7 +45,6 @@ class SendEmail extends Job implements ShouldQueue
      */
     public function handle()
     {
-
         $this->sendByPHPMailer($this->data);
     }
 
@@ -149,6 +148,8 @@ class SendEmail extends Job implements ShouldQueue
             $status = 'error';
 
         }
+
+        print_r($status);
         $this->delete();
 
         $this->replyToMarketHero($data);

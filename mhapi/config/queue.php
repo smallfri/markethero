@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'default' => env('QUEUE_DRIVER', 'sqs'),
+    'default' => env('QUEUE_DRIVER', 'redis'),
 
     /*
     |--------------------------------------------------------------------------
@@ -81,7 +81,7 @@ return [
             'region' => 'us-west-2',
         ],
 
-        'redis' => [
+        'redis-queue' => [
             'driver' => 'redis',
             'connection' => 'default',
             'queue' => 'default',

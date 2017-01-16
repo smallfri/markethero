@@ -8,6 +8,7 @@
 namespace App\Console\Commands;
 
 use App\Jobs\SendEmail;
+use App\Models\GroupEmailGroupsModel;
 use App\Models\GroupEmailModel;
 use DB;
 use Illuminate\Console\Command;
@@ -15,6 +16,8 @@ use RdKafka\Conf;
 use RdKafka\Consumer;
 use RdKafka\Producer;
 use RdKafka\TopicConf;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+
 
 /**
  * Class SendGroupsCommand
@@ -181,11 +184,14 @@ class KafkaConsumerCommand extends Command
             $Email->plain_text = $data->plain_text;
             $Email->max_retries = 5;
             $Email->send_at = $data->send_at;
-            $Email->status = 'pending-sending';
+            $Email->status = 'queued';
             $Email->date_added = $Email->last_updated = new \DateTime();
             $Email->save();
 
             $this->Email = $Email;
+
+            $job = (new SendEmail($Email))->onConnection('redis')->onQueue('redis-queue');
+                       app('Illuminate\Contracts\Bus\Dispatcher')->dispatch($job);
 
         } catch (\Exception $e)
         {
