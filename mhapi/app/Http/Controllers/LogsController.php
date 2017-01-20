@@ -36,12 +36,11 @@ class LogsController extends Controller
         {
             $sql->where(function ($query) use ($text)
             {
-
                 $query->where('title', 'LIKE', "%$text%")->orWhere('log', 'LIKE', "%$text%");
             });
         }
 
-        $data['logs'] = $sql->take(100)->get();
+        $data['logs'] = $sql->take(50)->get();
 
 
         // get levels for dropdown

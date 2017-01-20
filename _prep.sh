@@ -6,7 +6,7 @@
 echo "Prepping folders..."
 echo ""
 
-declare -a Files=("apps/console" "apps/common" "mhapi/resources" "mhapi/public" "mhapi/app")
+declare -a Files=("apps/console" "apps/common" "mhapi/resources" "mhapi/public" "mhapi/app" "mhapi/config")
 #Files[0] = controllers
 #Files[1] = helpers
 

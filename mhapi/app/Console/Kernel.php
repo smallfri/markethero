@@ -20,18 +20,15 @@ class Kernel extends ConsoleKernel
             'App\Console\Commands\AvgComplianceScoreCommand',
             'App\Console\Commands\GroupBounceHandlerCommand',
             'App\Console\Commands\GroupsComplianceHandlerCommand',
-            'App\Console\Commands\SendForgottenGroupsCommand',
+            'App\Console\Commands\SendForgottenEmailsCommand',
             'App\Console\Commands\UpdateGroupStatusCommand',
             'App\Console\Commands\SendTestEmailCommandHandler',
             'App\Console\Commands\TestEmailCommandHandler',
             'App\Console\Commands\TestEmailNotifyHandler',
             'App\Console\Commands\KafkaConsumerCommand',
-            'App\Console\Commands\KafkaQueueConsumerCommand',
             'App\Console\Commands\KafkaClicksConsumerCommand',
             'App\Console\Commands\KafkaOpensConsumerCommand',
             'App\Console\Commands\StatsCommand',
-            'App\Console\Commands\RedisQueueSubscriberCommand',
-            'App\Console\Commands\RedisQueuePublishCommand',
         ];
 
     /**
@@ -43,9 +40,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
 
-        $schedule->command('update-group-status')->everyMinute();
+//        $schedule->command('update-group-status')->everyMinute();
         // $schedule->command('kafka-consumer')->everyMinute();
-        // $schedule->command('send-forgotten-groups')->everyFiveMinutes();
+         $schedule->command('send-forgotten-email')->everyFiveMinutes();
         // $schedule->command('compliance:average')->cron('0 0 * * *');
         // $schedule->command('compliance:check')->everyMinute();
         //$schedule->command('bounce-handler')->everyMinute();

@@ -8,8 +8,11 @@
 namespace App\Console\Commands;
 
 use App\Jobs\SendEmail;
+use App\Jobs\SendTransactionalEmail;
 use App\Models\GroupEmailGroupsModel;
+use App\Models\GroupEmailLogModel;
 use App\Models\GroupEmailModel;
+use App\Models\TransactionalEmailModel;
 use DB;
 use Illuminate\Console\Command;
 use RdKafka\Conf;
@@ -53,6 +56,8 @@ class KafkaConsumerCommand extends Command
      */
     public function process(array $params = array())
     {
+
+//        print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
 
         $this->runKafka();
 
@@ -111,7 +116,7 @@ class KafkaConsumerCommand extends Command
         // Set where to start consuming messages when there is no initial offset in
         // offset store or the desired offset is out of range.
         // 'smallest': start from the beginning
-        $topicConf->set('auto.offset.reset', 'largest');
+        $topicConf->set('auto.offset.reset', 'smallest');
 
         $topic = $rk->newTopic("email_one_email_to_be_sent", $topicConf);
         // Start consuming partition 0
@@ -119,7 +124,10 @@ class KafkaConsumerCommand extends Command
 
         while (true)
         {
+//                        print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
+
             $message = $this->message = $topic->consume(0, 10);
+//            print_r($message);
 
             if (!empty($message))
             {
@@ -147,32 +155,24 @@ class KafkaConsumerCommand extends Command
     public function save($data)
     {
 
-        if (property_exists($data, 'group_id'))
-        {
-            $group_id = $data->group_id;
-        }
-        else
-        {
-            $group_id = 1;
-            DB::reconnect('mysql');
-            $pdo = DB::connection()->getPdo();
-            $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
-
-            GroupEmailGroupsModel::where('group_email_id', 1)
-                ->update(['status' => 'pending-sending']);
-            DB::disconnect('mysql');
-//            return;
-        }
-
         $email_uid = uniqid('', true);
 
-        try
+        if (property_exists($data, 'group_id'))
         {
+            $emailExist = GroupEmailModel::where('mhEmailID', '=', $data->id)->get();
+
+//            dd($emailExist);
+
+            if (!$emailExist->isEmpty())
+            {
+                return false;
+            }
+
             $Email = new GroupEmailModel();
             $Email->mhEmailID = $data->id;
             $Email->email_uid = $email_uid;
             $Email->customer_id = $data->customer_id;
-            $Email->group_email_id = $group_id;;
+            $Email->group_email_id = $data->group_id;
             $Email->to_email = $data->to_email;
             $Email->to_name = $data->to_name;
             $Email->from_email = $data->from_email;
@@ -190,19 +190,48 @@ class KafkaConsumerCommand extends Command
 
             $this->Email = $Email;
 
-            $job = (new SendEmail($Email))->onConnection('redis')->onQueue('redis-queue');
-                       app('Illuminate\Contracts\Bus\Dispatcher')->dispatch($job);
-
-        } catch (\Exception $e)
-        {
-            $this->stdout('['.date('Y-m-d H:i:s').'] Email Not Saved '.$data->id);
-
-            return false;
+            $job = (new SendEmail($Email))->onConnection('redis')->onQueue('redis-group-queue');
+            app('Illuminate\Contracts\Bus\Dispatcher')->dispatch($job);
         }
+        else
+        {
+            $emailExist = GroupEmailModel::where('mhEmailID', '=', $data->id)->get();
+
+            if (!$emailExist->isEmpty())
+            {
+                return false;
+            }
+
+            $Email = new TransactionalEmailModel();
+            $Email->mhEmailID = $data->id;
+            $Email->email_uid = $email_uid;
+            $Email->customer_id = $data->customer_id;
+            $Email->to_email = $data->to_email;
+            $Email->to_name = $data->to_name;
+            $Email->from_email = $data->from_email;
+            $Email->from_name = $data->from_name;
+            $Email->reply_to_email = $data->reply_to_email;
+            $Email->reply_to_name = $data->reply_to_name;
+            $Email->subject = $data->subject;
+            $Email->body = $data->body;
+            $Email->plain_text = $data->plain_text;
+            $Email->max_retries = 5;
+            $Email->send_at = $data->send_at;
+            $Email->status = 'queued';
+            $Email->date_added = $Email->last_updated = new \DateTime();
+            $Email->save();
+
+            $this->Email = $Email;
+
+            $job = (new SendTransactionalEmail($Email))->onConnection('redis')
+                ->onQueue('redis-transactional-queue');
+            app('Illuminate\Contracts\Bus\Dispatcher')->dispatch($job);
+
+        }
+
 
         return true;
 
     }
-
 
 }

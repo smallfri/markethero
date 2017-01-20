@@ -14,7 +14,7 @@ $topic = $rk->newTopic("email_one_email_to_be_sent");
 
 
 
-for ($i = 0; $i < 10000; $i++) {
+for ($i = 0; $i < 5000; $i++) {
 
     $message = [
         'reply_to_email' => 'russell@smallfri.com',

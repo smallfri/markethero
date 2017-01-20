@@ -9,13 +9,14 @@ use App\Models\DeliveryServerModel;
 use App\Models\GroupEmailGroupsModel;
 use App\Models\GroupEmailModel;
 use App\Models\PauseGroupEmailModel;
+use App\Models\TransactionalEmailModel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use RdKafka\Conf;
 use RdKafka\Producer;
 
-class SendEmail extends Job implements ShouldQueue
+class SendTransactionalEmail extends Job implements ShouldQueue
 {
 
     use InteractsWithQueue, SerializesModels;
@@ -45,7 +46,7 @@ class SendEmail extends Job implements ShouldQueue
      */
     public function handle()
     {
-        print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
+
         $this->sendByPHPMailer($this->data);
     }
 
@@ -66,36 +67,6 @@ class SendEmail extends Job implements ShouldQueue
             $server = DeliveryServerModel::find(1);
         }
 
-        if (isset($data->group_email_id)&&$data->group_email_id>1)
-        {
-            $group_email_id = $data->group_email_id;
-        }
-        else
-        {
-            $group_email_id = 1;
-        }
-
-        $pause = PauseGroupEmailModel::where('group_email_id', '=', $data->group_email_id)
-            ->orWhere('customer_id', '=', $data->customer_id)
-            ->get();
-
-        if (count($pause))
-        {
-            $pause = $pause[0];
-
-            if (!empty($pause))
-            {
-                if ($pause->group_email_id==$data->group_email_id||$pause->pause_customer==1)
-                {
-                    $this->delete();
-
-                    GroupEmailModel::where('email_uid', '=', $data->email_uid)
-                        ->update('status', '=', GroupEmailGroupsModel::STATUS_PAUSED);
-                    return false;
-                }
-            }
-        }
-
         try
         {
 
@@ -114,11 +85,6 @@ class SendEmail extends Job implements ShouldQueue
 
             $mail->addCustomHeader('X-Mw-Customer-Id', $data->customer_id);
             $mail->addCustomHeader('X-Mw-Email-Uid', $data->email_uid);
-            $mail->addCustomHeader('X-Mw-Group-Id', $group_email_id);
-            if ($group_email_id==1)
-            {
-                $mail->addCustomHeader('X-Mw-Transactional-Id', $group_email_id);
-            }
 
             $mail->addReplyTo($data->from_email, $data->from_name);
             $mail->setFrom($data->from_email, $data->from_name);
@@ -149,11 +115,13 @@ class SendEmail extends Job implements ShouldQueue
             $status = 'error';
 
         }
+
+        print_r($status);
         $this->delete();
 
         $this->replyToMarketHero($data);
 
-        $update = GroupEmailModel::find($data->email_id);
+        $update = TransactionalEmailModel::find($data->email_id);
         $update->status = $status;
         $update->last_updated = new \DateTime();
         $update->save();

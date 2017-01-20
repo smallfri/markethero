@@ -81,7 +81,21 @@ return [
             'region' => 'us-west-2',
         ],
 
-        'redis-queue' => [
+        'redis-group-queue' => [
+            'driver' => 'redis',
+            'connection' => 'default',
+            'queue' => 'default',
+            'expire' => 60,
+        ],
+
+        'redis-transactional-queue' => [
+            'driver' => 'redis',
+            'connection' => 'default',
+            'queue' => 'default',
+            'expire' => 60,
+        ],
+
+        'redis-forgotten-email-queue' => [
             'driver' => 'redis',
             'connection' => 'default',
             'queue' => 'default',

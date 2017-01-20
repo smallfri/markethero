@@ -22,7 +22,7 @@ function get_deploy_folders()
     global $deploy_folders;
 
     $handle = opendir(APPPATH);
-    $blacklist = array('.', '..', 'assets', 'config', 'database', 'lang', 'start', 'storage', 'tests', 'filters.php', 'api', 'extensions', 'cgi_bin');
+    $blacklist = array('.', '..', 'assets', 'database', 'lang', 'start', 'storage', 'tests', 'filters.php', 'api', 'extensions', 'cgi_bin');
     while (false !== ($file = readdir($handle))) {
         if (!in_array($file, $blacklist)) {
 //                echo "$file<br />\n";

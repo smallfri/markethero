@@ -30,7 +30,7 @@ class GroupEmailModel extends Authenticatable
         'plain_text',
         'send_at',
         'customer_id',
-        'group_emai',
+        'group_email_id',
         'date_added',
         'last_updated',
         'max_retries',
