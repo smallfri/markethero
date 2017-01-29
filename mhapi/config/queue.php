@@ -42,46 +42,21 @@ return [
             'expire' => 60,
         ],
 
-        'beanstalkd' => [
-            'driver' => 'beanstalkd',
-            'host' => 'localhost',
-            'queue' => 'default',
-            'ttr' => 60,
-        ],
-
-        'sqs' => [
-            'driver' => 'sqs',
-            'key' => 'AKIAJJL4Q5R6CEQBV5CQ',
-            'secret' => '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',
-            'queue' => 'https://sqs.us-west-2.amazonaws.com/774064829364/sqs',
-            'region' => 'us-west-2',
-        ],
-
-        'mail-queue' => [
-            'driver' => 'sqs',
-            'key' => 'AKIAJJL4Q5R6CEQBV5CQ',
-            'secret' => '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',
-            'queue' => 'https://sqs.us-west-2.amazonaws.com/774064829364/email-queue',
-            'region' => 'us-west-2',
-        ],
-
-        'qa-email-queue' => [
-            'driver' => 'sqs',
-            'key' => 'AKIAJJL4Q5R6CEQBV5CQ',
-            'secret' => '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',
-            'queue' => 'https://sqs.us-west-2.amazonaws.com/774064829364/qa-email-queue',
-            'region' => 'us-west-2',
-        ],
-
-        'db-queue' => [
-            'driver' => 'sqs',
-            'key' => 'AKIAJJL4Q5R6CEQBV5CQ',
-            'secret' => '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',
-            'queue' => 'https://sqs.us-west-2.amazonaws.com/774064829364/db-queue',
-            'region' => 'us-west-2',
-        ],
-
         'redis-group-queue' => [
+            'driver' => 'redis',
+            'connection' => 'default',
+            'queue' => 'default',
+            'expire' => 60,
+        ],
+
+        'redis-group-queue-two' => [
+            'driver' => 'redis',
+            'connection' => 'default',
+            'queue' => 'default',
+            'expire' => 60,
+        ],
+
+        'redis-group-queue-three' => [
             'driver' => 'redis',
             'connection' => 'default',
             'queue' => 'default',

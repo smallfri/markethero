@@ -81,7 +81,7 @@ class TransactionalEmailsController extends ApiController
 
         if (!$emailExist->isEmpty())
         {
-            return $this->respondWithError('This email already exists.');
+            return $this->respond(['email_uid' => $emailExist[0]['email_uid']]);
         }
 
         $email_uid = uniqid();

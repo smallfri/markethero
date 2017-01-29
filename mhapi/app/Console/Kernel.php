@@ -20,7 +20,6 @@ class Kernel extends ConsoleKernel
             'App\Console\Commands\AvgComplianceScoreCommand',
             'App\Console\Commands\GroupBounceHandlerCommand',
             'App\Console\Commands\GroupsComplianceHandlerCommand',
-            'App\Console\Commands\SendForgottenEmailsCommand',
             'App\Console\Commands\UpdateGroupStatusCommand',
             'App\Console\Commands\SendTestEmailCommandHandler',
             'App\Console\Commands\TestEmailCommandHandler',
@@ -40,15 +39,17 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
 
-//        $schedule->command('update-group-status')->everyMinute();
+        $schedule->command('update-group-status')->everyMinute();
         // $schedule->command('kafka-consumer')->everyMinute();
-         $schedule->command('send-forgotten-email')->everyFiveMinutes();
+       // $schedule->command('send-forgotten-groups')->everyFiveMinutes();
         // $schedule->command('compliance:average')->cron('0 0 * * *');
         // $schedule->command('compliance:check')->everyMinute();
         //$schedule->command('bounce-handler')->everyMinute();
-        //$schedule->command('send-test-email')->everyFiveMinutes();
+        //$schedule->command('get-stats')->daily();
+ 		//$schedule->command('send-test-email')->everyFiveMinutes();
         //$schedule->command('test-email-handler')->everyFiveMinutes();
         //$schedule->command('test-email-notifier')->everyTenMinutes();
-        $schedule->command('get-stats')->hourly();
     }
+
+ 
 }

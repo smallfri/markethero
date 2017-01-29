@@ -29,11 +29,14 @@ class BounceController extends ApiController
         if(empty($Bounce[0]))
         {
             Logger::addProgress('(Bounces) No Bounces Found '.print_r($Bounce,true),'(Bounces) No Bounces Found');
+//            Logger::addProgress('(Bounces) Server of incoming request '.$_SERVER['HTTP_REFERER'],'(Bounces) No Bounces Found');
 
            return $this->respondWithError('No Bounces not found.');
         }
 
         Logger::addProgress('(Bounce) Bounces Get '.print_r($Bounce,true),'(Bounce) Bounces Get');
+//        Logger::addProgress('(Bounces) Server of incoming request '.$_SERVER['HTTP_REFERER'],'(Bounces) No Bounces Found');
+
 
         return $this->respond(['bounces' => $Bounce->toArray()]);
 
@@ -47,11 +50,15 @@ class BounceController extends ApiController
         if(empty($Bounces[0]))
         {
             Logger::addProgress('(Bounces) No Bounces Found '.print_r($Bounces,true),'(Bounces) No Bounces Found');
+//            Logger::addProgress('(Bounces) Server of incoming request '.$_SERVER['HTTP_REFERER'],'(Bounces) No Bounces Found');
+
 
             return $this->respondWithError('No Bounces found.');
         }
 
         Logger::addProgress('(Bounce) Bounces Show '.print_r($Bounces,true),'(Bounce) Bounces Show');
+//        Logger::addProgress('(Bounces) Server of incoming request '.$_SERVER['HTTP_REFERER'],'(Bounces) No Bounces Found');
+
 
         return $this->respond(['bounces' => $Bounces->toArray()]);
     }

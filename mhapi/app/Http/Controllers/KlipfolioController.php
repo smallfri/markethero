@@ -364,7 +364,9 @@ END;
 
         $date->subDays(2);
 
-        $bounces = DB::select(DB::raw('SELECT count(b.log_id) AS bounces , b.customer_id, c.email, s.send_volume from mw_group_email_bounce_log AS b JOIN mw_customer AS c ON c.customer_id = b.customer_id JOIN mw_group_email_stats AS s ON s.customer_id = c.customer_id WHERE 1 AND b.date_added >= "'.$date->toDateTimeString().'" GROUP BY b.customer_id ORDER BY bounces DESC'));
+        $sql = 'SELECT count(b.log_id) AS bounces , b.customer_id, c.email, s.send_volume from mw_group_email_bounce_log AS b JOIN mw_customer AS c ON c.customer_id = b.customer_id JOIN mw_group_email_stats AS s ON s.customer_id = c.customer_id WHERE 1 AND b.date_added >= "'.$date->toDateTimeString().'" GROUP BY b.customer_id ORDER BY bounces DESC';
+
+        $bounces = DB::select(DB::raw($sql));
 
         return $this->respond([$bounces]);
 

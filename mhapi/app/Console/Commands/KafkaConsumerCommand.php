@@ -8,6 +8,8 @@
 namespace App\Console\Commands;
 
 use App\Jobs\SendEmail;
+use App\Jobs\SendEmailThree;
+use App\Jobs\SendEmailTwo;
 use App\Jobs\SendTransactionalEmail;
 use App\Models\GroupEmailGroupsModel;
 use App\Models\GroupEmailLogModel;
@@ -127,7 +129,7 @@ class KafkaConsumerCommand extends Command
 //                        print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
 
             $message = $this->message = $topic->consume(0, 10);
-//            print_r($message);
+            print_r($message);
 
             if (!empty($message))
             {
@@ -190,8 +192,32 @@ class KafkaConsumerCommand extends Command
 
             $this->Email = $Email;
 
-            $job = (new SendEmail($Email))->onConnection('redis')->onQueue('redis-group-queue');
-            app('Illuminate\Contracts\Bus\Dispatcher')->dispatch($job);
+            $test_value = $data->group_id % 3;
+
+            switch ($test_value)
+            {
+                case 0:
+                    $queue = 'redis-group-queue';
+                    $job = (new SendEmail($Email))->onConnection('redis')->onQueue($queue);
+                    app('Illuminate\Contracts\Bus\Dispatcher')->dispatch($job);
+                    break;
+                case 1:
+                    $queue = 'redis-group-queue-one';
+                    $job = (new SendEmailTwo($Email))->onConnection('redis')->onQueue($queue);
+                    app('Illuminate\Contracts\Bus\Dispatcher')->dispatch($job);
+                    break;
+                case 2:
+                    $queue = 'redis-group-queue-two';
+                    $job = (new SendEmailThree($Email))->onConnection('redis')->onQueue($queue);
+                    app('Illuminate\Contracts\Bus\Dispatcher')->dispatch($job);
+                    break;
+                default:
+                    $queue = 'redis-group-queue';
+                    $job = (new SendEmail($Email))->onConnection('redis')->onQueue($queue);
+                    app('Illuminate\Contracts\Bus\Dispatcher')->dispatch($job);
+            }
+
+
         }
         else
         {
