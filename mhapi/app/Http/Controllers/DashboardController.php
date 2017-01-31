@@ -30,6 +30,8 @@ class DashboardController extends ApiController
     public function index()
     {
 
+        return;
+
         /*
          * This gathers delivery stats for 2 weeks starting today
          */

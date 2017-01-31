@@ -125,54 +125,54 @@ class GroupEmailsController extends ApiController
         /*
          * compliance handler
          */
-        if ($this->use_compliance)
-        {
-            //check options
-            $options = $this->helpers->getOptions();
-
-
-            // count number of emails that have already been sent for this group
-            $countSent = $this->helpers->countSent($data['group_id']);
-
-            // get the compliance status id
-            $threshold = $this->helpers->checkComplianceStatus($data['group_id']);
-
-            // get the compliance %
-            $sendPercent = GroupEmailComplianceLevelsModel::find($threshold);
-
-            // get the leads count
-            $Group = GroupEmailGroupsModel::find($data['group_id']);
-
-            // determine the % of the group we should send immediatly
-            $sendAmount = $sendPercent['threshold']*$Group['leads_count'];
-
-            // if the number sent is greater than the compliance limit, set use queues to false
-            if ($countSent>$options->compliance_limit&&$countSent>$sendAmount)
-            {
-                $useQueues = false;
-                $compliance = true;
-
-                $this->helpers->updateGroupStatus($data['group_id'], GroupEmailGroupsModel::STATUS_IN_REVIEW);
-
-            }
-        }
+//        if ($this->use_compliance)
+//        {
+//            //check options
+//            $options = $this->helpers->getOptions();
+//
+//
+//            // count number of emails that have already been sent for this group
+//            $countSent = $this->helpers->countSent($data['group_id']);
+//
+//            // get the compliance status id
+//            $threshold = $this->helpers->checkComplianceStatus($data['group_id']);
+//
+//            // get the compliance %
+//            $sendPercent = GroupEmailComplianceLevelsModel::find($threshold);
+//
+//            // get the leads count
+//            $Group = GroupEmailGroupsModel::find($data['group_id']);
+//
+//            // determine the % of the group we should send immediatly
+//            $sendAmount = $sendPercent['threshold']*$Group['leads_count'];
+//
+//            // if the number sent is greater than the compliance limit, set use queues to false
+//            if ($countSent>$options->compliance_limit&&$countSent>$sendAmount)
+//            {
+//                $useQueues = false;
+//                $compliance = true;
+//
+//                $this->helpers->updateGroupStatus($data['group_id'], GroupEmailGroupsModel::STATUS_IN_REVIEW);
+//
+//            }
+//        }
 
         $emailUid = uniqid('', true);
         /*
          * if send_at is less than now, we are going to queue the emails, otherwise we will insert into db and mark
          * as pending-sending.
          */
-
-        $Pause = PauseGroupEmailModel::where('customer_id', '=', $data['customer_id'])->orWhere('group_email_id', '=', $data['group_id'])->get();
-
-        $pause = false;
-        if (!empty($Pause[0]))
-        {
-            if ($Pause[0]->pause_customer==1||$Pause[0]->group_email_id == $data['group_id'])
-            {
-                $pause = true;
-            }
-        }
+//
+//        $Pause = PauseGroupEmailModel::where('customer_id', '=', $data['customer_id'])->orWhere('group_email_id', '=', $data['group_id'])->get();
+//
+//        $pause = false;
+//        if (!empty($Pause[0]))
+//        {
+//            if ($Pause[0]->pause_customer==1||$Pause[0]->group_email_id == $data['group_id'])
+//            {
+//                $pause = true;
+//            }
+//        }
 
 //        if ($useQueues==true AND $pause==false)
 //        {
@@ -215,18 +215,18 @@ class GroupEmailsController extends ApiController
             $Email->send_at = $data['send_at'];
             $Email->customer_id = $data['customer_id'];
             $Email->group_email_id = $data['group_id'];
-            if ($compliance)
-            {
-                $Email->status = GroupEmailGroupsModel::STATUS_IN_REVIEW;
-            }
-            elseif ($pause==true)
-            {
-                $Email->status = GroupEmailGroupsModel::STATUS_PAUSED;
-            }
-            else
-            {
+//            if ($compliance)
+//            {
+//                $Email->status = GroupEmailGroupsModel::STATUS_IN_REVIEW;
+//            }
+//            elseif ($pause==true)
+//            {
+//                $Email->status = GroupEmailGroupsModel::STATUS_PAUSED;
+//            }
+//            else
+//            {
                 $Email->status = GroupEmailGroupsModel::STATUS_PENDING_SENDING;
-            }
+//            }
 
             $Email->date_added = new \DateTime();
             $Email->max_retries = 5;
