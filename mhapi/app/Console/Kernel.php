@@ -28,6 +28,8 @@ class Kernel extends ConsoleKernel
             'App\Console\Commands\KafkaClicksConsumerCommand',
             'App\Console\Commands\KafkaOpensConsumerCommand',
             'App\Console\Commands\StatsCommand',
+            'App\Console\Commands\SendForgottenEmailsCommand',
+
         ];
 
     /**
@@ -41,7 +43,11 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('update-group-status')->everyMinute();
         // $schedule->command('kafka-consumer')->everyMinute();
-       // $schedule->command('send-forgotten-groups')->everyFiveMinutes();
+        /**
+         * This runs a check for forgotten emails and adds them to the 'send-forgotten-queues' queue
+         *
+         */
+        $schedule->command('send-forgotten-groups')->hourly();
         // $schedule->command('compliance:average')->cron('0 0 * * *');
         // $schedule->command('compliance:check')->everyMinute();
         //$schedule->command('bounce-handler')->everyMinute();

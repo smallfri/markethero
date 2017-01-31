@@ -49,20 +49,6 @@ return [
             'expire' => 60,
         ],
 
-        'redis-group-queue-two' => [
-            'driver' => 'redis',
-            'connection' => 'default',
-            'queue' => 'default',
-            'expire' => 60,
-        ],
-
-        'redis-group-queue-three' => [
-            'driver' => 'redis',
-            'connection' => 'default',
-            'queue' => 'default',
-            'expire' => 60,
-        ],
-
         'redis-transactional-queue' => [
             'driver' => 'redis',
             'connection' => 'default',

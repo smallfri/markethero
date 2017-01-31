@@ -157,9 +157,9 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-//        App\Providers\BroadcastServiceProvider::class,
+        //App\Providers\BroadcastServiceProvider::class,
         Illuminate\Notifications\NotificationServiceProvider::class,
-        XmlResponse\XmlResponseServiceProvider::class
+        //XmlResponse\XmlResponseServiceProvider::class
 
 
     ],
