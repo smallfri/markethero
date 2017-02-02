@@ -59,7 +59,7 @@ class SendEmail extends Job implements ShouldQueue
 
         $customer = Customer::find($data->customer_id);
 
-        $server = DeliveryServerModel::find($customer->group_pool_id);
+        $server = DeliveryServerModel::find($customer->pool_group_id);
 
         if (empty($server))
         {
@@ -151,7 +151,7 @@ class SendEmail extends Job implements ShouldQueue
         }
         $this->delete();
 
-        $this->replyToMarketHero($data);
+        //$this->replyToMarketHero($data);
 
         $update = GroupEmailModel::find($data->email_id);
         $update->status = $status;

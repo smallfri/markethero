@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\EmailOne\Transformers\CustomerTransformer;
@@ -44,6 +43,8 @@ class KlipfolioController extends ApiController
 
     public function customerCount()
     {
+        return;
+
 
         $customers = Customer::select(DB::raw('COUNT(customer_id) as count, DAY(date_added) as date'))
             ->groupBy(DB::raw('DAY(date_added)'))
@@ -62,6 +63,8 @@ class KlipfolioController extends ApiController
 
     public function groupCount()
     {
+        return;
+
 
         $groups = GroupEmailGroupsModel::select(DB::raw('COUNT(group_email_id) as count, date_added'))
             ->groupBy('date_added')
@@ -79,10 +82,12 @@ class KlipfolioController extends ApiController
     public function getGroups()
     {
 
+        return;
+
         $pendingGroups = GroupEmailGroupsModel::join('mw_customer as c', 'c.customer_id', '=',
             'mw_group_email_groups.customer_id')->where('mw_group_email_groups.status', '=', 'pending-sending')
             ->orWhere('mw_group_email_groups.status', '=', 'processing')
-            ->take(50)
+            ->take(10)
             ->get();
 
         $pending = [];
@@ -113,7 +118,7 @@ class KlipfolioController extends ApiController
     {
 
         $Groups = DB::select(DB::raw('SELECT
-                	count(ge.email_id) AS count, MIN(ge.last_updated) AS min, MAX(ge.last_updated) AS max, TIMEDIFF(MAX(ge.last_updated), MIN(ge.last_updated)) AS elapsed_time, DATE_FORMAT(MIN(ge.last_updated) + INTERVAL count(ge.email_id)/1000 MINUTE, "%Y-%m-%d %H:%i:%s") AS goal_time, g.group_email_id, g.status, c.customer_id, c.email, c.first_name, c.last_name
+                	count(ge.email_id) AS count, MIN(ge.last_updated) AS min, MAX(ge.last_updated) AS max, g.group_email_id, g.status, c.customer_id, c.email, c.first_name, c.last_name
                 FROM
                 	mw_group_email_groups AS g
                 LEFT JOIN
@@ -123,7 +128,7 @@ class KlipfolioController extends ApiController
                 	mw_customer AS c
                 ON  c.customer_id = g.customer_id
                 GROUP BY
-                	g.group_email_id ORDER BY g.group_email_id DESC LIMIT 25'
+                	g.group_email_id ORDER BY g.group_email_id DESC LIMIT 10'
         ));
 
         return $this->respond(['stats' => $Groups]);
@@ -132,6 +137,8 @@ class KlipfolioController extends ApiController
 
     public function getAllGroupEmails()
     {
+        return;
+
 
         $Emails = GroupEmailModel::select('mw_group_email.email_id', 'mw_group_email.customer_id',
             'mw_group_email.group_email_id', 'mw_group_email.from_email', 'mw_group_email.subject')
@@ -145,6 +152,8 @@ class KlipfolioController extends ApiController
 
     public function getSpamReports()
     {
+        return;
+
 
         $Emails = GroupEmailBounceModel::select(
             'mw_group_email_bounce_log.customer_id',
@@ -165,6 +174,8 @@ class KlipfolioController extends ApiController
     public function getDeliveryStats14Days()
     {
 
+        return;
+
         $last_week1 = Carbon::parse('last week - 7 days')->format('Y-m-d');
         $last_week2 = Carbon::parse('this week + 7 days')->format('Y-m-d');
 
@@ -177,6 +188,7 @@ class KlipfolioController extends ApiController
 
     public function getBounceStats()
     {
+        return;
 
         $this_week1 = Carbon::parse('last week - 7 days')->format('Y-m-d');
         $this_week2 = Carbon::parse('this week + 7 days')->format('Y-m-d');
@@ -190,6 +202,8 @@ class KlipfolioController extends ApiController
 
     public function getAbuseStats()
     {
+        return;
+
 
         $this_week1 = Carbon::parse('this week - 14 days')->format('Y-m-d');
         $this_week2 = Carbon::parse('this week')->format('Y-m-d');
@@ -204,6 +218,8 @@ class KlipfolioController extends ApiController
     public function getUnsubscribeStats()
     {
 
+        return;
+
         $this_week1 = Carbon::parse('this week - 14 days')->format('Y-m-d');
         $this_week2 = Carbon::parse('this week')->format('Y-m-d');
 
@@ -216,6 +232,8 @@ class KlipfolioController extends ApiController
 
     public function getAllTransactionalEmails()
     {
+        return;
+
 
         $Emails = TransactionalEmailModel::select('mw_transactional_email.customer_id',
             'mw_transactional_email.to_name', 'mw_transactional_email.to_email', 'mw_transactional_email.subject',
@@ -231,6 +249,7 @@ class KlipfolioController extends ApiController
 
     public function getTraceLogs()
     {
+        return;
 
 
         $logs = TraceLog::select('*')->orderBy('id', 'DESC')->take(100)->get()->toArray();
@@ -251,6 +270,7 @@ class KlipfolioController extends ApiController
 
     public function getBounceServerStatus()
     {
+        return;
 
         $bounceServers = BounceServer::all();
 
@@ -262,6 +282,8 @@ class KlipfolioController extends ApiController
     public function getDeliveryServerStatus()
     {
 
+        return;
+
         $deliveryServers = DeliveryServerModel::all();
 
         return $this->respond(['deliveryServers' => $deliveryServers]);
@@ -270,6 +292,7 @@ class KlipfolioController extends ApiController
 
     public function getSMTPBounceRate()
     {
+        return;
 
         $this_week1 = Carbon::parse('this week - 14 days')->format('H:i d-m-Y');
 
@@ -307,7 +330,7 @@ class KlipfolioController extends ApiController
         $stats = DB::table('mw_group_email_stats')
             ->join('mw_customer', 'mw_customer.customer_id', '=', 'mw_group_email_stats.customer_id')
             ->orderBy('send_volume', 'DESC')
-            ->take(100)
+            ->take(50)
             ->get()
             ->toArray();
 
@@ -359,6 +382,8 @@ END;
 
     public function bouncesByCustomerId()
     {
+
+        return;
 
         $date = new Carbon();
 

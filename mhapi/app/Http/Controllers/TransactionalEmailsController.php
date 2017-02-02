@@ -73,16 +73,16 @@ class TransactionalEmailsController extends ApiController
         {
             return $this->respondWithError('Customer id does not exist.');
         }
-
-        $emailExist = TransactionalEmailModel::where('to_email', '=', $data['to_email'])
-            ->where('subject', '=', $data['subject'])
-            ->where('body', '=', $data['body'])
-            ->get();
-
-        if (!$emailExist->isEmpty())
-        {
-            return $this->respond(['email_uid' => $emailExist[0]['email_uid']]);
-        }
+//
+//        $emailExist = TransactionalEmailModel::where('to_email', '=', $data['to_email'])
+//            ->where('subject', '=', $data['subject'])
+//            ->where('body', '=', $data['body'])
+//            ->get();
+//
+//        if (!$emailExist->isEmpty())
+//        {
+//            return $this->respond(['email_uid' => $emailExist[0]['email_uid']]);
+//        }
 
         $email_uid = uniqid();
         $transactional = new TransactionalEmailModel();
