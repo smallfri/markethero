@@ -159,7 +159,7 @@ class TransactionalEmailsController extends ApiController
         if (!$mail->send())
         {
             $this->updateTransactionalEmail($data['email_uid'], 'unsent');
-            $this->logTransactionalEmailDelivery($data['email_id'], $mail->ErrorInfo);
+          //  $this->logTransactionalEmailDelivery($data['email_id'], $mail->ErrorInfo);
 //            $this->stdout('ERROR Sending transactional Email to '.$data['to_email'].'!');
 //            $this->stdout('ERROR '.$mail->ErrorInfo.'!');
         }
@@ -167,7 +167,7 @@ class TransactionalEmailsController extends ApiController
         {
             $this->updateTransactionalEmail($data['email_uid'], 'sent');
 //            $this->stdout('Sent transactional Email to '.$data['to_email'].'!');
-            $this->logTransactionalEmailDelivery($data['email_id'], 'OK');
+           // $this->logTransactionalEmailDelivery($data['email_id'], 'OK');
         }
 
         $mail->clearAddresses();
