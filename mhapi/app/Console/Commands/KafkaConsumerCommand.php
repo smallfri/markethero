@@ -8,9 +8,8 @@
 namespace App\Console\Commands;
 
 use App\Jobs\SendEmail;
-use App\Jobs\SendEmailThree;
-use App\Jobs\SendEmailTwo;
 use App\Jobs\SendTransactionalEmail;
+use App\Models\BroadcastEmailModel;
 use App\Models\GroupEmailModel;
 use App\Models\TransactionalEmailModel;
 use DB;
@@ -151,42 +150,41 @@ class KafkaConsumerCommand extends Command
     public function save($data)
     {
 
-        $email_uid = uniqid('', true);
+        $emailUID = uniqid('', true);
 
         if (property_exists($data, 'group_id'))
         {
-            $emailExist = GroupEmailModel::where('mhEmailID', '=', $data->id)->get();
+            $hash = md5(256,
+                trim($data['group_id']).trim($data['to_email']).trim($data['body']).trim($data['subject']));
 
-//            dd($emailExist);
+            $emailExist = GroupEmailModel::where('hash', '=', $hash)
+                ->get();
 
             if (!$emailExist->isEmpty())
             {
                 return false;
             }
 
-            $Email = new GroupEmailModel();
+
+            $Email = new BroadcastEmailModel();
+            $Email->emailUID = $emailUID;
             $Email->mhEmailID = $data->id;
-            $Email->email_uid = $email_uid;
-            $Email->customer_id = $data->customer_id;
-            $Email->group_email_id = $data->group_id;
-            $Email->to_email = $data->to_email;
-            $Email->to_name = $data->to_name;
-            $Email->from_email = $data->from_email;
-            $Email->from_name = $data->from_name;
-            $Email->reply_to_email = $data->reply_to_email;
-            $Email->reply_to_name = $data->reply_to_name;
-            $Email->subject = $data->subject;
-            $Email->body = $data->body;
-            $Email->plain_text = $data->plain_text;
-            $Email->max_retries = 5;
-            $Email->send_at = $data->send_at;
+            $Email->toName = $data['to_name'];
+            $Email->toEmail = $data['to_email'];
+            $Email->formName = $data['from_name'];
+            $Email->fromEmail = $data['from_email'];
+            $Email->replyToName = $data['reply_to_name'];
+            $Email->replyToEmail = $data['reply_to_email'];
+            $Email->subject = $data['subject'];
+            $Email->body = $data['body'];
+            $Email->plainText = $data['plain_text'];
+            $Email->customerID = $data['customer_id'];
+            $Email->groupID = $data['group_id'];
+            $Email->dateAdded = $Email->lastUpdated = new \DateTime();
             $Email->status = 'queued';
-            $Email->date_added = $Email->last_updated = new \DateTime();
             $Email->save();
 
             $this->Email = $Email;
-
-            $test_value = 0;
 
             $queue = 'redis-group-queue';
             $job = (new SendEmail($Email))->onConnection('redis')->onQueue($queue);
@@ -195,30 +193,33 @@ class KafkaConsumerCommand extends Command
         }
         else
         {
-            $emailExist = GroupEmailModel::where('mhEmailID', '=', $data->id)->get();
+            $hash = md5(256, trim($data['to_email']).trim($data['body']).trim($data['subject']));
+
+            $emailExist = TransactionalEmailModel::where('hash', '=', $hash)
+                ->get();
 
             if (!$emailExist->isEmpty())
             {
                 return false;
             }
 
+
             $Email = new TransactionalEmailModel();
+            $Email->emailUID = $emailUID;
             $Email->mhEmailID = $data->id;
-            $Email->email_uid = $email_uid;
-            $Email->customer_id = $data->customer_id;
-            $Email->to_email = $data->to_email;
-            $Email->to_name = $data->to_name;
-            $Email->from_email = $data->from_email;
-            $Email->from_name = $data->from_name;
-            $Email->reply_to_email = $data->reply_to_email;
-            $Email->reply_to_name = $data->reply_to_name;
-            $Email->subject = $data->subject;
-            $Email->body = $data->body;
-            $Email->plain_text = $data->plain_text;
-            $Email->max_retries = 5;
-            $Email->send_at = $data->send_at;
+            $Email->customerID = $data['customer_id'];
+
+            $Email->toName = $data['to_name'];
+            $Email->toEmail = $data['to_email'];
+            $Email->formName = $data['from_name'];
+            $Email->fromEmail = $data['from_email'];
+            $Email->replyToName = $data['reply_to_name'];
+            $Email->replyToEmail = $data['reply_to_email'];
+            $Email->subject = $data['subject'];
+            $Email->body = $data['body'];
+            $Email->plainText = $data['plain_text'];
+            $Email->dateAdded = $Email->lastUpdated = new \DateTime();
             $Email->status = 'queued';
-            $Email->date_added = $Email->last_updated = new \DateTime();
             $Email->save();
 
             $this->Email = $Email;

@@ -10,7 +10,7 @@ namespace App\Console\Commands;
 
 
 use App\Jobs\SendForgottenEmail;
-use App\Models\GroupEmailModel;
+use App\Models\BroadcastEmailModel;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Console\Command;
@@ -81,9 +81,9 @@ class SendForgottenEmailsCommand extends Command
     protected function findEmailsForSending()
     {
 
-        $time = Carbon::parse('now')->format('H:i:s');
+        $time = Carbon::parse('2 hours ago')->format('H:i:s');
 
-        $emails = GroupEmailModel::where('status', '=', 'queued')
+        $emails = BroadcastEmailModel::where('status', '=', 'queued')
             ->where('last_updated', '>', $time)
             ->get();
 

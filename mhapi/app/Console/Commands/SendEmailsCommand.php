@@ -12,6 +12,7 @@ use App\Helpers\Helpers;
 use App\Jobs\SendEmail;
 use App\Logger;
 use App\Models\BlacklistModel;
+use App\Models\BroadcastEmailModel;
 use App\Models\Customer;
 use App\Models\DeliveryServerModel;
 use App\Models\GroupControlsModel;
@@ -674,8 +675,8 @@ class SendEmailsCommand extends Command
         $pdo = DB::connection()->getPdo();
         $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 
-        $emails = GroupEmailModel::where('status', '=', 'pending-sending')
-            ->where('group_email_id', '=', $group->group_email_id)
+        $emails = BroadcastEmailModel::where('status', '=', 'pending-sending')
+            ->where('groupID', '=', $group->group_email_id)
             ->take($limit)
             ->skip($offset)
             ->get();
@@ -854,7 +855,7 @@ class SendEmailsCommand extends Command
         $pdo = DB::connection()->getPdo();
         $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 
-        GroupEmailModel::where('email_id', '=', $id)
+        BroadcastEmailModel::where('emailID', '=', $id)
             ->update(['status' => $status, 'last_updated' => $now]);
 
 

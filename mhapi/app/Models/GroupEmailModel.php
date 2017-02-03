@@ -16,25 +16,24 @@ class GroupEmailModel extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'email_id',
-        'email_uid',
         'mhEmailID',
+        'emailUID',
         'to_name',
-        'to_email',
-        'from_name',
-        'from_email',
-        'reply_to_name',
-        'reply_to_email',
+        'customerID',
+        'groupID',
+        'toEmail',
+        'toName',
+        'fromEmail',
+        'fromName',
+        'replyToEmail',
+        'replyToName',
         'subject',
         'body',
-        'plain_text',
-        'send_at',
-        'customer_id',
-        'group_email_id',
-        'date_added',
-        'last_updated',
-        'max_retries',
-        'status'
+        'plainText',
+        'status',
+        'dateAdded',
+        'lastUpdated',
+        'hash',
     ];
 
     /**
