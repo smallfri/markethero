@@ -43,12 +43,12 @@ class SendEmailsCommand extends Command
     /**
      * @var string
      */
-    protected $signature = 'send-groups';
+    protected $signature = 'send-broadcast';
 
     /**
      * @var string
      */
-    protected $description = 'Sends Group Emails';
+    protected $description = 'Sends Broadcast Emails';
 
     /**
      * @return int
@@ -429,6 +429,7 @@ class SendEmailsCommand extends Command
             $workerNumber = 1;
         }
         $this->stdout('Loading Queue Worker '.$workerNumber);
+
         $emails = $this->findEmailsForSending($group, $limit, $offset);
 
         $this->stdout('Limit '.$limit.' / '.'Offset '.$offset);
@@ -443,12 +444,12 @@ class SendEmailsCommand extends Command
 
             $this->stdout('do stuff here');
 
-            $this->stdout('Adding email '.$data['to_email']);
+            $this->stdout('Adding email '.$data['toEmail']);
 
-            $job = (new SendEmail($data))->onConnection('redis')->onQueue('redis-queue');
+            $job = (new SendEmail($data))->onConnection('redis')->onQueue('redis-group-queue');
             app('Illuminate\Contracts\Bus\Dispatcher')->dispatch($job);
 
-            $this->updateGroupEmailsToSent($data->email_id, GroupEmailGroupsModel::STATUS_QUEUED);
+            $this->updateGroupEmailsToSent($data->emailID, GroupEmailGroupsModel::STATUS_QUEUED);
 
         }
 
@@ -567,13 +568,10 @@ class SendEmailsCommand extends Command
             $status = 'error';
 
         }
-//            $this->delete();
 
-        print_r($data);
+       // $this->replyToMarketHero($data);
 
-        $this->replyToMarketHero($data);
-
-        $update = GroupEmailModel::find($data->email_id);
+        $update = BroadcastEmailModel::find($data->email_id);
         $update->status = $status;
         $update->last_updated = new \DateTime();
         $update->save();
@@ -619,12 +617,6 @@ class SendEmailsCommand extends Command
         $topic = $rk->newTopic("email_one_email_queued");
 
         $topic->produce(RD_KAFKA_PARTITION_UA, 0, $Email);
-
-//        $email = json_decode($Email);
-//        $update = GroupEmailModel::find($email->email_id);
-//               $update->status = GroupEmailGroupsModel::STATUS_QUEUED;
-//               $update->last_updated = new \DateTime();
-//               $update->save();
 
     }
 
@@ -813,7 +805,6 @@ class SendEmailsCommand extends Command
 
         $Options = GroupControlsModel::find(1);
 
-
         DB::disconnect('mysql');
 
         $options = json_decode(json_encode($Options));
@@ -855,9 +846,9 @@ class SendEmailsCommand extends Command
         $pdo = DB::connection()->getPdo();
         $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 
+        print_r($id);
         BroadcastEmailModel::where('emailID', '=', $id)
-            ->update(['status' => $status, 'last_updated' => $now]);
-
+            ->update(['status' => $status, 'lastUpdated' => $now]);
 
         DB::disconnect('mysql');
         return;
@@ -875,9 +866,9 @@ class SendEmailsCommand extends Command
         $pdo = DB::connection()->getPdo();
         $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 
-        $customer = GroupEmailGroupsModel::select('c.status AS status')
-            ->where('group_email_id', '=', $this->_group->group_email_id)
-            ->join('mw_customer AS c', 'c.customer_id', '=', 'mw_group_email_groups.customer_id')
+        $customer = BroadcastEmailModel::select('c.status AS status')
+            ->where('groupID', '=', $this->_group->group_email_id)
+            ->join('mw_customer AS c', 'c.customer_id', '=', 'mw_broadcast_email_log.customerID')
             ->get();
 
 

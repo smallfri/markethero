@@ -75,25 +75,24 @@ class TransactionalEmailsController extends ApiController
             return $this->respondWithError('Customer id does not exist.');
         }
 
-        $hash = md5(256, trim($data['to_email']).trim($data['body']).trim($data['subject']));
+        $hash = md5(strtolower(trim($data['to_email']) . trim($data['body']) . trim($data['subject'])));
 
         $emailExist = TransactionalEmailModel::where('hash', '=', $hash)
             ->get();
 
         if (!$emailExist->isEmpty())
         {
-            return false;
+            return $this->respond(['email_uid' => $emailExist[0]['emailUID']]);
         }
 
         $emailUID = uniqid('', true);
 
         $Email = new TransactionalEmailModel();
         $Email->emailUID = $emailUID;
-        $Email->mhEmailID = $data->id;
         $Email->customerID = $data['customer_id'];
         $Email->toName = $data['to_name'];
         $Email->toEmail = $data['to_email'];
-        $Email->formName = $data['from_name'];
+        $Email->fromName = $data['from_name'];
         $Email->fromEmail = $data['from_email'];
         $Email->replyToName = $data['reply_to_name'];
         $Email->replyToEmail = $data['reply_to_email'];
@@ -102,6 +101,7 @@ class TransactionalEmailsController extends ApiController
         $Email->plainText = $data['plain_text'];
         $Email->dateAdded = $Email->lastUpdated = new \DateTime();
         $Email->status = 'queued';
+        $Email->hash = $hash;
         $Email->save();
 
         $this->Email = $Email;
@@ -110,7 +110,7 @@ class TransactionalEmailsController extends ApiController
             ->onQueue('redis-transactional-queue');
         app('Illuminate\Contracts\Bus\Dispatcher')->dispatch($job);
 
-        if ($Email->email_id>0)
+        if ($Email->emailID>0)
         {
             return $this->respond(['email_uid' => $emailUID]);
         }

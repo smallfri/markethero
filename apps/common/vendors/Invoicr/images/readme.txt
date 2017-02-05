@@ -1,1 +1,0 @@
-To load a logo, place a file called logo.png at 230 x 130 in this folder

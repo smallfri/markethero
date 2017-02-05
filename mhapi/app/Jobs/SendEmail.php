@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Helpers\Helpers;
 use App\Logger;
+use App\Models\BroadcastEmailModel;
 use App\Models\Customer;
 use App\Models\DeliveryServerModel;
 use App\Models\GroupEmailGroupsModel;
@@ -45,7 +46,6 @@ class SendEmail extends Job implements ShouldQueue
      */
     public function handle()
     {
-        print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
         $this->sendByPHPMailer($this->data);
     }
 
@@ -56,8 +56,7 @@ class SendEmail extends Job implements ShouldQueue
      */
     public function sendByPHPMailer($data)
     {
-
-        $customer = Customer::find($data->customer_id);
+        $customer = Customer::find($data->customerID);
 
         $server = DeliveryServerModel::find($customer->pool_group_id);
 
@@ -66,17 +65,17 @@ class SendEmail extends Job implements ShouldQueue
             $server = DeliveryServerModel::find(1);
         }
 
-        if (isset($data->group_email_id)&&$data->group_email_id>1)
+        if (isset($data->groupID)&&$data->groupID>1)
         {
-            $group_email_id = $data->group_email_id;
+            $groupID = $data->groupID;
         }
         else
         {
-            $group_email_id = 1;
+            $groupID = 1;
         }
 
-        $pause = PauseGroupEmailModel::where('group_email_id', '=', $data->group_email_id)
-            ->orWhere('customer_id', '=', $data->customer_id)
+        $pause = PauseGroupEmailModel::where('group_email_id', '=', $data->groupID)
+            ->orWhere('customer_id', '=', $data->customerID)
             ->get();
 
         if (count($pause))
@@ -85,20 +84,29 @@ class SendEmail extends Job implements ShouldQueue
 
             if (!empty($pause))
             {
-                if ($pause->group_email_id==$data->group_email_id||$pause->pause_customer==1)
+                if ($pause->groupID==$data->groupID||$pause->pause_customer==1)
                 {
                     $this->delete();
 
-                    GroupEmailModel::where('email_uid', '=', $data->email_uid)
-                        ->update('status', '=', GroupEmailGroupsModel::STATUS_PAUSED);
+                    BroadcastEmailModel::where('emailUID', '=', $data->emailUID)
+                        ->update('status', '=', BroadcastEmailModel::STATUS_PAUSED);
                     return false;
                 }
             }
         }
 
+        $hash = md5(strtolower(trim($data['group_id']). trim($data->to_email) . trim($data->body) . trim($data->subject)));
+
+        $emailExist = BroadcastEmailModel::where('hash', '=', $hash)
+            ->get();
+
+        if (!$emailExist->isEmpty())
+        {
+            return false;
+        }
+
         try
         {
-
             $mail = New \PHPMailer();
             $mail->SMTPKeepAlive = true;
 
@@ -112,17 +120,17 @@ class SendEmail extends Job implements ShouldQueue
             $mail->Password = base64_decode($server->password);
             $mail->Sender = Helpers::findBounceServerSenderEmail($server->bounce_server_id);
 
-            $mail->addCustomHeader('X-Mw-Customer-Id', $data->customer_id);
-            $mail->addCustomHeader('X-Mw-Email-Uid', $data->email_uid);
-            $mail->addCustomHeader('X-Mw-Group-Id', $group_email_id);
-            if ($group_email_id==1)
+            $mail->addCustomHeader('X-Mw-Customer-Id', $data->customerID);
+            $mail->addCustomHeader('X-Mw-Email-Uid', $data->emailUID);
+            $mail->addCustomHeader('X-Mw-Group-Id', $groupID);
+            if ($groupID==1)
             {
-                $mail->addCustomHeader('X-Mw-Transactional-Id', $group_email_id);
+                $mail->addCustomHeader('X-Mw-Transactional-Id', $groupID);
             }
 
-            $mail->addReplyTo($data->from_email, $data->from_name);
-            $mail->setFrom($data->from_email, $data->from_name);
-            $mail->addAddress($data->to_email, $data->to_name);
+            $mail->addReplyTo($data->fromEmail, $data->fromName);
+            $mail->setFrom($data->fromEmail, $data->fromName);
+            $mail->addAddress($data->toEmail, $data->toName);
 
             $mail->Subject = $data->subject;
             $mail->MsgHTML($data->body);
@@ -150,12 +158,11 @@ class SendEmail extends Job implements ShouldQueue
 
         }
         $this->delete();
-
         //$this->replyToMarketHero($data);
 
-        $update = GroupEmailModel::find($data->email_id);
+        $update = BroadcastEmailModel::find($data->emailID);
         $update->status = $status;
-        $update->last_updated = new \DateTime();
+        $update->lastUpdated = new \DateTime();
         $update->save();
 
     }
@@ -176,7 +183,7 @@ class SendEmail extends Job implements ShouldQueue
 
         $message = [
             'mhEmailID' => $Email->mhEmailID,
-            'emailOneEmailID' => $Email->email_uid,
+            'emailOneEmailID' => $Email->emailUID,
             'sentDateTime' => date_format($date, 'U')
         ];
 

@@ -90,9 +90,9 @@ class GroupEmailsController extends ApiController
             return $this->respondWithError('Customer id does not exist.');
         }
 
-        $hash = md5(256, trim($data['group_id']). trim($data['to_email']) . trim($data['body']) . trim($data['subject']));
+        $hash = md5(strtolower(trim($data['group_id']). trim($data['to_email']) . trim($data['body']) . trim($data['subject'])));
 
-        $emailExist = GroupEmailModel::where('hash', '=', $hash)
+        $emailExist = BroadcastEmailModel::where('hash', '=', $hash)
             ->get();
 
         if (!$emailExist->isEmpty())
@@ -166,7 +166,7 @@ class GroupEmailsController extends ApiController
         $Email->emailUID = $emailUid;
         $Email->toName = $data['to_name'];
         $Email->toEmail = $data['to_email'];
-        $Email->formName = $data['from_name'];
+        $Email->fromName = $data['from_name'];
         $Email->fromEmail = $data['from_email'];
         $Email->replyToName = $data['reply_to_name'];
         $Email->replyToEmail = $data['reply_to_email'];
@@ -175,6 +175,7 @@ class GroupEmailsController extends ApiController
         $Email->plainText = $data['plain_text'];
         $Email->customerID = $data['customer_id'];
         $Email->groupID = $data['group_id'];
+        $Email->hash = $hash;
         if ($compliance)
         {
             $Email->status = BroadcastEmailModel::STATUS_IN_REVIEW;
@@ -189,7 +190,6 @@ class GroupEmailsController extends ApiController
         }
 
         $Email->dateAdded = $Email->lastUpdated = new \DateTime();
-        $Email->max_retries = 5;
         $Email->save();
 
         if ($emailUid)
@@ -200,21 +200,6 @@ class GroupEmailsController extends ApiController
 
         return $this->respondWithError('Email was not created.');
 
-    }
-
-    public function destroy($email_uid)
-    {
-
-        // delete email
-        $response = $this->endpoint->delete($email_uid);
-
-        if ($response->body['status']=='success')
-        {
-            return $this->respond(['email_uid' => 'Deleted '.$email_uid.'.']);
-
-        }
-
-        return $this->respondWithError('Email was not deleted.');
     }
 
 }

@@ -6,7 +6,15 @@
 
 class_name: AcceptanceTester
 modules:
-    enabled:
-        - PhpBrowser:
-            url: http://localhost/myapp
-        - \Helper\Acceptance
+  enabled:
+    - WebDriver:
+        url: 'http://localhost:8000/'
+        browser: firefox
+    - Laravel5:
+        part: ORM
+        environment_file: .env
+        cleanup: true
+     Db:
+      populate: true
+      cleanup: true
+    - \Helper\Acceptance

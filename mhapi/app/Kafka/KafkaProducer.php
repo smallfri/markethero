@@ -14,11 +14,11 @@ $topic = $rk->newTopic("email_one_email_to_be_sent");
 
 
 
-for ($i = 0; $i < 5000; $i++) {
+for ($i = 0; $i < 10; $i++) {
 
     $message = [
         'reply_to_email' => 'russell@smallfri.com',
-        "to_email"=>"testing1@russell-hudson.com",
+        "to_email"=>"smallfriinc@gmail.com",
         'from_email' => 'russell@smallfri.com',
         'to_name' => 'russell@smallfri.com',
         'reply_to_name' => 'russell@smallfri.com',

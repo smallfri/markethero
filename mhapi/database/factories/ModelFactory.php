@@ -11,11 +11,41 @@
 |
 */
 
-$factory->define(App\Models\User::class, function (Faker\Generator $faker) {
+use Carbon\Carbon;
+
+
+$factory->define(App\Models\BroadcastEmailModel::class, function (Faker\Generator $faker) {
+
+    $time = Carbon::parse('3 hours ago')->format('Y-m-d H:i:s');
+
     return [
-        'name' => $faker->name,
-        'email' => $faker->email,
-        'password' => bcrypt(str_random(10)),
-        'remember_token' => str_random(10),
+        'mhEmailID' => $faker->numberBetween(0,10000),
+        'emailUID' => uniqid(null, true),
+        'customerID' => 11,
+        'groupID' => 40,
+        'status' => 'queued',
+        'toEmail' => 'smallfriinc@gmail.com',
+        'toName' => $faker->name,
+        'replyToName' => $faker->name,
+        'fromEmail' => $faker->email,
+        'fromName' => $faker->name,
+        'replyToEmail' => $faker->email,
+        'subject' => $faker->paragraph,
+        'plainText' => $faker->paragraph,
+        'body' => $faker->paragraph,
+        'dateAdded' => $time,
+        'lastUpdated' => $time,
+
+    ];
+});
+
+$factory->define(App\Models\GroupEmailGroupsModel::class, function (Faker\Generator $faker) {
+
+    return [
+        'group_email_uid' => uniqid(null, true),
+        'customer_id' => 11,
+        'group_email_id' => 40,
+        'status' => 'pending-sending',
+
     ];
 });

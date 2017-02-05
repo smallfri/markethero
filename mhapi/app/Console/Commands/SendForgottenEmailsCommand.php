@@ -84,7 +84,7 @@ class SendForgottenEmailsCommand extends Command
         $time = Carbon::parse('2 hours ago')->format('H:i:s');
 
         $emails = BroadcastEmailModel::where('status', '=', 'queued')
-            ->where('last_updated', '>', $time)
+            ->where('lastUpdated', '>', $time)
             ->get();
 
         return $emails;

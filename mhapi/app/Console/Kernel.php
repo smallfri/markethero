@@ -25,6 +25,7 @@ class Kernel extends ConsoleKernel
             'App\Console\Commands\TestEmailCommandHandler',
             'App\Console\Commands\TestEmailNotifyHandler',
             'App\Console\Commands\KafkaConsumerCommand',
+            'App\Console\Commands\KafkaProducerCommand',
             'App\Console\Commands\KafkaClicksConsumerCommand',
             'App\Console\Commands\KafkaOpensConsumerCommand',
             'App\Console\Commands\StatsCommand',

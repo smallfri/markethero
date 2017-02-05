@@ -149,15 +149,14 @@ class KafkaConsumerCommand extends Command
 
     public function save($data)
     {
-
         $emailUID = uniqid('', true);
 
         if (property_exists($data, 'group_id'))
         {
-            $hash = md5(256,
-                trim($data['group_id']).trim($data['to_email']).trim($data['body']).trim($data['subject']));
 
-            $emailExist = GroupEmailModel::where('hash', '=', $hash)
+            $hash = md5(strtolower(trim($data->group_id). trim($data->to_email) . trim($data->body) . trim($data->subject)));
+
+            $emailExist = BroadcastEmailModel::where('hash', '=', $hash)
                 ->get();
 
             if (!$emailExist->isEmpty())
@@ -165,35 +164,34 @@ class KafkaConsumerCommand extends Command
                 return false;
             }
 
-
             $Email = new BroadcastEmailModel();
             $Email->emailUID = $emailUID;
             $Email->mhEmailID = $data->id;
-            $Email->toName = $data['to_name'];
-            $Email->toEmail = $data['to_email'];
-            $Email->formName = $data['from_name'];
-            $Email->fromEmail = $data['from_email'];
-            $Email->replyToName = $data['reply_to_name'];
-            $Email->replyToEmail = $data['reply_to_email'];
-            $Email->subject = $data['subject'];
-            $Email->body = $data['body'];
-            $Email->plainText = $data['plain_text'];
-            $Email->customerID = $data['customer_id'];
-            $Email->groupID = $data['group_id'];
+            $Email->toName = $data->to_name;
+            $Email->toEmail = $data->to_email;
+            $Email->fromName = $data->from_name;
+            $Email->fromEmail = $data->from_email;
+            $Email->replyToName = $data->reply_to_name;
+            $Email->replyToEmail = $data->reply_to_email;
+            $Email->subject = $data->subject;
+            $Email->body = $data->body;
+            $Email->plainText = $data->plain_text;
+            $Email->customerID = $data->customer_id;
+            $Email->groupID = $data->group_id;
             $Email->dateAdded = $Email->lastUpdated = new \DateTime();
             $Email->status = 'queued';
+            $Email->hash = $hash;
             $Email->save();
 
             $this->Email = $Email;
 
-            $queue = 'redis-group-queue';
-            $job = (new SendEmail($Email))->onConnection('redis')->onQueue($queue);
+            $job = (new SendEmail($Email))->onConnection('redis')->onQueue('redis-group-queue');
             app('Illuminate\Contracts\Bus\Dispatcher')->dispatch($job);
 
         }
         else
         {
-            $hash = md5(256, trim($data['to_email']).trim($data['body']).trim($data['subject']));
+            $hash = md5(256, trim($data->to_email).trim($data->body).trim($data->subject));
 
             $emailExist = TransactionalEmailModel::where('hash', '=', $hash)
                 ->get();
@@ -203,21 +201,19 @@ class KafkaConsumerCommand extends Command
                 return false;
             }
 
-
             $Email = new TransactionalEmailModel();
             $Email->emailUID = $emailUID;
             $Email->mhEmailID = $data->id;
-            $Email->customerID = $data['customer_id'];
-
-            $Email->toName = $data['to_name'];
-            $Email->toEmail = $data['to_email'];
-            $Email->formName = $data['from_name'];
-            $Email->fromEmail = $data['from_email'];
-            $Email->replyToName = $data['reply_to_name'];
-            $Email->replyToEmail = $data['reply_to_email'];
-            $Email->subject = $data['subject'];
-            $Email->body = $data['body'];
-            $Email->plainText = $data['plain_text'];
+            $Email->customerID = $data->customer_id;
+            $Email->toName = $data->to_name;
+            $Email->toEmail = $data->to_email;
+            $Email->fromName = $data->from_name;
+            $Email->fromEmail = $data->from_email;
+            $Email->replyToName = $data->reply_to_name;
+            $Email->replyToEmail = $data->reply_to_email;
+            $Email->subject = $data->subject;
+            $Email->body = $data->body;
+            $Email->plainText = $data->plain_text;
             $Email->dateAdded = $Email->lastUpdated = new \DateTime();
             $Email->status = 'queued';
             $Email->save();

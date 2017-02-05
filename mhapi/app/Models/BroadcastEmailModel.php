@@ -11,7 +11,7 @@ class BroadcastEmailModel extends Authenticatable
 
     protected $table = 'mw_broadcast_email_log';
 
-    protected $primaryKey = "mhEmailID";
+    protected $primaryKey = "emailID";
 
     const STATUS_APPROVED = 'approved';
 
