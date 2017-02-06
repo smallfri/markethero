@@ -9,7 +9,7 @@ class TransactionalEmailLogModel extends Authenticatable
     public $timestamps = false;
 
     protected $table = 'mw_transactional_email_log';
-    protected $primaryKey = "log_id";
+    protected $primaryKey = "emailID";
     /**
      * The attributes that are mass assignable.
      *

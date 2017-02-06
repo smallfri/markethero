@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Helpers\Helpers;
 use App\Logger;
+use App\Models\BroadcastEmailModel;
 use App\Models\Customer;
 use App\Models\DeliveryServerModel;
 use App\Models\GroupEmailGroupsModel;
@@ -47,6 +48,7 @@ class SendTransactionalEmail extends Job implements ShouldQueue
     public function handle()
     {
 
+        print_r(__CLASS__.'->'.__FUNCTION__.'['.__LINE__.']');
         $this->sendByPHPMailer($this->data);
     }
 
@@ -58,7 +60,7 @@ class SendTransactionalEmail extends Job implements ShouldQueue
     public function sendByPHPMailer($data)
     {
 
-        $customer = Customer::find($data->customer_id);
+        $customer = Customer::find($data->customerID);
 
         $server = DeliveryServerModel::find($customer->group_pool_id);
 
@@ -67,6 +69,16 @@ class SendTransactionalEmail extends Job implements ShouldQueue
             $server = DeliveryServerModel::find(1);
         }
 
+        $hash = md5(strtolower(trim($data->toEmail).trim($data->body).trim($data->subject)));
+
+                $emailExist = BroadcastEmailModel::where('hash', '=', $hash)
+                      ->where('status', '=', 'sent')
+                    ->get();
+
+                if (!$emailExist->isEmpty())
+                {
+                    return false;
+                }
         try
         {
 
@@ -83,12 +95,12 @@ class SendTransactionalEmail extends Job implements ShouldQueue
             $mail->Password = base64_decode($server->password);
             $mail->Sender = Helpers::findBounceServerSenderEmail($server->bounce_server_id);
 
-            $mail->addCustomHeader('X-Mw-Customer-Id', $data->customer_id);
-            $mail->addCustomHeader('X-Mw-Email-Uid', $data->email_uid);
+            $mail->addCustomHeader('X-Mw-Customer-Id', $data->customerID);
+            $mail->addCustomHeader('X-Mw-Email-Uid', $data->emailUID);
 
-            $mail->addReplyTo($data->from_email, $data->from_name);
-            $mail->setFrom($data->from_email, $data->from_name);
-            $mail->addAddress($data->to_email, $data->to_name);
+            $mail->addReplyTo($data->fromEmail, $data->fromName);
+            $mail->setFrom($data->fromEmail, $data->fromName);
+            $mail->addAddress($data->toEmail, $data->toEmail);
 
             $mail->Subject = $data->subject;
             $mail->MsgHTML($data->body);
@@ -115,15 +127,15 @@ class SendTransactionalEmail extends Job implements ShouldQueue
             $status = 'error';
 
         }
-
         $this->delete();
 
         $this->replyToMarketHero($data);
 
-        $update = TransactionalEmailModel::find($data->email_id);
+        $update = TransactionalEmailModel::find($data->emailID);
         $update->status = $status;
-        $update->last_updated = new \DateTime();
+        $update->lastUpdated = new \DateTime();
         $update->save();
+
 
     }
 
@@ -136,14 +148,15 @@ class SendTransactionalEmail extends Job implements ShouldQueue
 
         $rk = new Producer($conf);
         $rk->setLogLevel(LOG_DEBUG);
-        $rk->addBrokers("kafka-3.int.markethero.io, kafka-2.int.markethero.io,kafka-1.int.markethero.io");
+//        $rk->addBrokers("kafka-3.int.markethero.io, kafka-2.int.markethero.io,kafka-1.int.markethero.io");
+        $rk->addBrokers("zk-1.prod.markethero.io, zk-2.prod.markethero.io, zk-3.prod.markethero.io");
 
         $topic = $rk->newTopic("email_one_email_sent");
         $date = date_create();
 
         $message = [
             'mhEmailID' => $Email->mhEmailID,
-            'emailOneEmailID' => $Email->email_uid,
+            'emailOneEmailID' => $Email->emailUID,
             'sentDateTime' => date_format($date, 'U')
         ];
 

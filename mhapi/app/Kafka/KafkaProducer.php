@@ -6,7 +6,8 @@ $conf->set('broker.version.fallback', '0.8.2.1');
 
 $rk = new RdKafka\Producer($conf);
 $rk->setLogLevel(LOG_DEBUG);
-$rk->addBrokers("kafka-3.int.markethero.io, kafka-2.int.markethero.io,kafka-1.int.markethero.io");
+//$rk->addBrokers("kafka-3.int.markethero.io, kafka-2.int.markethero.io,kafka-1.int.markethero.io");
+$rk->addBrokers("zk-1.prod.markethero.io, zk-2.prod.markethero.io, zk-3.prod.markethero.io");
 
 
 

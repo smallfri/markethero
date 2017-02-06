@@ -46,6 +46,7 @@ class SendEmail extends Job implements ShouldQueue
      */
     public function handle()
     {
+
         $this->sendByPHPMailer($this->data);
     }
 
@@ -56,6 +57,7 @@ class SendEmail extends Job implements ShouldQueue
      */
     public function sendByPHPMailer($data)
     {
+
         $customer = Customer::find($data->customerID);
 
         $server = DeliveryServerModel::find($customer->pool_group_id);
@@ -74,30 +76,31 @@ class SendEmail extends Job implements ShouldQueue
             $groupID = 1;
         }
 
-        $pause = PauseGroupEmailModel::where('group_email_id', '=', $data->groupID)
-            ->orWhere('customer_id', '=', $data->customerID)
-            ->get();
+//        $pause = PauseGroupEmailModel::where('group_email_id', '=', $data->groupID)
+//            ->orWhere('customer_id', '=', $data->customerID)
+//            ->get();
+//
+//        if (count($pause))
+//        {
+//            $pause = $pause[0];
+//
+//            if (!empty($pause))
+//            {
+//                if ($pause->groupID==$data->groupID||$pause->pause_customer==1)
+//                {
+//                    $this->delete();
+//
+//                    BroadcastEmailModel::where('emailUID', '=', $data->emailUID)
+//                        ->update('status', '=', BroadcastEmailModel::STATUS_PAUSED);
+//                    return false;
+//                }
+//            }
+//        }
 
-        if (count($pause))
-        {
-            $pause = $pause[0];
-
-            if (!empty($pause))
-            {
-                if ($pause->groupID==$data->groupID||$pause->pause_customer==1)
-                {
-                    $this->delete();
-
-                    BroadcastEmailModel::where('emailUID', '=', $data->emailUID)
-                        ->update('status', '=', BroadcastEmailModel::STATUS_PAUSED);
-                    return false;
-                }
-            }
-        }
-
-        $hash = md5(strtolower(trim($data['group_id']). trim($data->to_email) . trim($data->body) . trim($data->subject)));
+        $hash = md5(strtolower(trim($data->groupID).trim($data->toEmail).trim($data->body).trim($data->subject)));
 
         $emailExist = BroadcastEmailModel::where('hash', '=', $hash)
+              ->where('status', '=', 'sent')
             ->get();
 
         if (!$emailExist->isEmpty())
@@ -157,14 +160,17 @@ class SendEmail extends Job implements ShouldQueue
             $status = 'error';
 
         }
-        $this->delete();
+//        $this->delete();
 
-        $this->replyToMarketHero($data);
+//        print_r($data->toEmail);
+//        print_r($status);
 
         $update = BroadcastEmailModel::find($data->emailID);
         $update->status = $status;
         $update->lastUpdated = new \DateTime();
         $update->save();
+
+        $this->replyToMarketHero($data);
 
     }
 
@@ -177,7 +183,7 @@ class SendEmail extends Job implements ShouldQueue
 
         $rk = new Producer($conf);
         $rk->setLogLevel(LOG_DEBUG);
-        $rk->addBrokers("kafka-3.int.markethero.io, kafka-2.int.markethero.io,kafka-1.int.markethero.io");
+        $rk->addBrokers("zk-1.prod.markethero.io, zk-2.prod.markethero.io, zk-3.prod.markethero.io");
 
         $topic = $rk->newTopic("email_one_email_sent");
         $date = date_create();
@@ -189,7 +195,7 @@ class SendEmail extends Job implements ShouldQueue
         ];
 
         $topic->produce(RD_KAFKA_PARTITION_UA, 0, json_encode($message));
-        //        var_dump(json_encode($message));
+//        var_dump(json_encode($message));
     }
 
 }

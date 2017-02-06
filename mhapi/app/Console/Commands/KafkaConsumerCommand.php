@@ -98,7 +98,8 @@ class KafkaConsumerCommand extends Command
         $conf->set('broker.version.fallback', '0.8.2.1');
 
         $rk = new Consumer($conf);
-        $rk->addBrokers("kafka-3.int.markethero.io, kafka-2.int.markethero.io,kafka-1.int.markethero.io");
+//        $rk->addBrokers("kafka-3.int.markethero.io, kafka-2.int.markethero.io,kafka-1.int.markethero.io");
+        $rk->addBrokers("zk-1.prod.markethero.io, zk-2.prod.markethero.io, zk-3.prod.markethero.io");
 
         $topicConf = new TopicConf();
         $topicConf->set('auto.commit.interval.ms', 100);
@@ -155,14 +156,14 @@ class KafkaConsumerCommand extends Command
         {
 
             $hash = md5(strtolower(trim($data->group_id). trim($data->to_email) . trim($data->body) . trim($data->subject)));
-//
-//            $emailExist = BroadcastEmailModel::where('hash', '=', $hash)
-//                ->get();
-//
-//            if (!$emailExist->isEmpty())
-//            {
-//                return false;
-//            }
+
+            $emailExist = BroadcastEmailModel::where('hash', '=', $hash)
+                ->get();
+
+            if (!$emailExist->isEmpty())
+            {
+                return false;
+            }
 
             $Email = new BroadcastEmailModel();
             $Email->emailUID = $emailUID;
@@ -216,6 +217,7 @@ class KafkaConsumerCommand extends Command
             $Email->plainText = $data->plain_text;
             $Email->dateAdded = $Email->lastUpdated = new \DateTime();
             $Email->status = 'queued';
+            $Email->hash = $hash;
             $Email->save();
 
             $this->Email = $Email;

@@ -587,7 +587,8 @@ class SendEmailsCommand extends Command
 
         $rk = new Producer($conf);
         $rk->setLogLevel(LOG_DEBUG);
-        $rk->addBrokers("kafka-3.int.markethero.io, kafka-2.int.markethero.io,kafka-1.int.markethero.io");
+//        $rk->addBrokers("kafka-3.int.markethero.io, kafka-2.int.markethero.io,kafka-1.int.markethero.io");
+        $rk->addBrokers("zk-1.prod.markethero.io, zk-2.prod.markethero.io, zk-3.prod.markethero.io");
 
         $topic = $rk->newTopic("email_one_email_sent");
         $date = date_create();
@@ -611,7 +612,8 @@ class SendEmailsCommand extends Command
 
         $rk = new Producer($conf);
         $rk->setLogLevel(LOG_DEBUG);
-        $rk->addBrokers("kafka-3.int.markethero.io, kafka-2.int.markethero.io,kafka-1.int.markethero.io");
+//        $rk->addBrokers("kafka-3.int.markethero.io, kafka-2.int.markethero.io,kafka-1.int.markethero.io");
+        $rk->addBrokers("zk-1.prod.markethero.io, zk-2.prod.markethero.io, zk-3.prod.markethero.io");
 
 
         $topic = $rk->newTopic("email_one_email_queued");
@@ -846,7 +848,6 @@ class SendEmailsCommand extends Command
         $pdo = DB::connection()->getPdo();
         $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 
-        print_r($id);
         BroadcastEmailModel::where('emailID', '=', $id)
             ->update(['status' => $status, 'lastUpdated' => $now]);
 
