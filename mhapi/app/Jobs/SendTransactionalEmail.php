@@ -116,7 +116,6 @@ class SendTransactionalEmail extends Job implements ShouldQueue
 
         }
 
-        print_r($status);
         $this->delete();
 
         $this->replyToMarketHero($data);

@@ -6,11 +6,11 @@
 echo "Prepping folders..."
 echo ""
 
-declare -a Files=("apps/console" "apps/common" "mhapi/resources" "mhapi/public" "mhapi/app" "mhapi/config")
+declare -a Files=("mhapi/resources" "mhapi/public" "mhapi/app" "mhapi/config")
 #Files[0] = controllers
 #Files[1] = helpers
 
-if [ -d "apps/console.new" ]; then
+if [ -d "mhapi/resources.new" ]; then
     echo "  Removing folders back to development..."
     for i in "${Files[@]}"
     do

@@ -124,7 +124,7 @@ class KafkaConsumerCommand extends Command
         {
 
             $message = $this->message = $topic->consume(0, 10);
-            //print_r($message);
+            print_r($message);
 
             if (!empty($message))
             {
@@ -155,14 +155,14 @@ class KafkaConsumerCommand extends Command
         {
 
             $hash = md5(strtolower(trim($data->group_id). trim($data->to_email) . trim($data->body) . trim($data->subject)));
-
-            $emailExist = BroadcastEmailModel::where('hash', '=', $hash)
-                ->get();
-
-            if (!$emailExist->isEmpty())
-            {
-                return false;
-            }
+//
+//            $emailExist = BroadcastEmailModel::where('hash', '=', $hash)
+//                ->get();
+//
+//            if (!$emailExist->isEmpty())
+//            {
+//                return false;
+//            }
 
             $Email = new BroadcastEmailModel();
             $Email->emailUID = $emailUID;

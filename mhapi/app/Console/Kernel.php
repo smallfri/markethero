@@ -48,7 +48,7 @@ class Kernel extends ConsoleKernel
          * This runs a check for forgotten emails and adds them to the 'send-forgotten-queues' queue
          *
          */
-        $schedule->command('send-forgotten-groups')->hourly();
+        $schedule->command('send-forgotten-emails')->hourly();
         // $schedule->command('compliance:average')->cron('0 0 * * *');
         // $schedule->command('compliance:check')->everyMinute();
         //$schedule->command('bounce-handler')->everyMinute();

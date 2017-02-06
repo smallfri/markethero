@@ -16,13 +16,12 @@ use Carbon\Carbon;
 
 $factory->define(App\Models\BroadcastEmailModel::class, function (Faker\Generator $faker) {
 
-    $time = Carbon::parse('3 hours ago')->format('Y-m-d H:i:s');
+    $time = Carbon::parse('2 hours ago')->format('Y-m-d H:i:s');
 
     return [
         'mhEmailID' => $faker->numberBetween(0,10000),
         'emailUID' => uniqid(null, true),
         'customerID' => 11,
-        'groupID' => 40,
         'status' => 'queued',
         'toEmail' => 'smallfriinc@gmail.com',
         'toName' => $faker->name,
@@ -44,7 +43,6 @@ $factory->define(App\Models\GroupEmailGroupsModel::class, function (Faker\Genera
     return [
         'group_email_uid' => uniqid(null, true),
         'customer_id' => 11,
-        'group_email_id' => 40,
         'status' => 'pending-sending',
 
     ];

@@ -118,19 +118,14 @@ class SendForgottenEmail extends Job implements ShouldQueue
             $status = 'error';
 
         }
-//        $this->delete();
+        $this->delete();
 
         $this->replyToMarketHero($data);
 
-        print_r($status);
-
-        print_r($data->toEmail);
-
-            $update = BroadcastEmailModel::find($data->emailID);
-            $update->status = $status;
-            $update->lastUpdated = new \DateTime();
-            $update->save();
-
+        $update = BroadcastEmailModel::find($data->emailID);
+        $update->status = $status;
+        $update->lastUpdated = new \DateTime();
+        $update->save();
 
     }
 

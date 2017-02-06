@@ -158,7 +158,8 @@ class SendEmail extends Job implements ShouldQueue
 
         }
         $this->delete();
-        //$this->replyToMarketHero($data);
+
+        $this->replyToMarketHero($data);
 
         $update = BroadcastEmailModel::find($data->emailID);
         $update->status = $status;
